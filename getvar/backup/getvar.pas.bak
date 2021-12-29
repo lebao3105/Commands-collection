@@ -1,9 +1,0 @@
-program getvar;
-uses
-  {$IFDEF WINDOWS}
-  Dos,
-  {$IFDEF UNIX}
-  BaseUnix,
-  {$ENDIF}
-  crt;
-
