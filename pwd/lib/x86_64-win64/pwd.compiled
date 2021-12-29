@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Compiler Value="D:\pascal\fpc\3.2.2\bin\x86_64-win64\fpc.exe" Date="1398760406"/>
+  <Params Value=" -MObjFPC -Scghi -O1 -g -gl -l -vewnhibq -FuD:\source\repos\Pascal\cmd\pwd\ -FUD:\source\repos\Pascal\cmd\pwd\lib\x86_64-win64\ -FED:\source\repos\Pascal\cmd\pwd\ -oD:\source\repos\Pascal\cmd\pwd\pwd.exe pwd.pas"/>
+</CONFIG>
