@@ -41,3 +41,21 @@ Free Pascal have its own Makefilie type is Makefile.fpc - which will be compiled
 ```
 I know that you will say: "Well, just remove spaces to tabs." . I also check for this solution, but not work too. <br>
 The other reason is there are both normal and non- Lazarus projects here. I made it beacause some program have errors while building by FPC (happends due to some support that only available in Lazarus). Make 2 specific Makefiles are the good idea, but I still have no way.
+
+### How to use
+For many commands, the syntax is:
+ ```
+ <program name> <options if have> <file/dir name/required argument>
+ ```
+Some commands you just run it without any argument: help, cls, getvar.<br>
+Wait, how can I compile these files?<br>
+  * For Lazarus project:
+     * Open any project you want to start.
+     * Use Shift + F9 to build the project. 
+     * Dont use Run in Lazarus, open Command Prompt, "cd" to the project direcory, and run the newly-built executable file instead.
+  * For non-Laz one:
+     * If you have installed Laz before, the FPC (Free Pascal Compiler) is included with Laz. Find it in <lazarus root folder>/fpc.
+     * If not, install FPC [here](https://freepascal.org).
+     * Because we will compile from Terminal, include the fpc direcory to the PATH first. For example, you installed FPC 3.2.2 x64 in C:\FPC\3.2.2\, include C:\FPC\3.2.2\bin\x6_64_win64\ to the PATH.
+     * Re-open cmd if you are opened it before (to apply the new PATH), go to the folder you want, issue ``` fpc <programname>.pas ```
+     * Some time in *NIX the output is not excutable, use ```chmod +x ./<filename> ``` to make it run easier.
