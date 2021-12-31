@@ -44,7 +44,7 @@ I know that you will say: "Well, just remove spaces to tabs." . I also check for
 The other reason is there are both normal and non- Lazarus projects here. I made it beacause some program have errors while building by FPC (happends due to some support that only available in Lazarus). Make 2 specific Makefiles are the good idea, but I still have no way.
 
 ### How to use
-For many commands, the syntax is:
+For all commands, the syntax is:
  ```
  <program name> <options if have> <file/dir name/required argument>
  ```
@@ -57,7 +57,7 @@ Wait, how can I compile these files?<br>
   * For non-Laz one:
      * If you have installed Laz before, the FPC (Free Pascal Compiler) is included with Laz. Find it in <lazarus root folder>/fpc.
      * If not, install FPC [here](https://freepascal.org).
-     * Because we will compile from Terminal, include the fpc direcory to the PATH first. For example, you installed FPC 3.2.2 x64 in C:\FPC\3.2.2\, include C:\FPC\3.2.2\bin\x6_64_win64\ to the PATH.
+     * Because we will compile from Terminal, include the fpc direcory to the PATH first. For example, you installed FPC 3.2.2 x64 in C:\FPC\3.2.2\, include C:\FPC\3.2.2\bin\x86_64_win64\ to the PATH.
      * Re-open cmd if you are opened it before (to apply the new PATH), go to the folder you want, issue ``` fpc <programname>.pas ```
      * Some time in *NIX the output is not excutable, use ```chmod +x ./<filename> ``` to make it run easier.
 
@@ -65,10 +65,22 @@ Wait, how can I compile these files?<br>
 Commands-collection is available in Windows, and *NIX (including macOS, Linux). BSD wiil work too.
   
 ### Can I replace the system's commands with these commands?
-You can, but this is not recommended, like some other question. However, this should be interesting if you try one time, and report your experience with me!
+You can, but this is not recommended, like some other question. However, this should be interesting if you try one time, and report your experience with me!<br>
+And there is a way to place the project on your system without to rename the original files:
+* Compile all the files, and find the Application/Excutable files (have .exe extenextension in Windows, or don't have any extensions in *NIX).
+* Rename all your output to <programname>-new. For example, ```echo``` -> ```echo-new```. Or you can change the originel filename and keep the new one.
+* Now move your files into ```%SYSTEM32%``` (Windows) or ```/usr/bin``` (*NIX). You can use a new folder to easier find, but you may need to include it in PATH.
+Some programs that you don't need to rename (if there're no any other similar programs with the same name installed):<br>
+You may need to rename in other OSes.
+```
+* cls (only in *NIX, some OSes may have, you must rename it on Windows) = clear (in most *NIX OSes)
+* printf = cat or echo > (print to) filename in *NIX
+* getvar = echo VARIABLE 
+* touch (replace the name in Windows) 
+* pwd (replace the name in *NIX) 
+```
   
 ### Why some commands source code are so simple, like ```echo``` or ```cls```?
 I made this commands just to work its basic function: like echo will be print texts to screen (write to file use printf), or cls clear the screen. And, they are also made with Pascal function, some are so simple (for example cls just run clrscr() and done :-).
 Yeah, like app1, I have my goal "Just working as expected".<br>
-  
-## Happy coding new year! See you again in 2022! Just make a fork of this repo, code or report any bug you found. You're welcome.
+Happy coding new year! See you again in 2022, just make a fork of this repo, code or report any bug you found. You're welcome.
