@@ -4,6 +4,7 @@ This repository has these directory = commands:
 * cat                 : Write file content
 * cd                  : "Change" to a folder (not working now due to...)
 * cls                 : Clear the screen
+* date                : Show and change (may not be true) the time & date (currently in working progress)
 * echo                : Just print text to screen.
 * getvar              : Print variable (PATH, HOME, etc...)
 * help                : Show the description of all commands hare, like this file :)
@@ -59,3 +60,15 @@ Wait, how can I compile these files?<br>
      * Because we will compile from Terminal, include the fpc direcory to the PATH first. For example, you installed FPC 3.2.2 x64 in C:\FPC\3.2.2\, include C:\FPC\3.2.2\bin\x6_64_win64\ to the PATH.
      * Re-open cmd if you are opened it before (to apply the new PATH), go to the folder you want, issue ``` fpc <programname>.pas ```
      * Some time in *NIX the output is not excutable, use ```chmod +x ./<filename> ``` to make it run easier.
+
+### Which OSes can this project support?
+Commands-collection is available in Windows, and *NIX (including macOS, Linux). BSD wiil work too.
+  
+### Can I replace the system's commands with these commands?
+You can, but this is not recommended, like some other question. However, this should be interesting if you try one time, and report your experience with me!
+  
+### Why some commands source code are so simple, like ```echo``` or ```cls```?
+I made this commands just to work its basic function: like echo will be print texts to screen (write to file use printf), or cls clear the screen. And, they are also made with Pascal function, some are so simple (for example cls just run clrscr() and done :-).
+Yeah, like app1, I have my goal "Just working as expected".<br>
+  
+## Happy coding new year! See you again in 2022! Just make a fork of this repo, code or report any bug you found. You're welcome.
