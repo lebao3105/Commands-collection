@@ -31,8 +31,8 @@ Well, the project are the remastered version of ```System commands```, which are
 ### Can I open some non-Lazarus project as a Lazarus project or Why there are some folder only have the source code files?
 * First, folders that don't have any *.lpi/lps file... and only have <application name>.pas (or also have utils.pas too) are not Lazarus project. You can use FPC to compile and run it from Terminal.
 * Second, you can make a non-Laz project into a normal project like others. 
-  * Open Laz -> File -> Open -> open your file here -> Select "Make a new project..." when prompted.
-  * Choose Console application -> Chage TMainApp to ```main``` , TAppName to the current program name.
+  * Open Laz -> File -> Open -> open your file here -> Select "Make a new project...(something like that)" when prompted.
+  * Choose Console application -> Chage the class name to ```main``` , Title(window title) to the current program name.
 
 ### Is there a ```Makefile``` for easier to compile?
 The answer is: No.<br>
