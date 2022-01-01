@@ -9,12 +9,11 @@ begin
     if ParamCount = 0 then goto help;
 	if ParamCount >= 3 then begin
 		 if ParamStr(ParamCount) = '' then begin writeln('Target file not found. Exitting.'); exit; end
-                 else if (ParamStr(ParamCount) = '--target') then begin writeln('Target file not found. Exitting.'); exit; end
+         else if (ParamStr(ParamCount) = '--target') then begin writeln('Target file not found. Exitting.'); exit; end
 		 else begin 
 		 AssignFile(target, ParamStr(ParamCount));
 		 try 
 		    append(target);
-            write(target);
 		    for i := 1 to (ParamCount - 2) do begin
 		    	write(target, ParamStr(i), ' '); end;
 		    	CloseFile(target);

@@ -23,9 +23,9 @@ begin
         writeln(' ----  Day/Month/Year (DD/MM/YY) ---- ');
         exit; end;
     end
-    else for n := 1 to ParamCount do begin
+    else for n := 1 to ParamCount do
+            DecodeDate(Date, YY, MM, DD); 
         if ParamStr(n) = '--show-year' then begin 
-            DecodeDate(Date, YY);
             writeln('The current year is: ', [yy]);
             exit;
         end;
@@ -37,10 +37,10 @@ begin
             if ParamStr(n) = '--show-short-pls' then begin
                 writeln('Today is: ');
                 exit; end
-            else 
+            else begin
                 writeln('Today is: '
                             ,' ',Dayof(DD),' ',Monthof(MM),' ',Yearof(YY));
-                exit;
+                exit; end;
         end;
         if ParamStr(n) = '--help' then goto help;
     end;

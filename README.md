@@ -4,10 +4,11 @@ This repository has these directory = commands:
 * cat                 : Write file content
 * cd                  : "Change" to a folder (not working now due to...)
 * cls                 : Clear the screen
-* date                : Show and change (may not be true) the time & date (currently in working progress)
-* echo                : Just print text to screen.
+* date                : Show and the time & date (currently in working progress, bug found!)
+* echo                : Just print text to screen
 * getvar              : Print variable (PATH, HOME, etc...)
 * help                : Show the description of all commands hare, like this file :)
+* insert              : Insert texts to file (like printf, working on progress)
 * mkdir               : Create a directory
 * move                : Move a file / folder (?).
 * printf              : Write something to file (work but not so good)
@@ -83,4 +84,43 @@ You may need to rename in other OSes.
 ### Why some commands source code are so simple, like ```echo``` or ```cls```?
 I made this commands just to work its basic function: like echo will be print texts to screen (write to file use printf), or cls clear the screen. And, they are also made with Pascal function, some are so simple (for example cls just run clrscr() and done :-).
 Yeah, like app1, I have my goal "Just working as expected".<br>
-Happy coding new year! See you again in 2022, just make a fork of this repo, code or report any bug you found. You're welcome.
+Happy coding new year! Just make a fork of this repo, code or report any bug you found. You're welcome.
+
+### What is the DecodeDate error in the new program ```date```?
+DecodeDate tries to decode the date, month and year stored in Date variable, and return them in its own variables. For example, check this program - which is still working after the error in my program:
+```
+Program Example9;
+
+{ This program demonstrates the DecodeDate function }
+
+Uses sysutils;
+
+Var YY,MM,DD : Word;
+
+Begin
+  DecodeDate(Date,YY,MM,DD);
+  Writeln (Format ('Today is %d/%d/%d',[dd,mm,yy]));
+End.
+```
+In the example, DecodeDate decodes the year, month and day in YY (year), MM (month), DD (day); then writeln prints them.<br>
+What's my error here? While I making the program with arguments like this:
+```
+// we are in the loop 
+if ParamStr(n) = '--show-time' then
+  DecodeDate(Date,YY,MM,DD); 
+  writeln('The current date is: ', [dd], [mm], [yy]); // this without the format function. However, this doesn't work.
+  // do stuff...
+```
+The debug log:
+```
+fpc date.pas
+Free Pascal Compiler version 3.2.0 [2021/02/21] for x86_64
+Copyright (c) 1993-2020 by Florian Klaempfl and others
+Target OS: Win64 for x64
+Compiling date.pas
+date.pas(28,28) Fatal: Syntax error, "." expected but "," found // this DecodeDate line!
+Fatal: Compilation aborted
+Error: D:\pascal\fpc\3.2.0\bin\x86_64-win64\ppcx64.exe returned an error exitcode
+```
+I checked the error position in source code, and found its stop in Date variable from the DecodeDate variable.<br>
+"." expected but "," found... Hmm, I also checked for begin..end blocks, and is there any other syntax errors, but nothing incorrect...

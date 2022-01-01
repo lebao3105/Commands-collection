@@ -2,8 +2,8 @@ program mkdir;
 uses sysutils, utils, crt;
 label help;
 begin
-    if ParamCount = 0 then goto help;
-    if ParamCount >= 1 then begin 
+    if ParamCount = 0 then goto help
+    else begin 
         if ParamStr(1) = '' then goto help;
         if ParamStr(1) = 'help' then goto help
         else begin 
