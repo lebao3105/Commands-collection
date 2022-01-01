@@ -1,7 +1,5 @@
 program date;
-(* This may be hard to make. I should done this before new year. 
-   Listening to ABBA music this time is so special :) *)
-uses sysutils; // load this library first, anyway
+uses sysutils, dateutils; // load this library first, anyway
 var 
     YY,MM,DD : Word;
     n : integer;
@@ -25,24 +23,23 @@ begin
         writeln(' ----  Day/Month/Year (DD/MM/YY) ---- ');
         exit; end;
     end
-    else for n := 1 to ParamCount do begin // I've found a new way to detect argument
+    else for n := 1 to ParamCount do begin
         if ParamStr(n) = '--show-year' then begin 
-            DecodeDate(Date,YY,MM,DD);
-            writeln('The current year is: %d',[YY]);
+            DecodeDate(Date, YY);
+            writeln('The current year is: ', [yy]);
             exit;
         end;
         if ParamStr(n) = '--show-time' then begin
-            writeln('The current time is (not include *seconds, date): ', TimeToStr(Now));
+            writeln('The current time is (not include date): ', TimeToStr(Now));
             exit;
         end;
         if ParamStr(n) = '--show-date' then begin
             if ParamStr(n) = '--show-short-pls' then begin
-                writeln('Today is: ', LongDayNames[DayOfWeek(Date)]);
+                writeln('Today is: ');
                 exit; end
             else 
-                DecodeDate(Date,YY,MM,DD);
-                writeln('Today is: ', LongDayNames[DayOfWeek(Date)]
-                            ,' ',[DD],' ',[MM],' ',[YY]);
+                writeln('Today is: '
+                            ,' ',Dayof(DD),' ',Monthof(MM),' ',Yearof(YY));
                 exit;
         end;
         if ParamStr(n) = '--help' then goto help;
