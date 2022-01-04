@@ -84,7 +84,7 @@ You may need to rename in other OSes.
 ### Why some commands source code are so simple, like ```echo``` or ```cls```?
 I made this commands just to work its basic function: like echo will be print texts to screen (write to file use printf), or cls clear the screen. And, they are also made with Pascal function, some are so simple (for example cls just run clrscr() and done :-).
 Yeah, like app1, I have my goal "Just working as expected".<br>
-Happy coding new year! Just make a fork of this repo, code or report any bug you found. You're welcome.
+More: many programs are made with parsing arguments, so it may cause some errors here. Find and fix that bug are so important.
 
 ### What is the DecodeDate error in the new program ```date```?
 DecodeDate tries to decode the date, month and year stored in Date variable, and return them in its own variables. For example, check this program - which is still working after the error in my program:
