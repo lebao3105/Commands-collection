@@ -5,7 +5,7 @@ uses
 var i:longint;
     n:integer;
 begin
-  if ParamCount = 0 then begin 
+  if ParamCount = 0 then  
     for i:=1 to EnvCount do
       WriteLn(EnvStr(i));
   end;
@@ -23,7 +23,9 @@ begin
     begin
         textgreenln('getvar version 1.0');
         TextColor(White);
-        WriteLn('Use getver with anything you want to get its variable.');
+        WriteLn('Use getvar with anything you want to get its variable.');
+        writeln('If you run this application without any arguments, getvar will');
+        writeln('list all available variables.');
     end;
   end;
 end.
