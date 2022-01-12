@@ -8,6 +8,7 @@ begin
   writeln('cd                 : Change the current directory to other (Not working yet)');
   writeln('cls                : Clear the scren');
   writeln('echo               : Prints text to screen');
+  writeln('find_content       : Search for something in a file');
   writeln('getvar             : Prints the variable(s)');
   writeln('help               : Show this box and exit');
   writeln('mkdir              : Create a directory');
