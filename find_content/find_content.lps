@@ -9,21 +9,29 @@
         <Filename Value="find_content.pas"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="3"/>
-        <CursorPos X="12" Y="7"/>
+        <TopLine Value="52"/>
+        <CursorPos X="53" Y="70"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit0>
     </Units>
-    <JumpHistory Count="2" HistoryIndex="1">
+    <JumpHistory Count="4" HistoryIndex="3">
       <Position1>
         <Filename Value="find_content.pas"/>
-        <Caret TopLine="40"/>
+        <Caret Line="51" Column="56" TopLine="45"/>
       </Position1>
       <Position2>
         <Filename Value="find_content.pas"/>
-        <Caret Line="51" Column="56" TopLine="45"/>
+        <Caret Line="7" Column="12" TopLine="3"/>
       </Position2>
+      <Position3>
+        <Filename Value="find_content.pas"/>
+        <Caret Line="18" Column="36" TopLine="11"/>
+      </Position3>
+      <Position4>
+        <Filename Value="find_content.pas"/>
+        <Caret Line="65" Column="16" TopLine="53"/>
+      </Position4>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
