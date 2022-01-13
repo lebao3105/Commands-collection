@@ -4,8 +4,9 @@ This repository has these directory = commands:
 * cat                 : Write file content
 * cd                  : "Change" to a folder (not working now due to...)
 * cls                 : Clear the screen
-* date                : Show and the time & date (currently in working progress, bug found!)
+* date                : Show and the time & date (error found!)
 * echo                : Just print text to screen
+* find_content        : Find content in a file (not working as expected at parsing arguments)
 * getvar              : Print variable (PATH, HOME, etc...)
 * help                : Show the description of all commands hare, like this file :)
 * insert              : Insert texts to file (like printf, working on progress)
