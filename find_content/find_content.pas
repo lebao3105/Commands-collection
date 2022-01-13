@@ -1,3 +1,4 @@
+{ Working not as expected }
 program find_content;
 uses Sysutils;
 var 
@@ -63,7 +64,7 @@ begin
                 writeln('Missing the target file name.');
                 exit;
             end
-        else
+        else 
         for i := 1 to n - 1 do
         res := searchfile(ParamStr(n+1), ParamStr(i));
         if res > 0 then 
