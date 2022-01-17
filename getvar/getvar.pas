@@ -19,7 +19,7 @@ begin
     {$ELSE}
     GetOSEnv('HOME');
     {$ENDIF} 
-   if ParamStr(n) = 'help' then
+   if ParamStr(n) = '--help' then
     begin
         textgreenln('getvar version 1.0');
         TextColor(White);
