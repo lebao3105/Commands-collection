@@ -34,6 +34,10 @@ begin
         writeln('touch Syntax:');
         writeln('touch [filename] : Create file [filename].');
         exit;
+    if ParamStr(n) = 'getvar' then
+        writeln('getvar Syntax:');
+        writeln('getvar [var] : Get the value of variable [var]');
+        exit;
   end;
 end.
 
