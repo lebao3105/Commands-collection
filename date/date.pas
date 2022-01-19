@@ -7,9 +7,30 @@ label help;
 begin
     if ParamCount = 0 then begin
         writeln('The current time and date is: ', DateTimeToStr(Now));
+        goto help;
         // use DateTimeToStr(Now) to print the current date & time in one time,
         // TimeToStr() just to print the time.
-        help: begin
+    end
+    else for n := 1 to ParamCount do begin
+            DecodeDate(Date, YY, MM, DD); 
+        if ParamStr(n) = '--show-year' then begin 
+            writeln('The current year is: ', [yy]);
+            // exit;
+        end;
+        if ParamStr(n) = '--show-time' then begin
+            writeln('The current time is (not include date): ', TimeToStr(Now));
+            // exit;
+        end;
+        if ParamStr(n) = '--show-date' then begin
+            if ParamStr(n) = '--show-short-pls' then 
+                writeln('Today is: ')
+            else 
+                writeln('Today is: '
+                            ,' ',Dayof(DD),' ',Monthof(MM),' ',Yearof(YY));
+        end;
+        if ParamStr(n) = '--help' then goto help;
+    end;
+    help: begin
         writeln('--------------------------------------------------'); 
         writeln('date verison 1.0 - show the time and date');
         writeln('Some flags you can use:');
@@ -22,26 +43,4 @@ begin
         writeln('Note that this program will work with the following time foramt:');
         writeln(' ----  Day/Month/Year (DD/MM/YY) ---- ');
         exit; end;
-    end
-    else for n := 1 to ParamCount do
-            DecodeDate(Date, YY, MM, DD); 
-        if ParamStr(n) = '--show-year' then begin 
-            writeln('The current year is: ', [yy]);
-            exit;
-        end;
-        if ParamStr(n) = '--show-time' then begin
-            writeln('The current time is (not include date): ', TimeToStr(Now));
-            exit;
-        end;
-        if ParamStr(n) = '--show-date' then begin
-            if ParamStr(n) = '--show-short-pls' then begin
-                writeln('Today is: ');
-                exit; end
-            else begin
-                writeln('Today is: '
-                            ,' ',Dayof(DD),' ',Monthof(MM),' ',Yearof(YY));
-                exit; end;
-        end;
-        if ParamStr(n) = '--help' then goto help;
-    end;
 end.
