@@ -1,31 +1,28 @@
 program mkdir;
-uses sysutils, utils, crt;
+uses sysutils, crt, utils;
 label help;
+var n: integer;
 begin
     if ParamCount = 0 then goto help
-    else begin 
-        if ParamStr(1) = '' then goto help;
-        if ParamStr(1) = 'help' then goto help
+    else  for n := 1 to ParamCount do begin 
+        if ParamStr(n) = '--help' then goto help
         else begin 
-            If Not DirectoryExists(ParamStr(1)) then
-                If Not CreateDir (ParamStr(1)) Then begin
+            If Not DirectoryExists(ParamStr(n)) then
+                If Not CreateDir (ParamStr(n)) Then begin
                     textred('Failed to create directory !');
                     exit; end
-                else
-                    Write('Directory ', ParamStr(1), ' created.');
-                    exit;
-            end; 
+                else begin
+                    Write('Directory ', ParamStr(n), ' created.');
+                    exit; end
+            else textred('Fatal: '); TextColor(White); writeln('Directory ', ParamStr(n), 'exists!');
+        end; 
     end;  
     help:
         begin
-            textgreen('mkdir version 1.0 '); TextColor(White); writeln('by Le Bao Nguyen');
-            writeln('This program a part of the "cmd" collection, which is released under');
-            writeln('the GNU V3 License.');
-            textgreenln('Usage:'); TextColor(White);
-            writeln('help:                     Show this help. If you use mkdir without these tags');
-            writeln('                                the program still show this help.');
-            writeln('(dirname)                       Replace (dirname) with your own directory name and mkdir');
-            write('                                will create it for you.');
+            writeln('mkdir usage: mkdir <direcory name>');
+            writeln('Use --help flag to print this help, however; you dont need to use this flag yet.');
+            writeln('Exiting... Process exited with code 0 (success).');
+            Delay(800);
             exit;
         end;
 end.

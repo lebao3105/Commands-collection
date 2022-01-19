@@ -4,3 +4,7 @@ find_content/test.pas
 find_content/find_content.exe
 find_content/find_content.exe
 find_content/lib/x86_64-win64/find_content.o
+mkdir/mkdir.o
+mkdir/utils.o
+mkdir/utils.ppu
+mkdir/mkdir.exe
