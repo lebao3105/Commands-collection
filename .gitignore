@@ -8,3 +8,6 @@ mkdir/mkdir.o
 mkdir/utils.o
 mkdir/utils.ppu
 mkdir/mkdir.exe
+cd/cd.exe
+.gitignore
+.gitignore

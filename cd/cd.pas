@@ -9,7 +9,7 @@ uses
 begin
     if ParamCount = 0 then writeln('Missing folder to change into it. Aborting'); exit;
     if ParamCount >= 1 then begin
-        if ParamStr(1) = '' then begin writeln('Target folder not found. Exiting.'); exit end;
+        if ParamStr(1) = '' then begin writeln('Target folder not found. Exiting.'); exit end
         else begin
             ChDir(ParamStr(1)); exit;
             if IOresult<>0 then
