@@ -1,4 +1,4 @@
-# Commands-collection
+## Commands-collection
 A collection of various system commands in Pascal <br>
 This repository has these directory = commands:
 * cat                 : Write file content
@@ -50,7 +50,7 @@ For all commands, the syntax is:
  ```
  <program name> <options if have> <file/dir name/required argument>
  ```
-Some commands you just run it without any argument: help, cls, getvar.<br>
+Some commands you can run it without any argument: help, cls, getvar.<br>
 Wait, how can I compile these files?<br>
   * For Lazarus project:
      * Open any project you want to start.
