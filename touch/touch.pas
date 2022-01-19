@@ -23,14 +23,11 @@ begin
      writeln('File ', ParamStr(1), ' created.'); exit; end; end; end;
   if ParamCount = 0 then begin 
      help: begin
-        textgreen('touch version 1.0 '); TextColor(White); writeln('by Le Bao Nguyen');
-        writeln('This program is a part of the "cmd" collection, which is released under');
-        writeln('the GNU V3 License.');
-        textgreenln('Usage:'); TextColor(White);
-        writeln('help                      Show this help. If you use touch without these tags');
-        writeln('                                 the program still show this help.');
-        writeln('(filename)                       Replace (filename) with your own file name and touch');
-        writeln('                                 will create it for you.');
+        textgreen('touch Usage: ');
+        TextColor(White);
+        writeln('touch <file name> : Create <file name> file. This program only can create one file at one time.');
+        writeln('Exiting... Process will exit with code 0 (success).');
+        Delay(800);
         exit;
   end;
   end;
