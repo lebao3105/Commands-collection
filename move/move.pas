@@ -1,4 +1,4 @@
-(* Thanks to dolev9 user from https://programmersheaven.com/ for these code! *)
+(* Thanks to dolev9 user from https://programmersheaven.com/ for this program! *)
 program move;
 uses dos,crt;
 
