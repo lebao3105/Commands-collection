@@ -63,7 +63,7 @@ Wait, how can I compile these files?<br>
      * Re-open cmd if you are opened it before (to apply the new PATH), go to the folder you want, issue ``` fpc <programname>.pas ```
      * Some time in *NIX the output is not excutable, use ```chmod +x ./<filename> ``` to make it run easier.
 
-### Which OSes can this project support?
+### Which OSes can work on this project?
 Commands-collection is available in Windows, and *NIX (including macOS, Linux). BSD wiil work too.
   
 ### Can I replace the system's commands with these commands?
@@ -75,11 +75,14 @@ And there is a way to place the project on your system without to rename the ori
 Some programs that you don't need to rename (if there're no any other similar programs with the same name installed):<br>
 You may need to rename in other OSes.
 ```
-* cls (only in *NIX, some OSes may have, you must rename it on Windows) = clear (in most *NIX OSes)
-* printf = cat or echo > (print to) filename in *NIX
-* getvar = echo VARIABLE 
-* touch (replace the name in Windows) 
-* pwd (replace the name in *NIX) 
+| Program | OS(es) that have the same program name | Program have same function in other OSes |
+|---------|----------------------------------------|------------------------------------------|
+| cls     | Windows                                | clear                                    |
+| pwd     | All OSes                               |                                          |
+| printf  | Unix                                   | echo [text] > filename.txt               |
+| touch   | Unix                                   | None                                     |
+| echo    | All OSes                               | None                                     |
+| date    | All OSes                               | None                                     |
 ```
   
 ### Why some commands source code are so simple, like ```echo``` or ```cls```?
