@@ -23,7 +23,7 @@ begin
     begin
         textgreenln('getvar version 1.0');
         TextColor(White);
-        WriteLn('Use getvar with anything you want to get its variable.');
+        WriteLn('Use getvar with anything you want to get its value.');
         writeln('If you run this application without any arguments, getvar will');
         writeln('list all available variables.');
     end;

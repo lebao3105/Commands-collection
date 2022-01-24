@@ -2,9 +2,7 @@
 program find_content;
 uses Sysutils;
 var 
-    fn : string;
     rd : string;
-    srch : string;
     res : longint;
     p : byte;
     n,i:integer;
