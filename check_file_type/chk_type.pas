@@ -1,4 +1,4 @@
-program check_type;
+program chk_type;
 uses 
     sysutils;
 var
@@ -20,9 +20,9 @@ begin
                 writeln('System file');
             if (value_type and faVolumeID) <> 0 then
                 writeln('This is a disk label');
-            If (value_type and faArchive)<>0 then
+            If (value_type and faArchive) <> 0 then
                 Writeln ('File is archive file');
-            If (value_type and faDirectory)<>0 then
+            If (value_type and faDirectory) <> 0 then
                 Writeln ('File is a directory');
         end
         else writeln('An error occured while checking the file');
