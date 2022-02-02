@@ -1,10 +1,13 @@
 program printf;
 uses 
-     sysutils,crt,utils;
+     sysutils, crt, color;
 var 
      target:TextFile;
      i:longint;
-label help;
+
+label 
+	help;
+
 begin
     if ParamCount = 0 then goto help;
 	if ParamCount >= 3 then begin

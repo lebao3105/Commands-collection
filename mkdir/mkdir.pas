@@ -1,6 +1,11 @@
 program mkdir;
-uses sysutils, crt, utils;
-label help;
+
+uses 
+    sysutils, crt, color;
+
+label 
+    help;
+
 begin
     if ParamCount = 0 then goto help
     else   

@@ -6,6 +6,8 @@ find_content/find_content.lps
 find_content/backup/find_content.lpi
 find_content/backup/find_content.lps
 find_content/lib/x86_64-win64/find_content.compiled
+rename/test
+rename/test2
 */*.exe
 */*.o
 */*.ppu
