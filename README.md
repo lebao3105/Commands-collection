@@ -16,6 +16,7 @@ This repository has these directory = commands:
 * pwd                 : Show the current directory 
 * rename              : Rename file
 * touch               : Create file
+
 ## FAQ + How to use
 ### I see in some folders have backup, lib directory, *.lpi and .lps file. What are they?
 Well, they are related to a Lazarus project - you need to open the direcory as a Lazarus project. Here's how:
@@ -60,7 +61,7 @@ Wait, how can I compile these files?<br>
      * If you have installed Laz before, the FPC (Free Pascal Compiler) is included with Laz. Find it in <lazarus root folder>/fpc.
      * If not, install FPC [here](https://freepascal.org).
      * Because we will compile from Terminal, include the fpc direcory to the PATH first. For example, you installed FPC 3.2.2 x64 in C:\FPC\3.2.2\, include C:\FPC\3.2.2\bin\x86_64_win64\ to the PATH.
-     * Re-open cmd if you are opened it before (to apply the new PATH), go to the folder you want, issue ``` fpc <programname>.pas ```
+     * Re-open cmd if you are opened it before (to apply the new PATH), go to the folder you want, use ``` fpc <programname>.pas ```. If there is error "Unit color not found" (the old utils Unit), add ```-Fu..\rtl\color.pas``` after the command.
      * Some time in *NIX the output is not excutable, use ```chmod +x ./<filename> ``` to make it run easier.
 
 ### Which OSes can work on this project?
