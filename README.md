@@ -64,6 +64,8 @@ Wait, how can I compile these files?<br>
      * Re-open cmd if you are opened it before (to apply the new PATH), go to the folder you want, use ``` fpc <programname>.pas ```. If there is error "Unit color not found" (the old utils Unit), add ```-Fu..\rtl\color.pas``` after the command.
      * Some time in *NIX the output is not excutable, use ```chmod +x ./<filename> ``` to make it run easier.
 
+**printf note: The "parse arguments" is not fully completed yet. Its hard to say, there are many problems on how the users can work on this program.**
+
 ### Which OSes can work on this project?
 Commands-collection is available in Windows, and *NIX (including macOS, Linux). BSD wiil work too.
   
@@ -73,7 +75,8 @@ And there is a way to place the project on your system without to rename the ori
 * Compile all the files, and find the Application/Excutable files (have .exe extenextension in Windows, or don't have any extensions in *NIX).
 * Rename all your output to <programname>-new. For example, ```echo``` -> ```echo-new```. Or you can change the originel filename and keep the new one.
 * Now move your files into ```%SYSTEM32%``` (Windows) or ```/usr/bin``` (*NIX). You can use a new folder to easier find, but you may need to include it in PATH.
-Some programs that you don't need to rename (if there're no any other similar programs with the same name installed):<br>
+Some programs that you don't need to rename (if there're no any other similar programs with the same name installed):
+
 You may need to rename in other OSes.
 ```
 | Program | OS(es) that have the same program name | Program have same function in other OSes |
