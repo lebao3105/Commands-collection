@@ -1,32 +1,28 @@
 program mkdir;
 
 uses 
-    sysutils, crt, color;
-
-label 
-    help;
+    sysutils, crt, color, warn;
+var 
+    n : integer;
 
 begin
-    if ParamCount = 0 then goto help
+    if ParamCount = 0 then missing_dir();
     else   
-        if ParamStr(1) = '--help' then goto help
+    for n := 1 to ParamCount do begin
+        if ParamStr(n) = '--help' then help()
         else begin  
-            If Not DirectoryExists(ParamStr(1)) then
-                If Not CreateDir (ParamStr(1)) Then begin
+            If Not DirectoryExists(ParamStr(n)) then
+                If Not CreateDir (ParamStr(n)) Then begin
                     textred('Failed to create directory !');
                     exit; end
                 else begin
-                    Write('Directory ', ParamStr(1), ' created.');
-                    exit; end
-            else textred('Fatal: '); TextColor(White); writeln('Directory ', ParamStr(1), 'exists!');
+                    Write('Directory ', ParamStr(n), ' created.');
+                    exit; 
+                end
+            else begin
+                textred('Fatal: '); TextColor(White); 
+                writeln('Directory ', ParamStr(n), 'exists!');
+            end;
         end; 
-    help:
-        begin
-            writeln('mkdir usage: mkdir <direcory name>');
-            writeln('Use --help flag to print this help, however; you dont need to use this flag yet.');
-            writeln('Sorry about that but mkdir can only create 1 folder at one time.');
-            writeln('Exiting... Process exited with code 0 (success).');
-            Delay(800);
-            exit;
-        end;
+    end;
 end.
