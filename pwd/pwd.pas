@@ -1,6 +1,6 @@
 program pwd; // program to show the current directory
 uses 
-    sysutils, warm;
+    sysutils, warn;
 var 
     n : integer;
 begin
