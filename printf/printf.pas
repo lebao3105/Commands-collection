@@ -1,6 +1,6 @@
 program printf;
 uses 
-     sysutils, crt, color;
+     sysutils, crt, color, warn;
 var 
      target:TextFile;
      i:longint;
@@ -9,10 +9,20 @@ label
 	help;
 
 begin
-    if ParamCount = 0 then goto help;
-	if ParamCount >= 3 then begin
-		 if ParamStr(ParamCount) = '' then begin writeln('Target file not found. Exitting.'); exit; end
-         else if (ParamStr(ParamCount) = '--target') then begin writeln('Target file not found. Exitting.'); exit; end
+    if ParamCount = 0 then help()
+	else
+		if ParamCount >= 3 then begin
+		 if ParamStr(ParamCount) = '' then 
+		 	begin 
+				missing_file(); 
+				exit; 
+			end
+         else 
+		 	 if (ParamStr(ParamCount) = '--target') then 
+			  	begin 
+				  	missing_file(); 
+				  	exit; 
+				end
 		 else begin 
 		 AssignFile(target, ParamStr(ParamCount));
 		 try 
@@ -30,17 +40,5 @@ begin
 		 	writeln('File ', ParamStr(ParamCount), ' editted.'); exit;
 		 end; 
 	end;
-        if ParamStr(1) = 'help' then goto help;
-        help:
-        begin
-            textgreen('printf version 1.0 '); TextColor(White); writeln('by Le Bao Nguyen');
-            writeln('This program a part of the "cmd" collection, which is released under');
-            writeln('the GNU V3 License.');
-            textgreenln('Usage:'); TextColor(White);
-            writeln('help:                           Show this help. If you use printf without these tags');
-            writeln('                                the program still show this help.');
-            writeln('(filename)                      Replace (filename) with your own file name and printf');
-            writeln('                                will edit it for you.');
-            exit;
-        end;
+        if ParamStr(1) = 'help' then help();
 end.
