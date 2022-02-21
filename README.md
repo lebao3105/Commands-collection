@@ -147,7 +147,6 @@ All your required file has been created.
 > touch helloworld.pas
 File helloworld.pas has been created.
 ```
-What I want here:
-  * Allow user to create multi files at one time using array of integer (before edit this file I want to use the string one) or using a flag. 
+What I want here is allow the user to create multi files at one time using array of integer (before edit this file I want to use the string one) or using a flag. Also warn they if the file exists
 
 3. echo: Line-breaking (like \n in original echo in Linux or in printf from C++) is not supported. I tried it many times, but there are problems with argument-parsing.
