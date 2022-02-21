@@ -1,14 +1,14 @@
 program cat;
 uses
- Sysutils, utils, crt;
+ Sysutils, warn, crt;
 
 var
   tfIn: TextFile;
   s: string;
-label readfile, help;
+label readfile;                                                                ;
 begin
    if ParamCount = 1 then begin
-   if ParamStr(1) = 'help' then goto help
+   if ParamStr(1) = 'help' then help()
    else begin
 	readfile: begin
   		writeln('Reading the contents of file: ', ParamStr(1));
@@ -35,17 +35,5 @@ begin
   	writeln('=========================================');
   	writeln('File ', ParamStr(1), ' was probably read. Press enter to stop.');
   	readln; end; end; end;
-  if ParamCount = 0 then begin 
-  	 help: begin
-        textgreen('cat version 1.0'); TextColor(White); writeln('by Le Bao Nguyen');
-        writeln('This program a part of the "cmd" collection, which is released under');
-        writeln('the GNU V3 License.');
-        textgreenln('Usage:');
-        writeln('help:                     Show this help. If you use touch without these tags');
-        writeln('                                 cat still show this help.');
-        writeln('(filename)                       Replace (filename) with your own file name and touch');
-        writeln('                                 will read it for you.');
-        exit;
-  end;
-  end;
+  if ParamCount = 0 then help();
 end.
