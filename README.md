@@ -134,7 +134,7 @@ I checked the error position in source code, and found its stop in Date variable
 
 ## Program(s) notes
 1. Printf: The "parse arguments" is not fully completed yet. Its hard to say, there are many problems on how the users can work on this program.
-2. Touch: Currently we have our new program, but I found that -Fu option is not working here, with both cmd and powershell. This program has been rewritten with new features, such as create file even you are running this app with multi arguments, for example:
+2. Touch: Currently we have our new program, but I found that -Fu option is not working here, with both cmd and powershell; so you can uncomment the units in uses section and textgreenln in the main program block. This program has been rewritten with new features, such as create file even you are running this app with multi arguments, for example:
 ```
 > touch 9 hello.txt
 There are many arguments that we are detected here. Which one you want to create?
@@ -147,6 +147,6 @@ All your required file has been created.
 > touch helloworld.pas
 File helloworld.pas has been created.
 ```
-What I want here is allow the user to create multi files at one time using array of integer (before edit this file I want to use the string one) or using a flag. Also warn they if the file exists
+What I want here is allow the user to create multi files at one time using array of integer (before edit this file I want to use the string one) or using a flag. Also warn they if the file exists. 
 
 3. echo: Line-breaking (like \n in original echo in Linux or in printf from C++) is not supported. I tried it many times, but there are problems with argument-parsing.
