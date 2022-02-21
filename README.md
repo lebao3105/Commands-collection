@@ -64,7 +64,6 @@ Wait, how can I compile these files?<br>
      * Re-open cmd if you are opened it before (to apply the new PATH), go to the folder you want, use ``` fpc <programname>.pas ```. If there is error "Unit color not found" (the old utils Unit), add ```-Fu..\rtl\color.pas``` after the command.
      * Some time in *NIX the output is not excutable, use ```chmod +x ./<filename> ``` to make it run easier.
 
-**printf note: The "parse arguments" is not fully completed yet. Its hard to say, there are many problems on how the users can work on this program.**
 
 ### Which OSes can work on this project?
 Commands-collection is available in Windows, and *NIX (including macOS, Linux). BSD wiil work too.
@@ -132,3 +131,23 @@ Error: D:\pascal\fpc\3.2.0\bin\x86_64-win64\ppcx64.exe returned an error exitcod
 ```
 I checked the error position in source code, and found its stop in Date variable from the DecodeDate variable.<br>
 "." expected but "," found... Hmm, I also checked for begin..end blocks, and is there any other syntax errors, but nothing incorrect...
+
+## Program(s) notes
+1. Printf: The "parse arguments" is not fully completed yet. Its hard to say, there are many problems on how the users can work on this program.
+2. Touch: Currently we have our new program, but I found that -Fu option is not working here, with both cmd and powershell. This program has been rewritten with new features, such as create file even you are running this app with multi arguments, for example:
+```
+> touch 9 hello.txt
+There are many arguments that we are detected here. Which one you want to create?
+Note that --help flag is not available for this application.
+Arg no.1 : 9
+Arg no.2 : hello.txt
+Enter your answer here (all to use all args): <-- I use writeln here, fixed
+all
+All your required file has been created.
+> touch helloworld.pas
+File helloworld.pas has been created.
+```
+What I want here:
+  * Allow user to create multi files at one time using array of integer (before edit this file I want to use the string one) or using a flag. 
+
+3. echo: Line-breaking (like \n in original echo in Linux or in printf from C++) is not supported. I tried it many times, but there are problems with argument-parsing.
