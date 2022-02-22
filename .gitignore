@@ -11,3 +11,4 @@ rename/test2
 */*.exe
 */*.o
 */*.ppu
+*/test*
