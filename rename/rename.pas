@@ -1,12 +1,20 @@
 program rename;
-uses sysutils,crt;
+
+uses 
+	sysutils, crt{, warn};
+
+var 
+	i: integer;
+
 begin
-	if ParamCount <=1 then writeln('Missing argument(s). Exiting.');
-	if ParamCount >= 2 then begin
-		if not FileExists(ParamStr(1)) then
-			writeln('The file ', ParamStr(1), ' does not exist. You may need to correct the target file name.')
-		else 
-			RenameFile(ParamStr(1), ParamStr(2));
-			write('File ', ParamStr(1), ' renamed to ', ParamStr(2));
-	end;
+	{if ParamCount <= 1 then missing_argv()
+	else} if ParamCount > 1 then 
+			begin
+				for i := 1 to ParamCount do
+					if not FileExists(ParamStr(i)) then
+						writeln('File ', ParamStr(i), ' does not exist!')
+					else 
+						RenameFile(ParamStr(i), ParamStr(i+1));
+						writeln('File ', ParamStr(i), ' renamed to ', ParamStr(i+1));
+			end;
 end.
