@@ -1,11 +1,15 @@
 program cat;
+{$mode objFPC}
 uses
  Sysutils, warn, crt;
 
 var
   tfIn: TextFile;
   s: string;
-label readfile;                                                                ;
+
+label 
+  readfile;
+                                                                  
 begin
    if ParamCount = 1 then begin
    if ParamStr(1) = 'help' then help()
