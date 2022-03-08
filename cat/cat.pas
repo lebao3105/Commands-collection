@@ -52,7 +52,8 @@ begin
               writeln('Error occured while reading file: ', E.Message);
               halt(1); end;
           end;
-      if (ParamStr(i) = '-v') and (ParamStr(i) = '--verbose') then
-          cat_prog('end', ParamStr(1));
+      for i := 2 to ParamCount do 
+        if (ParamStr(i) = '-v') and (ParamStr(i) = '--verbose') then
+            cat_prog('end', ParamStr(1));
     end;
 end.
