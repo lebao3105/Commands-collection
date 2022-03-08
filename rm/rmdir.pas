@@ -17,10 +17,12 @@ begin
                   begin
                     if (value_type and faReadOnly) <> 0 then
                         writeln('The target folder is readonly.')
-                    else
+                    else begin
                         RmDir(ParamStr(i));
-                        writeln('Done.');   
+                        writeln('Done.');
+                    end;   
                   end
                   else 
                     writeln('This is not a directory. Exiting.');
+        end;
 end.
