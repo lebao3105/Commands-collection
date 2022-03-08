@@ -70,7 +70,7 @@ source ~/.bashrc
 Open windows search -> type and search for env -> Launch first search result -> Environment Variables -> User/System PATH -> Add -> Browse -> Head to the bin folder -> OK to apply. Reopen any Command window to get the changes. 
 ```
 
-But not at all commands are vaid to use. Rename some programs here:
+But not at all commands are valid to use. Rename some programs here:
 * echo 
 * cat
 * cls (*NIX)
