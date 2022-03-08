@@ -1,43 +1,58 @@
 program cat;
 {$mode objFPC}
 uses
- Sysutils, warn, crt;
+   Sysutils, warn, verbose;
 
 var
-  tfIn: TextFile;
-  s: string;
+   tfIn: TextFile;
+   s: string;
+   i: integer;
 
 label 
-  readfile;
-                                                                  
-begin
-   if ParamCount = 1 then begin
-   if ParamStr(1) = 'help' then help()
-   else begin
-	readfile: begin
-  		writeln('Reading the contents of file: ', ParamStr(1));
-  		writeln('=========================================');
-		  AssignFile(tfIn, ParamStr(1));
-	// Embed the file handling in a try/except block to handle errors gracefully
-  try
-    // Open the file for reading
-    	reset(tfIn);
-    // Keep reading lines until the end of the file is reached
-      while not eof(tfIn) do
-        begin
-          readln(tfIn, s);
-          writeln(s);
+   readfile, help;
+
+begin 
+   if ParamCount = 0 then goto help
+   else if ParamCount > 1 then begin
+      if (ParamStr(1) = '-v') and (ParamStr(1) = '--verbose') then goto help;
+      for i := 2 to ParamCount do begin
+          // check for verbose status
+          if (ParamStr(i) = '-v') and (ParamStr(i) = '--verbose') 
+          then begin
+              writeln('Verbose mode turned on.');
+              cat_prog('begin', ParamStr(1));
+          end;
+
+          goto readfile;
+
       end;
-      CloseFile(tfIn);
+   end
+   else if ParamCount = 1 then goto readfile;
 
-  except
-    	on E: EInOutError do
-     	    writeln('File handling error occurred. Details: ', E.Message);
- 	    end;
+   // labels
+   help:
+    begin
+        writeln('Usage: cat <filename> <-v/--verbose>');
+        halt(1);
+    end;
 
-  // Wait for the user to end the program
-  	writeln('=========================================');
-  	writeln('File ', ParamStr(1), ' was probably read. Press enter to stop.');
-  	readln; end; end; end;
-  if ParamCount = 0 then help();
+   readfile:
+    begin
+      Assign(tfIn, ParamStr(1));
+          try
+            reset(tfIn);
+            while not eof(tfIn) do
+            begin
+              readln(tfIn, s);
+              writeln(s);
+            end;
+            CloseFile(tfIn);
+          except
+            on E: EInOutError do begin
+              writeln('Error occured while reading file: ', E.Message);
+              halt(1); end;
+          end;
+      if (ParamStr(i) = '-v') and (ParamStr(i) = '--verbose') then
+          cat_prog('end', ParamStr(1));
+    end;
 end.
