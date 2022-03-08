@@ -1,3 +1,4 @@
+{ verbose flag is not correctly defined yet - the program is not using it. }
 program cat;
 {$mode objFPC}
 uses
