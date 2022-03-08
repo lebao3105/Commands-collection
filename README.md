@@ -2,7 +2,7 @@
 A collection of various system commands in Pascal <br>
 This repository has these directory = commands:
 * cat                 : Write file content
-* cd                  : "Change" to a folder (not working now due to...)
+* cd                  : "Change" to a folder (not working now due to... DECRAPTED)
 * cls                 : Clear the screen
 * date                : Show and the time & date (error found!)
 * echo                : Just print text to screen
@@ -16,9 +16,10 @@ This repository has these directory = commands:
 * rename              : Rename file
 * touch               : Create file
 
-Some program should be here now:
-* rm : Remove file
+Some programs should be here now:
 * get file date/time : Get file created date/time
+* get file size      : Get file size
+* get disk space
 And more...
 
 ## Compiling
@@ -38,13 +39,13 @@ If the compiler says 'warn not found', you need to specify ```-Fu../rtl/``` opti
 ## What to know
 * You should not install this project to your computer - replace original commands. Not of all commands are working as expected.
 * You can use this project to learn Pascal, but not to learn C/C++.
+* Why ```cd``` command is DECRAPTED? Because function used to change the directory - both ```ChDir()``` and ```SetCurrentDir()``` - are not working. They are used to change the directory ONLY in the current process - I mean the program which is running the function.
 * This is easier if we have a ```makefile``` here, but you can switch between directories and compile:
 ```
 cd <command name>
 fpc <command name>.pas -Fu../rtl
-# When needed, go to other dir(s)
-cd ..\<other dir> & fpc <command name>.pas -Fu../rtl # Windows
-cd ../<other dir> & fpc <command name>.pas -Fu../rtl # *NIX
+# When needed, go to other dir(s) and compile
+cd ../<other dir> & fpc <command name>.pas -Fu../rtl 
 ```
 
 And add it to PATH (if needed):
