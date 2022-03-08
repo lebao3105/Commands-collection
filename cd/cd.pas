@@ -23,8 +23,9 @@ begin
         else begin
             ChDir(ParamStr(1)); exit;
             if IOresult<>0 then
-                textredln('Cannot change to directory : ',paramstr (1)); 
+                textred('Cannot change to directory : '); 
                 textcolor(white);
+                writeln(paramstr(1));
                 exit;
         end;
     end;
