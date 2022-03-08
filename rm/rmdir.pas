@@ -1,15 +1,15 @@
-program rmdirl;
+program rmdir;
 
 uses
-    sysutils{, warn};
+    sysutils, warn;
 
 var 
     value_type: longint;
     i : integer;
 
 begin
-    {if ParamCount = 0 then missing_dir()
-     else } 
+     if ParamCount = 0 then missing_dir()
+     else 
         for i := 1 to ParamCount do
             value_type := FileGetAttr(ParamStr(i));
             if value_type <> -1 then
