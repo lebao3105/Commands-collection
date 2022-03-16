@@ -23,6 +23,7 @@ begin
                 on E: EInOutError do
                     writeln('Error occured while reading file: ', E.Message);
             end;
+            FileClose(ParamStr(i));
             halt(0);
         end;
     end;
