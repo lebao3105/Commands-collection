@@ -4,7 +4,6 @@ ifdef OS
 	check_file_type := check_file_type/chk_type.exe
 	cls := cls/cls.exe
 	echo := echo/echo.exe
-	file_date := file_date/file_date.exe
 	find_content := find_content/find_content.exe
 	getvar := getvar/getvar.exe
 	help := help/help.exe
@@ -13,13 +12,12 @@ ifdef OS
 	printf := printf/printf.exe
 	rename := rename/rename.exe
 	rm := rm/rm.exe
-	rmdir := rmdir/rmdir.exe
+else
 	ifeq ($(shell uname), Linux)
 		cat := cat/cat
 		check_file_type := check_file_type/chk_type
 		cls := cls/cls
 		echo := echo/echo
-		file_date := file_date/file_date
 		find_content := find_content/find_content
 		getvar := getvar/getvar
 		help := help/help
@@ -28,7 +26,6 @@ ifdef OS
 		printf := printf/printf
 		rename := rename/rename
 		rm := rm/rm
-		rmdir := rmdir/rmdir
 	endif
 endif
 
@@ -36,7 +33,7 @@ endif
 include_path := rtl/
 
 # Targets
-.PHONY: all cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename rm rmdir clean
+.PHONY: all cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename rm rmdir
 cat: cat/cat.pas
 	fpc cat/cat.pas -o$(cat) -Fu$(include_path)
 
@@ -85,21 +82,23 @@ rename: rename/rename.pas
 rm: rm/rm.pas
 	fpc rm/rm.pas -o$(rm) -Fu$(include_path)
 
-rmdir: rmdir/rmdir.pas
-	fpc rmdir/rmdir.pas -o$(rmdir) -Fu$(include_path)
+rmdir: rm/rmdir.pas
+	echo This program is not working as expected. You cant use it now.
 
 # Build everything
 all: cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename rm rmdir
 
 # Clean
-clean:
+clean: $(cat) $(check_file_type) $(cls) $(date) $(echo) $(find_content) $(getvar) $(help) $(mkdir) $(move) $(printf) $(pwd) $(rename) $(rm) $(*/*.o)
 	ifdef OS
-		del -f $(cat) $(check_file_type) $(cls) $(date) $(echo) $(file_date) $(find_content) $(getvar) $(help) $(mkdir) $(move) $(printf) $(pwd) $(rename) $(rm) $(rmdir)
+		del -f $(cat) $(check_file_type) $(cls) $(date) $(echo) $(find_content) 
+		del -f $(getvar) $(help) $(mkdir) $(move) $(printf) $(pwd) $(rename) $(rm)
 		del -f $(*/*.o)
+	else
 		ifeq ($(sell uname), Linux)
-			rm -f $(cat) $(check_file_type) $(cls) $(date) $(echo) $(file_date) 
+			rm -f $(cat) $(check_file_type) $(cls) $(date) $(echo) 
 			rm -f $(find_content) $(getvar) $(help) $(mkdir) $(move) $(printf) 
-			rm -f $(pwd) $(rename) $(rm) $(rmdir)
+			rm -f $(pwd) $(rename) $(rm)
 			rm $(*/*.o)
 		endif
 	endif
