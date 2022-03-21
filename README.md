@@ -40,7 +40,7 @@ If the compiler says 'warn not found', you need to specify ```-Fu../rtl/``` opti
 * You should not install this project to your computer - replace original commands. Not of all commands are working as expected.
 * You can use this project to learn Pascal, but not to learn C/C++.
 * Why ```cd``` command is DECRAPTED? Because function used to change the directory - both ```ChDir()``` and ```SetCurrentDir()``` - are not working. They are used to change the directory ONLY in the current process - I mean the program which is running the function.
-* This is easier if we have a ```makefile``` here, but you can switch between directories and compile:
+* This is easier if we use ```makefile``` here, but you can switch between directories and compile:
 ```
 cd <command name>
 fpc <command name>.pas -Fu../rtl
@@ -48,20 +48,25 @@ fpc <command name>.pas -Fu../rtl
 cd ../<other dir> & fpc <command name>.pas -Fu../rtl 
 ```
 
+Even more, use make:
+```
+make <program name> / all / clean
+```
+
 And add it to PATH (if needed):
 ```
-cd .. # To project root folder
+cd .. # To project root folder, if you're not in it
 mkdir bin # Make a folder
 
 # Windows - copy .exe files
 cp */*.exe bin/ 
 
 # *NIX - the binary is the file which don't have a file extension
-cp */{echo,cat,cls,date,getvar,help,insert,mkdir,move,pwd,rename,touch} bin/
+cp */{echo,cat,cls,getvar,help,mkdir,move,pwd,rename,touch,rm} bin/
 
 # Set the PATH (temporary)
-set PATH=%PATH%;<path to .exe file> # Windows
-export PATH=$PATH:<path to .exe file> # *NIX
+set PATH=%PATH%;<path to .exe files> # Windows
+export PATH=$PATH:<path to binary files> # *NIX
 
 # Set the PATH permanently (*NIX with bash)
 echo 'export PATH=$PATH:<path to bin>' >> ~/.bashrc
@@ -77,7 +82,6 @@ But not at all commands are valid to use. Rename some programs here:
 * cls (*NIX)
 * mkdir 
 * date (but we can't use it now:))
-* cd
 * pwd (if you want, only for *NIX)
 * rm
 * touch (*NIX)
