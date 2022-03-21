@@ -1,6 +1,6 @@
 program chk_type;
 uses 
-    sysutils;
+    sysutils, warn;
 var
     n : integer;
 
@@ -8,9 +8,9 @@ procedure check_type(file_name : String);
 var
     value_type : longint;
 begin
-    if not FileExist(file_name) then
+    if not FileExists(file_name) then
     begin
-        missing_file(file_name);
+        writeln('File ', file_name, ' does not exist. Aborting.');
         halt(1);
     end
     else
