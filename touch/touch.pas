@@ -1,7 +1,7 @@
 program touch;
 
 uses 
-    {warn,} crt, {color,} 
+    warn, crt, color,
     sysutils, strutils;
 
 var 
@@ -26,16 +26,16 @@ begin
 end;
 
 begin
-    //if ParamCount = 0 then missing_file()
-    {else} if ParamCount > 1 then
+    if ParamCount = 0 then missing_file()
+    else if ParamCount > 1 then
     begin
         writeln('There are many arguments that we are detected here. Which one you want to create?');
         writeln('Note that --help flag is not available for this application.');
         for i := 1 to ParamCount do begin  
             writeln('Arg no.', i , ' : ', ParamStr(i));
         end;
-        //textgreen('Enter your answer here (all to use all): ');
-        write('Enter your answer here (all to use all args): ');
+        textgreen('Enter your answer here (all to use all): ');
+        //write('Enter your answer here (all to use all args): ');
         TextColor(White);
         read(ask);
         for i := 1 to ParamCount do begin// we use this loop only when we need it
