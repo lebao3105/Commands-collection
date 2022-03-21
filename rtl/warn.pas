@@ -4,7 +4,7 @@ Interface
 function missing_num():integer;
 function missing_argv():integer;
 function missing_file():integer;
-function help():integer;
+function help_prog():integer;
 function missing_dir():integer;
 Implementation
 uses
@@ -31,7 +31,7 @@ begin
     writeln('The program needs (one) more file(s) to start. Exitting...');
     delay(800);
 end;
-function help():integer;
+function help_prog():integer;
 begin
     writeln('You may want to use the help program or read the README.md file from the source code.');
     writeln('Link: https://github.com/lebao3105/Commands-collection');

@@ -1,4 +1,5 @@
 program printf;
+{$mode objFPC}
 uses 
      sysutils, crt, color, warn;
 var 
@@ -9,7 +10,7 @@ label
 	help;
 
 begin
-    if ParamCount = 0 then help()
+    if (ParamCount = 0) then help_prog()
 	else
 		if ParamCount >= 3 then begin
 		 if ParamStr(ParamCount) = '' then 
@@ -40,5 +41,5 @@ begin
 		 	writeln('File ', ParamStr(ParamCount), ' editted.'); exit;
 		 end; 
 	end;
-        if ParamStr(1) = 'help' then help();
+        if ParamStr(1) = 'help' then help_prog();
 end.

@@ -1,5 +1,4 @@
 program echo;
-//uses warn;
 
 var 
   i : integer;

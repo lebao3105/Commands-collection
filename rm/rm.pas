@@ -8,7 +8,7 @@ var
     value_type : longint;
 
 begin
-    if ParamCount = 0 then missing_file(); 
+    if ParamCount = 0 then missing_file() 
     else 
     for i := 1 to ParamCount do 
         value_type := FileGetAttr(ParamStr(i));

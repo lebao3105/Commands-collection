@@ -1,28 +1,28 @@
 program getvar;
 {$mode objFPC}
+
 uses
     Dos, crt, 
     sysutils, color;
 
-var i:longint;
-    n:integer;
+var i : longint;
+    n : integer;
 
 begin
   if ParamCount = 0 then  
       for i:=1 to EnvCount do
         WriteLn(EnvStr(i));
-      end;
 
   if ParamCount >=1 then begin
       for n :=1 to ParamCount do
-          GetOSEnv(ParamStr(n));
+          GetEnv(ParamStr(n));
 
       // but what if the user run this program on Linux with USERPROFILE?
       if ParamStr(n) = 'USERPROFILE' then 
         {$IFDEF WINDOWS}
-        GetOSEnv('USERPROFILE');
+        GetEnv('USERPROFILE');
         {$ELSE}
-        GetOSEnv('HOME');
+        GetEnv('HOME');
         {$ENDIF} 
         
       if ParamStr(n) = '--help' then

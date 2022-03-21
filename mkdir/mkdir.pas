@@ -6,10 +6,10 @@ var
     n : integer;
 
 begin
-    if ParamCount = 0 then missing_dir();
+    if ParamCount = 0 then missing_dir()
     else   
     for n := 1 to ParamCount do begin
-        if ParamStr(n) = '--help' then help()
+        if ParamStr(n) = '--help' then help_prog()
         else begin  
             If Not DirectoryExists(ParamStr(n)) then
                 If Not CreateDir (ParamStr(n)) Then begin

@@ -6,7 +6,9 @@ uses
 
 var
     i : integer;
+    s : TDateTime;
     n : longint;
+    item : QWord;
 
 begin
     if ParamCount = 0 then
@@ -17,8 +19,10 @@ begin
         for i := 1 to ParamCount do
         begin
             try
-                n := FileAge(ParamStr(i));
-                writeln('Result: File created on ', DateTimeToStr(FileDateToDateTime(n)));
+                item := ParamStr(i);
+                n := FileAge(item);
+                s := FileDateToDateTime(n);
+                writeln('Result: File created on ', DateTimeToStr(s));
             except
                 on E: EInOutError do
                     writeln('Error occured while reading file: ', E.Message);

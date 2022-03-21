@@ -1,6 +1,6 @@
 program chk_type;
 uses 
-    sysutils, warn;
+    sysutils;
 var
     n : integer;
 

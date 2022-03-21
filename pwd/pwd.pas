@@ -11,7 +11,7 @@ begin
         else if ParamStr(n) = '' then
             break
         else if ParamStr(n) = '--help' then
-            help();
+            help_prog();
     end;
         write(GetCurrentDir); // that's it
     exit;
