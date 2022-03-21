@@ -78,7 +78,7 @@ begin
     else if ParamStr(n) = 'rmdir' then begin
         writeln('rmdir Syntax: ');
         writeln('rmdir [folder name] : Remove folder name');
-    end;
+    end
     else if ParamStr(n) = 'dir' then begin
         writeln('dir Syntax: ');
         writeln('dir [folder name] : Show the content of [folder name]');
