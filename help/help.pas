@@ -66,7 +66,7 @@ begin
     else if ParamStr(n) = 'chk_type' then begin
         writeln('chk_type Syntax: ');
         writeln('chk_type [file name] : Check the file type of [file name]');
-    end;
+    end
     else if ParamStr(n) = 'cat' then begin
         writeln('cat Syntax: ');
         writeln('cat <filename> <-v/--verbose> : Prints the content of [file name]');
