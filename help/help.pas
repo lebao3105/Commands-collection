@@ -70,11 +70,11 @@ begin
     else if ParamStr(n) = 'cat' then begin
         writeln('cat Syntax: ');
         writeln('cat <filename> <-v/--verbose> : Prints the content of [file name]');
-    end;
+    end
     else if ParamStr(n) = 'rename' then begin
         writeln('rename Syntax: ');
         writeln('rename [old file name] [new file name] : Rename [old file name] to [new file name]');
-    end;
+    end
     else if ParamStr(n) = 'rmdir' then begin
         writeln('rmdir Syntax: ');
         writeln('rmdir [folder name] : Remove folder name');
@@ -82,19 +82,19 @@ begin
     else if ParamStr(n) = 'dir' then begin
         writeln('dir Syntax: ');
         writeln('dir [folder name] : Show the content of [folder name]');
-    end;
+    end
     else if ParamStr(n) = 'rm' then begin
         writeln('rm Syntax: ');
         writeln('rm [file name] : Remove [file name]');
-    end;
+    end
     else if ParamStr(n) = 'file_date' then begin
         writeln('file_date Syntax: ');
         writeln('file_date [file name] : Print the date of [file name]');
-    end;
+    end
     else if ParamStr(n) = 'file_size' then begin
         writeln('file_size Syntax: ');
         writeln('file_size [file name] : Print the size of [file name]');
-    end;
+    end
     else if ParamStr(n) = 'help' then begin
         writeln('help Syntax: ');
         writeln('help : Show this box and exit');
