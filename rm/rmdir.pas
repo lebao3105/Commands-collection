@@ -8,21 +8,23 @@ var
     i : integer;
 
 begin
-     if ParamCount = 0 then missing_dir()
-     else 
+    if ParamCount = 0 then missing_dir()
+    else 
         for i := 1 to ParamCount do
-            value_type := FileGetAttr(ParamStr(i));
-            if value_type <> -1 then
-                if (value_type and faDirectory) <> 0 then
-                  begin
-                    if (value_type and faReadOnly) <> 0 then
-                        writeln('The target folder is readonly.')
-                    else begin
-                        RmDir(ParamStr(i));
-                        writeln('Done.');
-                    end;   
-                  end
-                  else 
-                    writeln('This is not a directory. Exiting.');
+          value_type := FileGetAttr(ParamStr(i));
+        if value_type <> -1 then
+           if (value_type and faDirectory) <> 0 then
+            begin
+              if (value_type and faReadOnly) <> 0 then
+                writeln('The target folder is readonly.')
+              else for i := 1 to ParamCount do 
+              begin
+                RmDir(ParamStr(i));
+                writeln('Done.');
+              end;   
+            end
+           else 
+            writeln('This is not a directory. Exiting.');
+            halt(-1);
         end;
 end.
