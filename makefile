@@ -11,7 +11,8 @@ ifdef OS
 	move := move/move.exe
 	printf := printf/printf.exe
 	rename := rename/rename.exe
-	rm := rm/rm.exe
+	rm_item := rm/rm.exe
+	touch := touch/touch.exe
 else
 	ifeq ($(shell uname), Linux)
 		cat := cat/cat
@@ -25,7 +26,17 @@ else
 		move := move/move
 		printf := printf/printf
 		rename := rename/rename
-		rm := rm/rm
+		rm_item := rm/rm
+		touch := touch/touch
+	endif
+endif
+
+# Rm / del command
+ifdef OS
+	RM := rm 
+else
+	ifeq ($(shell uname), Linux)
+		RM := rm 
 	endif
 endif
 
@@ -33,7 +44,7 @@ endif
 include_path := rtl/
 
 # Targets
-.PHONY: all cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename rm rmdir
+.PHONY: all cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename $(RM) $(RM)dir
 cat: cat/cat.pas
 	fpc cat/cat.pas -o$(cat) -Fu$(include_path)
 
@@ -80,25 +91,18 @@ rename: rename/rename.pas
 	fpc rename/rename.pas -o$(rename) -Fu$(include_path)
 
 rm: rm/rm.pas
-	fpc rm/rm.pas -o$(rm) -Fu$(include_path)
+	fpc rm/rm.pas -o$(rm_item) -Fu$(include_path)
 
 rmdir: rm/rmdir.pas
 	echo This program is not working as expected. You cant use it now.
 
+touch: touch/touch.pas
+	fpc touch/touch.pas -o$(touch) -Fu$(include_path)
+
 # Build everything
-all: cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename rm rmdir
+all: cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename $(RM) $(RM)dir
 
 # Clean
-clean: $(cat) $(check_file_type) $(cls) $(date) $(echo) $(find_content) $(getvar) $(help) $(mkdir) $(move) $(printf) $(pwd) $(rename) $(rm) $(*/*.o)
-	ifdef OS
-		del -f $(cat) $(check_file_type) $(cls) $(date) $(echo) $(find_content) 
-		del -f $(getvar) $(help) $(mkdir) $(move) $(printf) $(pwd) $(rename) $(rm)
-		del -f $(*/*.o)
-	else
-		ifeq ($(sell uname), Linux)
-			rm -f $(cat) $(check_file_type) $(cls) $(date) $(echo) 
-			rm -f $(find_content) $(getvar) $(help) $(mkdir) $(move) $(printf) 
-			rm -f $(pwd) $(rename) $(rm)
-			rm $(*/*.o)
-		endif
-	endif
+clean:
+	$(RM) -f $(cat) $(check_file_type) $(cls) $(date) $(echo) $(find_content) $(*/*.o)
+	$(RM) -f $(getvar) $(help) $(mkdir) $(move) $(printf) $(pwd) $(rename) $(rm_item) $(touch)
