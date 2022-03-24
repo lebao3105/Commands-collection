@@ -4,7 +4,7 @@ This repository has these directory = commands:
 * cat                 : Write file content
 * cd                  : "Change" to a folder (not working now due to... DECRAPTED)
 * cls                 : Clear the screen
-* date                : Show and the time & date (error found!)
+* date                : Show and the time & date (something wrong...)
 * echo                : Just print text to screen
 * find_content        : Find content in a file (not working as expected at parsing arguments)
 * getvar              : Print variable (PATH, HOME, etc...)
@@ -81,7 +81,6 @@ But not at all commands are valid to use. Rename some programs here:
 * cat
 * cls (*NIX)
 * mkdir 
-* date (but we can't use it now:))
 * pwd (if you want, only for *NIX)
 * rm
 * touch (*NIX)
