@@ -32,11 +32,12 @@ else
 endif
 
 # Rm / del command
+RM := rm
 ifdef OS
-	RM := rm 
+	remove_sys := del
 else
 	ifeq ($(shell uname), Linux)
-		RM := rm 
+		remove_sys := rm 
 	endif
 endif
 
@@ -104,5 +105,5 @@ all: cat check_file_type cls date echo file_date find_content getvar help mkdir 
 
 # Clean
 clean:
-	$(RM) -f $(cat) $(check_file_type) $(cls) $(date) $(echo) $(find_content) $(*/*.o)
-	$(RM) -f $(getvar) $(help) $(mkdir) $(move) $(printf) $(pwd) $(rename) $(rm_item) $(touch)
+	$(remove_sys) -f $(cat) $(check_file_type) $(cls) $(date) $(echo) $(find_content) $(*/*.o)
+	$(remove_sys) -f $(getvar) $(help) $(mkdir) $(move) $(printf) $(pwd) $(rename) $(rm_item) $(touch)
