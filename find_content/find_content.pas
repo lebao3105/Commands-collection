@@ -68,7 +68,7 @@ begin
         res := searchfile(ParamStr(n+1), ParamStr(i));
         if res > 0 then 
             //writeln(ParamStr(i), ' found in line ', res, ' : ', rd)
-            writeln(ParamStr(i), ' found in the targetted file!');
+            writeln(ParamStr(i), ' found in the targetted file!')
         else
             writeln('Your wanted word(s) ', ParamStr(i), ' was not found.');
     end;
