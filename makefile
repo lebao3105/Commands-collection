@@ -62,12 +62,12 @@ echo: echo/echo.pas
 	fpc echo/echo.pas -o$(echo)
 
 file_date: file_date/file_date.pas
-	echo There are some problems that block us from compiling this program.
-	echo You cant use it now. Exiting.
+	@echo There are some problems in our code that block us from compiling this program.
+	@echo You cant use it now. Exiting.
 
 find_content: find_content/find_content.pas
-	echo This program is not working as expected. You should not use it now.
-	echo But by default, you can use it.
+	@echo This program is not working as expected. You should not use it now.
+	@echo But by default, you can use it.
 	fpc find_content/find_content.pas -o$(find_content)
 
 getvar: getvar/getvar.pas
@@ -95,7 +95,7 @@ rm: rm/rm.pas
 	fpc rm/rm.pas -o$(rm_item) -Fu$(include_path)
 
 rmdir: rm/rmdir.pas
-	echo This program is not working as expected. You cant use it now.
+	@echo This program is not working as expected. You cant use it now.
 
 touch: touch/touch.pas
 	fpc touch/touch.pas -o$(touch) -Fu$(include_path)
