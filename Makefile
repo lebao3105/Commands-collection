@@ -1,39 +1,39 @@
 # Program outputs
 ifdef OS
-	cat := cat/cat.exe
-	check_file_type := check_file_type/chk_type.exe
-	cls := cls/cls.exe
-	echo := echo/echo.exe
-	find_content := find_content/find_content.exe
-	getvar := getvar/getvar.exe
-	help := help/help.exe
-	mkdir := mkdir/mkdir.exe
-	move := move/move.exe
-	printf := printf/printf.exe
-	rename := rename/rename.exe
-	rm_item := rm/rm.exe
-	touch := touch/touch.exe
+	cat := build/cat.exe
+	check_file_type := build/chk_type.exe
+	cls := build/cls.exe
+	echo := build/echo.exe
+	find_content := build/find_content.exe
+	getvar := build/getvar.exe
+	help := build/help.exe
+	mkdir := build/mkdir.exe
+	move := build/move.exe
+	printf := build/printf.exe
+	rename := build/rename.exe
+	rm_item := build/rm.exe
+	touch := build/touch.exe
 else
 	ifeq ($(shell uname), Linux)
-		cat := cat/cat
-		check_file_type := check_file_type/chk_type
-		cls := cls/cls
-		echo := echo/echo
-		find_content := find_content/find_content
-		getvar := getvar/getvar
-		help := help/help
-		mkdir := mkdir/mkdir
-		move := move/move
-		printf := printf/printf
-		rename := rename/rename
-		rm_item := rm/rm
-		touch := touch/touch
+		cat := build/cat
+		check_file_type := build/chk_type
+		cls := build/cls
+		echo := build/echo
+		find_content := build/find_content
+		getvar := build/getvar
+		help := build/help
+		mkdir := build/mkdir
+		move := build/move
+		printf := build/printf
+		rename := build/rename
+		rm_item := build/rm
+		touch := build/touch
 	endif
 endif
 
 # Included units and installation path (not /usr/bin!) in Linux
 include_path := rtl/
-PATH := $(HOME)/bin
+PATH := $(HOME)/.local/bin
 
 # Targets
 .PHONY: all cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename $(RM) $(RM)dir install
@@ -93,26 +93,37 @@ touch: touch/touch.pas
 
 # Build everything
 build_all: cat check_file_type cls date echo find_content getvar help mkdir move printf rename $(RM) 
+	mv -rf build $(PATH)
 
 # Uninstall
 uninstall:
 	ifdef OS
-		rm -rf %USERPROFILE%\bin
-		@echo Uninstallation now should be completed. Remove %USERPROFILE%\bin from Environment Variables window.
+		rm -f %USERPROFILE%\.cmds_collection\bin
+		@echo The uninstallation now should be completed. Remove %USERPROFILE%\bin from Environment Variables window.
 	else
 		ifeq  ($(shell uname), Linux)
 			rm -rf ~/bin
 			bash export $PATH_TEMP=$(PATH)
 			sed -i 's/$PATH_TEMP/''/g' ~/.bashrc
 			source ~/.bashrc
-			@echo Uninstallation now should be completed.
+			@echo The uninstallation now should be completed.
 		endif
 	endif
 	
 # Even install
-install: build_all uninstall
 
+## This will install our programs to $HOME/.local/bin, which is set in $(PATH) (NOT system's path) variable.
+## Also add $(PATH) to the $PATH (here's the system's one) by print a line to ~/.bashrc
+install: build_all uninstall
+	cp -r build $(PATH)
+	@echo Done.
+
+## This target will install entrie Commands-Collection project to /usr/bin folder.
+## Of course we will need to use 'sudo'.
+install_systemwide: build_all uninstall
+	cp -r build /usr/bin
+	@echo Done.
+	
 # Clean
 clean:
-	rm -f $(cat) $(check_file_type) $(cls) $(date) $(echo) $(find_content) $(*/*.o)
-	rm -f $(getvar) $(help) $(mkdir) $(move) $(printf) $(pwd) $(rename) $(rm_item) $(touch)
+	rm -rf build 
