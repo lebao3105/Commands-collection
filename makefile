@@ -31,21 +31,12 @@ else
 	endif
 endif
 
-# Rm / del command
-RM := rm
-ifdef OS
-	remove_sys := del
-else
-	ifeq ($(shell uname), Linux)
-		remove_sys := rm 
-	endif
-endif
-
-# Included units
+# Included units and installation path (not /usr/bin!) in Linux
 include_path := rtl/
+PATH := $(HOME)/bin
 
 # Targets
-.PHONY: all cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename $(RM) $(RM)dir
+.PHONY: all cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename $(RM) $(RM)dir install
 cat: cat/cat.pas
 	fpc cat/cat.pas -o$(cat) -Fu$(include_path)
 
@@ -63,7 +54,7 @@ echo: echo/echo.pas
 
 file_date: file_date/file_date.pas
 	@echo There are some problems in our code that block us from compiling this program.
-	@echo You cant use it now. Exiting.
+	@echo You cant use it now. 
 
 find_content: find_content/find_content.pas
 	@echo This program is not working as expected. You should not use it now.
@@ -101,9 +92,27 @@ touch: touch/touch.pas
 	fpc touch/touch.pas -o$(touch) -Fu$(include_path)
 
 # Build everything
-all: cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename $(RM) $(RM)dir
+build_all: cat check_file_type cls date echo find_content getvar help mkdir move printf rename $(RM) 
+
+# Uninstall
+uninstall:
+	ifdef OS
+		rm -rf %USERPROFILE%\bin
+		@echo Uninstallation now should be completed. Remove %USERPROFILE%\bin from Environment Variables window.
+	else
+		ifeq  ($(shell uname), Linux)
+			rm -rf ~/bin
+			bash export $PATH_TEMP=$(PATH)
+			sed -i 's/$PATH_TEMP/''/g' ~/.bashrc
+			source ~/.bashrc
+			@echo Uninstallation now should be completed.
+		endif
+	endif
+	
+# Even install
+install: build_all uninstall
 
 # Clean
 clean:
-	$(remove_sys) -f $(cat) $(check_file_type) $(cls) $(date) $(echo) $(find_content) $(*/*.o)
-	$(remove_sys) -f $(getvar) $(help) $(mkdir) $(move) $(printf) $(pwd) $(rename) $(rm_item) $(touch)
+	rm -f $(cat) $(check_file_type) $(cls) $(date) $(echo) $(find_content) $(*/*.o)
+	rm -f $(getvar) $(help) $(mkdir) $(move) $(printf) $(pwd) $(rename) $(rm_item) $(touch)
