@@ -17,8 +17,8 @@ jobs:
     - name: Install compiler
       run: sudo apt update && sudo apt install fpc -y
       
-    - name: all
-      run: make all
+    - name: build_all
+      run: make build_all
       
     - name: clean
       run: make clean
