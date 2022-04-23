@@ -36,7 +36,7 @@ include_path := rtl/
 PATH := $(HOME)/.local/bin
 
 # Targets
-.PHONY: all cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename $(RM) $(RM)dir install
+.PHONY: build_all cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename $(RM) $(RM)dir install install_systemwide uninstall clean
 cat: cat/cat.pas
 	fpc cat/cat.pas -o$(cat) -Fu$(include_path)
 
