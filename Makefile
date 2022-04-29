@@ -93,7 +93,7 @@ touch: touch/touch.pas
 
 # Build everything
 build_all: clean init cat check_file_type cls date echo find_content getvar help mkdir move printf rename $(RM) 
-	mv -rf build $(PATH_TEMPO)
+	mv -f build $(PATH_TEMPO)
 
 # Uninstall
 uninstall:
