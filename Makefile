@@ -36,7 +36,7 @@ include_path := rtl/
 PATH_TEMPO := $(HOME)/.local/bin
 
 # Targets
-.PHONY: build_all cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename $(RM) $(RM)dir install install_systemwide uninstall clean
+.PHONY: build_all init cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename $(RM) $(RM)dir install install_systemwide uninstall clean
 cat: cat/cat.pas
 	fpc cat/cat.pas -o$(cat) -Fu$(include_path)
 
@@ -92,8 +92,8 @@ touch: touch/touch.pas
 	fpc touch/touch.pas -o$(touch) -Fu$(include_path)
 
 # Build everything
-build_all: cat check_file_type cls date echo find_content getvar help mkdir move printf rename $(RM) 
-	mv -rf build $(PATH)
+build_all: clean init cat check_file_type cls date echo find_content getvar help mkdir move printf rename $(RM) 
+	mv -rf build $(PATH_TEMPO)
 
 # Uninstall
 uninstall:
@@ -127,3 +127,7 @@ install_systemwide: build_all uninstall
 # Clean
 clean:
 	rm -rf build 
+
+# Initialize
+init:
+	mkdir build
