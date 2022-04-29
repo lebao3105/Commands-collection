@@ -33,7 +33,7 @@ endif
 
 # Included units and installation path (not /usr/bin!) in Linux
 include_path := rtl/
-PATH := $(HOME)/.local/bin
+PATH_TEMPO := $(HOME)/.local/bin
 
 # Targets
 .PHONY: build_all cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename $(RM) $(RM)dir install install_systemwide uninstall clean
@@ -103,7 +103,7 @@ uninstall:
 	else
 		ifeq  ($(shell uname), Linux)
 			rm -rf ~/bin
-			bash export $PATH_TEMP=$(PATH)
+			bash export $PATH_TEMP=$(PATH_TEMPO)
 			sed -i 's/$PATH_TEMP/''/g' ~/.bashrc
 			source ~/.bashrc
 			@echo The uninstallation now should be completed.
@@ -115,7 +115,7 @@ uninstall:
 ## This will install our programs to $HOME/.local/bin, which is set in $(PATH) (NOT system's path) variable.
 ## Also add $(PATH) to the $PATH (here's the system's one) by print a line to ~/.bashrc
 install: build_all uninstall
-	cp -r build $(PATH)
+	cp -r build $(PATH_TEMPO)
 	@echo Done.
 
 ## This target will install entrie Commands-Collection project to /usr/bin folder.
