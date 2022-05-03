@@ -35,6 +35,13 @@ endif
 include_path := rtl/
 PATH_TEMPO := $(HOME)/.local/bin
 
+# Find rm/del on the system
+ifdef OS
+	rm_sys := del
+else
+	rm _sys := rm
+endif
+
 # Targets
 .PHONY: build_all init cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename $(RM) $(RM)dir install install_systemwide uninstall clean
 cat: cat/cat.pas
@@ -98,11 +105,11 @@ build_all: clean init cat check_file_type cls date echo find_content getvar help
 # Uninstall
 uninstall:
 	ifdef OS
-		rm -f %USERPROFILE%\.cmds_collection\bin
+		$(rm_sys) -f %USERPROFILE%\.cmds_collection\bin
 		@echo The uninstallation now should be completed. Remove %USERPROFILE%\bin from Environment Variables window.
 	else
 		ifeq  ($(shell uname), Linux)
-			rm -rf ~/bin
+			$(rm_sys) -rf ~/bin
 			bash export $PATH_TEMP=$(PATH_TEMPO)
 			sed -i 's/$PATH_TEMP/''/g' ~/.bashrc
 			source ~/.bashrc
@@ -126,8 +133,11 @@ install_systemwide: build_all uninstall
 	
 # Clean
 clean:
-	rm -rf build 
+	$(rm_sys) -rf build 
 
 # Initialize
 init:
-	mkdir build
+	mkdir build 
+	ifndef OS
+		mkdir $(PATH_TEMPO)
+	endif
