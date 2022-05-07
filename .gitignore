@@ -12,3 +12,5 @@ rename/test2
 */*.o
 */*.ppu
 */test*
+build/
+obj_out/
