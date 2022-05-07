@@ -36,6 +36,13 @@ endif
 # Included units
 include_path := rtl/
 
+# Find rm/del on the system
+ifdef OS
+	rm_sys := del
+else
+	rm _sys := rm
+endif
+
 # Targets
 .PHONY: build_all init cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename $(RM) $(RM)dir clean
 cat: init cat/cat.pas
