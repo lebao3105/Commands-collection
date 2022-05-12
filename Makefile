@@ -40,7 +40,7 @@ include_path := rtl/
 ifdef OS
 	rm_sys := del
 else
-	rm _sys := rm
+	rm_sys := rm
 endif
 
 # Targets
