@@ -103,15 +103,17 @@ touch: init touch/touch.pas
 build_all: clean init cat check_file_type cls date echo find_content getvar help mkdir move printf rename $(RM)  
 	mv -f build/*.o $(build_obj)
 	mv -f $(build_obj) .
-#mv -f $(progs) $(build_progs)
+	mv -f build/* progs
+	mv -f progs build
 	mv -f obj_out $(build_obj)
 
 # Clean
 clean:
-	rm -rf build obj_out
+	rm -rf build obj_out progs
 
 # Initialize
 init:
 	mkdir build
+	mkdir progs
 	mkdir $(build_obj)
 	mkdir $(build_progs)

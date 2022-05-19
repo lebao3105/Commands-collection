@@ -14,3 +14,4 @@ rename/test2
 */test*
 build/
 obj_out/
+.vscode/
