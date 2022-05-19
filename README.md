@@ -2,9 +2,9 @@
 A collection of various system commands in Pascal <br>
 This repository has these directory = commands:
 * cat                 : Write file content
-* cd                  : "Change" to a folder (not working now due to... DECRAPTED)
+* cd                  : "Change" to a folder (DECRAPTED)
 * cls                 : Clear the screen
-* date                : Show and the time & date (something wrong...)
+* date                : Show and the time & date (something went wrong... here)
 * echo                : Just print text to screen
 * find_content        : Find content in a file (not working as expected at parsing arguments)
 * getvar              : Print variable (PATH, HOME, etc...)
@@ -16,14 +16,8 @@ This repository has these directory = commands:
 * rename              : Rename file
 * touch               : Create file
 
-Some programs should be here now:
-* get file date/time : Get file created date/time
-* get file size      : Get file size
-* get disk space
-And more...
-
 ## Compiling
-To compile the project, use:
+To compile the projectany program, use:
 ```
 cd <command name>
 fpc <command name>.pas
@@ -31,56 +25,31 @@ fpc <command name>.pas
 
 Make the file executable (*NIX):
 ```
-chmod +x <command name>
+chmod +x ./<command name>
 ```
 
-If the compiler says 'warn not found', you need to specify ```-Fu../rtl/``` option. Make sure you have included fpc path (points to fpc.exe program) in the PATH.
+Even more, use ```make```:
+```
+make <program name> / build_all / clean
+```
+
+If the compiler says 'warn not found' or something else similar , you need to specify ```-Fu../rtl/``` option.
 
 ## What to know
 * You should not install this project to your computer - replace original commands. Not of all commands are working as expected.
 * You can use this project to learn Pascal, but not to learn C/C++.
 * Why ```cd``` command is DECRAPTED? Because function used to change the directory - both ```ChDir()``` and ```SetCurrentDir()``` - are not working. They are used to change the directory ONLY in the current process - I mean the program which is running the function.
-* This is easier if we use ```makefile``` here, but you can switch between directories and compile:
-```
-cd <command name>
-fpc <command name>.pas -Fu../rtl
-# When needed, go to other dir(s) and compile
-cd ../<other dir> & fpc <command name>.pas -Fu../rtl 
-```
 
-Even more, use make:
-```
-make <program name> / all / clean
-```
 
-And add it to PATH (if needed):
-```
-cd .. # To project root folder, if you're not in it
-mkdir bin # Make a folder
 
-# Windows - copy .exe files
-cp */*.exe bin/ 
+> **Useful tips:** If you want to use this project more than once, you can add build/progs folder to the PATH. Run ```make build_all``` (if not already done) then modify ~/.bashrc (Bash) or add the folder to PATH in Environment Variables (Windows). But not all programs are valid to use on your system. Rename some programs here:
 
-# *NIX - the binary is the file which don't have a file extension
-cp */{echo,cat,cls,getvar,help,mkdir,move,pwd,rename,touch,rm} bin/
-
-# Set the PATH (temporary)
-set PATH=%PATH%;<path to .exe files> # Windows
-export PATH=$PATH:<path to binary files> # *NIX
-
-# Set the PATH permanently (*NIX with bash)
-echo 'export PATH=$PATH:<path to bin>' >> ~/.bashrc
-source ~/.bashrc
-
-# Windows
-Open windows search -> type and search for env -> Launch first search result -> Environment Variables -> User/System PATH -> Add -> Browse -> Head to the bin folder -> OK to apply. Reopen any Command window to get the changes. 
-```
-
-But not at all commands are valid to use. Rename some programs here:
 * echo 
 * cat
-* cls (*NIX)
+* cls (only on Windows
 * mkdir 
-* pwd (if you want, only for *NIX)
-* rm
-* touch (*NIX)
+* pwd (if you want, only on *NIX)
+* rm (only on *NIX)
+* touch (only on *NIX)
+
+Note that if you use MSYS/MinGW and add it to PATH on Windows, rename all needed programs.
