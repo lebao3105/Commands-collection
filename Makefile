@@ -96,11 +96,11 @@ touch: init touch/touch.pas
 	fpc touch/touch.pas -o$(touch) -Fu$(include_path)
 
 # Build everything
-build_all: clean init cat check_file_type cls date echo find_content getvar help mkdir move printf rename $(RM)  
+build_all: init cat check_file_type cls date echo find_content getvar help mkdir move printf rename $(RM)  
 	mv -f build/*.o build/*.ppu $(build_obj)
 	mv -f $(build_obj) .
-	mv -f build/* progs
-	mv -f progs build
+# Solution from Mereghost - StackOverflow
+	find build/ -maxdepth 1 -type f -exec mv -f {} $(build_progs) \;
 	mv -f obj_out $(build_obj)
 
 # Clean
@@ -110,6 +110,5 @@ clean:
 # Initialize
 init: clean
 	mkdir build
-	mkdir progs
 	mkdir $(build_obj)
 	mkdir $(build_progs)
