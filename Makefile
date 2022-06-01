@@ -97,7 +97,7 @@ touch: init touch/touch.pas
 
 # Build everything
 build_all: clean init cat check_file_type cls date echo find_content getvar help mkdir move printf rename $(RM)  
-	mv -f build/*.o $(build_obj)
+	mv -f build/*.o build/*.ppu $(build_obj)
 	mv -f $(build_obj) .
 	mv -f build/* progs
 	mv -f progs build
