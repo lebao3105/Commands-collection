@@ -54,9 +54,6 @@ check_file_type: init check_file_type/chk_type.pas
 cls: init cls/cls.pas
 	fpc cls/cls.pas -o$(cls)
 
-date: init date/date.pas
-	echo This program is not working as expected. You cant use it now.
-
 echo: init echo/echo.pas
 	fpc echo/echo.pas -o$(echo)
 
