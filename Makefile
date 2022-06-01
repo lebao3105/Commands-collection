@@ -62,8 +62,7 @@ file_date: init file_date/file_date.pas
 	@echo You cant use it now. 
 
 find_content: init find_content/find_content.pas
-	@echo This program is not working as expected. You should not use it now.
-	@echo But by default, you can use it.
+	@echo This program is weird a bit here, but you can use it.
 	fpc find_content/find_content.pas -o$(find_content)
 
 getvar: init getvar/getvar.pas
@@ -109,7 +108,7 @@ clean:
 	rm -rf build obj_out progs
 
 # Initialize
-init:
+init: clean
 	mkdir build
 	mkdir progs
 	mkdir $(build_obj)
