@@ -1,4 +1,5 @@
-{ Working not as expected on showing results }
+{ This program only can be used to verify if 
+the target word is found on the file. }
 program find_content;
 uses Sysutils;
 var 
@@ -7,6 +8,7 @@ var
     p : byte;
     n,i:integer;
     target_file:TextFile;
+    checker : boolean;
 
 procedure upstring (var s : string);
 begin
@@ -65,11 +67,18 @@ begin
             end
         else 
         for i := 1 to n - 1 do
-        res := searchfile(ParamStr(n+1), ParamStr(i));
+            res := searchfile(ParamStr(n+1), ParamStr(i));
+        
         if res > 0 then 
-            //writeln(ParamStr(i), ' found in line ', res, ' : ', rd)
-            writeln(ParamStr(i), ' found in the targetted file!')
+            checker := true
+            //writeln(ParamStr(i), ' found in the targetted file!')
         else
-            writeln('Your wanted word(s) ', ParamStr(i), ' was not found.');
+            checker := false;
+
+        if checker = false then
+            writeln('Your wanted word(s) ', ParamStr(i), ' was not found.')
+        else
+            writeln(ParamStr(i), ' found in line ', res, ' : ', rd);
+            exit;
     end;
 end.
