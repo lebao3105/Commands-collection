@@ -1,10 +1,11 @@
 ## Commands-collection
 A collection of various system commands in Pascal <br>
-This repository has these directory = commands:
+This repository has these directories = commands:
 * cat                 : Write file content
 * cd                  : "Change" to a folder (DECRAPTED)
 * cls                 : Clear the screen
 * date                : Show and the time & date (DECRAPTED)
+* dir                 : Show folder content (not completed)
 * echo                : Just print text to screen
 * find_content        : Find content in a file (not working as expected at parsing arguments)
 * getvar              : Print variable (PATH, HOME, etc...)
@@ -17,18 +18,13 @@ This repository has these directory = commands:
 * touch               : Create file
 
 ## Compiling
-To compile the a (any) program, do:
+To compile a/any program, do:
 ```
 cd <command name>
 fpc <command name>.pas
 ```
 
-Make the file executable (*NIX):
-```
-chmod +x ./<command name>
-```
-
-Even more, use ```make```:
+Or, use ```make```:
 ```
 make <program name>
 ```
