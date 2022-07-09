@@ -24,12 +24,12 @@ begin
                 with f do
                     writeln(Name:40, Size:15);
             until FindNext(f) <> 0;
-            textgreen('Found ', l , 'items in ', dir, ' directory.');
+            textgreen('Found '+ l + 'items in '+ dir+ ' directory.');
             exit(0);
         end
         
         else begin
-            textred('Unable to open directory ', dir, 'yet.');
+            textred('Unable to open directory '+ dir+ 'yet.');
             TextColor(White);
             exit(1);
         end;
