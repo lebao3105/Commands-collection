@@ -4,6 +4,7 @@ ifdef OS
 	check_file_type := build/chk_type.exe
 	cls := build/cls.exe
 	echo := build/echo.exe
+	dir := build/dir.exe
 	find_content := build/find_content.exe
 	getvar := build/getvar.exe
 	help := build/help.exe
@@ -19,6 +20,7 @@ else
 	cat := build/cat
 	check_file_type := build/chk_type
 	cls := build/cls
+	dir := build/dir
 	echo := build/echo
 	find_content := build/find_content
 	getvar := build/getvar
@@ -44,7 +46,7 @@ else
 endif
 
 # Targets
-.PHONY: build_all init cat check_file_type cls date echo file_date find_content getvar help mkdir move printf rename $(RM) $(RM)dir clean
+.PHONY: build_all init cat check_file_type cls dir echo file_date find_content getvar help mkdir move printf rename $(RM) $(RM)dir clean
 cat: init cat/cat.pas
 	fpc cat/cat.pas -o$(cat) -Fu$(include_path)
 
@@ -53,6 +55,9 @@ check_file_type: init check_file_type/chk_type.pas
 
 cls: init cls/cls.pas
 	fpc cls/cls.pas -o$(cls)
+
+dir: init dir/dir.pas dir/listing.pas
+	fpc dir/dir.pas -Fu$(include_path) -o$(dir)
 
 echo: init echo/echo.pas
 	fpc echo/echo.pas -o$(echo)
@@ -96,7 +101,7 @@ touch: init touch/touch.pas
 	fpc touch/touch.pas -o$(touch) -Fu$(include_path)
 
 # Build everything
-build_all: init cat check_file_type cls date echo find_content getvar help mkdir move printf rename $(RM)  
+build_all: init cat check_file_type cls dir echo find_content getvar help mkdir move printf rename $(RM)  
 	mv -f build/*.o build/*.ppu $(build_obj)
 	mv -f $(build_obj) .
 # Solution from Mereghost - StackOverflow
