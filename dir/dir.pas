@@ -10,13 +10,16 @@ begin
   begin
     writeln('Usage: dir [directory]');
     missing_argv();
-    exit(1);
-  end;
+    halt(1);
+  end
   
-  if ParamCount > 1 then
+  else if ParamCount > 1 then
   begin
       for i := 1 to ParamCount do
         dir_prog('begin', ParamStr(i));
         listitems(ParamStr(i));
-  end;
+  end
+
+  else listitems(ParamStr(1));
+
 end.
