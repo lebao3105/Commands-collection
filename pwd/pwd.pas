@@ -13,6 +13,6 @@ begin
         else if ParamStr(n) = '--help' then
             help_prog();
     end;
-        write(GetCurrentDir); // that's it
+        writeln(GetCurrentDir); // that's it
     exit;
 end.
