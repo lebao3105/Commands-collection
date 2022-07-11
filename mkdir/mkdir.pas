@@ -16,7 +16,7 @@ begin
                     textred('Failed to create directory !');
                     exit; end
                 else begin
-                    Write('Directory ', ParamStr(n), ' created.');
+                    writeln('Directory ', ParamStr(n), ' created.');
                     exit; 
                 end
             else begin
