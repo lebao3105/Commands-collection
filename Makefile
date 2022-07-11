@@ -11,6 +11,7 @@ ifdef OS
 	mkdir := build/mkdir.exe
 	move := build/move.exe
 	printf := build/printf.exe
+	pwd := build/pwd.exe
 	rename := build/rename.exe
 	rm_item := build/rm.exe
 	touch := build/touch.exe
@@ -28,6 +29,7 @@ else
 	mkdir := build/mkdir
 	move := build/move
 	printf := build/printf
+	pwd := build/pwd
 	rename := build/rename
 	rm_item := build/rm
 	touch := build/touch
