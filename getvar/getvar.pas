@@ -15,7 +15,7 @@ begin
 
   if ParamCount >=1 then begin
       for n :=1 to ParamCount do
-          GetEnv(ParamStr(n));
+          writeln(GetEnv(ParamStr(n)));
 
       // but what if the user run this program on Linux with USERPROFILE?
       if ParamStr(n) = 'USERPROFILE' then 
