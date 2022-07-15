@@ -103,9 +103,11 @@ touch: init touch/touch.pas
 build_all: init cat check_file_type cls dir echo find_content getvar mkdir move printf rename $(RM)  
 	mv -f build/*.o build/*.ppu $(build_obj)
 	mv -f $(build_obj) .
+	ifndef OS
 # Solution from Mereghost - StackOverflow
 	find build/ -maxdepth 1 -type f -exec mv -f {} $(build_progs) \;
 	mv -f obj_out $(build_obj)
+	endif
 
 # Clean
 clean:
