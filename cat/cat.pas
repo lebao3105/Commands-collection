@@ -56,7 +56,7 @@ begin
           then
           begin
               for k := 1 to ParamCount do
-                if k <> i then 
+                while k <> i do
                 begin
                     cat_prog('begin', ParamStr(k));
                     reader(ParamStr(k));
