@@ -48,7 +48,7 @@ else
 endif
 
 # Targets
-.PHONY: build_all init cat check_file_type cls dir echo file_date find_content getvar help mkdir move printf rename $(RM) $(RM)dir clean
+.PHONY: build_all init cat check_file_type cls dir echo file_date find_content getvar mkdir move printf rename $(RM) $(RM)dir clean
 cat: init cat/cat.pas
 	fpc cat/cat.pas -o$(cat) -Fu$(include_path)
 
@@ -75,9 +75,6 @@ find_content: init find_content/find_content.pas
 getvar: init getvar/getvar.pas
 	fpc getvar/getvar.pas -o$(getvar) -Fu$(include_path)
 
-help: init help/help.pas
-	fpc help/help.pas -o$(help)
-
 mkdir: init mkdir/mkdir.pas
 	fpc mkdir/mkdir.pas -o$(mkdir) -Fu$(include_path)
 
@@ -103,7 +100,7 @@ touch: init touch/touch.pas
 	fpc touch/touch.pas -o$(touch) -Fu$(include_path)
 
 # Build everything
-build_all: init cat check_file_type cls dir echo find_content getvar help mkdir move printf rename $(RM)  
+build_all: init cat check_file_type cls dir echo find_content getvar mkdir move printf rename $(RM)  
 	mv -f build/*.o build/*.ppu $(build_obj)
 	mv -f $(build_obj) .
 # Solution from Mereghost - StackOverflow
