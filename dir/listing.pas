@@ -2,9 +2,8 @@ unit listing;
 Interface
 uses
     sysutils,
-    warn,
-    color,
-    crt;
+    warn, crt,
+    color;
     
 var
     f: TSearchRec;
@@ -17,6 +16,11 @@ Implementation
 
 procedure listitems(dir:string);
 begin
+    {$ifdef WINDOWS}
+    if (dir = '/') or (dir = '\') then
+	Insert('C:', dir, 1);
+    //writeln(dir);
+    {$endif}
     if DirectoryExists(dir) then
     begin
         if FindFirst(dir + '/*', faAnyFile and (not faHidden), f) = 0 then
@@ -40,7 +44,7 @@ begin
         end
         
         else begin
-            textred('Unable to open directory '+ dir+ 'yet.');
+            textred('Unable to open directory '+ dir+ '!');
             TextColor(White);
             halt(1);
         end;
