@@ -10,7 +10,7 @@ label
 	help;
 
 begin
-    if (ParamCount = 0) then help_prog()
+    if (ParamCount = 0) then missing_argv()
 	else
 		if ParamCount >= 3 then begin
 		 if ParamStr(ParamCount) = '' then 
@@ -33,7 +33,7 @@ begin
 		    	CloseFile(target);
 		 except
 		 	on E: EInOutError do begin
-		 		writeln('Error(s) occured while we editting the file.');
+		 		writeln('Error(s) occured while we edit the file.');
 		 		write('Details: ');writeln(E.Message);
 				CloseFile(target);
 			end;
@@ -41,5 +41,4 @@ begin
 		 	writeln('File ', ParamStr(ParamCount), ' editted.'); exit;
 		 end; 
 	end;
-        if ParamStr(1) = 'help' then help_prog();
 end.
