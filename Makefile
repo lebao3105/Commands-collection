@@ -49,7 +49,7 @@ endif
 
 # Targets
 .PHONY: build_all init cat check_file_type cls dir echo \
-getvar mkdir move printf rename $(RM) $(RM)dir clean
+getvar mkdir printf rename $(RM) $(RM)dir clean
 cat: init cat/cat.pas
 	fpc cat/cat.pas -o$(cat) -Fu$(include_path)
 
@@ -72,9 +72,6 @@ getvar: init getvar/getvar.pas
 mkdir: init mkdir/mkdir.pas
 	fpc mkdir/mkdir.pas -o$(mkdir) -Fu$(include_path)
 
-move: init move/move.pas
-	fpc move/move.pas -o$(move)
-
 printf: init printf/printf.pas
 	fpc printf/printf.pas -o$(printf) -Fu$(include_path)
 
@@ -94,7 +91,7 @@ touch: init touch/touch.pas
 	fpc touch/touch.pas -o$(touch) -Fu$(include_path)
 
 # Build everything
-build_all: clean init cat check_file_type cls dir echo getvar mkdir move printf rename $(RM)  
+build_all: clean init cat check_file_type cls dir echo getvar mkdir printf rename $(RM)  
 	mv -f build/*.o build/*.ppu $(build_obj)
 ifdef OS
 	mv build/*.exe $(build_progs)

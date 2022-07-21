@@ -19,19 +19,16 @@ begin
 
       // but what if the user run this program on Linux with USERPROFILE?
       if ParamStr(n) = 'USERPROFILE' then 
-        {$IFDEF WINDOWS}
-        GetEnv('USERPROFILE');
-        {$ELSE}
+        {$IFDEF UNIX}
         GetEnv('HOME');
         {$ENDIF} 
         
       if ParamStr(n) = '--help' then
       begin
-          textgreenln('getvar version 1.0');
-          TextColor(White);
-          WriteLn('Use getvar with anything you want to get its value.');
+          writeLn('Use getvar with anything you want to get its value.');
           writeln('If you run this application without any arguments, getvar will');
           writeln('list all available variables.');
+          writeln('On UNIX, you can use USERPROFILE variable!');
       end;
   end;
 end.

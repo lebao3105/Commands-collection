@@ -9,7 +9,7 @@ This repository has these directories = commands:
 * getvar              : Print variable (PATH, HOME, etc...)
 * help                : Show the description of all commands hare, like this file - but it's removed too
 * mkdir               : Create a directory
-* move                : Move a file / folder (?).
+* move                : Move a file / folder (?-Removed).
 * printf              : Write something to file (work but not good as excepted)
 * pwd                 : Show the current directory 
 * rename              : Rename file
