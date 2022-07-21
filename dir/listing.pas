@@ -23,13 +23,16 @@ begin
     {$endif}
     if DirectoryExists(dir) then
     begin
-        if FindFirst(dir + '/*', faAnyFile and (not faHidden), f) = 0 then
+        if FindFirst(dir + '/*', faAnyFile and faDirectory and (not faHidden), f) = 0 then
         begin
             repeat
                 Inc(l);  
                 with f do
                 begin
-                    writeln(Name:20, Size:15);
+                    if Size = 0 then
+                        writeln(Name:20, '<Dir>':15)
+                    else
+                        writeln(Name:20, Size:15);
                 end;
             until FindNext(f) <> 0;
             FindClose(f);
