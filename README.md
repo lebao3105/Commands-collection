@@ -2,20 +2,21 @@
 A collection of various system commands in Pascal <br>
 This repository has these directories = commands:
 * cat                 : Write file content
-* cd                  : "Change" to a folder (DECRAPTED)
 * cls                 : Clear the screen
-* date                : Show and the time & date (DECRAPTED)
-* dir                 : Show folder content (not completed)
+* dir                 : Show folder content
 * echo                : Just print text to screen
-* find_content        : Find content in a file (not working as expected at parsing arguments)
+* find_content        : Find content in a file (REMOVED)
 * getvar              : Print variable (PATH, HOME, etc...)
-* help                : Show the description of all commands hare, like this file :)
+* help                : Show the description of all commands hare, like this file - but it's removed too
 * mkdir               : Create a directory
 * move                : Move a file / folder (?).
-* printf              : Write something to file (work but not so good)
+* printf              : Write something to file (work but not good as excepted)
 * pwd                 : Show the current directory 
 * rename              : Rename file
 * touch               : Create file
+* rmdir               : Remove folder - but I have compile problem on RMDir function
+
+echo, cls and pwd are 3 simplest programs.
 
 ## Compiling
 To compile a/any program, do:

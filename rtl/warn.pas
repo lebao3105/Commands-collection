@@ -4,7 +4,6 @@ Interface
 procedure missing_num();
 procedure missing_argv();
 procedure missing_file();
-procedure help_prog();
 procedure missing_dir();
 procedure not_a_dir(dir:string);
 Implementation
@@ -30,13 +29,6 @@ begin
     textred('Fatal: ');
     TextColor(White);
     writeln('The program needs (one) more file(s) to start. Exitting...');
-    delay(800);
-end;
-procedure help_prog();
-begin
-    writeln('You may want to use the help program or read the README.md file from the source code.');
-    writeln('Link: https://github.com/lebao3105/Commands-collection');
-    writeln('Exitting...');
     delay(800);
 end;
 procedure missing_dir();

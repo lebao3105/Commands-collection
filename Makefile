@@ -48,7 +48,8 @@ else
 endif
 
 # Targets
-.PHONY: build_all init cat check_file_type cls dir echo find_content getvar mkdir move printf rename $(RM) $(RM)dir clean
+.PHONY: build_all init cat check_file_type cls dir echo \
+getvar mkdir move printf rename $(RM) $(RM)dir clean
 cat: init cat/cat.pas
 	fpc cat/cat.pas -o$(cat) -Fu$(include_path)
 
@@ -56,6 +57,7 @@ check_file_type: init check_file_type/chk_type.pas
 	fpc check_file_type/chk_type.pas -o$(check_file_type) -Fu$(include_path)
 
 cls: init cls/cls.pas
+	@echo Warning: this program only clear the current "window" - try to scroll up.
 	fpc cls/cls.pas -o$(cls)
 
 dir: init dir/dir.pas dir/listing.pas
@@ -63,10 +65,6 @@ dir: init dir/dir.pas dir/listing.pas
 
 echo: init echo/echo.pas
 	fpc echo/echo.pas -o$(echo)
-
-find_content: init find_content/find_content.pas
-	@echo This program is weird a bit here, but you can use it.
-	fpc find_content/find_content.pas -o$(find_content)
 
 getvar: init getvar/getvar.pas
 	fpc getvar/getvar.pas -o$(getvar) -Fu$(include_path)
@@ -96,7 +94,7 @@ touch: init touch/touch.pas
 	fpc touch/touch.pas -o$(touch) -Fu$(include_path)
 
 # Build everything
-build_all: clean init cat check_file_type cls dir echo find_content getvar mkdir move printf rename $(RM)  
+build_all: clean init cat check_file_type cls dir echo getvar mkdir move printf rename $(RM)  
 	mv -f build/*.o build/*.ppu $(build_obj)
 ifdef OS
 	mv build/*.exe $(build_progs)
