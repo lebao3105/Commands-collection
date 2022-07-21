@@ -100,14 +100,16 @@ touch: init touch/touch.pas
 	fpc touch/touch.pas -o$(touch) -Fu$(include_path)
 
 # Build everything
-build_all: init cat check_file_type cls dir echo find_content getvar mkdir move printf rename $(RM)  
+build_all: clean init cat check_file_type cls dir echo find_content getvar mkdir move printf rename $(RM)  
 	mv -f build/*.o build/*.ppu $(build_obj)
+ifdef OS
+	mv build/*.exe $(build_progs)
+else
 	mv -f $(build_obj) .
-	ifndef OS
 # Solution from Mereghost - StackOverflow
-	find build/ -maxdepth 1 -type f -exec mv -f {} $(build_progs) \;
-	mv -f obj_out $(build_obj)
-	endif
+	find build/ -maxdepth 1 -type f -exec mv -f {} $(build_progs)
+	mv -f obj_out build/
+endif
 
 # Clean
 clean:
