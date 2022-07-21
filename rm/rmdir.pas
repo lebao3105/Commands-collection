@@ -1,30 +1,38 @@
 program rmdir;
 
 uses
-    sysutils, warn;
+	sysutils, warn, color, crt;
 
 var 
-    value_type: longint;
-    i : integer;
+		value_type: longint;
+		i : integer;
 
 begin
-    if ParamCount = 0 then missing_dir()
-    else 
-        for i := 1 to ParamCount do
-          value_type := FileGetAttr(ParamStr(i));
-        if value_type <> -1 then
-           if (value_type and faDirectory) <> 0 then
-            begin
-              if (value_type and faReadOnly) <> 0 then
-                writeln('The target folder is readonly.')
-              else for i := 1 to ParamCount do 
-              begin
-                RmDir(ParamStr(i));
-                writeln('Done.');
-              end;   
-            end
-           else 
-            writeln('This is not a directory. Exiting.');
-            halt(-1);
-        end;
+		if ParamCount = 0 then missing_dir()
+		else 
+			for i := 1 to ParamCount do begin
+				if not DirectoryExists(ParamStr(i))
+				then begin
+					// there may be many non-exist folders,
+					// so we can't use not_a_dir function
+					textredln('Directory not found or is not a directory: '+ ParamStr(i));
+					TextColor(LightGray);
+					halt(-1);
+				end
+
+				else begin
+					value_type := FileGetAttr(ParamStr(i));
+					while value_type <> -1 do begin
+						if (value_type and faReadOnly) <> 0 then begin
+							writeln('Target folder ' + ParamStr(i) + ' is read only.');
+							halt(1);
+						end
+						else begin
+							RmDir(ParamStr(i));
+							writeln('Done.');
+							halt(0);
+						end;
+					end;
+				end;
+			end;
 end.

@@ -48,7 +48,7 @@ else
 endif
 
 # Targets
-.PHONY: build_all init cat check_file_type cls dir echo file_date find_content getvar mkdir move printf rename $(RM) $(RM)dir clean
+.PHONY: build_all init cat check_file_type cls dir echo find_content getvar mkdir move printf rename $(RM) $(RM)dir clean
 cat: init cat/cat.pas
 	fpc cat/cat.pas -o$(cat) -Fu$(include_path)
 
@@ -63,10 +63,6 @@ dir: init dir/dir.pas dir/listing.pas
 
 echo: init echo/echo.pas
 	fpc echo/echo.pas -o$(echo)
-
-file_date: init file_date/file_date.pas
-	@echo There are some problems in our code that block us from compiling this program.
-	@echo You cant use it now. 
 
 find_content: init find_content/find_content.pas
 	@echo This program is weird a bit here, but you can use it.
