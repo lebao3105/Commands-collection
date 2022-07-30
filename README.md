@@ -2,7 +2,6 @@
 A collection of various system commands in Pascal <br>
 This repository has these directories = commands:
 * cat                 : Write file content
-* cls                 : Clear the screen
 * dir                 : Show folder content
 * echo                : Just print text to screen
 * find_content        : Find content in a file (REMOVED)
