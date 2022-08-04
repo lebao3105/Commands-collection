@@ -1,4 +1,6 @@
 ## Commands-collection
+[![Makefile CI](https://github.com/lebao3105/Commands-collection/actions/workflows/makefile.yml/badge.svg)](https://github.com/lebao3105/Commands-collection/actions/workflows/makefile.yml)
+
 A collection of various system commands in Pascal <br>
 This repository has these directories = commands:
 * cat                 : Write file content
@@ -23,6 +25,7 @@ To compile a/any program, do:
 cd <command name>
 fpc <command name>.pas
 ```
+In some projects you will need to use ```-Fu../rtl```.
 
 Or, use ```make```:
 ```
@@ -35,5 +38,4 @@ make build_all
 ```
 
 Clean: ```make clean```
-
-If the compiler says 'warn not found' or something else similar , you need to specify ```-Fu../rtl/``` option.
+.
