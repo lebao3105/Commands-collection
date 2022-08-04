@@ -16,13 +16,17 @@ begin
        getFileName := true
     else
         textredln('File '+filepath+' not found! Exiting.');
+        TextColor(LightGray);
+	getFileName := false;
         halt(-1);
 end;
 
 function reader(filepath : string): boolean;
+var checkResult: boolean;
 begin
-  if (getFileName(filepath) = true) then begin
-    assign(tfIn, filepath);
+  checkResult := getFileName(filepath);
+  if (checkResult = true) then begin
+    assignFile(tfIn, filepath);
     try
       reset(tfIn);
       while not eof(tfIn) do
@@ -49,18 +53,19 @@ begin
       TextColor(LightGray);
       writeln(' cat [file] [-v/--verbose] ...');
       halt(1);
-  end else if ParamCount = 1 then reader(ParamStr(1))
+  end
   else
     begin
       for i := 1 to ParamCount do
-          if (ParamStr(i) = '-v') and (ParamStr(i) = '--verbose') 
+          if (ParamStr(i) = '-v') or (ParamStr(i) = '--verbose') 
           then
           begin
               for k := 1 to ParamCount do
-                while k <> i do
+                if k <> i then
                 begin
                     cat_prog('begin', ParamStr(k));
                     reader(ParamStr(k));
+		    cat_prog('end', ParamStr(k));
                 end;
           end else reader(ParamStr(i));
     end;
