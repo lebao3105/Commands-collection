@@ -29,10 +29,12 @@ begin
                 Inc(l);  
                 with f do
                 begin
-                    if Size = 0 then
-                        writeln(Name:20, '<Dir>':15)
+                    if (Attr and faDirectory) = faDirectory then
+                        writeln(Name:20, '<Dir>':15, Size:20)
+                    else if (Attr and faSymLink) = faSymLink then
+                        writeln(Name:20, '<SymLink>':15, Size:20)
                     else
-                        writeln(Name:20, Size:15);
+                        writeln(Name:20, '':15, Size:20);
                 end;
             until FindNext(f) <> 0;
             FindClose(f);
@@ -41,14 +43,14 @@ begin
             else
             	directory := dir;
             textgreenln('Found '+ IntToStr(l) + ' items in '+ directory+ ' directory.');
-            TextColor(White);
+            TextColor(LightGray);
             writeln('Done!');
             halt(0);
         end
         
         else begin
             textred('Unable to open directory '+ dir+ '!');
-            TextColor(White);
+            TextColor(LightGray);
             halt(1);
         end;
     end
