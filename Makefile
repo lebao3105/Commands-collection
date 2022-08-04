@@ -2,14 +2,11 @@
 ifdef OS
 	cat := build/cat.exe
 	check_file_type := build/chk_type.exe
-	cls := build/cls.exe
 	echo := build/echo.exe
 	dir := build/dir.exe
 	find_content := build/find_content.exe
 	getvar := build/getvar.exe
-	help := build/help.exe
 	mkdir := build/mkdir.exe
-	move := build/move.exe
 	printf := build/printf.exe
 	pwd := build/pwd.exe
 	rename := build/rename.exe
@@ -20,14 +17,11 @@ ifdef OS
 else
 	cat := build/cat
 	check_file_type := build/chk_type
-	cls := build/cls
 	dir := build/dir
 	echo := build/echo
 	find_content := build/find_content
 	getvar := build/getvar
-	help := build/help
 	mkdir := build/mkdir
-	move := build/move
 	printf := build/printf
 	pwd := build/pwd
 	rename := build/rename
@@ -48,8 +42,6 @@ else
 endif
 
 # Targets
-.PHONY: build_all init cat check_file_type dir echo \
-getvar mkdir printf rename $(RM) $(RM)dir clean
 cat: init cat/cat.pas
 	fpc cat/cat.pas -o$(cat) -Fu$(include_path)
 
