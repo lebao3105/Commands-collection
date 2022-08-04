@@ -48,17 +48,13 @@ else
 endif
 
 # Targets
-.PHONY: build_all init cat check_file_type cls dir echo \
+.PHONY: build_all init cat check_file_type dir echo \
 getvar mkdir printf rename $(RM) $(RM)dir clean
 cat: init cat/cat.pas
 	fpc cat/cat.pas -o$(cat) -Fu$(include_path)
 
 check_file_type: init check_file_type/chk_type.pas
 	fpc check_file_type/chk_type.pas -o$(check_file_type) -Fu$(include_path)
-
-cls: init cls/cls.pas
-	@echo Warning: this program only clear the current "window" - try to scroll up.
-	fpc cls/cls.pas -o$(cls)
 
 dir: init dir/dir.pas dir/listing.pas
 	fpc dir/dir.pas -Fu$(include_path) -o$(dir)
@@ -91,7 +87,7 @@ touch: init touch/touch.pas
 	fpc touch/touch.pas -o$(touch) -Fu$(include_path)
 
 # Build everything
-build_all: clean init cat check_file_type cls dir echo getvar mkdir printf rename $(RM)  
+build_all: clean init cat check_file_type dir echo getvar mkdir printf rename $(RM)  
 	mv -f build/*.o build/*.ppu $(build_obj)
 ifdef OS
 	mv build/*.exe $(build_progs)

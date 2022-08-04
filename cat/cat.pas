@@ -21,7 +21,7 @@ end;
 
 function reader(filepath : string): boolean;
 begin
-    getFileName(filepath);
+  if (getFileName(filepath) = true) then begin
     assign(tfIn, filepath);
     try
       reset(tfIn);
@@ -39,6 +39,7 @@ begin
         halt(-1);
       end;
     end;
+  end;
 end;
 
 begin
