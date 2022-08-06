@@ -1,9 +1,6 @@
 program pwd;
 uses 
-    sysutils, warn;
-var 
-    n : integer;
-
+    sysutils;
 begin
     writeln(GetCurrentDir); 
 end.
