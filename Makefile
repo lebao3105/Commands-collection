@@ -7,6 +7,7 @@ ifdef OS
 	find_content := build/find_content.exe
 	getvar := build/getvar.exe
 	mkdir := build/mkdir.exe
+	presskey := build/presskey.exe
 	printf := build/printf.exe
 	pwd := build/pwd.exe
 	rename := build/rename.exe
@@ -22,6 +23,7 @@ else
 	find_content := build/find_content
 	getvar := build/getvar
 	mkdir := build/mkdir
+	presskey := build/presskey
 	printf := build/printf
 	pwd := build/pwd
 	rename := build/rename
@@ -60,6 +62,9 @@ getvar: init getvar/getvar.pas
 mkdir: init mkdir/mkdir.pas
 	fpc mkdir/mkdir.pas -o$(mkdir) -Fu$(include_path)
 
+presskey: init presskey/presskey.pas
+	fpc presskey/presskey.pas -o$(presskey) -Fu$(include_path)
+
 printf: init printf/printf.pas
 	fpc printf/printf.pas -o$(printf) -Fu$(include_path)
 
@@ -79,13 +84,13 @@ touch: init touch/touch.pas
 	fpc touch/touch.pas -o$(touch) -Fu$(include_path)
 
 # Build everything
-build_all: clean init cat check_file_type dir echo getvar mkdir printf rename rm
+build_all: clean init cat check_file_type dir echo getvar mkdir presskey printf rename rm
 	mv -f build/*.o build/*.ppu $(build_obj)
 ifdef OS
 	mv build/*.exe $(build_progs)
 else
 	mv -f $(build_obj) .
-# Solution from Mereghost - StackOverflow
+# Solution from Mereghost (StackOverflow)
 	find build/ -maxdepth 1 -type f -exec mv -f {} $(build_progs) \;
 	mv -f obj_out build/
 endif
