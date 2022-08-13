@@ -18,7 +18,7 @@ begin
                 exit; 
             end
         else begin
-            textred('Fatal: '); TextColor(White); 
+            textred('Fatal: '); TextColor(LightGray); 
             writeln('Directory ', ParamStr(n), 'exists!');
         end;
     end;

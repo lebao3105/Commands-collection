@@ -36,7 +36,7 @@ begin
         end;
         textgreen('Enter your answer here (all to use all): ');
         //write('Enter your answer here (all to use all args): ');
-        TextColor(White);
+        TextColor(LightGray);
         read(ask);
         for i := 1 to ParamCount do begin// we use this loop only when we need it
             check_ask(ask, IntToStr(i)); // to avoid other crazy loops

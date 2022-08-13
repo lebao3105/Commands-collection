@@ -13,35 +13,35 @@ uses
 procedure missing_num();
 begin
     textred('Fatal: ');
-    TextColor(White);
+    TextColor(LightGray);
     writeln('You are missing number(s) to do this action. Exitting...');
     delay(800);
 end;
 procedure missing_argv();
 begin
     textred('Error: ');
-    TextColor(White);
+    TextColor(LightGray);
     writeln('You are missing (an) argument(s) for the application. Exitting...');
     delay(800);
 end;
 procedure missing_file();
 begin
     textred('Fatal: ');
-    TextColor(White);
+    TextColor(LightGray);
     writeln('The program needs (one) more file(s) to start. Exitting...');
     delay(800);
 end;
 procedure missing_dir();
 begin
     textred('Fatal: ');
-    TextColor(White);
+    TextColor(LightGray);
     writeln('Missing directory(_ies) for the program. Exitting...');
     delay(800);
 end;
 procedure not_a_dir(dir:string);
 begin
     textred('Error occured: ');
-    TextColor(White);
+    TextColor(LightGray);
     writeln('Target item ', dir, ' is not exist, or is not a directory yet.');
     writeln('Check your input and try again.');
     delay(800);
