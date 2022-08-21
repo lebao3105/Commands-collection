@@ -3,7 +3,7 @@
 
 A collection of various system commands in Pascal <br>
 This repository has these directories = commands:
-* cat                 : Write file content
+* cat                 : Write file content (but now it doesn't work, who knows?)
 * dir                 : Show folder content
 * echo                : Just print text to screen
 * find_content        : Find content in a file (REMOVED)
@@ -25,17 +25,16 @@ To compile a/any program, do:
 cd <command name>
 fpc <command name>.pas
 ```
-In some projects you will need to use ```-Fu../rtl```.
+In some projects you will need to pass ```-Fu../rtl```.
 
 Or, use ```make```:
 ```
 make <program name>
 ```
 
-To build all programs. you can use the command below - outputs will be placed in build/ :
+To build all programs. you can use the command below - outputs will be placed in ```build/``` :
 ```
 make build_all
 ```
 
 Clean: ```make clean```
-.

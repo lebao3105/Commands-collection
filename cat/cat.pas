@@ -17,7 +17,7 @@ begin
     else
         textredln('File '+filepath+' not found! Exiting.');
         TextColor(LightGray);
-	getFileName := false;
+		getFileName := false;
         halt(-1);
 end;
 
@@ -27,13 +27,12 @@ begin
   checkResult := getFileName(filepath);
   if (checkResult = true) then begin
     assignFile(tfIn, filepath);
+	reset(tfIn);
     try
-      reset(tfIn);
-      while not eof(tfIn) do
-      begin
-        readln(tfIn, s);
-        writeln(s);
-      end;
+      while not eof(tfIn) do begin
+		readln(tfIn, s);
+		writeln(s);
+	  end;
       CloseFile(tfIn);
     except
       on E: EInOutError do
@@ -51,22 +50,10 @@ begin
   begin
       textred('Usage:');
       TextColor(LightGray);
-      writeln(' cat [file] [-v/--verbose] ...');
+      writeln(' cat [file]...');
       halt(1);
   end
   else
-    begin
-      for i := 1 to ParamCount do
-          if (ParamStr(i) = '-v') or (ParamStr(i) = '--verbose') 
-          then
-          begin
-              for k := 1 to ParamCount do
-                if k <> i then
-                begin
-                    cat_prog('begin', ParamStr(k));
-                    reader(ParamStr(k));
-		    cat_prog('end', ParamStr(k));
-                end;
-          end else reader(ParamStr(i));
-    end;
+    for i := 1 to ParamCount do
+        reader(ParamStr(i));
 end.
