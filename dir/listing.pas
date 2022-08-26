@@ -30,7 +30,7 @@ begin
                 with f do
                 begin
                     if (Attr and faDirectory) = faDirectory then
-                        writeln(Name:20, '<Dir>':15, Size:20)
+                        writeln(Name:20, '<Dir>':15, 'Uncountable':20) // don't use Size here
                     else if (Attr and faSymLink) = faSymLink then
                         writeln(Name:20, '<SymLink>':15, Size:20)
                     else
@@ -38,10 +38,12 @@ begin
                 end;
             until FindNext(f) <> 0;
             FindClose(f);
+
             if dir = '.' then
             	directory := 'this'
             else
             	directory := dir;
+            
             textgreenln('Found '+ IntToStr(l) + ' items in '+ directory+ ' directory.');
             TextColor(LightGray);
             writeln('Done!');

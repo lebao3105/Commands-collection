@@ -6,7 +6,8 @@ uses
 var i: integer;
 
 begin
-	
+	writeln('Please note that we can''t count the size of directories.');
+	writeln('Also this can not find and list hidden items.');
 	if ParamCount = 0 then
 		listitems('.')
   	else if ParamCount > 1 then
