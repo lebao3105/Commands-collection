@@ -10,7 +10,13 @@ label
 	help;
 
 begin
-    if (ParamCount = 0) then missing_argv()
+    if (ParamCount < 3) then begin
+		writeln('Usage: printf [string] --target [file]');
+		writeln('Append texts to a file.');
+		writeln('The file must be exist, or the program will throw error.');
+		missing_argv();
+		halt(1);
+	end
 	else
 		if ParamCount >= 3 then begin
 		 if ParamStr(ParamCount) = '' then 

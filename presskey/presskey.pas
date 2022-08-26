@@ -7,7 +7,7 @@ uses
 var
     i : integer;
 
-// These functions are the same work, they still have some differents
+// These functions do the same work, they still are different
 procedure defaultfn;
 begin
     writeln('Press any key to continue...');
@@ -55,7 +55,6 @@ begin
                 writeln('This is a demostration with no other parameters passed:');
                 defaultfn;
             end;
-
         end;
     end;
 end.

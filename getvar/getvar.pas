@@ -3,7 +3,7 @@ program getvar;
 
 uses
     Dos, crt, 
-    sysutils, color;
+    sysutils, color, strutils;
 
 var i : longint;
     n : integer;
@@ -24,20 +24,20 @@ begin
       if ParamStr(n) = 'USERPROFILE' then
         writeln(GetEnv('HOME'));
       {$ENDIF} 
-        
-       if ParamStr(n) = '--help' then
-       begin
-          writeLn('Use getvar with anything you want to get its value.');
-          writeln('If you run this application without any arguments, getvar will');
-          writeln('list all available variables.');
-          writeln('On UNIX, you can use USERPROFILE variable!');
-          writeln('Examples:');
-          writeln(ParamStr(0) , ' windir will return C:\Windows on Windows.');
-          writeln(ParamStr(0), ' path will return the system''s path.');
-       end
 
-       else
-         writeln(GetEnv(ParamStr(n)));
+      if ParamStr(n) = '--help' then
+      begin
+        writeLn('Use getvar with anything you want to get its value.');
+        writeln('If you run this application without any arguments, getvar will');
+        writeln('list all available variables.');
+        writeln('On UNIX, you can use USERPROFILE variable!');
+        writeln('Examples:');
+        writeln(ParamStr(0) , ' windir will return C:\Windows on Windows.');
+        writeln(ParamStr(0), ' path will return the system''s path.');
+      end
+
+      else
+        writeln(GetEnv(ParamStr(n)));
     end;
   halt(0);
 end.
