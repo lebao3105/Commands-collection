@@ -10,13 +10,15 @@ label
 	help;
 
 begin
-    if (ParamCount < 3) then begin
+	help: begin
 		writeln('Usage: printf [string] --target [file]');
 		writeln('Append texts to a file.');
 		writeln('The file must be exist, or the program will throw error.');
 		missing_argv();
 		halt(1);
-	end
+	end;
+
+    if (ParamCount < 3) then goto help
 	else
 		if ParamCount >= 3 then begin
 		 if ParamStr(ParamCount) = '' then 
@@ -24,12 +26,11 @@ begin
 				missing_file(); 
 				exit; 
 			end
-         else 
-		 	 if (ParamStr(ParamCount) = '--target') then 
-			  	begin 
-				  	missing_file(); 
-				  	exit; 
-				end
+         else if (ParamStr(ParamCount) = '--target') then 
+			begin 
+				missing_file(); 
+			  	exit; 
+			end
 		 else begin 
 		 AssignFile(target, ParamStr(ParamCount));
 		 try 
