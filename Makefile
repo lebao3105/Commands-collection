@@ -34,7 +34,7 @@ else
 endif
 
 # Included units
-include_path := rtl/
+include_path := include/
 
 # Find rm/del on the system
 ifdef OS

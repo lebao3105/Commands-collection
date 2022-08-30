@@ -17,7 +17,7 @@ This repository has these directories = commands:
 * touch               : Create file
 * rmdir               : Remove folder - but I have compile problem on RMDir function
 
-echo, cls and pwd are 3 simplest programs.
+echo and pwd are 2 simplest programs here.
 
 ## Compiling
 To compile a/any program, do:
