@@ -9,7 +9,7 @@ var
 	tfIn: TextFile;
 	s: string;
 	file_content: string;
-	i, k: integer;
+	i: integer;
 
 label
 	check, readfile;
@@ -33,7 +33,6 @@ begin
 
 	check: begin
 		if FileExists(s) then begin
-			cat_prog(s, 'begin');
 			goto readfile;
 		end
 		else begin
@@ -54,7 +53,6 @@ begin
 				writeln(file_content);
 			end;
 			CloseFile(tfIn);
-			cat_prog(s, 'end');
 		except
 			on E: EInOutError do begin
 				textredln('Error occured while reading file '+s+': '+E.Message);
