@@ -44,43 +44,40 @@ else
 endif
 
 # Targets
-cat: init cat/cat.pas
+cat: init_ cat/cat.pas
 	fpc cat/cat.pas -o$(cat) -Fu$(include_path)
 
-check_file_type: init check_file_type/chk_type.pas
+check_file_type: init_ check_file_type/chk_type.pas
 	fpc check_file_type/chk_type.pas -o$(check_file_type) -Fu$(include_path)
 
-dir: init dir/dir.pas dir/listing.pas
+dir: init_ dir/dir.pas dir/listing.pas
 	fpc dir/dir.pas -Fu$(include_path) -o$(dir)
 
-echo: init echo/echo.pas
+echo: init_ echo/echo.pas
 	fpc echo/echo.pas -o$(echo)
 
-getvar: init getvar/getvar.pas
+getvar: init_ getvar/getvar.pas
 	fpc getvar/getvar.pas -o$(getvar) -Fu$(include_path)
 
-mkdir: init mkdir/mkdir.pas
+mkdir: init_ mkdir/mkdir.pas
 	fpc mkdir/mkdir.pas -o$(mkdir) -Fu$(include_path)
 
-presskey: init presskey/presskey.pas
+presskey: init_ presskey/presskey.pas
 	fpc presskey/presskey.pas -o$(presskey) -Fu$(include_path)
 
-printf: init printf/printf.pas
+printf: init_ printf/printf.pas
 	fpc printf/printf.pas -o$(printf) -Fu$(include_path)
 
-pwd: init pwd/pwd.pas
+pwd: init_ pwd/pwd.pas
 	fpc pwd/pwd.pas -o$(pwd) -Fu$(include_path)
 
-rename: init rename/rename.pas
+rename: init_ rename/rename.pas
 	fpc rename/rename.pas -o$(rename) -Fu$(include_path)
 
-rm: init rm/rm.pas
+rm: init_ rm/rm.pas
 	fpc rm/rm.pas -o$(rm_item) -Fu$(include_path)
 
-rmdir: init rm/rmdir.pas
-	@echo This program is not working as expected. You cant use it now.
-
-touch: init touch/touch.pas
+touch: init_ touch/touch.pas
 	fpc touch/touch.pas -o$(touch) -Fu$(include_path)
 
 # Build everything
@@ -93,6 +90,12 @@ else
 # Solution from Mereghost (StackOverflow)
 	find build/ -maxdepth 1 -type f -exec mv -f {} $(build_progs) \;
 	mv -f obj_out build/
+endif
+
+init_:
+ifeq ($(do_clean), yes)
+	$(MAKE) clean
+	$(MAKE) init
 endif
 
 # Clean

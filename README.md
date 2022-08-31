@@ -31,10 +31,21 @@ Or, use ```make```:
 ```
 make <program name>
 ```
+If you want to clean all your build outputs which are in build/ folder, do:
+```
+make clean
+```
+Or build something after cleaning:
+```
+* *Nix OSes
+$ do_clean=yes make <target>
+* Windows
+> make <target> do_clean=yes
+```
 
-To build all programs. you can use the command below - outputs will be placed in ```build/``` :
+To build all programs:
 ```
 make build_all
 ```
 
-Clean: ```make clean```
+All outputs will be placed in build/ folder.
