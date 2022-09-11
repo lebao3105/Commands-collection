@@ -3,8 +3,9 @@
 
 A collection of various system commands in Pascal <br>
 This repository has these directories = commands:
-* cat                 : Write file content (but now it doesn't work, who knows?)
+* cat                 : Write file content
 * dir                 : Show folder content
+* calltime            : Print the current system time
 * echo                : Just print text to screen
 * find_content        : Find content in a file (REMOVED)
 * getvar              : Print variable (PATH, HOME, etc...)

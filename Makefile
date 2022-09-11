@@ -2,6 +2,7 @@
 ifdef OS
 	cat := build/cat.exe
 	check_file_type := build/chk_type.exe
+	calltime := build/calltime.exe
 	echo := build/echo.exe
 	dir := build/dir.exe
 	find_content := build/find_content.exe
@@ -18,6 +19,7 @@ ifdef OS
 else
 	cat := build/cat
 	check_file_type := build/chk_type
+	calltime := build/calltime
 	dir := build/dir
 	echo := build/echo
 	find_content := build/find_content
@@ -50,6 +52,9 @@ cat: init_ cat/cat.pas
 check_file_type: init_ check_file_type/chk_type.pas
 	fpc check_file_type/chk_type.pas -o$(check_file_type) -Fu$(include_path)
 
+calltime: init_ calltime/calltime.pas
+	fpc calltime/calltime.pas -o$(calltime)
+
 dir: init_ dir/dir.pas dir/listing.pas
 	fpc dir/dir.pas -Fu$(include_path) -o$(dir)
 
@@ -81,7 +86,7 @@ touch: init_ touch/touch.pas
 	fpc touch/touch.pas -o$(touch) -Fu$(include_path)
 
 # Build everything
-build_all: clean init cat check_file_type dir echo getvar mkdir presskey printf rename rm
+build_all: clean init cat check_file_type calltime dir echo getvar mkdir presskey printf rename rm
 	mv -f build/*.o build/*.ppu $(build_obj)
 ifdef OS
 	mv build/*.exe $(build_progs)
