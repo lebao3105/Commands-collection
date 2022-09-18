@@ -6,6 +6,7 @@ This repository has these directories = commands:
 * cat                 : Write file content
 * dir                 : Show folder content
 * calltime            : Print the current system time
+* calldate            : Same as calltime, but with date
 * echo                : Just print text to screen
 * find_content        : Find content in a file (REMOVED)
 * getvar              : Print variable (PATH, HOME, etc...)
