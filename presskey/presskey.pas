@@ -3,7 +3,6 @@ program presskey;
 // Helpful on UNIX OSes.
 uses
     crt, warn, color;
-
 var
     i : integer;
 
