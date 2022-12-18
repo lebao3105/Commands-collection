@@ -14,7 +14,7 @@ begin
         WriteLn(EnvStr(i));
     textgreen('Done ');
     TextColor(LightGray);
-    writeln('showing ALL defined variables on the system. Use --help parameter to see examples.');
+    writeln('showing ALL defined variables on the system.');
   end;
 
   if ParamCount >= 1 then
