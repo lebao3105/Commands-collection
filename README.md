@@ -10,6 +10,7 @@ This repository has these directories = commands:
 * echo                : Just print text to screen
 * getvar              : Print variable (PATH, HOME, etc...)
 * mkdir               : Create a directory
+* presskey            : Pascal version of Windows's pause program
 * printf              : Write something to file (work but not good as excepted)
 * pwd                 : Show the current directory 
 * rename              : Rename file
