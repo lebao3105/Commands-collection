@@ -25,17 +25,17 @@ cd <command name>
 fpc <command name>.pas
 # or
 fpc <command name>/<command name>.pas
+# with make
+make <command name>
 ```
-In some projects you will need to pass ```-Fu../rtl```.
+> If you don't use, some projects you will need to pass ```-Fu<source code root>/include``` to fpc.
+> To identify what project you need to
 
-Or, use ```make```:
-```
-make <program name>
-```
 If you want to clean all your build outputs which are in build/ folder, do:
 ```
 make clean
 ```
+
 Or do clean before the build:
 ```
 * bash
