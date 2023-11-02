@@ -61,4 +61,4 @@ All outputs will be placed in build/ folder.
 * Fix tabs show (remember to change FP/Lazarus settings or don't use any of them again friend!)
 * No crt (it can break outputs)
 * And even create an installer? Cool btw
-* Fix Makefile
+* ~Fix Makefile~ (completed)
