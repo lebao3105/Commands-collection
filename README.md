@@ -1,7 +1,10 @@
 ## Commands-collection
 Build status: [![Makefile CI](https://github.com/lebao3105/Commands-collection/actions/workflows/makefile.yml/badge.svg)](https://github.com/lebao3105/Commands-collection/actions/workflows/makefile.yml)
 
-A collection of various system commands in Pascal <br>
+A collection of system commands in Pascal, using FreePascal's library.
+
+Can use in normal life, but for basic stuff. Or better say, this is mostly for education.
+
 This repository has these directories = commands:
 * cat                 : Write file content
 * dir                 : Show folder content
@@ -19,7 +22,9 @@ This repository has these directories = commands:
 echo and pwd are 2 simplest programs here.
 
 ## Compiling
+
 To compile a/any program, do:
+
 ```
 cd <command name>
 fpc <command name>.pas
@@ -28,25 +33,32 @@ fpc <command name>/<command name>.pas
 # with make
 make <command name>
 ```
-> If you don't use, some projects you will need to pass ```-Fu<source code root>/include``` to fpc.
-> To identify what project you need to
 
-If you want to clean all your build outputs which are in build/ folder, do:
-```
-make clean
-```
+> Some projects will ask you pass ```-Fu<source code root>/include``` to fpc.
+> To identify what project you can check [Makefile](Makefile), or the source code of the program where you can look for the included unit in the uses section. The self-made units are placed in [include/](include/).
 
-Or do clean before the build:
+Or clean before building anything:
 ```
 * bash
 $ do_clean=yes make <target>
 * Windows
 > make <target> do_clean=yes
+* Or just do clean, let me do something else first
+make clean
 ```
 
 To build all programs:
 ```
-make build_all
+make all
 ```
 
 All outputs will be placed in build/ folder.
+
+## TODOs
+
+* Use TCustomApplication class
+* [Probably I won't pass it lol] Learn more about OSes and yeah, my own system.pas etc (like a real OS being written in Pascal)
+* Fix tabs show (remember to change FP/Lazarus settings or don't use any of them again friend!)
+* No crt (it can break outputs)
+* And even create an installer? Cool btw
+* Fix Makefile
