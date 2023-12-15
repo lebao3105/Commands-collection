@@ -34,7 +34,7 @@ fpc <command name>/<command name>.pas
 make <command name>
 ```
 
-> Some projects will ask you pass ```-Fu<source code root>/include``` to fpc.
+> Some projects will ask you to pass ```-Fu<source code root>/include``` to fpc.
 > To identify what project you can check [Makefile](Makefile), or the source code of the program where you can look for the included unit in the uses section. The self-made units are placed in [include/](include/).
 
 Or clean before building anything:
@@ -58,7 +58,7 @@ All outputs will be placed in build/ folder.
 
 * Use TCustomApplication class
 * [Probably I won't pass it lol] Learn more about OSes and yeah, my own system.pas etc (like a real OS being written in Pascal)
-* Fix tabs show (remember to change FP/Lazarus settings or don't use any of them again friend!)
+* Fix indentation (done)
 * No crt (it can break outputs)
 * And even create an installer? Cool btw
 * ~Fix Makefile~ (completed)
