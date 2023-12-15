@@ -36,5 +36,4 @@ begin
                 writeln('Use /no_hsec to disable showing the hundredth of a second');
             end;
     end;
-    halt(0);
 end.
