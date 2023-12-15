@@ -16,11 +16,13 @@ Implementation
 
 procedure listitems(dir:string);
 begin
-    {$ifdef WINDOWS}
-    if (dir = '/') or (dir = '\') then
-	Insert('C:', dir, 1);
-    //writeln(dir);
-    {$endif}
+    // {$ifdef win32}
+    // if (dir = '/') or (dir = '\') then
+	// Insert('C:', dir, 1);
+    // //writeln(dir);
+    // {$endif}
+    writeln(dir);
+    dir := ExtractFileDir(dir);
     if DirectoryExists(dir) then
     begin
         if FindFirst(dir + '/*', faAnyFile and faDirectory and (not faHidden), f) = 0 then
