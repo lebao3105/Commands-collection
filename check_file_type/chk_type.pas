@@ -43,8 +43,10 @@ begin
             if (value_type and faHidden) <> 0 then
                 //writeln('What a hidden file!'); // I don't want to have problems because of this
                 writeln('The file is hidden.'); // simply use this
+            {$ifdef win32}
             if (value_type and faSysfile) <> 0 then
                 writeln('This is a system file - you shouldnt touch to it.');
+            {$endif}
             if (value_type and faSymLink) <> 0 then
                 writeln('The file is a symlink to another item');
             If (value_type and faArchive) <> 0 then
