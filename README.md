@@ -3,7 +3,7 @@ Build status: [![Makefile CI](https://github.com/lebao3105/Commands-collection/a
 
 A collection of system commands in Pascal, using FreePascal's library.
 
-Can use in normal life, but for basic stuff. Or better say, this is mostly for education.
+Can use in normal life, basic stuff. Or better say, this is mostly for education purposes.
 
 This repository has these directories = commands:
 * cat                 : Write file content
@@ -20,6 +20,8 @@ This repository has these directories = commands:
 * touch               : Create file
 
 echo and pwd are 2 simplest programs here.
+
+Most programs here have `-h` and `--help` for their usage help.
 
 ## Compiling
 
@@ -56,7 +58,7 @@ All outputs will be placed in build/ folder.
 
 ## TODOs
 
-* Use TCustomApplication class
+* Use TCustomApplication class (not all programs will use this)
 * [Probably I won't pass it lol] Learn more about OSes and yeah, my own system.pas etc (like a real OS being written in Pascal)
 * Fix indentation (done)
 * No crt (it can break outputs)

@@ -9,8 +9,8 @@ begin
     if ParamCount = 0 then missing_dir()
     else   
     for n := 1 to ParamCount do begin
-        If Not DirectoryExists(ParamStr(n)) then
-            If Not CreateDir (ParamStr(n)) Then begin
+        if not DirectoryExists(ParamStr(n)) then
+            if not CreateDir (ParamStr(n)) then begin
                 textred('Failed to create directory !');
                 exit; end
             else begin

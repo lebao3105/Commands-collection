@@ -49,9 +49,9 @@ begin
             {$endif}
             if (value_type and faSymLink) <> 0 then
                 writeln('The file is a symlink to another item');
-            If (value_type and faArchive) <> 0 then
+            if (value_type and faArchive) <> 0 then
                 Writeln ('File is a archive.');
-            If (value_type and faDirectory) <> 0 then
+            if (value_type and faDirectory) <> 0 then
                 Writeln ('This is a directory.');
         end
     else writeln('An error occured while checking the file!');

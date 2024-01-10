@@ -1,59 +1,53 @@
 program presskey;
-// Pascal version of Windows's pause.
-// Helpful on UNIX OSes.
+{$mode objfpc}{$h+}
 uses
-    crt, warn, color;
-var
-    i : integer;
+    crt, warn, color,
+    classes, custapp;
 
-// These functions do the same work, they still are different
-procedure defaultfn;
-begin
-    writeln('Press any key to continue...');
-    repeat
-    until (KeyPressed);
+type TPressKey = class(TCustomApplication)
+protected
+    procedure DoRun; override;
 end;
+
+var
+    PressKeyApp: TPressKey;
+	no_lndown: boolean;
 
 procedure print_message(message:string);
 begin
-    writeln(message);
-    repeat
-    until (KeyPressed);
+	if no_lndown then write(message) else writeln(message);
+    repeat until (KeyPressed);
+	halt(0);
+end;
+
+procedure TPressKey.DoRun;
+var
+	errorMsg: string;
+begin
+	errorMsg := CheckOptions('c:h', ['custom-message:', 'help', 'no-linedown']);
+	if errorMsg <> '' then begin writeln(errorMsg); halt(1); end;
+	if ParamCount = 0 then print_message('Press any key to continue...');
+
+	if HasOption('h', 'help') then
+	begin
+		writeln(ParamStr(0) + ' [option]=[value]');
+		writeln('Pauses the current execution until a key is pressed.');
+		writeln('Available options:');
+		writeln('--help / -h						Show this help');
+		writeln('--custom-message / -c [value]		Set a custom message');
+		writeln('--no-linedown						Do not append \n at the end of the message');
+		halt(0);
+	end;
+
+	if HasOption('no-linedown') then no_lndown := true;
+	if HasOption('c', 'custom-message') then print_message(GetOptionValue('c', 'custom-message'));
 end;
 
 begin
-    if ParamCount = 0 then defaultfn
-    else begin
-        for i := 1 to ParamCount do begin
-            if (ParamStr(i) = '--custom-message') or (ParamStr(i) = '-c') then
-            begin
-                if ParamStr(i+1) = '' then
-                    missing_argv
-                else
-                    print_message(ParamStr(i+1));
-                    defaultfn;
-            end
-
-            else if (ParamStr(i) = '--error') or (ParamStr(i) = '-e') then
-            begin
-                if ParamStr(i+1) = '' then
-                    missing_argv
-                else
-                    TextColor(Red);
-                    print_message(ParamStr(i+1));
-                    TextColor(LightGray);
-                    defaultfn;
-            end;
-
-            if (ParamStr(i) = '--help') or (ParamStr(i) = '-h') then
-            begin
-                writeln('presskey');
-                writeln('This program suspends the current running program (the developer needs to call this program in their code), then print a message.');
-                writeln('More message(s) can be used with --custom-message/-c parameter. Also we can show an error with --error/-e.');
-                writeln('Finally, of course, use --help/-h to show this message again:-)');
-                writeln('This is a demostration with no other parameters passed:');
-                defaultfn;
-            end;
-        end;
-    end;
+	// is this a bad usage of TPressKey and ParamCount?
+	// if ParamCount = 0 then print_message('Press any key to continue...')
+	PressKeyApp := TPressKey.Create(nil);
+	PressKeyApp.StopOnException := true; // will there be exceptions?
+	PressKeyApp.Run;
+	PressKeyApp.Free;
 end.
