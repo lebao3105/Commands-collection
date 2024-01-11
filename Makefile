@@ -21,7 +21,7 @@ check_file_type: init_ check_file_type/chk_type.pas
 calltime: init_ calltime/calltime.pas
 	fpc calltime/calltime.pas $(options)
 
-dir: init_ dir/dir.pas dir/listing.pas
+dir: init_ dir/dir.pas
 	fpc dir/dir.pas -Fu$(include_path) $(options)
 
 getvar: init_ getvar/getvar.pas
