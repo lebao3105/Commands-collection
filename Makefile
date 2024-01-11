@@ -8,6 +8,10 @@ build_progs := build/progs
 options := -FE$(build_progs) -FU$(build_obj)
 
 # Targets
+
+# Build everything
+all: init cat check_file_type calltime dir getvar mkdir presskey printf rename rm
+
 cat: init_ cat/cat.pas
 	fpc cat/cat.pas $(options) -Fu$(include_path)
 
@@ -17,17 +21,15 @@ check_file_type: init_ check_file_type/chk_type.pas
 calltime: init_ calltime/calltime.pas
 	fpc calltime/calltime.pas $(options)
 
-calldate: init_ calldate/calldate.pas
-	fpc calldate/calldate.pas $(options)
-
 dir: init_ dir/dir.pas dir/listing.pas
 	fpc dir/dir.pas -Fu$(include_path) $(options)
 
-echo: init_ echo/echo.pas
-	fpc echo/echo.pas $(options)
-
 getvar: init_ getvar/getvar.pas
 	fpc getvar/getvar.pas $(options) -Fu$(include_path)
+
+includes: init_ $(include_path)color.pas $(include_path)logging.pas
+	fpc $(include_path)color.pas $(options)
+	fpc $(include_path)logging.pas $(options)
 
 mkdir: init_ mkdir/mkdir.pas
 	fpc mkdir/mkdir.pas $(options) -Fu$(include_path)
@@ -49,9 +51,6 @@ rm: init_ rm/rm.pas
 
 touch: init_ touch/touch.pas
 	fpc touch/touch.pas $(options) -Fu$(include_path)
-
-# Build everything
-all: init cat check_file_type calltime calldate dir echo getvar mkdir presskey printf rename rm
 
 init_:
 ifeq ($(do_clean), yes)
