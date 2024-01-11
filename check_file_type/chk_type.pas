@@ -1,6 +1,7 @@
 program chk_type;
+{$h+}
 uses 
-    sysutils;
+    sysutils, logging;
 var
     n : integer;
 
@@ -23,14 +24,9 @@ begin
     if not FileExists(file_name) then 
     begin
         if DirectoryExists(file_name) then
-        begin
-            writeln('This is a directory.');
-            halt(0);
-        end
-        else begin
-            writeln('File ', file_name, ' does not exist. Aborting.');
-            halt(1);
-        end;
+            die(file_name + ' is a directory.')
+        else
+            die(file_name + ' does not exist. Aborting.');
     end
     else
     value_type := FileGetAttr(file_name);
@@ -40,9 +36,9 @@ begin
             get_date(file_name);
             if (value_type and faReadOnly) <> 0 then
                 writeln('The file is read only. You should not touch to this file, except this is yours.');
-            if (value_type and faHidden) <> 0 then
-                //writeln('What a hidden file!'); // I don't want to have problems because of this
-                writeln('The file is hidden.'); // simply use this
+            // TODO: Hidden files flag
+            // if (value_type and faHidden) <> 0 then
+            //     writeln('The file is hidden.'); // simply use this
             {$ifdef win32}
             if (value_type and faSysfile) <> 0 then
                 writeln('This is a system file - you shouldnt touch to it.');

@@ -1,63 +1,90 @@
 program cat;
-{$mode objFPC}
+{$mode objFPC}{$h+}
 
 uses
-	sysutils, warn, 
-	verbose, color, crt;
+	custapp, classes,
+	sysutils, logging,
+	crt;
+
+type TCat = class(TCustomApplication)
+protected
+	procedure DoRun; override;
+end;
 
 var
-	tfIn: TextFile;
+	CatApp: TCat;
+	files: TStringList;
+	showLineNo: boolean;
 	s: string;
+	tfIn: TextFile;
 	file_content: string;
-	i: integer;
 
-label
-	check, readfile;
-
+// file read functions
+procedure readfile;
 begin
-	if ParamCount = 0 then
-	begin
-		textred('Usage: ');
-		TextColor(LightGray);
-		writeln(ParamStr(0), ' [file]');
-		missing_argv;
-		halt(1);
-	end
+	assignFile(tfIn, s);
+	reset(tfIn);
+	try
+		while not EOF(tfIn) do begin
+			readln(tfIn, file_content);
+			writeln(file_content);
+		end;
+	except
+		on E: EInOutError do begin
+			die('Error reading file ' + s + ': ' + E.Message);
+		end;
+	end;
+	CloseFile(tfIn);
+end;
 
-	else begin
-		for i := 1 to ParamCount do
-			s := ParamStr(i);
-			goto readfile;
+procedure check;
+begin
+	if FileExists(s) then readfile
+	else
+		error('File ' + s + ' not found!');
+		if ParamCount = 0 then
+			halt(-1);
+end;
+// end
+
+// TCat
+procedure TCat.DoRun;
+var
+	errorMsg: string;
+	args: TStringList; // flags with value (format: <flag>=<value>)
+	i: integer;
+begin
+	args := TStringList.Create();
+	files := TStringList.Create();
+	// https://github.com/alrieckert/freepascal/blob/master/packages/fcl-base/examples/testapp.pp
+	// args is a dummy argument for now, as no flag requires a value yet
+	errorMsg := CheckOptions('hn', ['help', 'show-lineno'], args, files);
+	if errorMsg <> '' then die(errorMsg);
+
+	if HasOption('h', 'help') then
+	begin
+		writeln(ParamStr(0), ' [options] [files]');
+		writeln('Prints out passed file paths.');
+		writeln('--help / -h			: Show this help');
+		writeln('-n / --show-lineno		: Show line number');
 		halt(0);
 	end;
 
-	check: begin
-		if FileExists(s) then begin
-			goto readfile;
-		end
-		else begin
-			textredln('File '+s+' not found!');
-			TextColor(LightGray);
-			if ParamCount = 0 then
-				writeln('Exiting now.');
-				halt(-1);
-		end;
-	end;
+	if HasOption('n', 'show-lineno') then showLineNo := true;
 
-	readfile: begin
-		assignFile(tfIn, s);
-		reset(tfIn);
-		try
-			while not EOF(tfIn) do begin
-				readln(tfIn, file_content);
-				writeln(file_content);
-			end;
-			CloseFile(tfIn);
-		except
-			on E: EInOutError do begin
-				textredln('Error occured while reading file '+s+': '+E.Message);
-				halt(1);
-			end;
-		end;
-	end;
+	for i := 0 to files.Count - 1 do
+		s := files[i];
+		check;
+
+	args.Free;
+	files.Free;
+	Terminate;
+end;
+
+
+begin
+	CatApp := TCat.Create(nil);
+	CatApp.StopOnException := true;
+	CatApp.Run;
+	CatApp.Free;
 end.

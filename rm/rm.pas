@@ -1,7 +1,7 @@
 program rm;
 
 uses 
-    sysutils, warn;
+    sysutils, logging;
 
 var 
     i : integer;

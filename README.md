@@ -8,9 +8,7 @@ Can use in normal life, basic stuff. Or better say, this is mostly for education
 This repository has these directories = commands:
 * cat                 : Write file content
 * dir                 : Show folder content
-* calltime            : Print the current system time
-* calldate            : Same as calltime, but with date
-* echo                : Just print text to screen
+* calltime            : Print the current system time & date
 * getvar              : Print variable (PATH, HOME, etc...)
 * mkdir               : Create a directory
 * presskey            : Pascal version of Windows's pause program
@@ -37,7 +35,7 @@ make <command name>
 ```
 
 > Some projects will ask you to pass ```-Fu<source code root>/include``` to fpc.
-> To identify what project you can check [Makefile](Makefile), or the source code of the program where you can look for the included unit in the uses section. The self-made units are placed in [include/](include/).
+> To identify what project you can check [Makefile](Makefile), or the source code of the program where you can look for included units in the uses section.
 
 Or clean before building anything:
 ```

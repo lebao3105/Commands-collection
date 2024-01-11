@@ -1,25 +1,25 @@
 program mkdir;
 
 uses 
-    sysutils, crt, color, warn;
+    sysutils, crt, color, logging;
 var 
     n : integer;
 
 begin
+    // TODO: -v (verbose) and -p (create parent directory if able) flags
     if ParamCount = 0 then missing_dir()
     else   
     for n := 1 to ParamCount do begin
         if not DirectoryExists(ParamStr(n)) then
-            if not CreateDir (ParamStr(n)) then begin
-                textred('Failed to create directory !');
-                exit; end
-            else begin
-                writeln('Directory ', ParamStr(n), ' created.');
-                exit; 
+            try
+                CreateDirectory(ParamStr(n));
+            except
+                on E: Exception do begin
+                    die(Format('Unable to create %s: %s',
+                               [ParamStr(n), E.Message]));
+                end;
             end
-        else begin
-            textred('Fatal: '); TextColor(LightGray); 
-            writeln('Directory ', ParamStr(n), 'exists!');
-        end;
+        else
+            die(ParamStr(n) + ' already exists');
     end;
 end.

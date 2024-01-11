@@ -1,7 +1,7 @@
 program presskey;
 {$mode objfpc}{$h+}
 uses
-    crt, warn, color,
+    crt, logging, color,
     classes, custapp;
 
 type TPressKey = class(TCustomApplication)
@@ -41,6 +41,8 @@ begin
 
 	if HasOption('no-linedown') then no_lndown := true;
 	if HasOption('c', 'custom-message') then print_message(GetOptionValue('c', 'custom-message'));
+
+	Terminate;
 end;
 
 begin
