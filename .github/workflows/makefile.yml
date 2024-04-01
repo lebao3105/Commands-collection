@@ -14,8 +14,11 @@ jobs:
     - name: Install compiler
       run: sudo apt update && sudo apt install fpc -y
       
-    - name: build_all
-      run: make build_all
+    - name: Build everything
+      run: make all
       
-    - name: clean
-      run: make clean
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'Commands-collection_Artifacts'
+        path: 'build/'
