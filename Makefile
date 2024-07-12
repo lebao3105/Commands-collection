@@ -7,42 +7,42 @@ options := -FE$(build_progs) -FU$(build_obj) -Fuinclude/
 # Targets
 
 # Build everything
-all: init cat check_file_type calltime dir getvar mkdir presskey printf rename rm
+all: init_ cat check_file_type calltime dir getvar mkdir presskey printf rename rm
 
-cat: init_ cat/cat.pas
+cat: cat/cat.pas
 	fpc cat/cat.pas $(options) -Fuinclude/
 
-check_file_type: init_ check_file_type/chk_type.pas
+check_file_type: check_file_type/chk_type.pas
 	fpc check_file_type/chk_type.pas $(options) -Fuinclude/
 
-calltime: init_ calltime/calltime.pas
+calltime: calltime/calltime.pas
 	fpc calltime/calltime.pas $(options)
 
-dir: init_ dir/dir.pas
+dir: dir/dir.pas
 	fpc dir/dir.pas -Fuinclude/ $(options)
 
-getvar: init_ getvar/getvar.pas
+getvar: getvar/getvar.pas
 	fpc getvar/getvar.pas $(options) -Fuinclude/
 
-includes: init_ $(wildcard include/*.pas)
+includes: $(wildcard include/*.pas)
 	fpc include/include.pas $(options)
 
-mkdir: init_ mkdir/mkdir.pas
+mkdir: mkdir/mkdir.pas
 	fpc mkdir/mkdir.pas $(options) -Fuinclude/
 
-presskey: init_ presskey/presskey.pas
+presskey: presskey/presskey.pas
 	fpc presskey/presskey.pas $(options) -Fuinclude/
 
-printf: init_ printf/printf.pas
+printf: printf/printf.pas
 	fpc printf/printf.pas $(options) -Fuinclude/
 
-rename: init_ rename/rename.pas
+rename: rename/rename.pas
 	fpc rename/rename.pas $(options) -Fuinclude/
 
-rm: init_ rm/rm.pas
+rm: rm/rm.pas
 	fpc rm/rm.pas $(options) -Fuinclude/
 
-touch: init_ touch/touch.pas
+touch: touch/touch.pas
 	fpc touch/touch.pas $(options) -Fuinclude/
 
 init_:
