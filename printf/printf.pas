@@ -3,11 +3,12 @@ program printf;
 
 uses
 	classes, custapp,
-	sysutils, crt, color, logging;
+	sysutils, logging;
 
 type TPrintF = class(TCustomApplication)
 protected
-	procedure DoRun;
+	procedure DoRun; override;
+strict private
 	procedure Help;
 end;
 
@@ -24,18 +25,18 @@ begin
 	errorMsg := CheckOptions('o:i:h', ['target:', 'string:', 'help']);
 	if errorMsg <> '' then begin Help; die(errorMsg); end;
 
-	if HasOption('h', 'help') then begin Help; halt(0); end;
+	if HasOption('h', 'help') then begin Help; Terminate; end;
 	if HasOption('o', 'target') then target := GetOptionValue('o', 'target');
 	if HasOption('i', 'string') then inp := GetOptionValue('i', 'string');
 
-	if target then
+	if target <> '' then
 	begin
-		if not FileExists(target) then die(target, ': no such file')
-		else Assign(where_to_write, target);
+		if not FileExists(target) then die(target + ': no such file')
+		else AssignFile(where_to_write, target);
 	end
 	else
-		where_to_write := Output;
-		Assign(where_to_write);
+		where_to_write := stdout;
+		AssignFile(where_to_write, '');
 	
 	Append(where_to_write);
 	write(where_to_write, inp);
@@ -50,7 +51,6 @@ begin
 	writeln('--help / -h				: Show this help');
 	writeln('--target / -o [path]		: Target file path');
 	writeln('--input / -i [text]		: Text to be appended');
-	// halt(0);
 end;
 
 begin

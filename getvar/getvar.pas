@@ -2,8 +2,7 @@ program getvar;
 {$mode objFPC}
 
 uses
-	Dos, crt, 
-	sysutils, color, strutils;
+	dos, sysutils, strutils;
 
 var i : longint;
 	n : integer;
@@ -26,7 +25,7 @@ begin
 			end
 
 			else
-				writeln(GetEnv(ParamStr(n)));
+				writeln(GetEnvironmentVariable(ParamStr(n)));
 		end;
 end.
 

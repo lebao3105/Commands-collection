@@ -6,7 +6,6 @@ uses
 
 var 
     i : integer;
-    haserrors: boolean; // not always we return code 0
 
 begin
     if ParamCount = 0 then die('Missing arguments. Stop.')
@@ -16,9 +15,7 @@ begin
                 FileCreate(ParamStr(i));
             except
                 on E: Exception do begin
-                    error('Failed to create ' + ParamStr(i) + ': ' + E.Message);
-                    haserrors := true;
+                    die('Failed to create ' + ParamStr(i) + ': ' + E.Message);
                 end;
             end;
-        if haserrors then halt(1);
 end.

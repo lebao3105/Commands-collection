@@ -1,7 +1,7 @@
 program presskey;
 {$mode objfpc}{$h+}
 uses
-    crt, logging, color,
+    crt, logging,
     classes, custapp;
 
 type TPressKey = class(TCustomApplication)

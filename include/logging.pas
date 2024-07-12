@@ -25,6 +25,7 @@ procedure warning(message: string);
 procedure error(message: string);
 
 // critical error that eventually kills the program
+{$HINT Do not overuse die(...), some objects may not be freed and can lead to memory leaks}
 procedure die(message: string; exit_code: integer);
 procedure die(message: string); overload;
 

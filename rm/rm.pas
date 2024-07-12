@@ -17,7 +17,7 @@ begin
                 writeln('Error occured: The target file is marked as readonly.');
                 halt(1);
 
-            {$ifdef win32}
+            {$ifdef win32} // faSysfile is not available on Linux
             if (value_type and faSysfile) <> 0 then
                 writeln('Error occured: The target file is a system file. You should not delete it.');
                 halt(-1);

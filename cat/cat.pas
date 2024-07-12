@@ -3,59 +3,62 @@ program cat;
 
 uses
 	custapp, classes,
-	sysutils, logging,
-	crt;
+	sysutils, logging;
 
 type TCat = class(TCustomApplication)
 protected
 	procedure DoRun; override;
-end;
 
-var
-	CatApp: TCat;
+private
 	files: TStringList;
 	showLineNo: boolean;
-	s: string;
-	tfIn: TextFile;
-	file_content: string;
+	procedure readFile(path: string);
+end;
 
-// file read functions
-procedure readfile;
+procedure TCat.readFile(path: string);
+var
+	tfIn: TextFile;
+	line: string;
+	currLine: integer = 1;
+
 begin
-	assignFile(tfIn, s);
+	if not FileExists(path) then begin
+		error(path + ': no such file or directory');
+		if ParamCount = 0 then halt(1);
+	end;
+
+	assignFile(tfIn, path);
 	reset(tfIn);
 	try
 		while not EOF(tfIn) do begin
-			readln(tfIn, file_content);
-			writeln(file_content);
+			readln(tfIn, line);
+			if showLineNo then
+				writeln(IntToStr(currLine):6, line:12)
+			else
+				writeln(line);
+			currLine := currLine + 1;
 		end;
 	except
 		on E: EInOutError do begin
-			die('Error reading file ' + s + ': ' + E.Message);
+			error('Error reading ' + path + ': ' + E.Message);
+			CloseFile(tfIn);
+			halt(1);
 		end;
 	end;
+
 	CloseFile(tfIn);
 end;
 
-procedure check;
-begin
-	if FileExists(s) then readfile
-	else
-		error('File ' + s + ' not found!');
-		if ParamCount = 0 then
-			halt(-1);
-end;
-// end
-
-// TCat
 procedure TCat.DoRun;
 var
 	errorMsg: string;
-	args: TStringList; // flags with value (format: <flag>=<value>)
+	args: TStringList; // flags with value (format: --<long flag>=<value> or -<short flag> value)
 	i: integer;
+
 begin
 	args := TStringList.Create();
 	files := TStringList.Create();
+
 	// https://github.com/alrieckert/freepascal/blob/master/packages/fcl-base/examples/testapp.pp
 	// args is a dummy argument for now, as no flag requires a value yet
 	errorMsg := CheckOptions('hn', ['help', 'show-lineno'], args, files);
@@ -67,20 +70,21 @@ begin
 		writeln('Prints out passed file paths.');
 		writeln('--help / -h			: Show this help');
 		writeln('-n / --show-lineno		: Show line number');
-		halt(0);
+		Terminate;
+		Exit;
 	end;
 
-	if HasOption('n', 'show-lineno') then showLineNo := true;
+	showLineNo := HasOption('n', 'show-lineno');
 
-	for i := 0 to files.Count - 1 do
-		s := files[i];
-		check;
+	for i := 0 to files.Count - 1 do readFile(files[i]);
 
 	args.Free;
 	files.Free;
 	Terminate;
 end;
 
+var
+	CatApp: TCat;
 
 begin
 	CatApp := TCat.Create(nil);

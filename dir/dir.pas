@@ -1,69 +1,133 @@
 program dir;
-{$h+}
+{$mode objfpc}{$h+}
+
 uses
-	logging, strutils, sysutils;
+	logging, sysutils, custapp, classes;
 
-var
-	i: integer;
-    f: TSearchRec;
-    l: longint=0;
-    directory: string;
+type TDir = class(TCustomApplication)
+protected
+    procedure DoRun; override;
 
-procedure listitems(path:string);
+private
+    showHidden: boolean;
+    showAsList: boolean;
+    procedure listitems(path: string);
+    function getOptions: shortint;
+end;
+
+function TDir.getOptions: ShortInt;
 begin
-    {$ifdef win32}
-    if StartsStr(path, '/') or StartsStr(path, '\') then
-	    path := 'C:' + path;
-    {$endif}
-
-    // if the specified path is relative
-    if StartsStr('.\', path) or StartsStr('./', path) then
-        path := ExtractFilePath(ParamStr(0)) + path + '/'
+    if showHidden then
+        Result := faAnyFile and faDirectory and not faHidden
+        //                              intended^^^
     else
-        if (not EndsStr('/', path)) and (not EndsStr('\', path)) then
-            path := path + '/';
+        Result := faAnyFile and faDirectory and faHidden;
+end;
+
+procedure TDir.listitems(path: string);
+var
+    filesCount: integer = 0;
+    filesSize: integer = 0;
+    f: TSearchRec;
+    l: longint = 0;
+
+begin
+    path := ExpandFileName(IncludeTrailingPathDelimiter(path));
 
     writeln(path);
 
     if DirectoryExists(path) then
     begin
-        if FindFirst(path + '*', faAnyFile and faDirectory and (not faHidden), f) = 0 then
+        if FindFirst(path + '*', getOptions, f) = 0 then
         begin
             repeat
                 Inc(l);  
                 with f do
                     if (Attr and faDirectory) = faDirectory then
-                        writeln(Name:20, '<Dir>':15, '-':20)
-                    else if (Attr and faSymLink) = faSymLink then
-                        writeln(Name:20, '<SymLink>':15, Size:20)
-                    else
-                        writeln(Name:20, '':15, Size:20);
+                    begin
+                        if showAsList then
+                            writeln(Name:20, '<Dir>':15, '-':20)
+                        else
+                            write(Name + ' ');
+                    end
+                    else if (Attr and faSymLink) = faSymLink then begin
+                        if showAsList then
+                            writeln(Name:20, '<SymLink>':15, Size:20)
+                        else
+                            write(Name + ' ');
+                        filesSize := filesSize + Size;
+                    end
+                    else begin
+                        if showAsList then
+                            writeln(Name:20, '':15, Size:20)
+                        else
+                            write(Name + ' ');
+                        filesSize := filesSize + Size;
+                        filesCount := filesCount + 1;
+                    end;
             until FindNext(f) <> 0;
-            FindClose(f);
 
-            if path = './' then
-            	directory := 'this'
-            else
-            	directory := path;
+            FindClose(f);
+            writeln;
             
-            info('Found ' + IntToStr(l) + ' items in '+ directory+ ' directory.' + #13);
-            halt(0);
+            info('Found ' + IntToStr(l) + ' items in '+ path + ' directory: ' +
+                            IntToStr(filesCount) + ' files, ' +
+                            IntToStr(l - filesCount) + ' directories.' + #13);
+            info(IntToStr(filesSize) + ' bytes of files.' + #13);
         end
         
         else
-            die('Unable to open directory ' + path + '!');
+            error('Unable to open directory ' + path + '!');
     end
     else
-        die(Format('Not a directory: %s', [path]));
+        error(Format('Not a directory or does not exist: %s', [path]));
 end;
 
-begin
-	warning('Please note that we can''t count the size of directories.');
-	warning('Also this can not find and list hidden items.');
-	if ParamCount = 0 then
-		listitems('.')
-  	else
-    	for i := 1 to ParamCount do
-        	listitems(ParamStr(i));
+procedure TDir.DoRun;
+var
+    args, dirs: TStringList;
+    i: integer;
+    errorMsg: string;
 
+begin
+    args := TStringList.Create;
+    dirs := TStringList.Create;
+
+    errorMsg := CheckOptions('hla', ['help', 'list', 'all'], args, dirs);
+    if errorMsg <> '' then begin error(errorMsg); ExitCode := 1; end
+    else begin
+        if HasOption('h', 'help') then
+        begin
+            writeln(ParamStr(0), ' [options] [folders]');
+            writeln('List items inside (a) directories.');
+            writeln('--help / -h                : Show this and exit');
+            writeln('--list / -l                : Show things as a list with their informations');
+            writeln('--all / -a                 : Show everything, including hidden things');
+            Terminate;
+            Exit;
+        end;
+
+        showAsList := HasOption('l', 'list');
+        showHidden := HasOption('a', 'all');
+
+        if dirs.Count = 0 then
+            listitems('./')
+        else
+            for i := 0 to dirs.Count - 1 do
+                listitems(dirs[i]);
+    end;
+
+    args.Free;
+    dirs.Free;
+    Terminate;
+end;
+
+var
+    DirApp: TDir;
+
+begin
+    DirApp := TDir.Create(nil);
+    DirApp.StopOnException := true;
+    DirApp.Run;
+    DirApp.Free;
 end.

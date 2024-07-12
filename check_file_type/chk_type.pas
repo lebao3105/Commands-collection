@@ -5,51 +5,59 @@ uses
 var
     n : integer;
 
-procedure get_date(filepath:string);
-// referenced from freepascal's wiki
+procedure get_date(where: string);
+// from freepascal's wiki
 var
     s : TDateTime;
     fa : longint;
 begin
-    fa := FileAge(filepath);
+    fa := FileAge(where);
     if fa <> -1 then
         s := FileDateToDateTime(fa);
-        writeln('Last modification time: ', DateTimeToStr(s));
+        writeln('* Last modified on: ', DateTimeToStr(s), ';');
 end;
 
-procedure check_type(file_name : String);
+procedure check_type(path: string);
 var
     value_type : longint;
+    isDir: boolean;
+
 begin
-    if not FileExists(file_name) then 
-    begin
-        if DirectoryExists(file_name) then
-            die(file_name + ' is a directory.')
-        else
-            die(file_name + ' does not exist. Aborting.');
-    end
+    if FileExists(path) then
+        isDir := false
+    else if DirectoryExists(path) then
+        isDir := true
     else
-    value_type := FileGetAttr(file_name);
+        die(path + ' does not exist. Quitting.');
+
+    value_type := FileGetAttr(path);
     if value_type <> -1 then
-        begin
-            writeln('File ', file_name, ' checked. Here is the result: ');
-            get_date(file_name);
-            if (value_type and faReadOnly) <> 0 then
-                writeln('The file is read only. You should not touch to this file, except this is yours.');
-            // TODO: Hidden files flag
-            // if (value_type and faHidden) <> 0 then
-            //     writeln('The file is hidden.'); // simply use this
+    begin
+        writeln(path, ' is: ');
+
+        get_date(path);
+
+        if (value_type and faReadOnly) <> 0 then
+            writeln('* Readonly;');
+        
+        if (value_type and faHidden) <> 0 then
+            writeln('* Hidden;');
+
+        if isDir then
+            writeln('* A directory;')
+        else begin
             {$ifdef win32}
             if (value_type and faSysfile) <> 0 then
-                writeln('This is a system file - you shouldnt touch to it.');
+                writeln('* A system file. Be careful with it;');
             {$endif}
+            
             if (value_type and faSymLink) <> 0 then
-                writeln('The file is a symlink to another item');
+                writeln('* A sym(bolic)link;');
+
             if (value_type and faArchive) <> 0 then
-                Writeln ('File is a archive.');
-            if (value_type and faDirectory) <> 0 then
-                Writeln ('This is a directory.');
-        end
+                writeln('* An archive;');
+        end;
+    end
     else writeln('An error occured while checking the file!');
 end;
 
@@ -59,5 +67,6 @@ begin
     else
         for n := 1 to ParamCount do begin
             check_type(ParamStr(n));
+            writeln;
         end;
 end.
