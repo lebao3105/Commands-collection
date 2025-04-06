@@ -2,7 +2,7 @@ program calltime;
 {$mode objFPC}
 
 uses
-    classes, custapp, dos, sysutils;
+    classes, custapp, sysutils, logging;
 
 type TCallTime = class(TCustomApplication)
 protected
@@ -16,7 +16,7 @@ var
     format: string = 'dddd mmmm dd yyyy tt';
 begin
     errorMsg := CheckOptions('hnf:', ['help', 'number-only', 'format:']);
-    if errorMsg <> '' then begin writeln(errorMsg); halt(1); end;
+    if errorMsg <> '' then die(errorMsg);
 
     if HasOption('h', 'help') then
     begin

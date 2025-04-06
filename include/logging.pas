@@ -1,14 +1,9 @@
 unit logging;
+{$mode objfpc}
 
 interface
 uses
-    crt, dos;
-
-// print colored text
-// default text color probably is LightGray,
-// these already have you covered.
-procedure writetextcolor(color: byte; message: string);
-procedure writetextcolorln(color: byte; message: string);
+    console, sysutils, dos;
 
 // debug
 // requires either DEBUG environment = 1 or
@@ -25,67 +20,53 @@ procedure warning(message: string);
 procedure error(message: string);
 
 // critical error that eventually kills the program
-{$HINT Do not overuse die(...), some objects may not be freed and can lead to memory leaks}
+{$HINT die(...) halts the program. You know what to do.}
 procedure die(message: string; exit_code: integer);
 procedure die(message: string); overload;
 
 implementation
 
-procedure writetextcolor(color: byte; message: string);
-begin
-    TextColor(color);
-    write(message);
-    TextColor(LightGray);
-end;
-
-procedure writetextcolorln(color: byte; message: string);
-begin
-    writetextcolor(color, message);
-    writeln;
-end;
-
 procedure debug(message: string);
     procedure printout;
     begin
-        writetextcolor(Green, '[Debug] ');
+        TConsole.Write('[Debug] ', ccGreen);
         writeln(message);
     end;
 
 begin
     if GetEnv('DEBUG') = '1' then printout
+    {$IFDEF DEBUG}
     else
-        {$IFDEF DEBUG}
         printout;
-        {$ENDIF}
+    {$ENDIF}
 end;
 
 procedure info(message: string);
 begin
-    writetextcolor(Magenta, '[Info] ');
+    TConsole.Write('[Info] ', ccBlue);
     writeln(message);
 end;
 
 procedure warning(message: string);
 begin
-    writetextcolor(Yellow, '[Warning] ');
+    TConsole.Write('[Warning] ', ccYellow);
     writeln(message);
 end;
 
 procedure error(message: string);
 begin
-    writetextcolor(Red, '[Error] ');
+    TConsole.Write('[Error] ', ccRed);
     writeln(message);
 end;
 
 procedure die(message: string; exit_code: integer);
 begin
-    writetextcolor(Red, '[Error] ');
-    writeln(message);
-    delay(800);
+    error(message);
+    sleep(800);
     halt(exit_code);
 end;
 
-procedure die(message: string);
+procedure die(message: string); inline;
 begin
     die(message, 1);
 end;

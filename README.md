@@ -19,34 +19,35 @@ This repository has these directories = commands:
 
 Most programs here have `-h` and `--help` for their usage help.
 
+These are NOT meant to replace system utilities. There are better tools outside.
+
 ## Compiling
 
 To compile a/any program, do:
 
-```
-cd <command name>
-fpc <command name>.pas
-# or
-fpc <command name>/<command name>.pas
-# with make
-make <command name>
+```bash
+$ make -C src <program name>.pas
 ```
 
-> Some projects will require you to pass ```-Fuinclude``` to fpc.
-> To identify what project you can check [Makefile](Makefile), or the source code of the program where you can look for included units in the `uses` section.
+To build everything:
 
-You can remove all previous build outputs by removing `build/`, or `make clean`. Setting `DO_CLEAN` to 1 before going to build anything with `make` will clean for you.
+```bash
+$ make all
+```
 
-To build all programs:
+To clean everything:
+
+```bash
+$ make clean
 ```
-make all
-```
+
+To clean before building the project without running the clean command above: set `DO_CLEAN` environment variable to 1, then build as usual.
 
 All outputs will be placed in build/ folder.
 
 ## Run
 
-All programs are set to be placed in `build/progs`. Run them from there... many will show help messages for you to know what can it do.
+All programs are set to be placed in `build/progs`. Run them from there - many will show help messages for you to know what can it do and what can you pass to the program.
 
 > All non-executable build files (.o, .ppu) are placed in `build/obj_out`.
 
@@ -59,7 +60,17 @@ This is due to TCustomApplication API used for parsing command-line arguments.
 
 Tell me if this is fixed or has a fix on my side.
 
-Do NOT use them over system programs - they are not made for that. Use in caution just like any other tools, whatever system ones or not.
+Also long flags (ones with 2 dashes: `--`) that needs a value must be followed by a `=` like this:
+
+```
+--format=dddd
+```
+
+Short flags (ones with one dash: `-`) do not need to:
+
+```
+-f dddd
+```
 
 ## TODOs
 
@@ -69,3 +80,7 @@ Do NOT use them over system programs - they are not made for that. Use in cautio
 * No crt (it can break outputs)
 * And even create an installer? Cool btw
 * ~Fix Makefile~ (completed)
+
+## Credits
+
+* @ikelaiah for cli-fp library. Part of it is used and modified.
