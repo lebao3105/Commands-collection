@@ -6,33 +6,26 @@ Build status: [![Makefile CI](https://github.com/lebao3105/Commands-collection/a
 
 A collection of system commands in (Objective) Pascal, using FreePascal's library. Tend to be cross-platform.
 
-This repository has these directories = commands:
-* cat                 : Write file content
-* dir                 : Show folder content
-* calltime            : Print the current system time & date
-* getvar              : Print variable (PATH, HOME, etc...)
-* mkdir               : Create a directory
-* presskey            : Pascal version of Windows's pause program
-* printf              : Write something to file (work but not good as excepted)
-* rename              : Rename file
-* touch               : Create file
+All programs have their own document in `docs/`.
 
 Most programs here have `-h` and `--help` for their usage help.
 
-These are NOT meant to replace system utilities. There are better tools outside.
+These are NOT meant to replace system utilities because of missing features and being too simple. There are better tools outside.
 
 ## Compiling
 
 To compile a/any program, do:
 
 ```bash
-$ make -C src <program name>.pas
+$ make src/<program name>
 ```
+
+Append `.exe` if you're on Windows.
 
 To build everything:
 
 ```bash
-$ make all
+$ make
 ```
 
 To clean everything:
@@ -41,9 +34,9 @@ To clean everything:
 $ make clean
 ```
 
-To clean before building the project without running the clean command above: set `DO_CLEAN` environment variable to 1, then build as usual.
+All outputs are placed in build/ folder.
 
-All outputs will be placed in build/ folder.
+Using `fpcmake -w -Tall` will (re)generate a `Makefile` for all supported platforms.
 
 ## Run
 
@@ -74,10 +67,9 @@ Short flags (ones with one dash: `-`) do not need to:
 
 ## TODOs
 
-* Use TCustomApplication class (not all programs will use this)
-* [Probably I won't pass it lol] Learn more about OSes and yeah, my own system.pas etc (like a real OS being written in Pascal)
+* Use TCustomApplication class (not all programs will use this) (done)\
 * Fix indentation (done)
-* No crt (it can break outputs)
+* No crt (it can break outputs) (done)
 * And even create an installer? Cool btw
 * ~Fix Makefile~ (completed)
 

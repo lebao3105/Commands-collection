@@ -2,10 +2,18 @@ test*
 *.exe
 *.o
 *.ppu
-build/
 
 *.dll
 *.so
 *.dylib
 
 *.log
+
+fpcmade*
+Package.fpc
+
+build/obj_out/*
+!build/obj_out/.gitkeep
+
+build/progs/*
+!build/progs/.gitkeep
