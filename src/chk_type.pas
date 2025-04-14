@@ -1,6 +1,7 @@
 program chk_type;
 {$h+}
-uses 
+
+uses
     sysutils, logging;
 var
     n : integer;
@@ -13,8 +14,10 @@ var
 begin
     fa := FileAge(where);
     if fa <> -1 then
+    begin
         s := FileDateToDateTime(fa);
         writeln('* Last modified on: ', DateTimeToStr(s), ';');
+    end;
 end;
 
 procedure check_type(path: string);
@@ -46,10 +49,8 @@ begin
         if isDir then
             writeln('* A directory;')
         else begin
-            {$ifdef win32}
             if (value_type and faSysfile) <> 0 then
                 writeln('* A system file. Be careful with it;');
-            {$endif}
             
             if (value_type and faSymLink) <> 0 then
                 writeln('* A sym(bolic)link;');

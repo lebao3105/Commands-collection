@@ -178,8 +178,8 @@ begin
     ResetColors;
 end;
 
-initialization
 {$ifdef WINDOWS}
+initialization
     TConsole.InitConsole;
 {$endif}
 end.

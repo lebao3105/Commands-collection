@@ -2,91 +2,76 @@ program mkdir;
 {$mode objFPC}{$H+}
 
 uses 
-    sysutils, logging, custapp, strutils, classes, utils;
+    sysutils, logging, custcustapp,
+    strutils, classes, utils;
 
-type TMkDir = class(TCustomApplication)
+type TMkDir = class(TCustCustApp)
 protected
     procedure DoRun; override;
 end;
 
 procedure TMkDir.DoRun;
 var
-    errorMsg, currentPath: string;
-    args, dirs: TStringList;
+    currentPath: string;
     splits: array of ansistring;
     j, i: integer;
     beVerbose, createParent: boolean;
 
-begin
-    args := TStringList.Create();
-    dirs := TStringList.Create();
-
-    errorMsg := CheckOptions('hvp', ['help', 'verbose', 'parent'], args, dirs);
-
-    if HasOption('h', 'help') or (dirs.Count = 0) or (errorMsg <> '') then
+    procedure CreateDirectory(path: string);
     begin
-        writeln(ParamStr(0), ' [flag] <directories>');
-        writeln('Create directories. Use your system''s directory separator!');
-        writeln('Use --help/-h flag to show this message (again).');
-        writeln('-p / --parent creates the parent directories if they do not exist.');
-        writeln('-v / --verbose to be verbose.');
-
-        Frees([args, dirs]);
-        
-		if errorMsg <> '' then
-			die(errorMsg)
-		else
-			halt(0);
+        try
+            System.MkDir(path);
+            if beVerbose then
+                info('Created directory: ' + path);
+        except
+            on E: Exception do begin
+                error('Error creating ' + path + ': ' + E.Message);
+                Frees([Opts, NonOpts]);
+                halt(1);
+            end;
+        end;
     end;
+
+begin
+    inherited DoRun;
 
     beVerbose := HasOption('v', 'verbose');
     createParent := HasOption('p', 'parent');
 
-    for i := 0 to dirs.Count - 1 do begin
+    for i := 0 to NonOpts.Count - 1 do begin
         if createParent then begin
-            splits := SplitString(dirs[i], DirectorySeparator);
+            splits := SplitString(NonOpts[i], DirectorySeparator);
 
             for j := Low(splits) to High(splits) do
             begin
-                currentPath := currentPath + DirectorySeparator + splits[j];
-                writeln(currentPath);
+                currentPath := ConcatPaths([currentPath, splits[j]]);
+
+                {$ifdef WINDOWS}
+                // The first work to do is to remove the leading backslash appended by
+                // ConcatPaths (?), then add a slash suffix. Why not backslash? Ask write and writeln.
+                currentPath := StringReplace(currentPath, #92, '', []) + '/';
+                {$endif}
+
+                if beVerbose then
+                    writeln('Creating ' + currentPath);
+
                 if not DirectoryExists(currentPath) then
-                begin
-                    try
-                        System.MkDir(currentPath);
-                        if beVerbose then
-                            info('Created directory: ' + currentPath);
-                    except
-                        on E: Exception do begin
-                            error('Error creating directory: ' + currentPath + ': ' + E.Message);
-                            Frees([args, dirs]);
-                            halt(1);
-                        end;
-                    end;
-                end
+                    CreateDirectory(currentPath)
                 else if j = High(splits) then
-                    die(currentPath + ' already exists!');
+                    die(currentPath + ' already exists!')
+                else
+                    error(currentPath + ' already exists!');
             end;
         end
 
-        else if not DirectoryExists(dirs[i]) then begin
-            try
-                System.MkDir(dirs[i]);
-                if beVerbose then
-                    info('Created directory: ' + dirs[i]);
-            except
-                on E: Exception do begin
-                    error('Error creating directory: ' + dirs[i] + ': ' + E.Message);
-                    Frees([args, dirs]);
-                    halt(1);
-                end;
-            end;
-        end else
-            die(dirs[i] + ' already exists!');
+        else
+            if not DirectoryExists(NonOpts[i]) then
+                CreateDirectory(NonOpts[i])
+            else if i = NonOpts.Count - 1 then
+                die(NonOpts[i] + ' already exists!')
+            else
+                error(NonOpts[i] + ' already exists!');
     end;
-
-    Frees([args, dirs]);
-    Terminate;
 end;
 
 var 
@@ -94,7 +79,8 @@ var
 
 begin
     MkDirApp := TMkDir.Create(nil);
-    MkDirApp.StopOnException := true;
+    MkDirApp.RequireNonOpts := true;
+    MkDirApp.AddFlag('p', 'parent', '', 'Creates parent directories if they do not exist');
     MkDirApp.Run;
     MkDirApp.Free;
 end.

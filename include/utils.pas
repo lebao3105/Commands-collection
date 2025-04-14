@@ -34,8 +34,8 @@ begin
     end;
 end;
 
-function ExistAsAFile(path: string): boolean; begin Result := Exist(path, AFile); end;
+function ExistAsAFile(path: string): boolean; inline; begin Result := Exist(path, AFile); end;
 
-function ExistAsADir(path: string): boolean; begin Result := Exist(path, AFolder); end;
+function ExistAsADir(path: string): boolean; inline; begin Result := Exist(path, AFolder); end;
 
 end.

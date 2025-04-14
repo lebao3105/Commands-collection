@@ -2,15 +2,14 @@ program cat;
 {$mode objFPC}{$h+}
 
 uses
-	custapp, classes,
-	sysutils, logging, utils;
+	custapp, classes, custcustapp,
+	sysutils, logging, utils, console;
 
-type TCat = class(TCustomApplication)
+type TCat = class(TCustCustApp)
 protected
 	procedure DoRun; override;
 
 private
-	files: TStringList;
 	showLineNo: boolean;
 	procedure readFile(path: string);
 end;
@@ -22,20 +21,19 @@ var
 	currLine: integer = 1;
 
 begin
-	if not FileExists(path) then begin
-		error(path + ': no such file');
-		if ParamCount = 0 then halt(1);
-	end;
+	if (not ExistAsAFile(path)) and (ParamCount = 0) then halt(1);
 
 	assignFile(tfIn, path);
 	reset(tfIn);
 	try
 		while not EOF(tfIn) do begin
 			readln(tfIn, line);
+
 			if showLineNo then
-				writeln(IntToStr(currLine):6, line:12)
+				writeln(IntToStr(currLine):6, ' | ', line)
 			else
 				writeln(line);
+			
 			Inc(currLine);
 		end;
 	except
@@ -47,46 +45,24 @@ begin
 	end;
 
 	CloseFile(tfIn);
+
+	writeln;
+
+	if HasOption('v', 'verbose') then
+		TConsole.writeln('> Read ' + path + '.' + sLineBreak, ccGreen);
 end;
 
 procedure TCat.DoRun;
 var
-	errorMsg: string;
-	args: TStringList; // flags with value (format: --<long flag>=<value> or -<short flag> value)
 	i: integer;
 
 begin
-	args := TStringList.Create();
-	files := TStringList.Create();
-
-	// https://github.com/alrieckert/freepascal/blob/master/packages/fcl-base/examples/testapp.pp
-	// args is a dummy argument for now, as no flag requires a value yet
-	errorMsg := CheckOptions('hn', ['help', 'show-lineno'], args, files);
-	if errorMsg <> '' then begin
-		Frees([args, files]);
-		die(errorMsg);
-	end;
-
-	if HasOption('h', 'help') or (errorMsg <> '') or (files.Count = 0) then
-	begin
-		writeln(ParamStr(0), ' [options] [files]');
-		writeln('Prints out passed file paths.');
-		writeln('--help / -h			: Show this help');
-		writeln('-n / --show-lineno		: Show line number');
-
-		Frees([args, files]);
-
-		if errorMsg <> '' then
-			die(errorMsg)
-		else
-			halt(0);
-	end;
+	inherited DoRun;
 
 	showLineNo := HasOption('n', 'show-lineno');
 
-	for i := 0 to files.Count - 1 do readFile(files[i]);
+	for i := 0 to NonOpts.Count - 1 do readFile(NonOpts[i]);
 
-	Frees([args, files]);
 	Terminate;
 end;
 
@@ -95,7 +71,8 @@ var
 
 begin
 	CatApp := TCat.Create(nil);
-	CatApp.StopOnException := true;
+	CatApp.RequireNonOpts := true;
+	CatApp.AddFlag('n', 'show-lineno', '', 'Show line numbers', false);
 	CatApp.Run;
 	CatApp.Free;
 end.

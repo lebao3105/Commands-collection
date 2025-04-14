@@ -1,27 +1,19 @@
 program dir;
 {$mode objfpc}{$h+}
+{$coperators on}
 
 uses
-	logging, sysutils, custapp, classes;
+	logging, sysutils, custcustapp, classes;
 
-type TDir = class(TCustomApplication)
+type TDir = class(TCustCustApp)
 protected
     procedure DoRun; override;
 
 private
     showHidden: boolean;
     showAsList: boolean;
+    dirOnly: boolean;
     procedure listitems(path: string);
-    function getOptions: shortint;
-end;
-
-function TDir.getOptions: ShortInt;
-begin
-    if showHidden then
-        Result := faAnyFile and faDirectory and not faHidden
-        //                              intended^^^
-    else
-        Result := faAnyFile and faDirectory and faHidden;
 end;
 
 procedure TDir.listitems(path: string);
@@ -30,6 +22,7 @@ var
     filesSize: integer = 0;
     f: TSearchRec;
     l: longint = 0;
+    lineToPrint: string;
 
 begin
     path := ExpandFileName(IncludeTrailingPathDelimiter(path));
@@ -38,42 +31,84 @@ begin
 
     if DirectoryExists(path) then
     begin
-        if FindFirst(path + '*', getOptions, f) = 0 then
+        if FindFirst(path + '*', faAnyFile, f) = 0 then
         begin
             repeat
-                Inc(l);  
-                with f do
-                    if (Attr and faDirectory) = faDirectory then
+                Inc(l);
+
+                // TODO:
+                // * Move f.Name to the bottom of the line (with showAsList set to true)
+                // * Last modified (with showAsList set to true)
+                with f do begin
+                    if (Attr = -1) and showAsList then
                     begin
-                        if showAsList then
-                            writeln(Name:20, '<Dir>':15, '-':20)
-                        else
-                            write(Name + ' ');
-                    end
-                    else if (Attr and faSymLink) = faSymLink then begin
-                        if showAsList then
-                            writeln(Name:20, '<SymLink>':15, Size:20)
-                        else
-                            write(Name + ' ');
-                        filesSize := filesSize + Size;
-                    end
-                    else begin
-                        if showAsList then
-                            writeln(Name:20, '':15, Size:20)
-                        else
-                            write(Name + ' ');
-                        filesSize := filesSize + Size;
-                        filesCount := filesCount + 1;
+                        writeln(Format('%20s%20s', [Name, '<ERROR>']));
+                        continue;
                     end;
+
+                    if not showAsList then begin
+                        write(Name + ' ');
+                        if (Attr and faDirectory) = 0 then
+                        begin
+                            Inc(filesCount);
+                            Inc(filesSize, Size);
+                        end;
+                        continue;
+                    end;
+
+                    if dirOnly then begin
+                        if (Attr and faDirectory) = 0 then continue;
+
+                        lineToPrint := Format('%20s%20s%10s', [Name, '<Dir>', '-']);
+                    end
+
+                    else begin
+                        lineToPrint := Format('%20s', [Name]);
+
+                        // Commented out: They are commented because of
+                        // Find{First,Next}.Attr not having all of the attributes
+                        // we can get and set (even the ones below are not all of them).
+                        // Although the documentation explicitly lists all available flags,
+                        // I still want to check. Will test later.
+
+                        if (Attr and faDirectory) <> 0 then
+                            lineToPrint += Format('%20s', ['<Dir>']);
+
+                        // if (Attr and faSymlink) <> 0 then
+                        //     lineToPrint += Format('%20s', ['<Symlink>']);
+                        
+                        if (Attr and faSysFile) <> 0 then
+                            lineToPrint += Format('%20s', ['<Sys file>']);
+
+                        // if (Attr and faCompressed) <> 0 then
+                        //     lineToPrint += Format('%20s', ['<Compressed file>']);
+
+                        // if (Attr and faEncrypted) <> 0 then
+                        //     lineToPrint += Format('%20s', ['<Encrypted file>']);
+
+                        if (Attr and faAnyFile) <> 0 then begin
+                            lineToPrint += Format('%20s', ['<File>']);
+                            Inc(filesCount);
+                            Inc(filesSize, Size);
+                        end;
+                    end;
+
+                    if (Attr and faHidden) <> 0 then
+                        lineToPrint += Format('%10s', ['<Hidden>']);
+
+                    if showAsList then
+                        writeln(lineToPrint)
+                    else
+                        write(lineToPrint);
+                end;
             until FindNext(f) <> 0;
 
             FindClose(f);
-            writeln;
             
-            info('Found ' + IntToStr(l) + ' items in '+ path + ' directory: ' +
-                            IntToStr(filesCount) + ' files, ' +
+            writeln;
+            info('Found ' + IntToStr(filesCount) + ' files, ' +
                             IntToStr(l - filesCount) + ' directories.' + #13);
-            info(IntToStr(filesSize) + ' bytes of files.' + #13);
+            info(IntToStr(filesSize) + ' bytes of files.' + #13 + #13);
         end
         
         else
@@ -85,40 +120,25 @@ end;
 
 procedure TDir.DoRun;
 var
-    args, dirs: TStringList;
     i: integer;
-    errorMsg: string;
 
 begin
-    args := TStringList.Create;
-    dirs := TStringList.Create;
+    inherited DoRun;
 
-    errorMsg := CheckOptions('hla', ['help', 'list', 'all'], args, dirs);
-    if errorMsg <> '' then begin error(errorMsg); ExitCode := 1; end
-    else begin
-        if HasOption('h', 'help') then
-        begin
-            writeln(ParamStr(0), ' [options] [folders]');
-            writeln('List items inside (a) directories.');
-            writeln('--help / -h                : Show this and exit');
-            writeln('--list / -l                : Show things as a list with their informations');
-            writeln('--all / -a                 : Show everything, including hidden things');
-            Terminate;
-            Exit;
-        end;
+    showAsList := HasOption('l', 'list');
+    showHidden := HasOption('a', 'all');
+    dirOnly := HasOption('d', 'dir-only');
 
-        showAsList := HasOption('l', 'list');
-        showHidden := HasOption('a', 'all');
+    debug(Format('-l / --list specified? %s', [BoolToStr(showAsList)]));
+    debug(Format('-a / -all specified? %s', [BoolToStr(showHidden)]));
+    debug(Format('-d / --dir-only specified? %s', [BoolToStr(dirOnly)]));
 
-        if dirs.Count = 0 then
-            listitems('./')
-        else
-            for i := 0 to dirs.Count - 1 do
-                listitems(dirs[i]);
-    end;
+    if NonOpts.Count = 0 then
+        listitems('./')
+    else
+        for i := 0 to NonOpts.Count - 1 do
+            listitems(NonOpts[i]);
 
-    args.Free;
-    dirs.Free;
     Terminate;
 end;
 
@@ -127,7 +147,9 @@ var
 
 begin
     DirApp := TDir.Create(nil);
-    DirApp.StopOnException := true;
+    DirApp.AddFlag('l', 'list', '', 'Show the output as a list', false);
+    DirApp.AddFlag('a', 'all', '', 'Show everything, including hidden stuff and folders', false);
+    DirApp.AddFlag('d', 'dir-only', '', 'Only show directories');
     DirApp.Run;
     DirApp.Free;
 end.

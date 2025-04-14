@@ -2,32 +2,23 @@ program calltime;
 {$mode objFPC}
 
 uses
-    classes, custapp, sysutils, logging;
+    classes, custcustapp, sysutils, logging;
 
-type TCallTime = class(TCustomApplication)
+type TCallTime = class(TCustCustApp)
 protected
     procedure DoRun; override;
 end;
 
 procedure TCallTime.DoRun;
 var
-    errorMsg: string;
     ThisMonement: TDateTime;
     format: string = 'dddd mmmm dd yyyy tt';
+
 begin
-    errorMsg := CheckOptions('hnf:', ['help', 'number-only', 'format:']);
-    if errorMsg <> '' then die(errorMsg);
+    inherited DoRun;
 
-    if HasOption('h', 'help') then
-    begin
-        writeln(ParamStr(0), ' [flag]');
-        writeln('Use --help/-h flag to show this message (again).');
-        writeln('-f / --format sets the custom format to be used');
-        writeln('Available format strings can be found at https://www.freepascal.org/docs-html/rtl/sysutils/formatchars.html');
-        halt(0);
-    end;
-
-    if HasOption('f', 'format') then format := GetOptionValue('f', 'format');
+    if HasOption('f', 'format') then
+        format := GetOptionValue('f', 'format');
 
     ThisMonement := Now;
 
@@ -40,7 +31,7 @@ var
 
 begin
     CallTimeApp := TCallTime.Create(nil);
-    CallTimeApp.StopOnException := true;
+    CallTimeApp.AddFlag('f', 'format', 'string', 'Custom time/date/both format');
     CallTimeApp.Run;
     CallTimeApp.Free;
 end.
