@@ -1,0 +1,60 @@
+name: Nightly CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  linux:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install compiler
+      run: sudo apt update && sudo apt install fpc -y
+    
+    - name: Regenerate Makefile
+      run: fpcmake -w -Tall
+
+    - name: Build all projects
+      run: make all
+    
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        path: build/progs
+        if-no-files-found: error
+        name: Commands Collection (Nightly) for Linux
+  
+  windows:
+    
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Lazarus IDE
+      run: choco install lazarus
+    
+    - name: Setup MSYS2 just for... GNU Make
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: mingw64
+        install: make
+    
+    - name: Regenerate Makefile
+      shell: msys2 {0}
+      run: fpcmake -w -Tall
+
+    - name: Build all projects
+      shell: msys2 {0}
+      run: make all
+    
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        path: build/progs
+        if-no-files-found: error
+        name: Commands Collection (Nightly) for x86_64 Windows
