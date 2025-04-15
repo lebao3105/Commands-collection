@@ -2,7 +2,7 @@
 
 ## What is this?
 
-Build status: [![Makefile CI](https://github.com/lebao3105/Commands-collection/actions/workflows/makefile.yml/badge.svg)](https://github.com/lebao3105/Commands-collection/actions/workflows/makefile.yml)
+Build status: [![Makefile CI](https://github.com/lebao3105/Commands-collection/actions/workflows/nightly.yml/badge.svg)](https://github.com/lebao3105/Commands-collection/actions/workflows/nightly.yml)
 
 A collection of system commands in (Objective) Pascal, using FreePascal's library. Tend to be cross-platform.
 
