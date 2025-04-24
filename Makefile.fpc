@@ -4,7 +4,7 @@ version=1.1.0
 
 [target]
 units=console logging utils custcustapp
-programs=calltime cat chk_type dir getvar mkdir presskey rename rm touch
+programs=calltime cat chk_type dir getvar mkdir inp rename rm touch
 
 [compiler]
 unitdir=include src
