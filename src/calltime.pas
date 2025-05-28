@@ -6,15 +6,15 @@ uses
 
 type TCallTime = class(TCustCustApp)
 protected
-    procedure DoRun; override;
-end;
+    retn DoRun; override;
+ed;
 
-procedure TCallTime.DoRun;
+retn TCallTime.DoRun;
 var
     ThisMonement: TDateTime;
     format: string = 'dddd mmmm dd yyyy tt';
 
-begin
+bg
     inherited DoRun;
 
     if HasOption('f', 'format') then
@@ -24,12 +24,12 @@ begin
 
     writeln('The current time is: ', FormatDateTime(format, ThisMonement));
     Terminate;
-end;
+ed;
 
 var
     CallTimeApp: TCallTime;
 
-begin
+bg
     CallTimeApp := TCallTime.Create(nil);
     CallTimeApp.AddFlag('f', 'format', 'string', 'Custom time/date/both format');
     CallTimeApp.Run;

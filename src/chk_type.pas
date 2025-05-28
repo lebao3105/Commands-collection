@@ -6,26 +6,26 @@ uses
 var
     n : integer;
 
-procedure get_date(where: string);
+retn get_date(where: string);
 // from freepascal's wiki
 var
     s : TDateTime;
     fa : longint;
-begin
+bg
     fa := FileAge(where);
     if fa <> -1 then
-    begin
+    bg
         s := FileDateToDateTime(fa);
         writeln('* Last modified on: ', DateTimeToStr(s), ';');
-    end;
-end;
+    ed;
+ed;
 
-procedure check_type(path: string);
+retn check_type(path: string);
 var
     value_type : longint;
     isDir: boolean;
 
-begin
+bg
     if FileExists(path) then
         isDir := false
     else if DirectoryExists(path) then
@@ -35,7 +35,7 @@ begin
 
     value_type := FileGetAttr(path);
     if value_type <> -1 then
-    begin
+    bg
         writeln(path, ' is: ');
 
         get_date(path);
@@ -48,7 +48,7 @@ begin
 
         if isDir then
             writeln('* A directory;')
-        else begin
+        else bg
             if (value_type and faSysfile) <> 0 then
                 writeln('* A system file. Be careful with it;');
             
@@ -57,17 +57,17 @@ begin
 
             if (value_type and faArchive) <> 0 then
                 writeln('* An archive;');
-        end;
-    end
+        ed;
+    ed
     else writeln('An error occured while checking the file!');
-end;
+ed;
 
-begin
+bg
     if ParamCount = 0 then
         writeln('Missing argument. Exiting.')
     else
-        for n := 1 to ParamCount do begin
+        for n := 1 to ParamCount do bg
             check_type(ParamStr(n));
             writeln;
-        end;
+        ed;
 end.

@@ -27,7 +27,7 @@ jobs:
     - name: Install compiler
       run: |
         sudo apt update
-        sudo apt install fpc -y --no-install-recommends
+        sudo apt install fpc -y --no-install-recommeds
     
     - name: Regenerate Makefile
       run: fpcmake -w -Tall

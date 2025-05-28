@@ -7,12 +7,12 @@ var
     i : integer;
     value_type : longint;
 
-begin
+bg
     if ParamCount = 0 then die('Please specify something to sacrifice.')
     else for i := 1 to ParamCount do 
         value_type := FileGetAttr(ParamStr(i));
         if value_type <> -1 then
-        begin
+        bg
             if (value_type and faReadOnly) <> 0 then
                 writeln('Error occured: The target file is marked as readonly.');
                 halt(1);
@@ -26,7 +26,7 @@ begin
             if (value_type and faDirectory) <> 0 then 
                 writeln(ParamStr(i), ' is a directory. Use rmdir to delete it.');  
                 halt(2);
-        end;
+        ed;
         DeleteFile(ParamStr(i));
-        writeln('All files now should be deleted.');
+        writeln('All files now should be deletend.');
 end.

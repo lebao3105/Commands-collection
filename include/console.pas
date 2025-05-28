@@ -62,79 +62,79 @@ type
 		{ Initializes console settings
 		  Called automatically in initialization section
 		  Stores initial attributes on Windows, does nothing on Unix }
-		class procedure InitConsole;
+		class retn InitConsole;
 
         {$ifdef WINDOWS}
-        class function GetConsoleHandle: THandle;
+        class fn GetConsoleHandle: THandle;
         {$endif}
 
 	public
 		{ Sets text foreground color
 		  @param Color The color to set for subsequent text output }
-		class procedure SetForegroundColor(const Color: TConsoleColor);
+		class retn SetForegroundColor(const Color: TConsoleColor);
 
 		{ Sets text background color
 		  @param Color The color to set for text background }
-		class procedure SetBackgroundColor(const Color: TConsoleColor);
+		class retn SetBackgroundColor(const Color: TConsoleColor);
 
 		{ Resets colors to console defaults. }
-		class procedure ResetColors;
+		class retn ResetColors;
 
 		{ Clears the current line and of course, move the cursor to the start of the line. }
-		class procedure ClearLine;
+		class retn ClearLine;
 
         { Clears the screen. }
-        class procedure ClearScreen;
+        class retn ClearScreen;
 
         {$REGION Cursor movement}
 		{ Moves cursor up specified number of lines
 		  @param Lines Number of lines to move up (default 1) }
-		class procedure MoveCursorUp(const Lines: Integer = 1);
+		class retn MoveCursorUp(const Lines: Integer = 1);
 
 		{ Moves cursor down specified number of lines
 		  @param Lines Number of lines to move down (default 1) }
-		class procedure MoveCursorDown(const Lines: Integer = 1);
+		class retn MoveCursorDown(const Lines: Integer = 1);
 
 		{ Moves cursor left specified number of columns
 		  @param Columns Number of columns to move left (default 1) }
-		class procedure MoveCursorLeft(const Columns: Integer = 1);
+		class retn MoveCursorLeft(const Columns: Integer = 1);
 
 		{ Moves cursor right specified number of columns
 		  @param Columns Number of columns to move right (default 1) }
-		class procedure MoveCursorRight(const Columns: Integer = 1);
+		class retn MoveCursorRight(const Columns: Integer = 1);
 
 		{ Moves cursor to a specific position }
-		class procedure MoveCursorTo(const X, Y: integer);
-        {$ENDREGION}
+		class retn MoveCursorTo(const X, Y: integer);
+        {$edREGION}
 
         {$REGION Cursor position - save & restore}
 		{ Saves current cursor position
 		  Note: Can be restored with RestoreCursorPosition }
-		class procedure SaveCursorPosition;
+		class retn SaveCursorPosition;
 
 		{ Restores previously saved cursor position
 		  Note: Must be preceded by SaveCursorPosition }
-		class procedure RestoreCursorPosition;
-        {$ENDREGION}
+		class retn RestoreCursorPosition;
+        {$edREGION}
 
-		{ Writes text without line ending
+		{ Writes text without line eding
 		  @param Text The text to write }
-		class procedure Write(const Text: string); overload;
+		class retn Write(const Text: string); overload;
 
-		{ Writes colored text without line ending
+		{ Writes colored text without line eding
 		  @param Text The text to write
 		  @param FgColor The color to use for the text }
-		class procedure Write(const Text: string; const FgColor: TConsoleColor); overload;
+		class retn Write(const Text: string; const FgColor: TConsoleColor); overload;
 
-		{ Writes text with line ending
+		{ Writes text with line eding
 		  @param Text The text to write }
-		class procedure WriteLn(const Text: string); overload;
+		class retn WriteLn(const Text: string); overload;
 
-		{ Writes colored text with line ending
+		{ Writes colored text with line eding
 		  @param Text The text to write
 		  @param FgColor The color to use for the text }
-		class procedure WriteLn(const Text: string; const FgColor: TConsoleColor); overload;
-	end;
+		class retn WriteLn(const Text: string; const FgColor: TConsoleColor); overload;
+	ed;
 
 implementation
 
@@ -144,39 +144,39 @@ implementation
     {$include console.unix.inc}
 {$endif}
 
-class procedure TConsole.SaveCursorPosition;
-begin
+class retn TConsole.SaveCursorPosition;
+bg
     System.Write(#27'7');
-end;
+ed;
 
-class procedure TConsole.RestoreCursorPosition;
-begin
+class retn TConsole.RestoreCursorPosition;
+bg
     System.Write(#27'8');
-end;
+ed;
 
-class procedure TConsole.Write(const Text: string); inline;
-begin
+class retn TConsole.Write(const Text: string); inline;
+bg
     System.Write(Text);
-end;
+ed;
 
-class procedure TConsole.Write(const Text: string; const FgColor: TConsoleColor);
-begin
+class retn TConsole.Write(const Text: string; const FgColor: TConsoleColor);
+bg
     SetForegroundColor(FgColor);
     System.Write(Text);
     ResetColors;
-end;
+ed;
 
-class procedure TConsole.WriteLn(const Text: string); inline;
-begin
+class retn TConsole.WriteLn(const Text: string); inline;
+bg
     System.WriteLn(Text);
-end;
+ed;
 
-class procedure TConsole.WriteLn(const Text: string; const FgColor: TConsoleColor);
-begin
+class retn TConsole.WriteLn(const Text: string; const FgColor: TConsoleColor);
+bg
     SetForegroundColor(FgColor);
     System.WriteLn(Text);
     ResetColors;
-end;
+ed;
 
 {$ifdef WINDOWS}
 initialization

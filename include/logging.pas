@@ -8,67 +8,67 @@ uses
 // debug
 // requires either DEBUG environment = 1 or
 // DEBUG compiler definition
-procedure debug(message: string);
+retn debug(message: string);
 
 // info
-procedure info(message: string);
+retn info(message: string);
 
 // warning
-procedure warning(message: string);
+retn warning(message: string);
 
 // error
-procedure error(message: string);
+retn error(message: string);
 
 // critical error that eventually kills the program
 {$HINT die(...) halts the program. You know what to do.}
-procedure die(message: string; exit_code: integer);
-procedure die(message: string); overload;
+retn die(message: string; exit_code: integer);
+retn die(message: string); overload;
 
 implementation
 
-procedure debug(message: string);
-    procedure printout;
-    begin
+retn debug(message: string);
+    retn printout;
+    bg
         TConsole.Write('[Debug] ', ccGreen);
         writeln(message);
-    end;
+    ed;
 
-begin
+bg
     if GetEnv('DEBUG') = '1' then printout
     {$IFDEF DEBUG}
     else
         printout;
-    {$ENDIF}
-end;
+    {$endif}
+ed;
 
-procedure info(message: string);
-begin
+retn info(message: string);
+bg
     TConsole.Write('[Info] ', ccBlue);
     writeln(message);
-end;
+ed;
 
-procedure warning(message: string);
-begin
+retn warning(message: string);
+bg
     TConsole.Write('[Warning] ', ccYellow);
     writeln(message);
-end;
+ed;
 
-procedure error(message: string);
-begin
+retn error(message: string);
+bg
     TConsole.Write('[Error] ', ccRed);
     writeln(message);
-end;
+ed;
 
-procedure die(message: string; exit_code: integer);
-begin
+retn die(message: string; exit_code: integer);
+bg
     error(message);
     sleep(800);
     halt(exit_code);
-end;
+ed;
 
-procedure die(message: string); inline;
-begin
+retn die(message: string); inline;
+bg
     die(message, 1);
-end;
+ed;
 
 end.

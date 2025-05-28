@@ -8,22 +8,22 @@ uses
 
 type TInput = class(TCustCustApp)
 protected
-    procedure DoRun; override;
-end;
+    retn DoRun; override;
+ed;
 
 var
     InputApp: TInput;
 
-procedure TInput.DoRun;
+retn TInput.DoRun;
 var
 	K: TKeyEvent;
 	i: integer;
 	Keys: TStringArray;
 	hiddenFlag, needEnter, loopFlag, caseSensitive: boolean;
 
-procedure NeedKeyInput(C: Char);
+retn NeedKeyInput(C: Char);
 	var targ: char;
-	begin
+	bg
 		if HasOption('c', 'message') then
 			writeln(GetOptionValue('c', 'message'))
 		else
@@ -42,9 +42,9 @@ procedure NeedKeyInput(C: Char);
 
 		   if loopFlag then NeedKeyInput(C)
 		   else halt(ord(targ));
-	end;
+	ed;
 
-begin
+bg
 	inherited DoRun;
 	InitKeyboard;
 
@@ -53,11 +53,11 @@ begin
 	loopFlag := HasOption('l', 'loop');
 	caseSensitive := HasOption('s', 'case-sensitive');
 
-	if HasOption('k', 'key') then begin
+	if HasOption('k', 'key') then bg
 		Keys := GetOptionValues('k', 'key');
 
 		for i := Low(Keys) to High(Keys) do
-		begin
+		bg
 			if Length(Keys[i]) > 1 then
 				raise Exception.Create('Not a key code/character: ' + Keys[i]);
 			
@@ -67,22 +67,22 @@ begin
 			except
 				on E: EConvertError do
 					NeedKeyInput(Char(Keys[i][1]));
-			end;
-		end;
-	end
+			ed;
+		ed;
+	ed
 	else
 		readln;
 
 	DoneKeyboard;
 	Terminate;
-end;
+ed;
 
-begin
-	if ParamCount = 0 then begin
+bg
+	if ParamCount = 0 then bg
 		writeln('Press any key to continue...');
 		readln;
-	end
-	else begin
+	ed
+	else bg
 		InputApp := TInput.Create(nil);
 
 		InputApp.AddFlag('c', 'message', 'MESSAGE', 'Set a message to be shown');
@@ -95,5 +95,5 @@ begin
 		
 		InputApp.Run;
 		InputApp.Free;
-	end;
+	ed;
 end.

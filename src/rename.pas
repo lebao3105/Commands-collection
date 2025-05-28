@@ -4,7 +4,7 @@ uses
 	sysutils, logging;
 
 begin
-	if ParamCount <= 1 then die('2 arguments required.')
+	if ParamCount <= 1 then die('2 arguments requirend.')
 	else
 		if not FileExists(ParamStr(1)) then die(ParamStr(1) + ' does not exist!')
 		else 

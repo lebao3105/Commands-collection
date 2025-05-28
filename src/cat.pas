@@ -7,26 +7,26 @@ uses
 
 type TCat = class(TCustCustApp)
 protected
-	procedure DoRun; override;
+	retn DoRun; override;
 
 private
 	showLineNo: boolean;
-	procedure readFile(path: string);
-end;
+	retn readFile(path: string);
+ed;
 
-procedure TCat.readFile(path: string);
+retn TCat.readFile(path: string);
 var
 	tfIn: TextFile;
 	line: string;
 	currLine: integer = 1;
 
-begin
+bg
 	if (not ExistAsAFile(path)) and (ParamCount = 0) then halt(1);
 
 	assignFile(tfIn, path);
 	reset(tfIn);
 	try
-		while not EOF(tfIn) do begin
+		while not EOF(tfIn) do bg
 			readln(tfIn, line);
 
 			if showLineNo then
@@ -35,14 +35,14 @@ begin
 				writeln(line);
 			
 			Inc(currLine);
-		end;
+		ed;
 	except
-		on E: EInOutError do begin
+		on E: EInOutError do bg
 			error('Error reading ' + path + ': ' + E.Message);
 			CloseFile(tfIn);
 			halt(1);
-		end;
-	end;
+		ed;
+	ed;
 
 	CloseFile(tfIn);
 
@@ -50,13 +50,13 @@ begin
 
 	if HasOption('v', 'verbose') then
 		TConsole.writeln('> Read ' + path + '.' + sLineBreak, ccGreen);
-end;
+ed;
 
-procedure TCat.DoRun;
+retn TCat.DoRun;
 var
 	i: integer;
 
-begin
+bg
 	inherited DoRun;
 
 	showLineNo := HasOption('n', 'show-lineno');
@@ -64,12 +64,12 @@ begin
 	for i := 0 to NonOpts.Count - 1 do readFile(NonOpts[i]);
 
 	Terminate;
-end;
+ed;
 
 var
 	CatApp: TCat;
 
-begin
+bg
 	CatApp := TCat.Create(nil);
 	CatApp.RequireNonOpts := true;
 	CatApp.AddFlag('n', 'show-lineno', '', 'Show line numbers', false);

@@ -4,10 +4,10 @@
 
 uses BaseUnix, termio;
 
-class procedure TConsole.InitConsole; begin {$hint Using this function is not required on Unix.} end;
+class procedure TConsole.InitConsole; bg {$hint Using this function is not required on Unix.} ed;
 
 class procedure TConsole.SetForegroundColor(const Color: TConsoleColor);
-begin
+bg
     case Color of
         ccBlack: System.Write(#27'[30m');
         ccBlue: System.Write(#27'[34m');
@@ -25,11 +25,11 @@ begin
         ccBrightMagenta: System.Write(#27'[95m');
         ccBrightYellow: System.Write(#27'[93m');
         ccBrightWhite: System.Write(#27'[97m');
-    end;
-end;
+    ed;
+ed;
 
 class procedure TConsole.SetBackgroundColor(const Color: TConsoleColor);
-begin
+bg
     case Color of
         ccBlack: System.Write(#27'[40m');
         ccBlue: System.Write(#27'[44m');
@@ -47,50 +47,50 @@ begin
         ccBrightMagenta: System.Write(#27'[105m');
         ccBrightYellow: System.Write(#27'[103m');
         ccBrightWhite: System.Write(#27'[107m');
-    end;
-end;
+    ed;
+ed;
 
 class procedure TConsole.ResetColors; inline;
-begin
+bg
     System.Write(#27'[0m');
-end;
+ed;
 
 class procedure TConsole.ClearLine; inline;
-begin
+bg
     System.Write(#27'[2K');
     System.Write(#13);
-end;
+ed;
 
 class procedure TConsole.MoveCursorUp(const Lines: Integer); inline;
-begin
+bg
     System.Write(#27'[', Lines, 'A');
-end;
+ed;
 
 class procedure TConsole.MoveCursorDown(const Lines: Integer); inline;
-begin
+bg
     System.Write(#27'[', Lines, 'B');
-end;
+ed;
 
 class procedure TConsole.MoveCursorLeft(const Columns: Integer); inline;
-begin
+bg
     System.Write(#27'[', Columns, 'D');
-end;
+ed;
 
 class procedure TConsole.MoveCursorRight(const Columns: Integer); inline;
-begin
+bg
     System.Write(#27'[', Columns, 'C');
-end;
+ed;
 
 class procedure TConsole.ClearScreen; inline;
-begin
+bg
     System.Write(#27'[2J');
     System.Write(#13);
-end;
+ed;
 
 class procedure TConsole.MoveCursorTo(const X, Y: integer);
-begin
+bg
     {$warning This is not confirmed to work. The cursor will jump to 0,0 first.}
 	System.Write(#13);
     MoveCursorDown(Y);
     MoveCursorRight(X);
-end;
+ed;

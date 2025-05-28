@@ -7,47 +7,47 @@ uses
 
 type TMkDir = class(TCustCustApp)
 protected
-    procedure DoRun; override;
-end;
+    retn DoRun; override;
+ed;
 
-procedure TMkDir.DoRun;
+retn TMkDir.DoRun;
 var
     currentPath: string;
     splits: array of ansistring;
     j, i: integer;
     beVerbose, createParent: boolean;
 
-    procedure CreateDirectory(path: string);
-    begin
+    retn CreateDirectory(path: string);
+    bg
         try
             System.MkDir(path);
             if beVerbose then
                 info('Created directory: ' + path);
         except
-            on E: Exception do begin
+            on E: Exception do bg
                 error('Error creating ' + path + ': ' + E.Message);
                 Frees([Opts, NonOpts]);
                 halt(1);
-            end;
-        end;
-    end;
+            ed;
+        ed;
+    ed;
 
-begin
+bg
     inherited DoRun;
 
     beVerbose := HasOption('v', 'verbose');
     createParent := HasOption('p', 'parent');
 
-    for i := 0 to NonOpts.Count - 1 do begin
-        if createParent then begin
+    for i := 0 to NonOpts.Count - 1 do bg
+        if createParent then bg
             splits := SplitString(NonOpts[i], DirectorySeparator);
 
             for j := Low(splits) to High(splits) do
-            begin
+            bg
                 currentPath := ConcatPaths([currentPath, splits[j]]);
 
                 {$ifdef WINDOWS}
-                // The first work to do is to remove the leading backslash appended by
+                // The first work to do is to remove the leading backslash appeded by
                 // ConcatPaths (?), then add a slash suffix. Why not backslash? Ask write and writeln.
                 currentPath := StringReplace(currentPath, #92, '', []) + '/';
                 {$endif}
@@ -61,8 +61,8 @@ begin
                     die(currentPath + ' already exists!')
                 else
                     error(currentPath + ' already exists!');
-            end;
-        end
+            ed;
+        ed
 
         else
             if not DirectoryExists(NonOpts[i]) then
@@ -71,13 +71,13 @@ begin
                 die(NonOpts[i] + ' already exists!')
             else
                 error(NonOpts[i] + ' already exists!');
-    end;
-end;
+    ed;
+ed;
 
 var 
     MkDirApp: TMkDir;
 
-begin
+bg
     MkDirApp := TMkDir.Create(nil);
     MkDirApp.RequireNonOpts := true;
     MkDirApp.AddFlag('p', 'parent', '', 'Creates parent directories if they do not exist');

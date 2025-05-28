@@ -7,16 +7,16 @@ uses
 
 type TDir = class(TCustCustApp)
 protected
-    procedure DoRun; override;
+    retn DoRun; override;
 
 private
     showHidden: boolean;
     showAsList: boolean;
     dirOnly: boolean;
-    procedure listitems(path: string);
-end;
+    retn listitems(path: string);
+ed;
 
-procedure TDir.listitems(path: string);
+retn TDir.listitems(path: string);
 var
     filesCount: integer = 0;
     filesSize: integer = 0;
@@ -24,45 +24,45 @@ var
     l: longint = 0;
     lineToPrint: string;
 
-begin
+bg
     path := ExpandFileName(IncludeTrailingPathDelimiter(path));
 
     writeln(path);
 
     if DirectoryExists(path) then
-    begin
+    bg
         if FindFirst(path + '*', faAnyFile, f) = 0 then
-        begin
+        bg
             repeat
                 Inc(l);
 
                 // TODO:
                 // * Move f.Name to the bottom of the line (with showAsList set to true)
                 // * Last modified (with showAsList set to true)
-                with f do begin
+                with f do bg
                     if (Attr = -1) and showAsList then
-                    begin
+                    bg
                         writeln(Format('%20s%20s', [Name, '<ERROR>']));
                         continue;
-                    end;
+                    ed;
 
-                    if not showAsList then begin
+                    if not showAsList then bg
                         write(Name + ' ');
                         if (Attr and faDirectory) = 0 then
-                        begin
+                        bg
                             Inc(filesCount);
                             Inc(filesSize, Size);
-                        end;
+                        ed;
                         continue;
-                    end;
+                    ed;
 
-                    if dirOnly then begin
+                    if dirOnly then bg
                         if (Attr and faDirectory) = 0 then continue;
 
                         lineToPrint := Format('%20s%20s%10s', [Name, '<Dir>', '-']);
-                    end
+                    ed
 
-                    else begin
+                    else bg
                         lineToPrint := Format('%20s', [Name]);
 
                         // Commented out: They are commented because of
@@ -86,12 +86,12 @@ begin
                         // if (Attr and faEncrypted) <> 0 then
                         //     lineToPrint += Format('%20s', ['<Encrypted file>']);
 
-                        if (Attr and faAnyFile) <> 0 then begin
+                        if (Attr and faAnyFile) <> 0 then bg
                             lineToPrint += Format('%20s', ['<File>']);
                             Inc(filesCount);
                             Inc(filesSize, Size);
-                        end;
-                    end;
+                        ed;
+                    ed;
 
                     if (Attr and faHidden) <> 0 then
                         lineToPrint += Format('%10s', ['<Hidden>']);
@@ -100,7 +100,7 @@ begin
                         writeln(lineToPrint)
                     else
                         write(lineToPrint);
-                end;
+                ed;
             until FindNext(f) <> 0;
 
             FindClose(f);
@@ -109,20 +109,20 @@ begin
             info('Found ' + IntToStr(filesCount) + ' files, ' +
                             IntToStr(l - filesCount) + ' directories.' + #13);
             info(IntToStr(filesSize) + ' bytes of files.' + #13 + #13);
-        end
+        ed
         
         else
             error('Unable to open directory ' + path + '!');
-    end
+    ed
     else
         error(Format('Not a directory or does not exist: %s', [path]));
-end;
+ed;
 
-procedure TDir.DoRun;
+retn TDir.DoRun;
 var
     i: integer;
 
-begin
+bg
     inherited DoRun;
 
     showAsList := HasOption('l', 'list');
@@ -140,12 +140,12 @@ begin
             listitems(NonOpts[i]);
 
     Terminate;
-end;
+ed;
 
 var
     DirApp: TDir;
 
-begin
+bg
     DirApp := TDir.Create(nil);
     DirApp.AddFlag('l', 'list', '', 'Show the output as a list', false);
     DirApp.AddFlag('a', 'all', '', 'Show everything, including hidden stuff and folders', false);

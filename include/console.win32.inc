@@ -5,57 +5,57 @@
 uses Windows;
 
 class function TConsole.GetConsoleHandle: THandle;
-begin
+bg
     Result := GetStdHandle(STD_OUTPUT_HANDLE);
     Assert(Result <> INVALID_HANDLE_VALUE);
-end;
+ed;
 
 class procedure TConsole.InitConsole;
 var Handle: THandle;
     Info: TConsoleScreenBufferInfo;
-begin
+bg
     Handle := GetStdHandle(STD_OUTPUT_HANDLE);
 
     if GetConsoleScreenBufferInfo(Handle, Info) then
         FDefaultAttr := Info.wAttributes
     else
         FDefaultAttr := $07; // light gray on black
-end;
+ed;
 
 class procedure TConsole.SetForegroundColor(const Color: TConsoleColor);
 var Handle: THandle;
     Info: TConsoleScreenBufferInfo;
-begin
+bg
     Handle := GetStdHandle(STD_OUTPUT_HANDLE);
     GetConsoleScreenBufferInfo(Handle, Info);
     SetConsoleTextAttribute(Handle, (Info.wAttributes and $F0) or Ord(Color));
-end;
+ed;
 
 class procedure TConsole.SetBackgroundColor(const Color: TConsoleColor);
 var
     Handle: THandle;
     Info: TConsoleScreenBufferInfo;
-begin
+bg
     Handle := GetConsoleHandle;
     GetConsoleScreenBufferInfo(Handle, Info);
     SetConsoleTextAttribute(Handle, (Info.wAttributes and $0F) or (Ord(Color) shl 4));
-end;
+ed;
 
 class procedure TConsole.ResetColors; inline;
-begin
+bg
     SetConsoleTextAttribute(GetConsoleHandle, FDefaultAttr);
-end;
+ed;
 
 class procedure TConsole.ClearLine;
 var
     Info: TConsoleScreenBufferInfo;
 
-begin
+bg
     GetConsoleScreenBufferInfo(GetConsoleHandle, Info);
 
     System.Write(#13);
     System.Write(StringOfChar(' ', Info.dwSize.X));
-end;
+ed;
 
 class procedure TConsole.ClearScreen;
 var
@@ -64,7 +64,7 @@ var
     scrollRect: TSmallRect;
     Handle: THandle;
     Fill: TCharInfo;
-begin
+bg
     Handle := GetConsoleHandle;
     GetConsoleScreenBufferInfo(Handle, Info);
 
@@ -85,55 +85,55 @@ begin
     Info.dwCursorPosition.Y := 0;
 
     SetConsoleCursorPosition(Handle, Info.dwCursorPosition);
-end;
+ed;
 
 class procedure TConsole.MoveCursorUp(const Lines: Integer); inline;
 var Handle: THandle;
     Info: TConsoleScreenBufferInfo;
-begin
+bg
 	Handle := GetConsoleHandle;
     GetConsoleScreenBufferInfo(Handle, Info);
     Inc(Info.dwCursorPosition.Y, Lines);
     SetConsoleCursorPosition(Handle, Info.dwCursorPosition);
-end;
+ed;
 
 class procedure TConsole.MoveCursorDown(const Lines: Integer); inline;
 var Handle: THandle;
     Info: TConsoleScreenBufferInfo;
-begin
+bg
 	Handle := GetConsoleHandle;
     GetConsoleScreenBufferInfo(Handle, Info);
     Dec(Info.dwCursorPosition.Y, Lines);
     SetConsoleCursorPosition(Handle, Info.dwCursorPosition);
-end;
+ed;
 
 class procedure TConsole.MoveCursorLeft(const Columns: Integer); inline;
 var Handle: THandle;
     Info: TConsoleScreenBufferInfo;
-begin
+bg
 	Handle := GetConsoleHandle;
     GetConsoleScreenBufferInfo(Handle, Info);
     Dec(Info.dwCursorPosition.X, Columns);
     SetConsoleCursorPosition(Handle, Info.dwCursorPosition);
-end;
+ed;
 
 class procedure TConsole.MoveCursorRight(const Columns: Integer); inline;
 var Handle: THandle;
     Info: TConsoleScreenBufferInfo;
-begin
+bg
 	Handle := GetConsoleHandle;
     GetConsoleScreenBufferInfo(Handle, Info);
     Inc(Info.dwCursorPosition.X, Columns);
     SetConsoleCursorPosition(Handle, Info.dwCursorPosition);
-end;
+ed;
 
 class procedure TConsole.MoveCursorTo(const X, Y: integer);
 var Handle: THandle;
     Info: TConsoleScreenBufferInfo;
-begin
+bg
 	Handle := GetConsoleHandle;
     GetConsoleScreenBufferInfo(Handle, Info);
     Info.dwCursorPosition.X := X;
     Info.dwCursorPosition.Y := Y;
     SetConsoleCursorPosition(Handle, Info.dwCursorPosition);
-end;
+ed;
