@@ -4,7 +4,7 @@ version=1.1.0
 
 [target]
 units=console logging utils custcustapp
-programs=calltime cat chk_type dir getvar mkdir inp rename rm touch
+programs=calltime cat chk_type dir env mkdir inp rename rm touch
 
 [compiler]
 unitdir=include src
@@ -12,3 +12,21 @@ targetdir=build/progs
 sourcedir=include src
 unittargetdir=build/obj_out
 includedir=include
+options=-Sa -Si -Sm -Sc -dbg:=begin -ded:=end -dretn:=procedure -dfn:=function -dctor:=constructor -ddtor:=destructor
+
+[rules]
+%: %.pp
+	$(COMPILER) $<
+	$(EXECPPAS)
+%: %.pas
+	$(COMPILER) $<
+	$(EXECPPAS)
+%: %.lpr
+	$(COMPILER) $<
+	$(EXECPPAS)
+%: %.dpr
+	$(COMPILER) $<
+	$(EXECPPAS)
+examples:
+	@echo ???
+	@exit 1
