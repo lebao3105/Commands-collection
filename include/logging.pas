@@ -34,11 +34,10 @@ retn debug(message: string);
     ed;
 
 bg
-    if GetEnv('DEBUG') = '1' then printout
-    {$IFDEF DEBUG}
-    else
+    {$IfNDef DEBUG}
+    if GetEnv('DEBUG') = '1' then
+    {$EndIf}
         printout;
-    {$endif}
 ed;
 
 retn info(message: string);
@@ -61,7 +60,8 @@ ed;
 
 retn die(message: string; exit_code: integer);
 bg
-    error(message);
+    TConsole.Write('[Fatal] ', ccRed);
+    writeln(message);
     sleep(800);
     halt(exit_code);
 ed;

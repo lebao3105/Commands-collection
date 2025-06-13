@@ -15,7 +15,7 @@ bg
                 FileCreate(ParamStr(i));
             except
                 on E: Exception do bg
-                    die('Failed to create ' + ParamStr(i) + ': ' + E.Message);
+                    error('Failed to create ' + ParamStr(i) + ': ' + E.Message);
                 ed;
             ed;
 end.
