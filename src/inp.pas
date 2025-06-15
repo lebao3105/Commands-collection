@@ -9,6 +9,9 @@ uses
 type TInput = class(TCustCustApp)
 protected
     retn DoRun; override;
+
+public
+	retn ShowHelp;
 ed;
 
 var
@@ -18,30 +21,50 @@ retn TInput.DoRun;
 var
 	K: TKeyEvent;
 	i: integer;
-	Keys: TStringArray;
-	hiddenFlag, needEnter, loopFlag, caseSensitive: boolean;
+	Keys: array of char;
+	StrKeys: array of string;
+	Availables: string = '[';
+	hiddenFlag, needEnter, loopFlag: boolean;
+	caseSensitive, showAvailables: boolean;
 
-retn NeedKeyInput(C: Char);
-	var targ: char;
+	retn NeedKeyInput();
+	var targ: char; n: integer;
 	bg
 		if HasOption('c', 'message') then
-			writeln(GetOptionValue('c', 'message'))
+			write(GetOptionValue('c', 'message') + ' ')
 		else
-			writeln('Press a key to continue...');
-
-		K := TranslateKeyEvent(GetKeyEvent);
-		targ := GetKeyEventChar(K);
-
-		if not hiddenFlag then
-			write(targ);
+			write('Press a key to continue... ');
 		
-		if needEnter then readln;
+		if Length(Keys) > 0 then bg
+			if showAvailables then
+				write(Availables);
+			
+			K := TranslateKeyEvent(GetKeyEvent);
+			targ := GetKeyEventChar(K);
 
-		if ((not caseSensitive) and (targ = C)) or
-		   (caseSensitive and (UpCase(targ) = UpCase(C))) then
+			if not hiddenFlag then
+				write(targ);
+			
+			if needEnter then readln;
 
-		   if loopFlag then NeedKeyInput(C)
-		   else halt(ord(targ));
+			for n := Low(Keys) to High(Keys) do
+			bg
+				if (caseSensitive and (ord(targ) = ord(Keys[n])))
+				then
+					halt(ord(targ))
+				else if ((not caseSensitive) and (UpCase(Keys[n]) = UpCase(targ)))
+				then
+					halt(ord(targ));
+			ed;
+			if loopFlag then bg
+				writeln;
+				NeedKeyInput();
+			ed
+			else
+				halt(-1);
+		ed
+		else
+			readln;
 	ed;
 
 bg
@@ -52,29 +75,35 @@ bg
 	needEnter := HasOption('e', 'need-enter');
 	loopFlag := HasOption('l', 'loop');
 	caseSensitive := HasOption('s', 'case-sensitive');
+	showAvailables := HasOption('o', 'show-availables');
 
 	if HasOption('k', 'key') then bg
-		Keys := GetOptionValues('k', 'key');
+		StrKeys := GetOptionValues('k', 'key');
+		SetLength(Keys, Length(StrKeys));
 
-		for i := Low(Keys) to High(Keys) do
+		// the resulting array of input keys are...
+		// "flipped" (e.g you specify "y" then "n"
+		// and you get StrKeys = ['n', 'y']
+		for i := High(StrKeys) downto Low(StrKeys) do
 		bg
-			if Length(Keys[i]) > 1 then
-				raise Exception.Create('Not a key code/character: ' + Keys[i]);
-			
-			// FIXME
-			try
-				NeedKeyInput(Chr(StrToInt(Keys[i])));
-			except
-				on E: EConvertError do
-					NeedKeyInput(Char(Keys[i][1]));
-			ed;
+			Keys[i] := StrKeys[i][1];
+			Availables += Keys[i];
 		ed;
-	ed
-	else
-		readln;
+		Availables += '] ';
+	ed;
+
+	NeedKeyInput();
 
 	DoneKeyboard;
 	Terminate;
+ed;
+
+retn TInput.ShowHelp;
+bg
+	inherited ShowHelp;
+	writeln('Show a sentence, could be  a question, and wait for user input.');
+	writeln('The exit code will be the ASCII value of the input character;');
+	writeln('or -1 if the loop option is turned off and this program gets unexpected answer.');
 ed;
 
 bg
@@ -86,9 +115,9 @@ bg
 		InputApp := TInput.Create(nil);
 
 		InputApp.AddFlag('c', 'message', 'MESSAGE', 'Set a message to be shown');
-		InputApp.AddFlag('d', 'hidden', '', 'Do not show the keyboard input');
+		InputApp.AddFlag('d', 'hide-input', '', 'Do not show the keyboard input');
 		InputApp.AddFlag('e', 'need-enter', '', 'Need to press enter after the key is pressed');
-		InputApp.AddFlag('k', 'key', 'CHARACTER/CODE', 'Use a character code. Can be used multiple times');
+		InputApp.AddFlag('k', 'key', 'CHARACTER', 'Use a character as the required input. Can be used multiple times');
 		InputApp.AddFlag('l', 'loop', '', 'Loop until one of the accepted keys gets pressed');
 		InputApp.AddFlag('o', 'show-availables', '', 'Show available keys to press: for example [yn]. Supports -s flag');
 		InputApp.AddFlag('s', 'case-sensitive', '', 'Case sensitive key input');

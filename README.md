@@ -38,6 +38,19 @@ All targets are shown here, although NOT all are meant to be used:
 
 https://www.freepascal.org/docs-html/prog/progse81.html#x296-312000E.2
 
+Also variables set by `fpcmake`:
+
+https://www.freepascal.org/docs-html/prog/progse86.html#x313-329000E.7
+
+There are still some more to use:
+
+* `DEBUG` and `RELEASE` = build variants
+* `CREATESMART` = create smartlinked library
+* `LINKSMART` = smart linking
+* `STRIP` = symbol and stuff stripping
+* `VERBOSE` = a little bit more verbose'ing compile output
+* `OPTIMIZE` = optimized output (level 2 according to 3.2.2 fpcmake)
+
 ## Run
 
 All programs are set to be placed in `build/progs`. Run them from there - many will show help messages for you to know what can it do and what can you pass to the program.

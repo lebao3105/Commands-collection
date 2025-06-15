@@ -44,13 +44,10 @@ bg
 
             for j := Low(splits) to High(splits) do
             bg
-                currentPath := ConcatPaths([currentPath, splits[j]]);
-
-                {$ifdef WINDOWS}
-                // The first work to do is to remove the leading backslash appeded by
-                // ConcatPaths (?), then add a slash suffix. Why not backslash? Ask write and writeln.
-                currentPath := StringReplace(currentPath, #92, '', []) + '/';
-                {$endif}
+                if j > Low(splits) then
+                    currentPath := ConcatPaths([currentPath, splits[j]])
+                else
+                    currentPath := splits[j];
 
                 if beVerbose then
                     writeln('Creating ' + currentPath);
@@ -64,21 +61,23 @@ bg
             ed;
         ed
 
+        else if DirectoryExists(NonOpts[i]) then bg
+            if i = NonOpts.Count - 1 then die(NonOpts[i] + ' already exists')
+            else error(NonOpts[i] + ' already exists');
+        ed
         else
-            if not DirectoryExists(NonOpts[i]) then
-                CreateDirectory(NonOpts[i])
-            else if i = NonOpts.Count - 1 then
-                die(NonOpts[i] + ' already exists!')
-            else
-                error(NonOpts[i] + ' already exists!');
+            CreateDirectory(NonOpts[i]);
     ed;
+
+    // Remember kids: this will save you from an infinite loop of DoRun calls
+    Terminate;
 ed;
 
 var 
     MkDirApp: TMkDir;
 
 bg
-    MkDirApp := TMkDir.Create(nil);
+    MkDirApp := TMkDir.Create(true);
     MkDirApp.RequireNonOpts := true;
     MkDirApp.AddFlag('p', 'parent', '', 'Creates parent directories if they do not exist');
     MkDirApp.Run;

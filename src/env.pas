@@ -3,10 +3,7 @@ program env;
 
 uses
 	sysutils, strutils, custcustapp,
-	logging, classes, process
-	{$ifdef WINDOWS}
-	,windows
-	{$endif};
+	logging, classes, process;
 
 type
 	TEnvApp = class(TCustCustApp)
@@ -20,24 +17,19 @@ type
 var i : longint;
 	EnvApp: TEnvApp;
 
-{$ifdef UNIX}
-fn setenv(var name, value: pchar; overwrite: integer): integer; external 'libc';
-fn unsetenv(name: pchar): integer; external 'libc';
-{$endif}
-
 retn TEnvApp.DoRun;
 var
 	targetProg: string;
 	progArgs: TStringList;
 	aProcess: TProcess;
 	n: integer;
-	splits: array of ansistring;
+	optvalues: array of ansistring;
 
 bg
 	inherited DoRun;
-	SetLength(splits, 2);
-	progArgs := TStringList.Create;
 	
+	progArgs := TStringList.Create;
+
 	if (ParamCount >= 1) and (NonOpts.Count = 0) and not HasOption('g', 'get') then
 	bg
 		ShowHelp;
@@ -46,36 +38,13 @@ bg
 	ed;
 
 	if HasOption('g', 'get') then bg
-		progArgs.AddStrings(GetOptionValues('g', 'get'));
+		optvalues := GetOptionValues('g', 'get');
 
-		for n := 0 to progArgs.Count - 1 do
-			writeln(sysutils.GetEnvironmentVariable(progArgs[i]));
+		for i := 0 to High(optvalues) do
+			writeln(sysutils.GetEnvironmentVariable(optvalues[i]));
 		
-		progArgs.Clear;
+		progArgs.Free;
 		halt(0);
-	ed;
-
-	if HasOption('s', 'set') then bg
-		progArgs.SetStrings(GetOptionValues('s', 'set'));
-
-		for n := 0 to progArgs.Count - 1 do bg
-			splits := SplitString(progArgs[n], '=');
-			{$ifdef WINDOWS}
-			if not windows.SetEnvironmentVariable(PAnsiChar(splits[0]), PAnsiChar(splits[1])) then
-				die(
-					Format(
-						'Unable to set the environment variable. Code %d',
-						[windows.GetLastError()]
-					),
-					windows.GetLastError() // <- will this work?
-				);
-			{$else}
-			// TODO: Handle non-zero return values
-			setenv(PChar(splits[0]), PChar(splits[1]), 1);
-			{$endif}
-		ed;
-
-		progArgs.Clear;
 	ed;
 
 	progArgs.SetStrings(NonOpts);
@@ -92,7 +61,20 @@ bg
 		aProcess.Parameters.AddStrings(progArgs);
 		aProcess.Options := aProcess.Options + [poWaitOnExit];
 		aProcess.CurrentDirectory := GetCurrentDir;
-		// todo: show output
+
+		aProcess.Environment := TStringList.Create;
+		for i := 1 to GetEnvironmentVariableCount do
+			aProcess.Environment.Add(GetEnvironmentString(i));
+
+		if HasOption('s', 'set') then
+			aProcess.Environment.AddStrings(GetOptionValues('s', 'set'));
+		
+		if HasOption('u', 'unset') then bg
+			optvalues := GetOptionValues('u', 'unset');
+			for i := 0 to High(optvalues) do
+				aProcess.Environment.Delete(aProcess.Environment.IndexOfName(optvalues[i]));
+		ed;
+		
 		aProcess.Execute;
 		aProcess.Free;
 		progArgs.Free;
@@ -118,6 +100,7 @@ bg
 	inherited ShowHelp;
 	writeln('Changes environment variables for the specified program.');
 	writeln('Run this program with no arguments to list all environment variables.');
+	writeln('Getting environment variables will ignore all other options, EXCEPT help flags.');
 ed;
 
 bg
@@ -129,7 +112,6 @@ bg
 	else bg
 		EnvApp := TEnvApp.Create();
 		EnvApp.AddFlag('u', 'unset', 'VAR', 'Unset variable(s)', false);
-		EnvApp.AddFlag('e', 'empty', '', 'Unset all variables', false);
 		EnvApp.AddFlag('g', 'get', 'VAR', 'Get variable(s) value', false);
 		EnvApp.AddFlag('s', 'set', 'VAR=VALUE', 'Set variable(s)', false);
 		EnvApp.AddFlag('', '', 'PROGRAM', 'The program to run', false);
