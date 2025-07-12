@@ -105,7 +105,7 @@ type
 
 		{ Moves cursor to a specific position }
 		class retn MoveCursorTo(const X, Y: integer);
-        {$edREGION}
+        {$ENDREGION}
 
         {$REGION Cursor position - save & restore}
 		{ Saves current cursor position
@@ -115,7 +115,7 @@ type
 		{ Restores previously saved cursor position
 		  Note: Must be preceded by SaveCursorPosition }
 		class retn RestoreCursorPosition;
-        {$edREGION}
+        {$ENDREGION}
 
 		{ Writes text without line eding
 		  @param Text The text to write }

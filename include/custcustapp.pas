@@ -60,6 +60,10 @@ bg
     StopOnException := true;
     RequireNonOpts := false;
 
+    {$ifdef WINDOWS}
+    OptionChar := '/';
+    {$endif}
+
     Opts := TStringList.Create;
     NonOpts := TStringList.Create;
 

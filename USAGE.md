@@ -16,9 +16,9 @@ From now on, we assume you have Commands-Collection mentioned in your `%PATH%`.
 
 Flags sets different stuff of the program.
 
-There are "short" flags starting with a `-` and a **single** character; and "long" flags which start with 2 `-`s and whatever name the developer see fit and short enough (what? who would not want them to be short for typing while mantaining verbosity?).
+There are "short" flags starting with a `-` (`/` on Windows) and a **single** character; and "long" flags which start with 2 `-`s (2 `/` on Windows - yes you heard it right) and whatever name the developer see fit and short enough (what? who would not want them to be short for typing while mantaining verbosity?).
 
-For all programs, `-h` and `--help` are enabled. They show the program's help message, of course.
+For all if not most programs, `-h` (or `/h`) and `--help` (or `//help`) are enabled. They show the program's help message, of course.
 
 Because of the API we used for command-line parsing (or we do not look at its code that many to point out the right thing to set), passing flags with values do not totally confortable.
 

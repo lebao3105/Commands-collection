@@ -8,8 +8,10 @@ var
     value_type : longint;
 
 bg
-    if ParamCount = 0 then die('Please specify something to sacrifice.')
-    else for i := 1 to ParamCount do 
+    if ParamCount = 0 then die('Please specify something to sacrifice.');
+
+    for i := 1 to ParamCount do
+    bg
         value_type := FileGetAttr(ParamStr(i));
         if value_type <> -1 then
         bg
@@ -29,4 +31,5 @@ bg
         ed;
         DeleteFile(ParamStr(i));
         writeln('All files now should be deletend.');
+    ed;
 end.
