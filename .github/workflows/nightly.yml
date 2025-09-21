@@ -25,19 +25,19 @@ jobs:
 
     steps:
       - name: Install compiler (Ubuntu)
-        if: ${{ matrix.os }} == 'ubuntu-latest'
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
           sudo apt update
           sudo apt install fpc -y --no-install-recommends
 
       - name: Install compiler (macOS)
-        if: ${{ matrix.os }} == 'macos-latest'
+        if: ${{ matrix.os == 'macos-latest' }}
         run: |
           brew update
           brew install fpc
 
       - name: Install compiler (Windows)
-        if: ${{ matrix.os }} == 'windows-latest'
+        if: ${{ matrix.os == 'windows-latest' }}
         run: |
           choco update
           choco install lazarus
