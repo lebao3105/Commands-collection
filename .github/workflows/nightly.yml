@@ -6,12 +6,14 @@ on:
       - "src/**"
       - "include/**"
       - "Makefile.fpc"
+      - ".github/workflows/nightly.yml"
 
   pull_request:
     paths:
       - "src/**"
       - "include/**"
       - "Makefile.fpc"
+      - ".github/workflows/nightly.yml"
 
   workflow_dispatch:
 
