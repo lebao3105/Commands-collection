@@ -34,8 +34,8 @@ bg
     ed;
 ed;
 
-fn ExistAsAFile(path: string): boolean; inline; bg Result := Exist(path, AFile); ed;
+fn ExistAsAFile(path: string): boolean; bg Result := Exist(path, AFile); ed;
 
-fn ExistAsADir(path: string): boolean; inline; bg Result := Exist(path, AFolder); ed;
+fn ExistAsADir(path: string): boolean; bg Result := Exist(path, AFolder); ed;
 
 end.

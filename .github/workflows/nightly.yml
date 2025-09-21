@@ -3,41 +3,63 @@ name: Nightly CI
 on:
   push:
     paths:
-      - 'src/**'
-      - 'include/**'
-      - 'Makefile.fpc'
+      - "src/**"
+      - "include/**"
+      - "Makefile.fpc"
 
   pull_request:
     paths:
-      - 'src/**'
-      - 'include/**'
-      - 'Makefile.fpc'
-  
+      - "src/**"
+      - "include/**"
+      - "Makefile.fpc"
+
   workflow_dispatch:
 
 jobs:
+  setup:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
-  linux:
-
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Install compiler
-      run: |
-        sudo apt update
-        sudo apt install fpc -y --no-install-recommends
-    
-    - name: Regenerate Makefile
-      run: fpcmake -w -Tall
+      - name: Install compiler (Ubuntu)
+        if: ${{ matrix.os }} == 'ubuntu-latest'
+        run: |
+          sudo apt update
+          sudo apt install fpc -y --no-install-recommends
 
-    - name: Build all projects
-      run: make
-    
-    - name: Upload build artifact
-      uses: actions/upload-artifact@v4
-      with:
-        path: build/progs
-        if-no-files-found: error
-        name: Commands Collection (Nightly) for Linux
+      - name: Install compiler (macOS)
+        if: ${{ matrix.os }} == 'macos-latest'
+        run: |
+          brew update
+          brew install fpc
+
+      - name: Install compiler (Windows)
+        if: ${{ matrix.os }} == 'windows-latest'
+        run: |
+          choco update
+          choco install lazarus
+
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    needs: setup
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build all projects
+        run: make
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: build/progs
+          if-no-files-found: error
+          name: Commands Collection (Nightly) for ${{ matrix.os }}

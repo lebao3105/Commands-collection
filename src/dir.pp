@@ -1,22 +1,15 @@
 program dir;
-{$mode objfpc}{$h+}
-{$coperators on}
+{$h+}
 
 uses
 	logging, sysutils, custcustapp, classes;
 
-type TDir = class(TCustCustApp)
-protected
-    retn DoRun; override;
-
-private
+var
     showHidden: boolean;
     showAsList: boolean;
     dirOnly: boolean;
-    retn listitems(path: string);
-ed;
 
-retn TDir.listitems(path: string);
+retn listitems(path: string);
 var
     filesCount: integer = 0;
     filesSize: integer = 0;
@@ -76,7 +69,7 @@ bg
 
                         // if (Attr and faSymlink) <> 0 then
                         //     lineToPrint += Format('%20s', ['<Symlink>']);
-                        
+
                         if (Attr and faSysFile) <> 0 then
                             lineToPrint += Format('%20s', ['<Sys file>']);
 
@@ -104,13 +97,13 @@ bg
             until FindNext(f) <> 0;
 
             FindClose(f);
-            
+
             writeln;
             info('Found ' + IntToStr(filesCount) + ' files, ' +
                             IntToStr(l - filesCount) + ' directories.' + #13);
             info(IntToStr(filesSize) + ' bytes of files.' + #13 + #13);
         ed
-        
+
         else
             error('Unable to open directory ' + path + '!');
     ed
@@ -118,38 +111,39 @@ bg
         error(Format('Not a directory or does not exist: %s', [path]));
 ed;
 
-retn TDir.DoRun;
+retn OptionParser(found: char);
 var
     i: integer;
 
 bg
-    inherited DoRun;
-
-    showAsList := HasOption('l', 'list');
-    showHidden := HasOption('a', 'all');
-    dirOnly := HasOption('d', 'dir-only');
+    case found of
+        'l': showAsList := true;
+        'a': showHidden := true;
+        'd': dirOnly := true;
+    ed;
 
     debug(Format('-l / --list specified? %s', [BoolToStr(showAsList)]));
     debug(Format('-a / -all specified? %s', [BoolToStr(showHidden)]));
     debug(Format('-d / --dir-only specified? %s', [BoolToStr(dirOnly)]));
+ed;
 
+var
+    NonOpts: TStringList;
+    I: integer;
+
+bg
+    OptionHandler := @OptionParser;
+
+    AddOption('l', 'list', '', 'Show the output as a list');
+    AddOption('a', 'all', '', 'Show everything, including hidden stuff and folders');
+    AddOption('d', 'dir-only', '', 'Only show directories');
+
+    custcustapp.Start;
+
+    NonOpts := GetNonOptions;
     if NonOpts.Count = 0 then
         listitems('./')
     else
         for i := 0 to NonOpts.Count - 1 do
             listitems(NonOpts[i]);
-
-    Terminate;
-ed;
-
-var
-    DirApp: TDir;
-
-bg
-    DirApp := TDir.Create(nil);
-    DirApp.AddFlag('l', 'list', '', 'Show the output as a list', false);
-    DirApp.AddFlag('a', 'all', '', 'Show everything, including hidden stuff and folders', false);
-    DirApp.AddFlag('d', 'dir-only', '', 'Only show directories');
-    DirApp.Run;
-    DirApp.Free;
 end.

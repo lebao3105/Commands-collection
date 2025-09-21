@@ -2,6 +2,7 @@ test*
 *.exe
 *.o
 *.ppu
+*.res
 
 *.dll
 *.so
@@ -17,3 +18,15 @@ build/obj_out/*
 
 build/progs/*
 !build/progs/.gitkeep
+
+src/*
+!src/*.pp
+!src/*.pas
+!src/*.inc
+
+include/*
+!include/*.pp
+!include/*.pas
+!include/*.inc
+
+fpcdebug*

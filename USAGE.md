@@ -4,34 +4,26 @@ Thank you for installing this product. Here goes a quick, universal guide for al
 
 ## Launch a shell with Commands-Collection in `PATH`
 
-> Note: this is Windows only for now.
-
 Make sure you enable "Install Start Menu/Desktop/Task bar shortcuts" option first.
 
-Then, using any way you please, open CommandsCollection. A Command Prompt window will show up, telling you it has `%PATH%` variable updated for Commands-Collection programs.
+Then, using any way you please, open CommandsCollection. A CMD window will open, telling you that `%PATH%` has been updated.
 
-From now on, we assume you have Commands-Collection mentioned in your `%PATH%`.
+That's what you will do on Windows.
 
 ## Arguments and flags
 
 Flags sets different stuff of the program.
 
-There are "short" flags starting with a `-` (`/` on Windows) and a **single** character; and "long" flags which start with 2 `-`s (2 `/` on Windows - yes you heard it right) and whatever name the developer see fit and short enough (what? who would not want them to be short for typing while mantaining verbosity?).
+* Short flags begin with `-`, following by a character.
+* Long flags begin with `--`.
 
-For all if not most programs, `-h` (or `/h`) and `--help` (or `//help`) are enabled. They show the program's help message, of course.
+For most programs, `-h` / `--help` are available.
+They show all available flags and more informations.
 
-Because of the API we used for command-line parsing (or we do not look at its code that many to point out the right thing to set), passing flags with values do not totally confortable.
-
-You can not combine short flags like this:
+You can combine short flags like this:
 
 ```bash
 dir -la
-```
-
-You need to do this instead:
-
-```bash
-dir -l -a
 ```
 
 With that `dir` will show all files and folders as you wish.
@@ -42,16 +34,10 @@ Pass values to long flags like this:
 env --get=HOMEPATH
 ```
 
-Not this:
+**Not only** this:
 
 ```bash
 env --get HOMEPATH
-```
-
-However this does not apply to short flags:
-
-```bash
-env -g HOMEPATH # Works
 ```
 
 ## Quick FAQ

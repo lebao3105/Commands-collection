@@ -1,14 +1,14 @@
 program rm;
 
-uses 
+uses
     sysutils, logging;
 
-var 
+var
     i : integer;
     value_type : longint;
 
 bg
-    if ParamCount = 0 then die('Please specify something to sacrifice.');
+    if ParamCount = 0 then die('Nothing to sacrifice.');
 
     for i := 1 to ParamCount do
     bg
@@ -25,8 +25,8 @@ bg
                 halt(-1);
             {$endif}
 
-            if (value_type and faDirectory) <> 0 then 
-                writeln(ParamStr(i), ' is a directory. Use rmdir to delete it.');  
+            if (value_type and faDirectory) <> 0 then
+                writeln(ParamStr(i), ' is a directory. Use rmdir to delete it.');
                 halt(2);
         ed;
         DeleteFile(ParamStr(i));

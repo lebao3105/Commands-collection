@@ -26,11 +26,9 @@ var
     isDir: boolean;
 
 bg
-    if FileExists(path) then
-        isDir := false
-    else if DirectoryExists(path) then
-        isDir := true
-    else
+    isDir := DirectoryExists(path);
+
+    if (not isDir) and (not FileExists(path)) then
         die(path + ' does not exist. Quitting.');
 
     value_type := FileGetAttr(path);
@@ -42,7 +40,7 @@ bg
 
         if (value_type and faReadOnly) <> 0 then
             writeln('* Readonly;');
-        
+
         if (value_type and faHidden) <> 0 then
             writeln('* Hidden;');
 
@@ -51,7 +49,7 @@ bg
         else bg
             if (value_type and faSysfile) <> 0 then
                 writeln('* A system file. Be careful with it;');
-            
+
             if (value_type and faSymLink) <> 0 then
                 writeln('* A sym(bolic)link;');
 
