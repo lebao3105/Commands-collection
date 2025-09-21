@@ -80,7 +80,7 @@ bg
             // Get size required to hold the text
             if (FpSysCtl(PCInt(@MIB), Length(MIB), Nil, @s, Nil, 0) = 0) then
             bg
-                GetMem(hardware_pl, len);
+                GetMem(hardware_pl, s);
 
                 // Actually get the string
                 if (FpSysCtl(PCInt(@MIB), Length(MIB), hardware_pl, @s, Nil, 0) = 0) then
