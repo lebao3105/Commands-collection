@@ -46,9 +46,6 @@ jobs:
           choco update
           choco install lazarus
 
-      - name: Regenerate Makefile
-        run: fpcmake -w -Tall
-
       - name: Build all projects
         run: make
 
