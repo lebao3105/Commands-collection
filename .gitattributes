@@ -1,0 +1,5 @@
+*           text eol=lf
+*.bat       text eol=crlf
+*.iss       text eol=crlf
+*.inc       text eol=lf diff=pascal
+*.pp        text eol=lf diff=pascal
