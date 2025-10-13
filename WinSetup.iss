@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "CommandsCollection"
-#define MyAppVersion "1.5"
-#define MyAppPublisher "Le Bao Nguyen (lebao3105)"
+#define MyAppVersion "1.0"
+#define MyAppPublisher "Le Bao Nguyen"
 #define MyAppURL "https://github.com/lebao3105/Commands-collection"
 #define MyAppExeName "SetEnv.bat"
 
@@ -22,7 +22,7 @@ DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
 LicenseFile=LICENSE
 InfoBeforeFile=README.md
-InfoAfterFile=POSTINST
+InfoAfterFile=USAGE.md
 ; Remove the following line to run in administrative install mode (install for all users).
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
@@ -43,14 +43,15 @@ Source: "build\progs\calltime.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "build\progs\cat.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "build\progs\chk_type.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "build\progs\dir.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\progs\getvar.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "build\progs\env.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "build\progs\inp.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "build\progs\mkdir.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\progs\presskey.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\progs\printf.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "build\progs\rename.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "build\progs\rm.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "build\progs\rmdir.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "build\progs\touch.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+; NOTE: Don't include UNIX-only programs!
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "C:\Windows\SysWOW64\cmd.exe"; \
