@@ -42,9 +42,7 @@ jobs:
 
       - name: Install compiler (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
-        run: |
-          choco update
-          choco install lazarus
+        uses: gcarreno/setup-lazarus@v3.3.1
 
       - name: Build all projects
         run: make
