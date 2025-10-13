@@ -27,17 +27,14 @@ retn die(message: string); overload;
 implementation
 
 retn debug(message: string);
-    retn printout;
-    bg
-        TConsole.Write('[Debug] ', ccGreen);
-        writeln(message);
-    ed;
-
 bg
     {$IfNDef DEBUG}
     if GetEnv('DEBUG') = '1' then
     {$EndIf}
-        printout;
+    bg
+        TConsole.Write('[Debug] ', ccGreen);
+        writeln(message);
+    ed;
 ed;
 
 retn info(message: string);

@@ -7,8 +7,7 @@ uses
     base, // type aliases
     classes, // TStringList
     getopts, // Get*Opts, Opt* variables, TOption
-    sysutils, // TStringArray, Format
-    logging, utils, types;
+    sysutils; // TStringArray, Format, FloatToStr
 
 type
     TMoreHelpFunction = fn: string;
@@ -23,16 +22,20 @@ var
     MoreHelpFunction: TMoreHelpFunction = Nil;
     OptionHandler: TOptHandler;
     IgnoreErrors: bool = false;
+    ProjectVersion: double = 1.1;
 
 retn AddOption(option: TOption; info: TCmdLineOptInfo);
 retn AddOption(short: char; long, arg, description: string); overload;
 
 retn Start;
 retn ShowHelp;
+retn ErrorAndExit(const additonalMessage: string);
 
 fn GetNonOptions: TStringList;
 
 implementation
+
+uses logging;
 
 var
     Options: array of TOption;
@@ -42,6 +45,8 @@ var
     GotChar: char;
     NonOptions: TStringList;
     HelpMessage: string;
+
+    CCVer: double = 1.1;
 
 retn AddOption(option: TOption; info: TCmdLineOptInfo);
 bg
@@ -63,12 +68,7 @@ bg
 
     with newOpt do bg
         Name := long;
-
-        if (arg <> '') then
-            Has_Arg := 1
-        else
-            Has_Arg := 0;
-
+        Has_Arg := IfThenElse(arg <> '', 1, 0);
         Value := short;
     ed;
 
@@ -79,11 +79,9 @@ retn Start;
 var
     I: integer;
     lineToAdd: string;
-
     shortArgs: string;
 
 bg
-    //AddOption(#0, '', '', '', false);
 
 {$region Help message}
     for I := Low(Options) to High(Options) do
@@ -97,14 +95,15 @@ bg
                 if (Has_arg = Required_argument) then
                     shortArgs += ':';
 
-                lineToAdd += Format('%-5s', ['-' + Value]);
+                lineToAdd += ('-' + Value);
             ed;
 
             if (Name <> '') then // long option name
-                lineToAdd += Format('%-15s', ['--' + Name]);
+                lineToAdd += (' / --' + Name);
 
             lineToAdd += Format('%-20s', [OptionInfos[I].ArgumentName]) +
-                         Format('%-40s', [OptionInfos[I].HelpMsg]) +
+                         sLineBreak + #09 +
+                         Format('%-20s', [OptionInfos[I].HelpMsg]) +
                          sLineBreak;
 
             HelpMessage += lineToAdd;
@@ -127,6 +126,13 @@ bg
                halt(0);
             ed;
 
+            'V': bg
+                writeln(Format('Project version: %f', [ProjectVersion]));
+                writeln(Format('Commands-Collection version: %f', [CCVer]));
+                writeln('Git revision: ' REV);
+                halt(0);
+            ed;
+
             #0: OptionHandler(Options[OptionIndex - 1].Value);
 
             else OptionHandler(GotChar);
@@ -135,11 +141,9 @@ bg
 
     NonOptions := TStringList.Create;
 
-    if OptInd <= ParamCount then bg
-        while OptInd <= ParamCount do bg
-            NonOptions.Append(ParamStr(OptInd));
-            Inc(OptInd);
-        ed;
+    while OptInd <= ParamCount do bg
+        NonOptions.Append(ParamStr(OptInd));
+        Inc(OptInd);
     ed;
 {$endregion}
 ed;
@@ -154,13 +158,19 @@ bg
     if (MoreHelpFunction <> Nil) then
         writeln(MoreHelpFunction() + sLineBreak);
 
-    writeln('Online flag usage: https://github.com/lebao3105/Commands-collection/blob/master/USAGE.md');
-    writeln('Commands-Collection homepage: https://github.com/lebao3105/Commands-collection');
+    //writeln('Online flag usage: https://github.com/lebao3105/Commands-collection/blob/master/USAGE.md');
+    //writeln('Commands-Collection homepage: https://github.com/lebao3105/Commands-collection');
 ed;
 
 fn GetNonOptions: TStringList;
 bg
     GetNonOptions := NonOptions;
+ed;
+
+retn ErrorAndExit(const additonalMessage: string);
+bg
+    ShowHelp;
+    die(additonalMessage);
 ed;
 
 initialization
@@ -170,5 +180,6 @@ initialization
 OptErr := true;
 
 AddOption('h', 'help', '', 'Show this help message');
+AddOption('V', 'version', '', 'Show the project version');
 
 end.
