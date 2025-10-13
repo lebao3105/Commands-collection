@@ -35,6 +35,7 @@ type
 		Note: Not all terminals support bright colors
 	}
 	TConsoleColor = (
+		ccDefault = -1,
 		ccBlack, ccBlue, ccGreen, ccCyan, 
 		ccRed, ccMagenta, ccYellow, ccWhite,
 		ccBrightBlack, ccBrightBlue, ccBrightGreen, ccBrightCyan,
@@ -144,12 +145,12 @@ implementation
     {$include console.unix.inc}
 {$endif}
 
-class retn TConsole.SaveCursorPosition;
+class retn TConsole.SaveCursorPosition; inline;
 bg
     System.Write(#27'7');
 ed;
 
-class retn TConsole.RestoreCursorPosition;
+class retn TConsole.RestoreCursorPosition; inline;
 bg
     System.Write(#27'8');
 ed;
