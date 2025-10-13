@@ -15,6 +15,39 @@ $ fpcmake -w -Tall
 Writing Makefile
 ```
 
+To compile a/any program, do:
+
+```bash
+$ make src/<program name>
+```
+
+Append `.exe` if you're on Windows (optional).
+
+To build everything:
+
+```bash
+$ make
+```
+
+To clean everything:
+
+```bash
+$ make clean
+```
+
+All targets are shown [here](https://www.freepascal.org/docs-html/prog/progse81.html#x296-312000E.2), although NOT all are meant to be used.
+
+Also variables set by `fpcmake` [here](https://www.freepascal.org/docs-html/prog/progse86.html#x313-329000E.7).
+
+There are still some more to use:
+
+* `DEBUG` and `RELEASE` = build variants
+* `CREATESMART` = create smartlinked library
+* `LINKSMART` = smart linking
+* `STRIP` = symbol and stuff stripping
+* `VERBOSE` = a little bit more verbose'ing compile output
+* `OPTIMIZE` = optimized output (level 2 according to 3.2.2 fpcmake)
+
 ## Code style
 
 ### Type definition
@@ -30,28 +63,6 @@ They are named using PascalCase convention.
 Should be sorted alphabetically + by length.
 
 Named using either PascalCase or camelCase convention.
-
-### File structure
-
-```pascal
-<file type> <name>;
-
-<macros and stuff>
-
-uses <units>;
-
-type
-  <definitions, forward declare if needed>
-
-var
-  <variables>
-
-<type implementations>
-
-<global functions>
-
-<do anything you want>
-```
 
 ## Definitions
 
@@ -72,12 +83,12 @@ They do not appear as macros. Placed in [include/base.pp](include/base.pp).
 
 ## Additional informations
 
-* `-Sx` has been used for Exception keywords (`try`, `except`, `finally`, `raise`);
-* `-Sa` has been used for assertions;
-* `-Sm` has been used for macros;
-* `-Sc` has been used for C operators;
-* `-Si` has been used for inline functions.
-* Anonymous function (or lambda function) is available on in-development FPC;
+* `-Sx` is used for Exception keywords (`try`, `except`, `finally`, `raise`);
+* `-Sa` is used for assertions;
+* `-Sm` is used for macros;
+* `-Sc` is used for C operators;
+* `-Si` is used for inline functions.
+* Anonymous function (or lambda function) is available on **in-development** FPC;
 * One should list used stuff from an unit in the `uses` section;
 * "Long" strings (aka `ansistring` or `string` with `{$longstrings on}` or `{$h+}`) are usually used.
 

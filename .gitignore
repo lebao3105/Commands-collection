@@ -30,3 +30,5 @@ include/*
 !include/*.inc
 
 fpcdebug*
+*.db
+.vs/

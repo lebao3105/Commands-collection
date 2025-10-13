@@ -1,8 +1,7 @@
 # Commands-collection
 
-Build status: [![Makefile CI](https://github.com/lebao3105/Commands-collection/actions/workflows/nightly.yml/badge.svg)](https://github.com/lebao3105/Commands-collection/actions/workflows/nightly.yml)
-
-## What is this?
+Build status:
+[![Makefile CI](https://github.com/lebao3105/Commands-collection/actions/workflows/nightly.yml/badge.svg)](https://github.com/lebao3105/Commands-collection/actions/workflows/nightly.yml)
 
 A collection of system commands written in Free Pascal.
 
@@ -17,47 +16,22 @@ They are:
 * `mkdir` + `touch` + `rm`
 * `rename` = file / folder renamer
 * `uname`
+* `uptime`
+* Overall: cross-platform programs that are seen in daily computer life
+* Overall: proof-of-concept (POC)s
 
-While some do tend to be compatible with GNU coreutils (like `uname`), many are not.
+They are NOT:
 
-I personally *do not* intend to make this 100% coreutils-compatible, but cross-platform.
+* Copycats (although some are intended to behave like ones in GNU coreutils)
+* Made to be laughed at
+* Suitable for daily-use
+* Fully optimized (atm)
+* Object-oriented (although `TStringList` is used sometimes)
+* Battle-tested
 
 ## Compiling
 
-To compile a/any program, do:
-
-```bash
-$ make src/<program name>
-```
-
-Append `.exe` if you're on Windows (optional).
-
-To build everything:
-
-```bash
-$ make
-```
-
-To clean everything:
-
-```bash
-$ make clean
-```
-
-Using `fpcmake -w -Tall` will (re)generate a `Makefile` for all supported platforms.
-
-All targets are shown [here](https://www.freepascal.org/docs-html/prog/progse81.html#x296-312000E.2), although NOT all are meant to be used.
-
-Also variables set by `fpcmake` [here](https://www.freepascal.org/docs-html/prog/progse86.html#x313-329000E.7).
-
-There are still some more to use:
-
-* `DEBUG` and `RELEASE` = build variants
-* `CREATESMART` = create smartlinked library
-* `LINKSMART` = smart linking
-* `STRIP` = symbol and stuff stripping
-* `VERBOSE` = a little bit more verbose'ing compile output
-* `OPTIMIZE` = optimized output (level 2 according to 3.2.2 fpcmake)
+Read [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Run
 
@@ -70,3 +44,10 @@ The universal usage documentation is [here](USAGE.md).
 ## Credits
 
 * [@ikelaiah](https://github.com/ikelaiah) for cli-fp library. Part of it is used and modified.
+
+## References
+
+* Linux man pages
+* GNU Coreutils [source code](https://github.com/coreutils/coreutils)
+* Free Pascal's Run time [library](https://www.freepascal.org/docs-html/rtl/index.html) (RTL)
+* Procps-ng [source code](https://gitlab.com/procps-ng/procps)
