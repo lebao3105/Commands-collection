@@ -2,148 +2,160 @@ program dir;
 {$h+}
 
 uses
-	logging, sysutils, custcustapp, classes;
+    base,
+    classes, // TStringList
+    custcustapp,
+    getopts, // OptArg
+    logging,
+    regexpr,
+    sysutils,
+    strutils, // EndsStr
+    utils, // FS stat
+    
+    dir.report,
+    dir.unix,
+    dir.win32,
+    dir.cc;
 
 var
-    showHidden: boolean;
-    showAsList: boolean;
-    dirOnly: boolean;
+    nonOpts: TStringList;
+    showHidden: bool = false;
+    showAsList: bool = false;
+    dirOnly: bool = false;
+    ignorePattern: string;
+    ignoreBackups: bool = false;
+    listFmt: ListingFormats = ListingFormats.{$ifdef UNIX}GNU{$else}CMD{$endif};
 
-retn listitems(path: string);
+retn ListItems(path: string);
 var
-    filesCount: integer = 0;
-    filesSize: integer = 0;
+    filesCount: int = 0;
+    filesSize: int = 0;
+    hiddenCount: int = 0;
+    count: ulong = 0;
     f: TSearchRec;
-    l: longint = 0;
-    lineToPrint: string;
+    props: TFSProperties;
+    r: TRegExpr;
 
 bg
     path := ExpandFileName(IncludeTrailingPathDelimiter(path));
 
-    writeln(path);
+    if nonOpts.Count > 1 then bg
+        write(path); writeln(':');
+    ed;
 
-    if DirectoryExists(path) then
+    if FindFirst(path + '*', faAnyFile, f) = 0 then
     bg
-        if FindFirst(path + '*', faAnyFile, f) = 0 then
-        bg
-            repeat
-                Inc(l);
+        r := TRegExpr.Create;
+        {$define IS_DIR:=((Attr and faDirectory) = faDirectory)}
+        {$define IS_HIDDEN:=((Attr and faHidden) = faHidden)}
+        repeat
+            with f do bg
+                if ignoreBackups and EndsStr('~', Name) then continue;
 
-                // TODO:
-                // * Move f.Name to the bottom of the line (with showAsList set to true)
-                // * Last modified (with showAsList set to true)
-                with f do bg
-                    if (Attr = -1) and showAsList then
-                    bg
-                        writeln(Format('%20s%20s', [Name, '<ERROR>']));
-                        continue;
-                    ed;
-
-                    if not showAsList then bg
-                        write(Name + ' ');
-                        if (Attr and faDirectory) = 0 then
-                        bg
-                            Inc(filesCount);
-                            Inc(filesSize, Size);
-                        ed;
-                        continue;
-                    ed;
-
-                    if dirOnly then bg
-                        if (Attr and faDirectory) = 0 then continue;
-
-                        lineToPrint := Format('%20s%20s%10s', [Name, '<Dir>', '-']);
-                    ed
-
-                    else bg
-                        lineToPrint := Format('%20s', [Name]);
-
-                        // Commented out: They are commented because of
-                        // Find{First,Next}.Attr not having all of the attributes
-                        // we can get and set (even the ones below are not all of them).
-                        // Although the documentation explicitly lists all available flags,
-                        // I still want to check. Will test later.
-
-                        if (Attr and faDirectory) <> 0 then
-                            lineToPrint += Format('%20s', ['<Dir>']);
-
-                        // if (Attr and faSymlink) <> 0 then
-                        //     lineToPrint += Format('%20s', ['<Symlink>']);
-
-                        if (Attr and faSysFile) <> 0 then
-                            lineToPrint += Format('%20s', ['<Sys file>']);
-
-                        // if (Attr and faCompressed) <> 0 then
-                        //     lineToPrint += Format('%20s', ['<Compressed file>']);
-
-                        // if (Attr and faEncrypted) <> 0 then
-                        //     lineToPrint += Format('%20s', ['<Encrypted file>']);
-
-                        if (Attr and faAnyFile) <> 0 then bg
-                            lineToPrint += Format('%20s', ['<File>']);
-                            Inc(filesCount);
-                            Inc(filesSize, Size);
-                        ed;
-                    ed;
-
-                    if (Attr and faHidden) <> 0 then
-                        lineToPrint += Format('%10s', ['<Hidden>']);
-
-                    if showAsList then
-                        writeln(lineToPrint)
-                    else
-                        write(lineToPrint);
+                if ignorePattern <> '' then bg
+                    try
+                        r.Expression := ignorePattern;
+                        if r.Exec(Name) then continue;
+                    finally
+                    end;
                 ed;
-            until FindNext(f) <> 0;
 
-            FindClose(f);
+                if not showHidden then bg
+                    if (Name = '.') or (Name = '..') then
+                        continue;
+                ed;
 
-            writeln;
-            info('Found ' + IntToStr(filesCount) + ' files, ' +
-                            IntToStr(l - filesCount) + ' directories.' + #13);
-            info(IntToStr(filesSize) + ' bytes of files.' + #13 + #13);
-        ed
+                // Name-only list
+                if not showAsList then bg
+                    if IS_HIDDEN then bg
+                        if not showHidden then continue;
+                        Inc(hiddenCount);
+                    ed;
 
-        else
-            error('Unable to open directory ' + path + '!');
+                    if not IS_DIR then bg
+                        if dirOnly then continue;
+                        Inc(filesCount);
+                    ed;
+
+                    Inc(count);
+                    PopulateFSInfo(path + '/' + Name, props);
+                    PrintObjectName(Name, props); WriteSp;
+                    filesSize += props.Size;
+                ed
+
+                // Detailed list
+                else bg
+                    PopulateFSInfo(path + '/' + Name, props);
+                    filesSize += props.Size;
+
+                    case listFmt of
+                        ListingFormats.GNU:
+                            dir.unix.PrintALine(Name, props);
+                    ed;
+                ed;
+            ed;
+        until FindNext(f) <> 0;
+
+        FindClose(f);
+        r.Free;
+
+        writeln;
+        Report(filesCount, count, hiddenCount, filesSize, listFmt, dirOnly);
     ed
+
     else
-        error(Format('Not a directory or does not exist: %s', [path]));
+        error('Unable to open directory ' + path + '!');
 ed;
 
 retn OptionParser(found: char);
-var
-    i: integer;
-
 bg
     case found of
         'l': showAsList := true;
         'a': showHidden := true;
         'd': dirOnly := true;
-    ed;
+        'i': ignorePattern := OptArg;
+        'B': ignoreBackups := true;
 
-    debug(Format('-l / --list specified? %s', [BoolToStr(showAsList)]));
-    debug(Format('-a / -all specified? %s', [BoolToStr(showHidden)]));
-    debug(Format('-d / --dir-only specified? %s', [BoolToStr(dirOnly)]));
+        'w': listFmt := ListingFormats.CMD;
+        'u': listFmt := ListingFormats.GNU;
+        'c': listFmt := ListingFormats.CC;
+    ed;
+ed;
+
+fn AdditionalHelpMessages: string;
+bg
+    AdditionalHelpMessages :=
+        'If -l / --list is passed: this program will use the format ' +
+        'that the current OS families most (GNU coreutils format on UNIX, ' +
+        'Windows''s dir format on Windows).' + sLineBreak +
+
+        'The last related flag will be used, e.g: -w -u will use Coreutils format.' +
+        sLineBreak + sLineBreak + 'Directory sizes are not calculated.';
 ed;
 
 var
-    NonOpts: TStringList;
-    I: integer;
+    I: int;
 
-bg
+begin
+    MoreHelpFunction := @AdditionalHelpMessages;
     OptionHandler := @OptionParser;
 
     AddOption('l', 'list', '', 'Show the output as a list');
     AddOption('a', 'all', '', 'Show everything, including hidden stuff and folders');
-    AddOption('d', 'dir-only', '', 'Only show directories');
+    AddOption('d', 'directory', '', 'Only show directories');
+    AddOption('i', 'ignore', 'PATTERN', 'Ignore entities that match the specified pattern');
+    AddOption('B', 'ignore-backups', '', 'Ignore entities that end with ~');
+
+    AddOption('w', 'win-fmt', '', 'List directory content using Windows CMD''s dir format');
+    AddOption('u', 'uni-fmt', '', 'List directory content using GNU coreutils format');
+    AddOption('c', 'cmc-fmt', '', 'List directory content using CommandsCollection format');
 
     custcustapp.Start;
 
-    NonOpts := GetNonOptions;
-    if NonOpts.Count = 0 then
+    nonOpts := GetNonOptions;
+    if nonOpts.Count = 0 then
         listitems('./')
     else
-        for i := 0 to NonOpts.Count - 1 do
-            listitems(NonOpts[i]);
+        for I := 0 to nonOpts.Count - 1 do
+            listitems(nonOpts[I]);
 end.
