@@ -16,7 +16,7 @@ includedir=include
 options=-gl -Sa -Si -Sm -Sc -Sx -Co -CO -Cr -CR \
 		-dbg:=begin -ded:=end -dretn:=procedure \
 		-dfn:=function -dlong:=longint -dulong:=longword \
-		-dint:=integer -dbool:=boolean -dREV:=\'$(GIT) rev-parse --short HEAD\'
+		-dint:=integer -dbool:=boolean
 
 [rules]
 %: include/%.pp
@@ -25,15 +25,7 @@ options=-gl -Sa -Si -Sm -Sc -Sx -Co -CO -Cr -CR \
 %: src/%.pp
 	$(COMPILER) $<
 	$(EXECPPAS)
-%: %.pas
-	$(COMPILER) $<
-	$(EXECPPAS)
-%: %.lpr
-	$(COMPILER) $<
-	$(EXECPPAS)
-%: %.dpr
-	$(COMPILER) $<
-	$(EXECPPAS)
+all: calltime cat chk_type dir env inp mkdir rename rm rmdir touch uname uptime
 examples:
 	@echo There are no examples here. Exiting.
 	@exit 1

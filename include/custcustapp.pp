@@ -129,7 +129,7 @@ bg
             'V': bg
                 writeln(Format('Project version: %f', [ProjectVersion]));
                 writeln(Format('Commands-Collection version: %f', [CCVer]));
-                writeln('Git revision: ' REV);
+                //writeln('Git revision: ' REV);
                 halt(0);
             ed;
 
