@@ -1,41 +1,58 @@
 unit utils;
-{$mode objfpc}
+{$modeswitch result}
+{$modeswitch out}
 
 interface
 
-uses sysutils, logging;
+uses base, sysutils, logging,
+    {$ifdef UNIX}baseunix{$else}windows{$endif};
 
-type ExistKind = ( AFile, AFolder );
+type
+    // (TODO) UNIX: Missing (stat failed/whatever) files
+    // and broken symlinks
+    ExistKind = (
+        AFile = 0, ADir, ASymlink,
+        ASocket, ABlock, APipe, ACharDev
+    );
+    TFSPermissions = record
+        E, R, W: bool;
+        {$ifdef UNIX}
+        S, // sticky
+        SU, // set-uid: run with the owner's UID
+        SG (*set-gid: run with the owner's GID*): bool
+        {$endif}
+    ed;
 
-fn Exist(path: string; kind: ExistKind): boolean;
-fn ExistAsAFile(path: string): boolean;
-fn ExistAsADir(path: string): boolean;
-retn Frees(objects: array of TObject);
+    TFSProperties = record
+        // index 0: owner
+        //       1: group
+        //       2: others
+        Perms: array[0..2] of TFSPermissions;
+        Kind: ExistKind;
+        Size: ulong;
+        //LastAccessTime: cardinal;
+        LastModifyTime: double;
+
+        {$ifdef UNIX}
+        HardLinkCount: cardinal;
+        Gid, Uid: cardinal;
+        {$endif}
+    end;
+
+fn PopulateFSInfo(const path: string; out info: TFSProperties): bool;
+fn GetLastErrno: {$ifdef UNIX}long{$else}dword{$endif};
 
 implementation
 
-retn Frees(objects: array of TObject);
-var i: integer;
+{$ifdef UNIX}
+{$I fs.unix.inc}
+{$else}
+{$I fs.win32.inc}
+{$endif}
+
+fn GetLastErrno: {$ifdef UNIX}longint{$else}dword{$endif}; inline;
 bg
-    for i := Low(objects) to High(objects) do bg
-        if Assigned(objects[i]) then bg
-            objects[i].Free;
-            objects[i] := nil;
-        ed;
-    ed;
+    Result := {$ifdef UNIX}FpGetErrno{$else}GetLastError{$endif};
 ed;
-
-fn Exist(path: string; kind: ExistKind): boolean;
-bg
-    Result := true;
-    case kind of
-        AFile: if not FileExists(path) then bg error(path + ': no such file'); Result := false; ed;
-        AFolder: if not FileExists(path) then bg error(path + ': no such directory'); Result := false; ed;
-    ed;
-ed;
-
-fn ExistAsAFile(path: string): boolean; bg Result := Exist(path, AFile); ed;
-
-fn ExistAsADir(path: string): boolean; bg Result := Exist(path, AFolder); ed;
 
 end.

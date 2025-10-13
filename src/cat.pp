@@ -17,7 +17,7 @@ var
 	currLine: integer = 1;
 
 bg
-	if not ExistAsAFile(path) then halt(1);
+	if not FileExists(path) then halt(1);
 
 	Assign(tfIn, path);
 	Reset(tfIn);
