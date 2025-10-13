@@ -2,9 +2,10 @@
 name=Commands Collection
 version=1.1.0
 
-[target]
-units=console logging utils custcustapp sysinf
-programs=calltime cat chk_type dir env mkdir inp rename rm touch uname
+[require]
+libc=true
+packages=regexpr fcl-process rtl
+tools=git
 
 [compiler]
 unitdir=include src
@@ -12,10 +13,16 @@ targetdir=build/progs
 sourcedir=include src
 unittargetdir=build/obj_out
 includedir=include
-options=-gl -Sa -Si -Sm -Sc -Sx -dbg:=begin -ded:=end -dretn:=procedure -dfn:=function -dctor:=constructor -ddtor:=destructor
+options=-gl -Sa -Si -Sm -Sc -Sx -Co -CO -Cr -CR \
+		-dbg:=begin -ded:=end -dretn:=procedure \
+		-dfn:=function -dlong:=longint -dulong:=longword \
+		-dint:=integer -dbool:=boolean -dREV:=\'$(GIT) rev-parse --short HEAD\'
 
 [rules]
-%: %.pp
+%: include/%.pp
+	$(COMPILER) $<
+	$(EXECPPAS)
+%: src/%.pp
 	$(COMPILER) $<
 	$(EXECPPAS)
 %: %.pas
