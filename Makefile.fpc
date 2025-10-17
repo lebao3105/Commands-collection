@@ -4,7 +4,7 @@ version=1.1.0
 
 [require]
 libc=true
-packages=regexpr fcl-process rtl
+packages=regexpr fcl-process users rtl
 tools=git
 
 [compiler]
@@ -12,11 +12,11 @@ unitdir=include src
 targetdir=build/progs
 sourcedir=include src
 unittargetdir=build/obj_out
-includedir=include
+includedir=include src
 options=-gl -Sa -Si -Sm -Sc -Sx -Co -CO -Cr -CR \
 		-dbg:=begin -ded:=end -dretn:=procedure \
 		-dfn:=function -dlong:=longint -dulong:=longword \
-		-dint:=integer -dbool:=boolean
+		-dint:=integer -dbool:=boolean -dreturn:=exit
 
 [rules]
 %: include/%.pp

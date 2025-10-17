@@ -10,15 +10,13 @@
 FPCMake can be used:
 
 ```bash
-$ fpcmake -w -Tall
-<bunch of target requirement(s) and such>
-Writing Makefile
+    fpcmake -w -Tall
 ```
 
 To compile a/any program, do:
 
 ```bash
-$ make src/<program name>
+    make src/<program name>
 ```
 
 Append `.exe` if you're on Windows (optional).
@@ -26,13 +24,13 @@ Append `.exe` if you're on Windows (optional).
 To build everything:
 
 ```bash
-$ make
+    make
 ```
 
 To clean everything:
 
 ```bash
-$ make clean
+    make clean
 ```
 
 All targets are shown [here](https://www.freepascal.org/docs-html/prog/progse81.html#x296-312000E.2), although NOT all are meant to be used.
@@ -47,6 +45,10 @@ There are still some more to use:
 * `STRIP` = symbol and stuff stripping
 * `VERBOSE` = a little bit more verbose'ing compile output
 * `OPTIMIZE` = optimized output (level 2 according to 3.2.2 fpcmake)
+
+You can complile and run [fpmake.pp](fpmake.pp), which is quite nice-looking&dependency-handling.
+However you may have to set the `FPCDIR` environment variable to the compiler source
+for it to work. It also (re)compiles everything at once so using this is a should-not.
 
 ## Code style
 
@@ -66,22 +68,33 @@ Named using either PascalCase or camelCase convention.
 
 ## Definitions
 
+> Note: these are not APPLIED to fpmake.pp!
+
 They are definied in [Makefile.fpc](Makefile.fpc):
 
 * `bg` = `begin`. Do NOT use it in `program`'s main block;
 * `ed` = `end`. Do NOT use it in `program`'s main block;
 * `retn` = `produce`;
 * `fn` = `function`;
-* `ctor` = `constructor`;
-* `dtor` = `destructor`.
+* `return` = `exit`;
+* and maybe more - check the file.
 
-Some more might be defined depending on the target OS + other compile flags.
+This one, along with other compiler options, must be kept synced with [fpmake.pp](fpmake.pp).
 
 ## Type aliases
 
-They do not appear as macros. Placed in [include/base.pp](include/base.pp).
+> Note: these are not APPLIED to fpmake.pp!
+
+They are defined globally:
+
+* `long` = `longint`;
+* `ulong` = `longword`;
+* `bool` = `boolean`;
+* `int` = `integer`.
 
 ## Additional informations
+
+> Note: some are not APPLIED to fpmake.pp!
 
 * `-Sx` is used for Exception keywords (`try`, `except`, `finally`, `raise`);
 * `-Sa` is used for assertions;
@@ -96,7 +109,7 @@ They do not appear as macros. Placed in [include/base.pp](include/base.pp).
 
 Create a new file in `src`. Some units to include (not required to add all of them):
 
-* `base`: Type aliases;
+* `base`: Type aliases blah blah;
 * `console`: Print colored text and more;
 * `custcustapp` (to be renamed): Argument parser;
 * `logging`: Self-explantory;

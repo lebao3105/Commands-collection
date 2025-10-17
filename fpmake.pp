@@ -1,69 +1,66 @@
 program fpmake;
 
-uses fpmkunit;
+uses fpmkunit, strutils;
 
-procedure CreatePackage(const name: shortstring; deps: array of string);
 var
     p: TPackage;
+
+procedure AddProgram(const name: shortstring; deps: array of string);
+var
     t: TTarget;
     i: integer;
 begin
-    with Installer do begin
-        p := AddPackage(name);
-        p.NeedLibC := true;
-        t := p.Targets.AddUnit(name);
-        
-        for i := low(deps) to high(deps) do
-            t.Dependencies.Add(deps[i]);
+    t := p.Targets.AddProgram(name + '.pp');
 
-        t.UnitPath.Add('include');
-        t.UnitPath.Add('src');
-    end;
+    for i := low(deps) to high(deps) do
+        t.Dependencies.Add(deps[i]);
 end;
 
-procedure CreatePackage(const name: shortstring); overload;
+procedure AddProgram(const name: shortstring); overload;
 begin
-    CreatePackage(name, []);
+    AddProgram(name, []);
 end;
 
+var
+    n: integer;
+    splittedOpts: array of ansistring;
+
+const
+    opts =
+        '-gl -Sa -Si -Sm -Sc -Sx -Co -CO -Cr -CR ' +
+		'-dbg:=begin -ded:=end -dretn:=procedure ' +
+		'-dfn:=function -dlong:=longint -dulong:=longword ' +
+		'-dint:=integer -dbool:=boolean -dreturn:=exit ' +
+		'-FEbuild/progs -FUbuild/obj_out ' +
+		'-Fusrc -Fuinclude -Fisrc -Fiinclude';
+
 begin
-    Defaults.Options.Append('-gl');
-    Defaults.Options.Append('-Sa');
-    Defaults.Options.Append('-Si');
-    Defaults.Options.Append('-Sm');
-    Defaults.Options.Append('-Sc');
-    Defaults.Options.Append('-Sx');
-    Defaults.Options.Append('-Co');
-    Defaults.Options.Append('-CO');
-    Defaults.Options.Append('-Cr');
-    Defaults.Options.Append('-CR');
+    p := Installer.AddPackage('CommandsCollection');
+    p.NeedLibC := true;
+    p.Version := '1.0';
+    p.Directory := 'src';
 
-    Defaults.Options.Append('-dbg:=begin');
-    Defaults.Options.Append('-ded:=end');
-    Defaults.Options.Append('-dretn:=procedure');
-    Defaults.Options.Append('-dfn:=function');
-    Defaults.Options.Append('-dlong:=longint');
-    Defaults.Options.Append('-dulong:=longword');
-    Defaults.Options.Append('-dint:=integer');
-    Defaults.Options.Append('-dbool:=boolean');
-
-    CreatePackage('calltime');
-    CreatePackage('cat');
-    CreatePackage('chk_type');
-    CreatePackage('dir', ['regexpr']);
-    CreatePackage('env', ['fcl-process']);
-    CreatePackage('inp');
-    CreatePackage('mkdir');
-    CreatePackage('rename');
-    CreatePackage('rm');
-    CreatePackage('rmdir');
-    CreatePackage('touch');
+    AddProgram('calltime');
+    AddProgram('cat');
+    AddProgram('chk_type');
+    AddProgram('dir', ['regexpr', 'users']);
+    AddProgram('env', ['fcl-process']);
+    AddProgram('inp');
+    AddProgram('mkdir');
+    AddProgram('rename');
+    AddProgram('rm');
+    AddProgram('rmdir');
+    AddProgram('touch');
 
     if Defaults.OS in AllUnixOSes then
     begin
-        CreatePackage('uname');
-        CreatePackage('uptime');
+        AddProgram('uname');
+        AddProgram('uptime');
     end;
+
+    splittedOpts := strutils.SplitString(opts, ' ');
+    for n := low(splittedOpts) to high(splittedOpts) do
+        Defaults.Options.Append(splittedOpts[n]);
 
     Installer.Run;
 end.

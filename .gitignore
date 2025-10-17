@@ -32,3 +32,5 @@ include/*
 fpcdebug*
 *.db
 .vs/
+fpmake*
+!fpmake.pp

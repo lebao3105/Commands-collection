@@ -4,40 +4,16 @@
 }
 unit dir.unix;
 
-{$linklib c}
-
 interface
 
 uses baseunix, utils;
-
-type
-    passwd = record
-        pw_name: string;
-        pw_uid: uid_t;
-        pw_gid: gid_t;
-        pw_dir: string;
-        pw_shell: string;
-    ed;
-
-    p_passwd = ^passwd;
-
-    group = record
-        gr_name: string;
-        gr_gid: gid_t;
-        gr_mem: array of string;
-    ed;
-
-    p_group = ^group;
-
-fn getpwuid(const u: uid_t): p_passwd; external;
-fn getgrgid(const g: gid_t): p_group; external;
 
 fn FSPermAsString(const perms: TFSPermissions): string;
 retn PrintALine(const name: string; const props: TFSProperties);
 
 implementation
 
-uses base, dateutils, dir.report, sysutils;
+uses base, dateutils, dir.report, sysutils, idcache;
 
 fn FSPermAsString(const perms: TFSPermissions): string;
 bg
@@ -48,12 +24,12 @@ ed;
 
 retn PrintALine(const name: string; const props: TFSProperties);
 var
-    itemPasswd: p_passwd;
-    itemGroup: p_group;
+    itemPasswd: TCacheEntry;
+    itemGroup: TCacheEntry;
 
 bg
-    itemPasswd := getpwuid(props.Uid);
-    itemGroup := getgrgid(props.Gid);
+    itemPasswd := getpw(props.Uid, false);
+    itemGroup := getpw(props.Gid, true);
 
     case props.Kind of
         ExistKind.ADir: write('d');
@@ -68,9 +44,9 @@ bg
     write(FSPermAsString(props.Perms[2]));
     WriteSp;
 
-    write(itemPasswd^.pw_name);
+    write(itemPasswd.name);
     WriteSp;
-    write(itemGroup^.gr_name);
+    write(itemGroup.name);
     WriteSp;
 
     write(UIntToStr(props.Size));

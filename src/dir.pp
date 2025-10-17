@@ -11,7 +11,7 @@ uses
     sysutils,
     strutils, // EndsStr
     utils, // FS stat
-    
+
     dir.report,
     dir.unix,
     dir.win32,
@@ -29,7 +29,7 @@ var
 retn ListItems(path: string);
 var
     filesCount: int = 0;
-    filesSize: int = 0;
+    filesSize: ulong = 0;
     hiddenCount: int = 0;
     count: ulong = 0;
     f: TSearchRec;
@@ -50,6 +50,16 @@ bg
         {$define IS_HIDDEN:=((Attr and faHidden) = faHidden)}
         repeat
             with f do bg
+                if not IS_DIR then bg
+                    if dirOnly then continue;
+                    Inc(filesCount);
+                ed;
+
+                if IS_HIDDEN then bg
+                    if not showHidden then continue;
+                    Inc(hiddenCount);
+                ed;
+
                 if ignoreBackups and EndsStr('~', Name) then continue;
 
                 if ignorePattern <> '' then bg
@@ -65,22 +75,14 @@ bg
                         continue;
                 ed;
 
+                Inc(count);
+                PopulateFSInfo(path + '/' + Name, props);
+                filesSize += props.Size;
+
                 // Name-only list
                 if not showAsList then bg
-                    if IS_HIDDEN then bg
-                        if not showHidden then continue;
-                        Inc(hiddenCount);
-                    ed;
-
-                    if not IS_DIR then bg
-                        if dirOnly then continue;
-                        Inc(filesCount);
-                    ed;
-
-                    Inc(count);
-                    PopulateFSInfo(path + '/' + Name, props);
-                    PrintObjectName(Name, props); WriteSp;
-                    filesSize += props.Size;
+                    PrintObjectName(Name, props);
+                    WriteSp;
                 ed
 
                 // Detailed list
@@ -91,6 +93,10 @@ bg
                     case listFmt of
                         ListingFormats.GNU:
                             dir.unix.PrintALine(Name, props);
+                        ListingFormats.CC:
+                            dir.cc.PrintALine(Name, props);
+                        ListingFormats.CMD:
+                            dir.win32.PrintALine(Name, props);
                     ed;
                 ed;
             ed;
