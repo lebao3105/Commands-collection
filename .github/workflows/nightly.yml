@@ -6,6 +6,7 @@ on:
       - "src/**"
       - "include/**"
       - "Makefile.fpc"
+      - "Makefile"
       - ".github/workflows/nightly.yml"
 
   pull_request:
@@ -13,6 +14,7 @@ on:
       - "src/**"
       - "include/**"
       - "Makefile.fpc"
+      - "Makefile"
       - ".github/workflows/nightly.yml"
 
   workflow_dispatch:
@@ -38,7 +40,7 @@ jobs:
         if: ${{ matrix.os == 'macos-latest' }}
         run: |
           brew update
-          brew install fpc
+          brew install fpc fpc-src-laz
 
       - name: Install compiler (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
