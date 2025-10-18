@@ -23,7 +23,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -36,15 +36,21 @@ jobs:
           sudo apt update
           sudo apt install fp-{compiler,units-{base,rtl,fcl}} -y --no-install-recommends
 
-      - name: Install compiler (Windows/macOS)
-        if: ${{ matrix.os != 'ubuntu-latest' }}
+      - name: Install compiler (Windows)
+        if: ${{ matrix.os == 'windows-latest' }}
         uses: gcarreno/setup-lazarus@v3.3.1
+      
+      # - name: Install compiler (macOS)
+      #   if: ${{ matrix.os == 'macos-latest' }}
+      #   run: |
+      #     brew update
+      #     brew upgrade
+      #     brea install fpc-laz
 
       - name: Download fcl-jsonschema
         run: |
           curl -o fcl-jsonschema.tar https://gitlab.com/freepascal.org/fpc/source/-/archive/main/source-main.tar?ref_type=heads&path=packages/fcl-jsonschema
           tar -xf fcl-jsonschema.tar
-
 
       - name: Build all projects (UNIX)
         if: ${{ matrix.os != 'windows-latest' }}
