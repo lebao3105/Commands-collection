@@ -34,16 +34,10 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
           sudo apt update
-          sudo apt install fpc -y --no-install-recommends
+          sudo apt install fp-{compiler,units-{base,rtl}} -y --no-install-recommends
 
-      - name: Install compiler (macOS)
-        if: ${{ matrix.os == 'macos-latest' }}
-        run: |
-          brew update
-          brew install fpc fpc-src-laz
-
-      - name: Install compiler (Windows)
-        if: ${{ matrix.os == 'windows-latest' }}
+      - name: Install compiler (Windows/macOS)
+        if: ${{ matrix.os != 'ubuntu-latest' }}
         uses: gcarreno/setup-lazarus@v3.3.1
 
       - name: Build all projects
