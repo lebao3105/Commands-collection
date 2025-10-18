@@ -49,7 +49,7 @@ jobs:
 
       - name: Download fcl-jsonschema
         run: |
-          curl -o fcl-jsonschema.tar https://gitlab.com/freepascal.org/fpc/source/-/archive/main/source-main.tar?ref_type=heads&path=packages/fcl-jsonschema
+          curl -o fcl-jsonschema.tar "https://gitlab.com/freepascal.org/fpc/source/-/archive/main/source-main.tar?ref_type=heads&path=packages/fcl-jsonschema"
           tar -xf fcl-jsonschema.tar
 
       - name: Build all projects (UNIX)
