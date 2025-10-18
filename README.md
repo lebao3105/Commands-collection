@@ -78,6 +78,10 @@ To install:
 
 `DEBUG` environment variable can be set to `1` to enable debug builds.
 
+> Note: If you use FPC 3.2.2 and older, download and unpack this file:
+> https://gitlab.com/freepascal.org/fpc/source/-/archive/main/source-main.tar?ref_type=heads&path=packages/fcl-jsonschema
+> Add -sp <path to unpacked file> to fpmake's compilation (first command)
+
 ## Run
 
 All programs are set to be placed in `build/bin/<target cpu+os>`.

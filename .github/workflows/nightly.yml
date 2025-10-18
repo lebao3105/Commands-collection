@@ -40,12 +40,27 @@ jobs:
         if: ${{ matrix.os != 'ubuntu-latest' }}
         uses: gcarreno/setup-lazarus@v3.3.1
 
-      - name: Build all projects
+      - name: Download fcl-jsonschema
+        run: |
+          curl -o fcl-jsonschema.tar https://gitlab.com/freepascal.org/fpc/source/-/archive/main/source-main.tar?ref_type=heads&path=packages/fcl-jsonschema
+          tar -xf fcl-jsonschema.tar
+
+
+      - name: Build all projects (UNIX)
+        if: ${{ matrix.os != 'windows-latest' }}
         env:
           DEBUG: 1
         run: |
-          fpc -gl fpmake.pp
+          fpc -gl -Fufcl-jsonschema fpmake.pp
           ./fpmake build
+        
+      - name: Build all projects (Windows)
+        if: ${{ matrix.os == 'windows-latest' }}
+        env:
+          DEBUG: 1
+        run: |
+          fpc -gl -Fufcl-jsonschema fpmake.pp
+          .\fpmake.exe build
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
