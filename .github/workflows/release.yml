@@ -12,8 +12,6 @@ on:
         type: boolean
         required: true
 
-  workflow_dispatch:
-
 jobs:
   build:
     strategy:
