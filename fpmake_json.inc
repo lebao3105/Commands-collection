@@ -61,7 +61,7 @@ begin
         searchPaths.Add(fpcdir);
 
     if not jObj.Find('debug', debug) then
-        debug := GetEnvironmentVariable('DEBUG') = '1';
+        debug := TJSONBoolean.Create(GetEnvironmentVariable('DEBUG') = '1');
 
     if not debug.AsBoolean then begin
         heaptrace := TJSONBoolean.Create(false);
