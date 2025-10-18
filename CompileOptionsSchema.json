@@ -1,0 +1,38 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "lineinfo": {
+            "description": "Use line info unit = more info in backtraces",
+            "type": "boolean"
+        },
+        "heaptrace": {
+            "description": "Use heaptrace unit for memory leak/corruption detecting",
+            "type": "boolean"
+        },
+        "debug": {
+            "description": "Add debugging-related flags",
+            "type": "boolean"
+        },
+        "extraArgs": {
+            "description": "Extra compiler options",
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true
+        },
+        "unitOutPath": {
+            "description": "Unit output (.o, .ppu) path. Defaults to build/units/<target platform> if left empty.",
+            "type": "string"
+        },
+        "exeOutPath": {
+            "description": "Executable+unit output path. Defaults to build/bin/<target platform> if left empty.",
+            "type": "string"
+        },
+        "searchpaths": {
+            "description": "Search paths. $FPCDIR environment variable will also be used.",
+            "type": "string"
+        }
+    }
+}

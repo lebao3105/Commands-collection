@@ -1,0 +1,48 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "programs": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "description": "Target name",
+                        "type": "string"
+                    },
+                    "dependencies": {
+                        "description": "Target dependencies",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": ["name"]
+            }
+        },
+        "units": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "description": "Target name",
+                        "type": "string"
+                    },
+                    "dependencies": {
+                        "description": "Target dependencies",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": ["name"]
+            }
+        }
+    }
+}
