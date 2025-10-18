@@ -54,7 +54,7 @@ jobs:
         env:
           DEBUG: 0
         run: |
-          fpc -gl -Fufcl-jsonschema fpmake.pp
+          fpc -gl -Fusource-main-packages-fcl-jsonschema/packages/fcl-jsonschema/src/ fpmake.pp
           .\fpmake.exe build -sp fcl-jsonschema
 
       - name: Upload build artifact

@@ -57,7 +57,7 @@ jobs:
         env:
           DEBUG: 1
         run: |
-          fpc -gl -Fufcl-jsonschema fpmake.pp
+          fpc -gl -Fusource-main-packages-fcl-jsonschema/packages/fcl-jsonschema/src/ fpmake.pp
           ./fpmake build
         
       - name: Build all projects (Windows)
