@@ -37,8 +37,8 @@ jobs:
           sudo apt install fp-{compiler,units-{base,rtl,fcl}} -y --no-install-recommends
 
       - name: Install compiler (Windows)
-        if: ${{ matrix.os == 'windows-latest' }}
-        uses: gcarreno/setup-lazarus@v3.3.1
+        if: ${{ matrix.os != 'ubuntu-latest' }}
+        uses: lebao3105/setup-lazarus@master
       
       # - name: Install compiler (macOS)
       #   if: ${{ matrix.os == 'macos-latest' }}
