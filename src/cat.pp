@@ -3,7 +3,7 @@ program cat;
 
 uses
     base,
-	custapp, classes, custcustapp,
+	classes, custcustapp,
 	sysutils, logging, utils, console;
 
 var

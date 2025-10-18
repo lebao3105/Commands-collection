@@ -5,7 +5,6 @@ uses
     base,
     classes, // TStringList
     custcustapp,
-    getopts, // OptArg
     logging,
     regexpr,
     sysutils,
@@ -45,7 +44,11 @@ bg
 
     if FindFirst(path + '*', faAnyFile, f) = 0 then
     bg
-        r := TRegExpr.Create;
+        if ignorePattern <> '' then bg
+            r := TRegExpr.Create;
+            r.Expression := ignorePattern;
+        ed;
+
         {$define IS_DIR:=((Attr and faDirectory) = faDirectory)}
         {$define IS_HIDDEN:=((Attr and faHidden) = faHidden)}
         repeat
@@ -62,13 +65,7 @@ bg
 
                 if ignoreBackups and EndsStr('~', Name) then continue;
 
-                if ignorePattern <> '' then bg
-                    try
-                        r.Expression := ignorePattern;
-                        if r.Exec(Name) then continue;
-                    finally
-                    end;
-                ed;
+                if Assigned(r) and r.Exec(Name) then continue;
 
                 if not showHidden then bg
                     if (Name = '.') or (Name = '..') then
@@ -119,7 +116,7 @@ bg
         'l': showAsList := true;
         'a': showHidden := true;
         'd': dirOnly := true;
-        'i': ignorePattern := OptArg;
+        'i': ignorePattern := GetOptValue;
         'B': ignoreBackups := true;
 
         'w': listFmt := ListingFormats.CMD;

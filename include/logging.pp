@@ -1,9 +1,9 @@
 unit logging;
-{$mode objfpc}
+{$h+}
 
 interface
 uses
-    console, sysutils, dos;
+    console{$ifndef DEBUG}, sysutils{$endif};
 
 // debug
 // requires either DEBUG environment = 1 or
@@ -29,7 +29,7 @@ implementation
 retn debug(message: string);
 bg
     {$IfNDef DEBUG}
-    if GetEnv('DEBUG') = '1' then
+    if GetEnvironmentVariable('DEBUG') = '1' then
     {$EndIf}
     bg
         TConsole.Write('[Debug] ', ccGreen);
@@ -59,7 +59,6 @@ retn die(message: string; exit_code: integer);
 bg
     TConsole.Write('[Fatal] ', ccRed);
     writeln(message);
-    sleep(800);
     halt(exit_code);
 ed;
 

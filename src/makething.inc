@@ -37,18 +37,17 @@ var
     j, i: integer;
 
 bg
-    OptionHandler := @OptionParser;
 
     AddOption('v', 'verbose', '', 'Be verbose');
     AddOption('p', 'parent', '', 'Creates parent directories if they do not exist');
 
+    if (ParamCount = 0) then
+        die('Nothing to create.');
+
+    OptionHandler := @OptionParser;
     custcustapp.Start;
 
     NonOpts := GetNonOptions;
-
-    if (NonOpts.Count = 0) then
-        die('Nothing to create.');
-
     for i := 0 to NonOpts.Count - 1 do bg
         if createParent then
         bg

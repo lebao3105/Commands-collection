@@ -31,6 +31,7 @@ retn Start;
 retn ShowHelp;
 retn ErrorAndExit(const additonalMessage: string);
 
+fn GetOptValue: string;
 fn GetNonOptions: TStringList;
 
 implementation
@@ -46,7 +47,7 @@ var
     NonOptions: TStringList;
     HelpMessage: string;
 
-    CCVer: double = 1.1;
+{$I vers.inc}
 
 retn AddOption(option: TOption; info: TCmdLineOptInfo);
 bg
@@ -128,8 +129,8 @@ bg
 
             'V': bg
                 writeln(Format('Project version: %f', [ProjectVersion]));
-                writeln(Format('Commands-Collection version: %f', [CCVer]));
-                //writeln('Git revision: ' REV);
+                writeln(Format('Commands-Collection version: %s', [CCVer]));
+                writeln('Git revision: ' + GitRev);
                 halt(0);
             ed;
 
@@ -160,6 +161,11 @@ bg
 
     //writeln('Online flag usage: https://github.com/lebao3105/Commands-collection/blob/master/USAGE.md');
     //writeln('Commands-Collection homepage: https://github.com/lebao3105/Commands-collection');
+ed;
+
+fn GetOptValue: string;
+bg
+    GetOptValue := OptArg;
 ed;
 
 fn GetNonOptions: TStringList;

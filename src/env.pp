@@ -50,7 +50,7 @@ var
 	aProcess: TProcess;
     i : uint16;
 
-bg
+begin
 	if ParamCount = 0 then bg
 		for i := 1 to GetEnvironmentVariableCount do
 			writeln(GetEnvironmentString(i));
@@ -102,6 +102,7 @@ bg
     		aProcess.CurrentDirectory := GetCurrentDir;
 
     		aProcess.Environment := TStringList.Create;
+			//       v intentional
     		for i := 1 to GetEnvironmentVariableCount do
     			aProcess.Environment.Add(GetEnvironmentString(i));
 
