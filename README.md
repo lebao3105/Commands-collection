@@ -1,7 +1,7 @@
 # Commands-collection
 
 Build status:
-[![Makefile CI](https://github.com/lebao3105/Commands-collection/actions/workflows/nightly.yml/badge.svg)](https://github.com/lebao3105/Commands-collection/actions/workflows/nightly.yml)
+[![Nightly CI](https://github.com/lebao3105/Commands-collection/actions/workflows/nightly.yml/badge.svg)](https://github.com/lebao3105/Commands-collection/actions/workflows/nightly.yml)
 
 A collection of system commands written in Free Pascal.
 
@@ -29,15 +29,58 @@ They are NOT:
 * Object-oriented (although `TStringList` is used sometimes)
 * Battle-tested
 
-## Compiling
+## Building
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md).
+### Setup
+
+* FPC (Free Pascal Compiler) 3.x with some packages(\*):
+    * `users` and `regexpr` for `dir`;
+    * `fcl-process` for `env`;
+    * `fcl-process`, `fcl-json` and `fcl-jsonschema` for `fpmake`
+* Git, to show the repository's revision in program's `-V`
+
+\*: Technically you don't need to care about this. Default installations of FPC include them all.
+Some Linux distributions like Debian separate packages into categories for easier management.
+The RTL (Run Time Library) is always included as the very critical dependency of the program.
+
+### Build
+
+Compile [fpmake.pp](fpmake.pp) first:
+```bash
+    fpc -gl fpmake.pp
+```
+
+To build program(s) and/or unit(s):
+
+```bash
+    ./fpmake build --CompileTarget=<what to build, separated by commas>
+    # to build everything
+    ./fpmake build
+    # if you love verbosity:
+    ./fpmake build -v --CompileTarget=all
+```
+
+To clean:
+
+```bash
+    ./fpmake clean
+```
+
+To install:
+
+```bash
+    ./fpmake install -B <install path>
+```
+
+`--CompileTarget` is optional. Not providing it means you want fpmake to include all packages at once.
+
+[CompileOptionsSchema.json](CompileOptionsSchema.json) can be used to create a CompileOptions.json, which will be used to manipulate some aspects of compilation.
+
+`DEBUG` environment variable can be set to `1` to enable debug builds.
 
 ## Run
 
-All programs are set to be placed in `build/progs`.
-
-> All non-executable build files (.o, .ppu) are placed in `build/obj_out`.
+All programs are set to be placed in `build/bin/<target cpu+os>`.
 
 The universal usage documentation is [here](USAGE.md).
 

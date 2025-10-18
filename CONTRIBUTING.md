@@ -1,55 +1,5 @@
 # Contributing to CommandsCollection
 
-## Setup
-
-* Latest stable FPC (Free Pascal Compiler)
-* Make
-
-## Building (and generating `Makefile`)
-
-FPCMake can be used:
-
-```bash
-    fpcmake -w -Tall
-```
-
-To compile a/any program, do:
-
-```bash
-    make src/<program name>
-```
-
-Append `.exe` if you're on Windows (optional).
-
-To build everything:
-
-```bash
-    make
-```
-
-To clean everything:
-
-```bash
-    make clean
-```
-
-All targets are shown [here](https://www.freepascal.org/docs-html/prog/progse81.html#x296-312000E.2), although NOT all are meant to be used.
-
-Also variables set by `fpcmake` [here](https://www.freepascal.org/docs-html/prog/progse86.html#x313-329000E.7).
-
-There are still some more to use:
-
-* `DEBUG` and `RELEASE` = build variants
-* `CREATESMART` = create smartlinked library
-* `LINKSMART` = smart linking
-* `STRIP` = symbol and stuff stripping
-* `VERBOSE` = a little bit more verbose'ing compile output
-* `OPTIMIZE` = optimized output (level 2 according to 3.2.2 fpcmake)
-
-You can complile and run [fpmake.pp](fpmake.pp), which is quite nice-looking&dependency-handling.
-However you may have to set the `FPCDIR` environment variable to the compiler source
-for it to work. It also (re)compiles everything at once so using this is a should-not.
-
 ## Code style
 
 ### Type definition
@@ -70,7 +20,7 @@ Named using either PascalCase or camelCase convention.
 
 > Note: these are not APPLIED to fpmake.pp!
 
-They are definied in [Makefile.fpc](Makefile.fpc):
+They are definied in [fpmake.pp](fpmake.pp):
 
 * `bg` = `begin`. Do NOT use it in `program`'s main block;
 * `ed` = `end`. Do NOT use it in `program`'s main block;
@@ -78,8 +28,6 @@ They are definied in [Makefile.fpc](Makefile.fpc):
 * `fn` = `function`;
 * `return` = `exit`;
 * and maybe more - check the file.
-
-This one, along with other compiler options, must be kept synced with [fpmake.pp](fpmake.pp).
 
 ## Type aliases
 
@@ -92,7 +40,7 @@ They are defined globally:
 * `bool` = `boolean`;
 * `int` = `integer`.
 
-## Additional informations
+## Additional information
 
 > Note: some are not APPLIED to fpmake.pp!
 
@@ -107,7 +55,9 @@ They are defined globally:
 
 ## Create a new program
 
-Create a new file in `src`. Some units to include (not required to add all of them):
+### Write a new file
+
+Create a new file with the `.pp` extension in [src](src). Some units to [include](include) (not required to add all of them) and update (if you want and the thing to add is fit):
 
 * `base`: Type aliases blah blah;
 * `console`: Print colored text and more;
@@ -136,8 +86,18 @@ They only available after parsing.
 
 Errors while parsing can be skipped by setting `custcustapp.IgnoreErrors` to true.
 
-### How about repeatable options?
+#### How about repeatable options?
 
 Create an array of string, and append the assigned value (`getopts.OptArg`) to that array.
 
 [`env`](src/env.pp) is an example.
+
+#### Is is required to write some addtional messages?
+
+No:v "additional messages" already answered that.
+
+You do not need to write a function and assign `MoreHelpFunction` with its address, at all.
+
+### Tell fpmake the program's exisitence
+
+Edit [Targets.json](Targets.json).
