@@ -20,7 +20,7 @@ Named using either PascalCase or camelCase convention.
 
 > Note: these are not APPLIED to fpmake.pp!
 
-They are definied in [fpmake.pp](fpmake.pp):
+They are definied in [fpmake.pp](build-aux/fpmake.pp):
 
 * `bg` = `begin`. Do NOT use it in `program`'s main block;
 * `ed` = `end`. Do NOT use it in `program`'s main block;
@@ -100,4 +100,4 @@ You do not need to write a function and assign `MoreHelpFunction` with its addre
 
 ### Tell fpmake the program's exisitence
 
-Edit [Targets.json](Targets.json).
+Edit [Targets.json](build-aux/Targets.json).

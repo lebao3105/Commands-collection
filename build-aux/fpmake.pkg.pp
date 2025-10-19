@@ -1,3 +1,14 @@
+unit fpmake.pkg;
+
+interface
+
+procedure AddProgram(const name: shortstring; deps: TJSONArray);
+procedure AddUnit(const name: shortstring; deps: TJSONArray);
+
+implementation
+
+uses fpmake.utils, sysutils;
+
 procedure AddProgram(const name: shortstring; deps: TJSONArray);
 var
     t: TTarget;
@@ -7,6 +18,8 @@ begin
 
     for i := 0 to deps.Count - 1 do
         t.Dependencies.Add(deps.Strings[i]);
+
+    FPTextIndent(Format('[AddP] Added %s which depends on %s', [name, deps.AsJSON.AsString]));
 end;
 
 procedure AddUnit(const name: shortstring; deps: TJSONArray);
@@ -18,4 +31,8 @@ begin
 
     for i := 0 to deps.Count - 1 do
         t.Dependencies.Add(deps.Strings[i]);
+    
+    FPTextIndent(Format('[AddU] Added %s which depends on %s', [name, deps.AsJSON.AsString]));
 end;
+
+end.

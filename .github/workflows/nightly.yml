@@ -34,7 +34,7 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
           sudo apt update
-          sudo apt install fp-{compiler,units-{base,rtl,fcl}} -y --no-install-recommends
+          sudo apt install fp-{compiler,units-{base,rtl,fcl,misc}} -y --no-install-recommends
 
       - name: Install compiler (Windows)
         if: ${{ matrix.os != 'ubuntu-latest' }}

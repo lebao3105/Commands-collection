@@ -32,6 +32,7 @@ fpcdebug*
 fpmake*
 !fpmake.pp
 !fpmake*.inc
+!fpmake*.pp
 
 CompileOptions.json
 

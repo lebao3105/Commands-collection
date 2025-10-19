@@ -1,7 +1,7 @@
 program calltime;
 
 uses
-    custcustapp, sysutils, getopts;
+    custcustapp, sysutils;
 
 var
     format: string = 'dddd mmmm dd yyyy tt';
@@ -9,7 +9,7 @@ var
 retn OptionParser(found: char);
 bg
     case found of
-        'f': format := OptArg;
+        'f': format := GetOptValue;
     ed;
 ed;
 

@@ -5,9 +5,7 @@ program fpmake;
 {$assertions on}
 
 uses fpmkunit, strutils, sysutils, process,
-     fpjson, jsonparser, fpjson.schema.schema,
-     fpjson.schema.validator, fpjson.schema.reader,
-     classes (* TFileStream *);
+     fpmake.json, fpmake.pkg, fpmake.utils;
 
 var
     p: TPackage;
@@ -26,7 +24,7 @@ begin
     crafted += Format(
         'GitRev = ''%s'';' + sLineBreak +
         'CCVer = ''%s'';', [Trim(gitrev), p.Version]);
-    strm := TFileStream.Create('include/vers.inc', fmCreate or fmShareDenyWrite);
+    strm := TFileStream.Create('../include/vers.inc', fmCreate or fmShareDenyWrite);
     try
         strm.Position := 0;
         strm.Write(crafted[1], Length(crafted));
@@ -39,9 +37,6 @@ var
     n: integer;
     splittedOpts: array of ansistring;
     optval: ansistring;
-
-{$I fpmake_iter.inc}
-{$I fpmake_json.inc}
 
 const
     opts =
@@ -57,12 +52,13 @@ begin
 
     p := Installer.AddPackage('CommandsCollection');
 
+    debug('Creating a new package...');
     with p do begin
         ShortName := 'cmdc';
         NeedLibC := true; // only some needs
         Version := '1.1';
         
-        Directory := 'build/';
+        Directory := '../build/';
         //^ while without trailing delimiter works,
         // fpmake's output prints paths without...
         // the trailing delimiter - e.g buildbin/x86_64-linux
@@ -77,6 +73,7 @@ begin
 
     
     // Add compile options
+    debug('Populating compile options');
     splittedOpts := strutils.SplitString(opts, ' ');
     for n := low(splittedOpts) to high(splittedOpts) do
         Defaults.Options.Append(splittedOpts[n]);
@@ -84,7 +81,7 @@ begin
     ValidateJSON('CompileOptions.json', 'CompileOptionsSchema.json');
     ApplySettings;
 
-
+    debug('Adding targets...');
     // Add targets.
     // Targets.json is the database file, which can also be
     // used to add all targets at once (units are excluded
@@ -98,13 +95,12 @@ begin
         ValidateAndAddTarget;
 
 
+    debug('Writing ../vers.inc ...');
     // Write down project's version and Git revision
     // into include/vers.inc
     WriteVerInc;
 
+    debug('Done initializing.');
     // Start
     Installer.Run;
-
-    // Free calls per program keep memory leak away
-    FreeAndNil(JSNInput);
 end.

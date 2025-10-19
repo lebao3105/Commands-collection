@@ -1,22 +1,47 @@
+unit fpmake.json;
+
+{$ifdef VER3_3}
+{$define HAS_JSSC}
+{$endif}
+
+interface
+
+{ Validates a JSON file using the corresponding schema file.
+  This is a bit compiler-dependent. It's OK if you use FPC
+  3.3+, otherwise fpmake will download fcl-jsonschema and
+  tell you to use it next time. }
+procedure ValidateJSON(const input, schemap: string);
+
+{ Applies settings from CompileOptions.json, if any }
+procedure ApplySettings;
+
+implementation
+
+uses classes, // TFileStream
+     fpjson, jsonparser,
+     fpmake.utils,
+    {$ifdef HAS_JSSC}
+    ,fpjson.schema.schema,
+     fpjson.schema.validator,
+     fpjson.schema.reader
+    {$endif};
+
 var
-    JSNInput: TJSONData;
+    JSNInput: TJSONData = nil;
 
 procedure ValidateJSON(const input, schemap: string);
 var
+{$ifdef HAS_JSSC}
     sReader: TJSONSchemaReader;
     JSNSchema: TJSONSchema;
     JSNValidator: TJSONSchemaValidator;
+{$endif}
+
     tfIn: TFileStream;
     inputJSON: ansistring;
 begin
-    if FileExists(input) and FileExists(schemap) then
+    if FileExists(input) then
     begin
-        JSNValidator := TJSONSchemaValidator.Create(nil);
-        JSNSchema := TJSONSchema.Create;
-        sReader := TJSONSchemaReader.Create(nil);
-        sReader.ReadFromFile(JSNSchema, schemap);
-        sReader.Free;
-
         tfIn := TFileStream.Create(input, fmOpenRead or fmShareDenyWrite);
         try
             SetLength(inputJSON, tfIn.Size);
@@ -26,6 +51,18 @@ begin
         end;
 
         JSNInput := GetJSON(inputJSON);
+    end
+    else
+        JSNInput := GetJSON('{}');
+
+    {$ifdef HAS_JSSC}
+    if FileExists(schemap) then
+    begin
+        JSNValidator := TJSONSchemaValidator.Create(nil);
+        JSNSchema := TJSONSchema.Create;
+        sReader := TJSONSchemaReader.Create(nil);
+        sReader.ReadFromFile(JSNSchema, schemap);
+        sReader.Free;
 
         if not JSNValidator.ValidateJSON(JSNInput, JSNSchema) then
             raise Exception.Create(JSNValidator.Messages.AsJSON.FormatJSON);
@@ -34,8 +71,7 @@ begin
         FreeAndNil(JSNValidator);
         exit;
     end;
-
-    JSNInput := GetJSON('{}');
+    {$endif}
 end;
 
 procedure ApplySettings;
@@ -74,7 +110,8 @@ begin
     if not jObj.Find('debug', debug) then
         debug := TJSONBoolean.Create(GetEnvironmentVariable('DEBUG') = '1');
 
-    if not debug.AsBoolean then begin
+    if not debug.AsBoolean then
+    begin
         heaptrace := TJSONBoolean.Create(false);
         extraArgs.Add('-O3');
         extraArgs.Add('-Xs'); // strip symbols
@@ -109,23 +146,38 @@ var
     I, J: integer;
     splits: array of ansistring;
     cached: TJSONObject;
+    isFound: boolean = true;
 
 begin
     jObj := JSNInput as TJSONObject;
     programList := jObj.Arrays['programs'];
     unitList := jObj.Arrays['units'];
 
-    if names = 'all' then
-    begin
-        for I := 0 to programList.Count - 1 do
+    case names of
+    'all':
         begin
-            cached := programList.Objects[I];
-            if not cached.Find('dependencies', cachedList) then
-                cachedList := TJSONArray.Create;
-            AddProgram(cached.Strings['name'], cachedList);
+            for I := 0 to programList.Count - 1 do
+            begin
+                cached := programList.Objects[I];
+                if not cached.Find('dependencies', cachedList) then
+                    cachedList := TJSONArray.Create;
+                AddProgram(cached.Strings['name'], cachedList);
+            end;
+            exit;
         end;
-        exit;
+    'all-units':
+        begin
+            for I := 0 to unitList.Count - 1 do
+            begin
+                cached := unitList.Objects[I];
+                if not cached.Find('dependencies', cachedList) then
+                    cachedList := TJSONArray.Create;
+                AddUnit(cached.Strings['name'], cachedList);
+            end;
+            exit;
+        end;
     end;
+
 
     splits := SplitString(names, ',');
     for I := 0 to high(splits) do begin
@@ -136,6 +188,7 @@ begin
                 if not cached.Find('dependencies', cachedList) then
                     cachedList := TJSONArray.Create;
                 AddProgram(cached.Strings['name'], cachedList);
+                isFound := true;
                 exit;
             end;
         end;
@@ -147,8 +200,16 @@ begin
                 if not cached.Find('dependencies', cachedList) then
                     cachedList := TJSONArray.Create;
                 AddUnit(cached.Strings['name'], cachedList);
+                isFound := true;
                 exit;
             end;
         end;
+
+        if not isFound then
+            FPTextIndent(Format('Unknown element: %s. Skip adding target for this one.', [ splits[I] ]));
     end;
 end;
+
+finalization
+    FreeAndNil(JSNInput);
+end.

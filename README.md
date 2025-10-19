@@ -33,54 +33,12 @@ They are NOT:
 
 ### Setup
 
-* FPC (Free Pascal Compiler) 3.x with some packages(\*):
-    * `users` and `regexpr` for `dir`;
-    * `fcl-process` for `env`;
-    * `fcl-process`, `fcl-json` and `fcl-jsonschema` for `fpmake`
+* FPC (Free Pascal Compiler) 3.x
 * Git, to show the repository's revision in program's `-V`
-
-\*: Technically you don't need to care about this. Default installations of FPC include them all.
-Some Linux distributions like Debian separate packages into categories for easier management.
-The RTL (Run Time Library) is always included as the very critical dependency of the program.
 
 ### Build
 
-Compile [fpmake.pp](fpmake.pp) first:
-```bash
-    fpc -gl fpmake.pp
-```
-
-To build program(s) and/or unit(s):
-
-```bash
-    ./fpmake build --CompileTarget=<what to build, separated by commas>
-    # to build everything
-    ./fpmake build
-    # if you love verbosity:
-    ./fpmake build -v --CompileTarget=all
-```
-
-To clean:
-
-```bash
-    ./fpmake clean
-```
-
-To install:
-
-```bash
-    ./fpmake install -B <install path>
-```
-
-`--CompileTarget` is optional. Not providing it means you want fpmake to include all packages at once.
-
-[CompileOptionsSchema.json](CompileOptionsSchema.json) can be used to create a CompileOptions.json, which will be used to manipulate some aspects of compilation.
-
-`DEBUG` environment variable can be set to `1` to enable debug builds.
-
-> Note: If you use FPC 3.2.2 and older, download and unpack this file:
-> https://gitlab.com/freepascal.org/fpc/source/-/archive/main/source-main.tar?ref_type=heads&path=packages/fcl-jsonschema
-> Add -sp <path to unpacked file> to fpmake's compilation (first command)
+Read [this](build-aux/README.md).
 
 ## Run
 
@@ -96,5 +54,6 @@ The universal usage documentation is [here](USAGE.md).
 
 * Linux man pages
 * GNU Coreutils [source code](https://github.com/coreutils/coreutils)
-* Free Pascal's Run time [library](https://www.freepascal.org/docs-html/rtl/index.html) (RTL)
+* Free Pascal's Run time [library](https://www.freepascal.org/docs-html/rtl/index.html) (RTL) and [Wiki](https://wiki.freepascal.org) and [docs](https://www.freepascal.org/docs.html)
 * Procps-ng [source code](https://gitlab.com/procps-ng/procps)
+* Free Pascal Compiler's [packages](https://gitlab.com/freepascal.org/fpc/source/-/tree/main/packages?ref_type=heads)

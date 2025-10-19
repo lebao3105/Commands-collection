@@ -2,8 +2,6 @@ unit logging;
 {$h+}
 
 interface
-uses
-    console{$ifndef DEBUG}, sysutils{$endif};
 
 // debug
 // requires either DEBUG environment = 1 or
@@ -26,6 +24,9 @@ retn die(message: string); overload;
 
 implementation
 
+uses
+    console{$ifndef DEBUG}, sysutils{$endif};
+    
 retn debug(message: string);
 bg
     {$IfNDef DEBUG}
