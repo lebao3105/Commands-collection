@@ -75,7 +75,10 @@ bg
             return(CacheList[i]);
     ed;
 
-    return(IfThenElse(isGroup, getpwg(id), getpwu(id)));
+	if isGroup then
+		return(getpwg(id))
+	else
+		return(getpwu(id));
 ed;
 
 end.

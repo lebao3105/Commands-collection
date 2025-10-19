@@ -4,11 +4,8 @@ program fpmake;
 {$coperators on}
 {$assertions on}
 
-uses fpmkunit, strutils, sysutils, process,
+uses classes, fpmkunit, strutils, sysutils, process,
      fpmake.json, fpmake.pkg, fpmake.utils;
-
-var
-    p: TPackage;
 
 procedure WriteVerInc;
 var
@@ -50,10 +47,10 @@ begin
     // Must be done first before any Installer call
     AddCustomFpmakeCommandlineOption('CompileTarget', 'Program / unit to compile, separated by commas');
 
-    p := Installer.AddPackage('CommandsCollection');
+    fpmake.pkg.p := Installer.AddPackage('CommandsCollection');
 
     debug('Creating a new package...');
-    with p do begin
+    with fpmake.pkg.p do begin
         ShortName := 'cmdc';
         NeedLibC := true; // only some needs
         Version := '1.1';

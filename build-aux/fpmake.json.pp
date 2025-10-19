@@ -1,4 +1,5 @@
 unit fpmake.json;
+{$mode objfpc}
 
 {$ifdef VER3_3}
 {$define HAS_JSSC}
@@ -15,11 +16,14 @@ procedure ValidateJSON(const input, schemap: string);
 { Applies settings from CompileOptions.json, if any }
 procedure ApplySettings;
 
+{ Validates and adds target(s). }
+procedure ValidateAndAddTarget(const names: shortstring = 'all');
+
 implementation
 
 uses classes, // TFileStream
-     fpjson, jsonparser,
-     fpmake.utils,
+     fpjson, jsonparser, fpmake.pkg,
+     fpmake.utils, sysutils, fpmkunit
     {$ifdef HAS_JSSC}
     ,fpjson.schema.schema,
      fpjson.schema.validator,
@@ -179,7 +183,7 @@ begin
     end;
 
 
-    splits := SplitString(names, ',');
+    splits := SplitStr(names, ',');
     for I := 0 to high(splits) do begin
         for J := 0 to programList.Count - 1 do begin
             cached := programList.Objects[J];
