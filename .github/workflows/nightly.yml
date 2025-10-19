@@ -48,12 +48,14 @@ jobs:
       #     brea install fpc-laz
 
       - name: Download fcl-jsonschema
+        working-directory: build-aux
         run: |
           curl -o fcl-jsonschema.tar "https://gitlab.com/freepascal.org/fpc/source/-/archive/main/source-main.tar?ref_type=heads&path=packages/fcl-jsonschema"
           tar -xf fcl-jsonschema.tar
           fpc -gl -Fusource-main-packages-fcl-jsonschema/packages/fcl-jsonschema/src/ fpmake.pp
 
       - name: Build all projects (UNIX)
+        working-directory: build-aux
         if: ${{ matrix.os != 'windows-latest' }}
         env:
           DEBUG: 1
@@ -61,6 +63,7 @@ jobs:
           ./fpmake build
         
       - name: Build all projects (Windows)
+        working-directory: build-aux
         if: ${{ matrix.os == 'windows-latest' }}
         env:
           DEBUG: 1
