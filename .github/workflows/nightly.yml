@@ -2,6 +2,8 @@ name: Nightly CI
 
 on:
   push:
+    branches:
+      - 'master'
     paths:
       - "*/**.pp"
       - "*/**.inc"
@@ -79,7 +81,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    
+    continue-on-error: true
     needs: build
     
     permissions:
@@ -93,5 +95,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run:
-          gh release view nightly && gh release delete nightly -y --cleanup-tag
+          gh release delete nightly -y --cleanup-tag
           gh release create nightly "Commands Collection*" --generate-notes -p -t Nightly
