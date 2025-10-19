@@ -42,7 +42,7 @@ const
 		'-dbg:=begin -ded:=end -dretn:=procedure ' +
 		'-dfn:=function -dlong:=longint -dulong:=longword ' +
 		'-dint:=integer -dbool:=boolean -dreturn:=exit ' +
-		'-Fusrc -Fuinclude -Fisrc -Fiinclude';
+		'-Fu../src -Fu../include -Fi../src -Fi../include';
 
 begin
     // Must be done first before any Installer call
