@@ -4,7 +4,8 @@ program fpmake;
 {$coperators on}
 {$assertions on}
 
-uses classes, fpmkunit, strutils, sysutils, process,
+uses {$ifdef UNIX}cthreads,{$endif} classes,
+	 fpmkunit, strutils, sysutils, process,
      fpmake.json, fpmake.pkg, fpmake.utils;
 
 procedure WriteVerInc;
