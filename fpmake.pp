@@ -55,8 +55,6 @@ begin
     // Must be done first before any Installer call
     AddCustomFpmakeCommandlineOption('CompileTarget', 'Program / unit to compile, separated by commas');
 
-    JSNSchema := TJSONSchema.Create;
-    JSNValidator := TJSONSchemaValidator.Create(nil);
     p := Installer.AddPackage('CommandsCollection');
 
     with p do begin
@@ -108,7 +106,5 @@ begin
     Installer.Run;
 
     // Free calls per program keep memory leak away
-    FreeAndNil(JSNSchema);
-    FreeAndNil(JSNValidator);
     FreeAndNil(JSNInput);
 end.

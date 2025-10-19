@@ -1,30 +1,41 @@
 var
-    JSNSchema: TJSONSchema;
-    JSNValidator: TJSONSchemaValidator;
     JSNInput: TJSONData;
 
 procedure ValidateJSON(const input, schemap: string);
 var
     sReader: TJSONSchemaReader;
+    JSNSchema: TJSONSchema;
+    JSNValidator: TJSONSchemaValidator;
     tfIn: TFileStream;
     inputJSON: ansistring;
 begin
-    sReader := TJSONSchemaReader.Create(nil);
-    sReader.ReadFromFile(JSNSchema, schemap);
-    sReader.Free;
+    if FileExists(input) and FileExists(schemap) then
+    begin
+        JSNValidator := TJSONSchemaValidator.Create(nil);
+        JSNSchema := TJSONSchema.Create;
+        sReader := TJSONSchemaReader.Create(nil);
+        sReader.ReadFromFile(JSNSchema, schemap);
+        sReader.Free;
 
-    tfIn := TFileStream.Create(input, fmOpenRead or fmShareDenyWrite);
-    try
-        SetLength(inputJSON, tfIn.Size);
-        tfIn.Read(inputJSON[1], tfIn.Size);
-    finally
-        tfIn.Free;
+        tfIn := TFileStream.Create(input, fmOpenRead or fmShareDenyWrite);
+        try
+            SetLength(inputJSON, tfIn.Size);
+            tfIn.Read(inputJSON[1], tfIn.Size);
+        finally
+            tfIn.Free;
+        end;
+
+        JSNInput := GetJSON(inputJSON);
+
+        if not JSNValidator.ValidateJSON(JSNInput, JSNSchema) then
+            raise Exception.Create(JSNValidator.Messages.AsJSON.FormatJSON);
+
+        FreeAndNil(JSNSchema);
+        FreeAndNil(JSNValidator);
+        exit;
     end;
 
-    JSNInput := GetJSON(inputJSON);
-
-    if not JSNValidator.ValidateJSON(JSNInput, JSNSchema) then
-        raise Exception.Create(JSNValidator.Messages.AsJSON.FormatJSON);
+    JSNInput := GetJSON('{}');
 end;
 
 procedure ApplySettings;
