@@ -94,6 +94,6 @@ jobs:
       - name: Publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run:
+        run: |
           gh release delete nightly -y --cleanup-tag
           gh release create nightly "Commands Collection*" --generate-notes -p -t Nightly
