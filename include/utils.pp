@@ -39,8 +39,26 @@ type
         {$endif}
     end;
 
+    IterateResults = (
+        OK, NO_CALLBACK, INACCESSIBLE,
+        STAT_FAILED
+    );
+
+    TIterateDirCallback = retn(
+        const name: ansistring;
+        const info: TFSProperties;
+        const status: IterateResults);
+
 fn PopulateFSInfo(const path: string; out info: TFSProperties): bool;
-fn GetLastErrno: {$ifdef UNIX}long{$else}dword{$endif};
+fn GetLastErrno: {$ifdef UNIX}longint{$else}dword{$endif};
+
+{ Iterates path, and run callback on each entry.
+  If the callback is nil, returns NO_CALLBACK.
+  If path is not accessible, INACCESSIBLE.
+  When IterateDir fails to get an entry's stats, STAT_FAILED will be returned
+  at the end of the iteration, and STAT_FAILED will also be passed to the callback.
+  If everything passes, OK will be returned. }
+fn IterateDir(const path: string; callback: TIterateDirCallback): IterateResults;
 
 implementation
 

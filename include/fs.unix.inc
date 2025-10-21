@@ -1,18 +1,29 @@
 {
     File-system related tasks, implementation for UNIX.
-    
+
     To be honest, baseunix unit has covered everything:
     * stat structure (looks a bit different from the C one)
       and function. We also have bit masks for various stuff
       like file type and permission
     * Error codes. Although we do not stringlize any of them (for now)
-    
+
     Documentations for this unix is here:
     https://www.freepascal.org/docs-html/rtl/baseunix/index.html
     Enjoy.
 }
 
 uses dateutils;
+
+{const
+    DT_UNKNOWN = 0;
+    DT_FIFO = 1;
+    DT_CHR = 2;
+    DT_DIR = 4;
+    DT_BLK = 6;
+    DT_REG = 8;
+    DT_LNK = 10;
+    DT_SOCK = 12;
+    DT_WHT = 14;}
 
 fn PopulateFSInfo(const path: string; out info: TFSProperties): bool;
 var
@@ -22,7 +33,7 @@ bg
         Result := false;
         Exit;
     ed;
-    
+
     with info do bg
         case (st.st_mode and S_IFMT) of
             S_IFBLK: Kind := ExistKind.ABlock;
@@ -57,4 +68,44 @@ bg
     ed;
 
     Result := true;
+ed;
+
+fn IterateDir(const path: string; callback: TIterateDirCallback): IterateResults;
+var
+    dir: pDIR;
+    entry: pDirent;
+    p: TFSProperties;
+
+bg
+    if not Assigned(callback) then
+        return(IterateResults.NO_CALLBACK);
+
+    dir := FpOpendir(path);
+    if dir = nil then
+        return(IterateResults.INACCESSIBLE);
+
+    Result := IterateResults.OK;
+
+    repeat
+        entry := fpReadDir(dir^);
+        if entry <> nil then bg
+            with entry^ do bg
+
+                // Not all file systems support d_type -
+                // some will return DT_UNKNOWN. Maybe use PopulateFSInfo?
+                // Not ideal, but as Dirent having too little fields for
+                // TFSProperties, this is the way.
+
+                if not PopulateFSInfo(path + '/' + ansistring(d_name), p) then bg
+                    callback(ansistring(d_name), p, IterateResults.STAT_FAILED);
+                    Result := IterateResults.STAT_FAILED;
+                ed
+                else
+                    callback(ansistring(d_name), p, IterateResults.OK);
+
+            ed;
+        ed;
+    until entry = nil;
+
+    FpClosedir(dir^);
 ed;

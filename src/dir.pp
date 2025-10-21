@@ -25,15 +25,61 @@ var
     ignoreBackups: bool = false;
     listFmt: ListingFormats = ListingFormats.{$ifdef UNIX}GNU{$else}CMD{$endif};
 
-retn ListItems(path: string);
 var
-    filesCount: int = 0;
-    filesSize: ulong = 0;
-    hiddenCount: int = 0;
-    count: ulong = 0;
-    f: TSearchRec;
-    props: TFSProperties;
     r: TRegExpr;
+    filesCount: uint16 = 0;
+    filesSize: ulong = 0;
+    hiddenCount: uint16 = 0;
+    count: ulong = 0;
+
+retn ShowDirEntry(
+        const name: string;
+        const info: TFSProperties;
+        const status: IterateResults);
+bg
+    if status <> IterateResults.OK then exit; // TODO
+
+    // NOT what Windows do (hides stuff with a dot as the prefix)
+    {$ifdef UNIX}
+    if (not showHidden) and StartsStr('.', name) then
+        exit;
+    {$endif}
+
+    if ignoreBackups and (EndsStr('~', name) or EndsStr('.bak', name)) then
+        exit;
+
+    if Assigned(r) and r.Exec(name) then
+        exit;
+
+    if (info.Kind <> ExistKind.ADir) then
+    bg
+        if dirOnly then exit;
+        Inc(filesCount);
+        Inc(filesSize, info.Size);
+    ed;
+
+    Inc(count);
+
+    // Name-only list
+    if not showAsList then bg
+        PrintObjectName(Name, info);
+        WriteSp;
+    ed
+
+    // Detailed list
+    else case listFmt of
+        ListingFormats.GNU:
+            dir.unix.PrintALine(Name, info);
+        ListingFormats.CC:
+            dir.cc.PrintALine(Name, info);
+        ListingFormats.CMD:
+            dir.win32.PrintALine(Name, info);
+    ed;
+ed;
+
+retn ListItems(path: string);
+//var
+//    statFailCount: uint16 = 0;
 
 bg
     path := ExpandFileName(IncludeTrailingPathDelimiter(path));
@@ -42,72 +88,26 @@ bg
         write(path); writeln(':');
     ed;
 
-    if FindFirst(path + '*', faAnyFile, f) = 0 then
-    bg
-        if ignorePattern <> '' then bg
-            r := TRegExpr.Create;
-            r.Expression := ignorePattern;
+    if (ignorePattern <> '') and (not Assigned(r))
+    then bg
+        r := TRegExpr.Create;
+        r.Expression := ignorePattern;
+    ed;
+
+    case IterateDir(path, @ShowDirEntry) of
+        INACCESSIBLE: bg
+            error(path + ' is inaccessible.');
+            writeln('Make sure that it either exists, is a directory, and you have enough permissions to read it.');
         ed;
 
-        {$define IS_DIR:=((Attr and faDirectory) = faDirectory)}
-        {$define IS_HIDDEN:=((Attr and faHidden) = faHidden)}
-        repeat
-            with f do bg
-                if not IS_DIR then bg
-                    if dirOnly then continue;
-                    Inc(filesCount);
-                ed;
+        // TODO
+        //STAT_FAILED: Inc(statFailCount);
 
-                if IS_HIDDEN then bg
-                    if not showHidden then continue;
-                    Inc(hiddenCount);
-                ed;
+        OK:
+            Report(filesCount, count, hiddenCount, filesSize, listFmt, dirOnly);
+    end;
 
-                if ignoreBackups and EndsStr('~', Name) then continue;
-
-                if Assigned(r) and r.Exec(Name) then continue;
-
-                if not showHidden then bg
-                    if (Name = '.') or (Name = '..') then
-                        continue;
-                ed;
-
-                Inc(count);
-                PopulateFSInfo(path + '/' + Name, props);
-                filesSize += props.Size;
-
-                // Name-only list
-                if not showAsList then bg
-                    PrintObjectName(Name, props);
-                    WriteSp;
-                ed
-
-                // Detailed list
-                else bg
-                    PopulateFSInfo(path + '/' + Name, props);
-                    filesSize += props.Size;
-
-                    case listFmt of
-                        ListingFormats.GNU:
-                            dir.unix.PrintALine(Name, props);
-                        ListingFormats.CC:
-                            dir.cc.PrintALine(Name, props);
-                        ListingFormats.CMD:
-                            dir.win32.PrintALine(Name, props);
-                    ed;
-                ed;
-            ed;
-        until FindNext(f) <> 0;
-
-        FindClose(f);
-        r.Free;
-
-        writeln;
-        Report(filesCount, count, hiddenCount, filesSize, listFmt, dirOnly);
-    ed
-
-    else
-        error('Unable to open directory ' + path + '!');
+    if Assigned(r) then r.Free;
 ed;
 
 retn OptionParser(found: char);
@@ -147,7 +147,7 @@ begin
     AddOption('a', 'all', '', 'Show everything, including hidden stuff and folders');
     AddOption('d', 'directory', '', 'Only show directories');
     AddOption('i', 'ignore', 'PATTERN', 'Ignore entities that match the specified pattern');
-    AddOption('B', 'ignore-backups', '', 'Ignore entities that end with ~');
+    AddOption('B', 'ignore-backups', '', 'Ignore entities that end with ~ OR .bak');
 
     AddOption('w', 'win-fmt', '', 'List directory content using Windows CMD''s dir format');
     AddOption('u', 'uni-fmt', '', 'List directory content using GNU coreutils format');
@@ -157,7 +157,7 @@ begin
 
     nonOpts := GetNonOptions;
     if nonOpts.Count = 0 then
-        listitems('./')
+        listitems('.')
     else
         for I := 0 to nonOpts.Count - 1 do
             listitems(nonOpts[I]);

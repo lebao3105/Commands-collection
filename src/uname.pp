@@ -9,21 +9,15 @@ uses
     {$endif};
 
 var
-    PrintedOnce: bool = false;
     Inf: TUtsname;
     PrettyPrint: bool = false;
 
 retn PrintElement(what, name: string);
 bg
-    if (PrintedOnce) then
-        write(' ');
-
-    PrintedOnce := true;
-
     if PrettyPrint then
         writeln(name, ': ', what)
     else
-        write(what);
+        write(what, ' ');
 ed;
 
 fn ExtraHelp: string;
@@ -72,11 +66,12 @@ bg
         'm': PrintElement(Inf.machine, 'Machine hardware name');
 
         // End old macOSes env
-
+        
+        // GNU handles this more strictly, can be seen by calls to
+        // sysinfo / sysctl (prob it's platform-specific)
         'p': PrintElement({$I %FPCTARGET%}, 'Processor type');
         'i': bg
             {$ifdef BSD} //?
-
             // Get size required to hold the text
             if (FpSysCtl(PCInt(@MIB), Length(MIB), Nil, @s, Nil, 0) = 0) then
             bg

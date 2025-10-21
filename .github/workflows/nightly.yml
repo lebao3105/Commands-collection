@@ -3,7 +3,7 @@ name: Nightly CI
 on:
   push:
     branches:
-      - 'master'
+      - "master"
     paths:
       - "*/**.pp"
       - "*/**.inc"
@@ -12,6 +12,8 @@ on:
       - ".github/workflows/nightly.yml"
 
   pull_request:
+    branches:
+      - "master"
     paths:
       - "*/**.pp"
       - "*/**.inc"
@@ -25,7 +27,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -41,7 +43,7 @@ jobs:
       - name: Install compiler (Windows)
         if: ${{ matrix.os != 'ubuntu-latest' }}
         uses: lebao3105/setup-lazarus@master
-      
+
       # - name: Install compiler (macOS)
       #   if: ${{ matrix.os == 'macos-latest' }}
       #   run: |
@@ -63,7 +65,7 @@ jobs:
           DEBUG: 1
         run: |
           ./fpmake build
-        
+
       - name: Build all projects (Windows)
         working-directory: build-aux
         if: ${{ matrix.os == 'windows-latest' }}
@@ -83,7 +85,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     needs: build
-    
+
     permissions:
       contents: write
 
