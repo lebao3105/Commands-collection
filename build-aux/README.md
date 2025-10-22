@@ -25,7 +25,7 @@ Everything will be read and used by fpmkunit, the underlying build system.
 Now to compile: download [this](https://gitlab.com/freepascal.org/fpc/source/-/tree/main/packages/fcl-jsonschema?ref_type=heads) folder, unpack, and run:
 
 ```bash
-    fpc -Fu<unpacked folder / to / src> fpmake.pp
+    fpc -Fu<unpacked folder / to / src> -dHAS_JSSC fpmake.pp
 ```
 
 You may need to download more different folders, append more `-Fu` (NOT `-FU`)s. The mentioned folder must end with `src` (or contain `.pp` and / or `.pas` that is not `fpmake.pp`)

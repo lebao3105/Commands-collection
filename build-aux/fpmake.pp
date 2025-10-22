@@ -23,8 +23,8 @@ begin
     debug('Git revision ' + gitrev);
     crafted += Format(
         'GitRev = ''%s'';' + sLineBreak +
-        'CCVer = ''%s'';', [gitrev, p.Version]);
-    strm := TFileStream.Create('../include/vers.inc', fmCreate or fmShareDenyWrite);
+        'CCVer = ''%s'';', [Trim(gitrev), p.Version]);
+    strm := TFileStream.Create('../include/vers.inc', fmCreate or fmShareDenyWrite or fmOpenWrite);
     try
         strm.Position := 0;
         strm.Write(crafted[1], Length(crafted));

@@ -56,7 +56,7 @@ jobs:
         run: |
           curl -o fcl-jsonschema.tar "https://gitlab.com/freepascal.org/fpc/source/-/archive/main/source-main.tar?ref_type=heads&path=packages/fcl-jsonschema"
           tar -xf fcl-jsonschema.tar
-          fpc -gl -Fusource-main-packages-fcl-jsonschema/packages/fcl-jsonschema/src/ fpmake.pp
+          fpc -gl -Fusource-main-packages-fcl-jsonschema/packages/fcl-jsonschema/src/ -dHAS_JSSC fpmake.pp
 
       - name: Build all projects (UNIX)
         working-directory: build-aux
