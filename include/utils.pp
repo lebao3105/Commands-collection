@@ -1,6 +1,7 @@
 unit utils;
 {$modeswitch result}
 {$modeswitch out}
+{$H+}
 
 interface
 
@@ -8,11 +9,10 @@ uses base, sysutils, logging,
     {$ifdef UNIX}baseunix{$else}windows{$endif};
 
 type
-    // (TODO) UNIX: Missing (stat failed/whatever) files
-    // and broken symlinks
     ExistKind = (
         AFile = 0, ADir, ASymlink,
-        ASocket, ABlock, APipe, ACharDev
+        ASocket, ABlock, APipe, ACharDev,
+        AStatFailure
     );
     TFSPermissions = record
         E, R, W: bool;
@@ -29,13 +29,16 @@ type
         //       2: others
         Perms: array[0..2] of TFSPermissions;
         Kind: ExistKind;
-        Size: ulong;
+        Size: qword;
         //LastAccessTime: cardinal;
         LastModifyTime: double;
 
         {$ifdef UNIX}
         HardLinkCount: cardinal;
         Gid, Uid: cardinal;
+        {$else}
+        IsHidden: bool; // Set externally - check fs.win32.inc
+        Gid, Uid: PSID;
         {$endif}
     end;
 
@@ -44,10 +47,13 @@ type
         STAT_FAILED
     );
 
-    TIterateDirCallback = retn(
-        const name: ansistring;
-        const info: TFSProperties;
-        const status: IterateResults);
+    TIterateDirResult = record
+        name: ansistring;
+        info: TFSProperties;
+        status: IterateResults
+    end;
+
+    PIterateDirResult = ^TIterateDirResult;
 
 fn PopulateFSInfo(const path: string; out info: TFSProperties): bool;
 fn GetLastErrno: {$ifdef UNIX}longint{$else}dword{$endif};
@@ -58,7 +64,7 @@ fn GetLastErrno: {$ifdef UNIX}longint{$else}dword{$endif};
   When IterateDir fails to get an entry's stats, STAT_FAILED will be returned
   at the end of the iteration, and STAT_FAILED will also be passed to the callback.
   If everything passes, OK will be returned. }
-fn IterateDir(const path: string; callback: TIterateDirCallback): IterateResults;
+fn IterateDir(const path: string; callback: TThreadFunc): IterateResults;
 
 implementation
 

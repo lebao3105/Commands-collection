@@ -10,7 +10,11 @@ interface
 uses base, console, utils;
 
 type
-    ListingFormats = ( CMD, GNU, CC );
+    ListingFormats = ( CMD, {$ifdef UNIX}GNU,{$endif} CC );
+
+var
+    addColors: bool = false;
+    listFmt: ListingFormats = ListingFormats.{$ifdef UNIX}GNU{$else}CMD{$endif};
 
 const
     foreAndBack: array of array[0..1] of TConsoleColor = (
@@ -30,14 +34,14 @@ const
         // Reference: https://github.com/coreutils/coreutils/blob/master/src/ls.c#L634
     );
 
-retn Report(const files, total, hiddens: uint16; size: ulong; listFmt: ListingFormats; dirOnly: bool);
+retn Report(const files, total, hiddens: uint16; size: qword; dirOnly: bool);
 retn PrintObjectName(const name: string; const props: TFSProperties);
 
 implementation
 
 uses logging, sysutils;
 
-retn Report(const files, total, hiddens: uint16; size: ulong; listFmt: ListingFormats; dirOnly: bool);
+retn Report(const files, total, hiddens: uint16; size: qword; dirOnly: bool);
 bg
     case listFmt of
         ListingFormats.CC: bg
@@ -65,16 +69,18 @@ var
     colorPair: array[0..1] of TConsoleColor;
 
 bg
-    colorPair := foreAndBack[ord(props.Kind)];
-    TConsole.SetForegroundColor(colorPair[0]);
-    TConsole.SetBackgroundColor(colorPair[1]);
+    if addColors then bg
+        colorPair := foreAndBack[ord(props.Kind)];
+        SetForegroundColor(colorPair[0]);
+        SetBackgroundColor(colorPair[1]);
 
-    // TODO: Permissions
-    if props.Perms[0].E then
-        TConsole.SetForegroundColor(ccBrightGreen);
+        // TODO: Permissions
+        if props.Perms[0].E then
+            SetForegroundColor(ccBrightGreen);
+    ed;
 
-    TConsole.Write(name);
-    TConsole.ResetColors;
+    Write(name);
+    ResetColors;
 ed;
 
 end.

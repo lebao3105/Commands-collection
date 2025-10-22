@@ -2,6 +2,9 @@ program dir;
 {$h+}
 
 uses
+    {$ifdef UNIX}
+    cthreads,
+    {$endif}
     base,
     classes, // TStringList
     custcustapp,
@@ -12,7 +15,9 @@ uses
     utils, // FS stat
 
     dir.report,
+    {$ifdef UNIX}
     dir.unix,
+    {$endif}
     dir.win32,
     dir.cc;
 
@@ -21,60 +26,70 @@ var
     showHidden: bool = false;
     showAsList: bool = false;
     dirOnly: bool = false;
-    ignorePattern: string;
     ignoreBackups: bool = false;
-    listFmt: ListingFormats = ListingFormats.{$ifdef UNIX}GNU{$else}CMD{$endif};
 
 var
-    r: TRegExpr;
-    filesCount: uint16 = 0;
-    filesSize: ulong = 0;
-    hiddenCount: uint16 = 0;
-    count: ulong = 0;
+    rg: TRegExpr;
+    filesCount: ulong = 0;
+    filesSize: qword = 0;
+    hiddenCount: longword = 0;
+    count: longint = 0;
 
-retn ShowDirEntry(
-        const name: string;
-        const info: TFSProperties;
-        const status: IterateResults);
+fn ShowDirEntry(p: pointer): ptrint;
+var r: PIterateDirResult;
 bg
-    if status <> IterateResults.OK then exit; // TODO
+    r := PIterateDirResult(p);
+    if r^.status <> IterateResults.OK then exit; // TODO
 
-    // NOT what Windows do (hides stuff with a dot as the prefix)
-    {$ifdef UNIX}
-    if (not showHidden) and StartsStr('.', name) then
-        exit;
-    {$endif}
-
-    if ignoreBackups and (EndsStr('~', name) or EndsStr('.bak', name)) then
-        exit;
-
-    if Assigned(r) and r.Exec(name) then
-        exit;
-
-    if (info.Kind <> ExistKind.ADir) then
+    if r^.info.Kind <> ExistKind.ADir then
     bg
         if dirOnly then exit;
-        Inc(filesCount);
-        Inc(filesSize, info.Size);
+        InterLockedIncrement(filesCount);
+        Inc(filesSize, r^.info.Size);
     ed;
+
+    if not showHidden then
+{$ifdef UNIX}
+        if StartsStr('.', r^.name) then
+{$else}
+        if r^.info.IsHidden then
+{$endif}
+        bg
+            InterLockedIncrement(hiddenCount);
+            exit;
+        ed;
+
+    if ignoreBackups and (EndsStr('~', r^.name) or EndsStr('.bak', r^.name)) then
+        exit;
+
+    try
+        if Assigned(rg) and rg.Exec(r^.name) then
+            exit;
+    except
+        // TODO
+    end;
 
     Inc(count);
 
     // Name-only list
     if not showAsList then bg
-        PrintObjectName(Name, info);
+        PrintObjectName(r^.name, r^.info);
         WriteSp;
     ed
 
     // Detailed list
     else case listFmt of
+        {$ifdef UNIX}
         ListingFormats.GNU:
-            dir.unix.PrintALine(Name, info);
+            dir.unix.PrintALine(r^.name, r^.info);
+        {$endif}
         ListingFormats.CC:
-            dir.cc.PrintALine(Name, info);
+            dir.cc.PrintALine(r^.name, r^.info);
         ListingFormats.CMD:
-            dir.win32.PrintALine(Name, info);
+            dir.win32.PrintALine(r^.name, r^.info);
     ed;
+
+    ShowDirEntry := 0;
 ed;
 
 retn ListItems(path: string);
@@ -88,12 +103,6 @@ bg
         write(path); writeln(':');
     ed;
 
-    if (ignorePattern <> '') and (not Assigned(r))
-    then bg
-        r := TRegExpr.Create;
-        r.Expression := ignorePattern;
-    ed;
-
     case IterateDir(path, @ShowDirEntry) of
         INACCESSIBLE: bg
             error(path + ' is inaccessible.');
@@ -103,11 +112,16 @@ bg
         // TODO
         //STAT_FAILED: Inc(statFailCount);
 
-        OK:
-            Report(filesCount, count, hiddenCount, filesSize, listFmt, dirOnly);
+        OK: bg
+            Report(filesCount, count, hiddenCount, filesSize, dirOnly);
+            filesCount := 0;
+            count := 0;
+            hiddenCount := 0;
+            filesSize := 0;
+        ed;
     end;
 
-    if Assigned(r) then r.Free;
+    if Assigned(rg) then rg.Free;
 ed;
 
 retn OptionParser(found: char);
@@ -115,13 +129,20 @@ bg
     case found of
         'l': showAsList := true;
         'a': showHidden := true;
+        'c': addColors := true;
         'd': dirOnly := true;
-        'i': ignorePattern := GetOptValue;
+        'i': bg
+            if rg = nil then
+                rg := TRegExpr.Create;
+            rg.Expression := GetOptValue;
+        ed;
         'B': ignoreBackups := true;
 
         'w': listFmt := ListingFormats.CMD;
+        {$ifdef UNIX}
         'u': listFmt := ListingFormats.GNU;
-        'c': listFmt := ListingFormats.CC;
+        {$endif}
+        'm': listFmt := ListingFormats.CC;
     ed;
 ed;
 
@@ -140,18 +161,28 @@ var
     I: int;
 
 begin
+    if ParamCount = 0 then
+    bg
+        ListItems('.');
+        exit;
+    ed;
+
     MoreHelpFunction := @AdditionalHelpMessages;
     OptionHandler := @OptionParser;
 
     AddOption('l', 'list', '', 'Show the output as a list');
     AddOption('a', 'all', '', 'Show everything, including hidden stuff and folders');
+    AddOption('c', 'color', '', 'Use colors in the output');
     AddOption('d', 'directory', '', 'Only show directories');
     AddOption('i', 'ignore', 'PATTERN', 'Ignore entities that match the specified pattern');
     AddOption('B', 'ignore-backups', '', 'Ignore entities that end with ~ OR .bak');
+    AddOption('R', 'recursive', '', 'List stuff, recursively');
 
     AddOption('w', 'win-fmt', '', 'List directory content using Windows CMD''s dir format');
+    {$ifdef UNIX}
     AddOption('u', 'uni-fmt', '', 'List directory content using GNU coreutils format');
-    AddOption('c', 'cmc-fmt', '', 'List directory content using CommandsCollection format');
+    {$endif}
+    AddOption('m', 'cmc-fmt', '', 'List directory content using CommandsCollection format');
 
     custcustapp.Start;
 

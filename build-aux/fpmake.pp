@@ -14,14 +14,16 @@ var
     gitrev: ansistring = '<Unknown>';
     crafted: ansistring = 'const ';
 begin
-    RunCommand(
+    RunCommandInDir(
+        ExtractFilePath(ParamStr(0)),
         ExeSearch('git', GetEnvironmentVariable('PATH')),
         ['rev-parse', '--short=7', 'HEAD'],
         gitrev
     );
+    debug('Git revision ' + gitrev);
     crafted += Format(
         'GitRev = ''%s'';' + sLineBreak +
-        'CCVer = ''%s'';', [Trim(gitrev), p.Version]);
+        'CCVer = ''%s'';', [gitrev, p.Version]);
     strm := TFileStream.Create('../include/vers.inc', fmCreate or fmShareDenyWrite);
     try
         strm.Position := 0;
@@ -49,13 +51,13 @@ begin
     AddCustomFpmakeCommandlineOption('CompileTarget', 'Program / unit to compile, separated by commas');
 
     fpmake.pkg.p := Installer.AddPackage('CommandsCollection');
-
+    debug('The current directory is ' + ExtractFilePath(ParamStr(0)));
     debug('Creating a new package...');
     with fpmake.pkg.p do begin
         ShortName := 'cmdc';
         NeedLibC := true; // only some needs
         Version := '1.1';
-        
+
         Directory := '../build/';
         //^ while without trailing delimiter works,
         // fpmake's output prints paths without...
@@ -69,7 +71,7 @@ begin
         DescriptionFile := 'README.md';
     end;
 
-    
+
     // Add compile options
     debug('Populating compile options');
     splittedOpts := strutils.SplitString(opts, ' ');
@@ -93,7 +95,7 @@ begin
         ValidateAndAddTarget;
 
 
-    debug('Writing ../vers.inc ...');
+    debug('Writing ../include/vers.inc ...');
     // Write down project's version and Git revision
     // into include/vers.inc
     WriteVerInc;

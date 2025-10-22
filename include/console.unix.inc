@@ -4,9 +4,7 @@
 
 uses BaseUnix, termio;
 
-class procedure TConsole.InitConsole; bg {$hint Using this function is not required on Unix.} ed;
-
-class procedure TConsole.SetForegroundColor(const Color: TConsoleColor);
+retn SetForegroundColor(const Color: TConsoleColor);
 bg
     case Color of
         ccBlack: System.Write(#27'[30m');
@@ -28,7 +26,7 @@ bg
     ed;
 ed;
 
-class procedure TConsole.SetBackgroundColor(const Color: TConsoleColor);
+retn SetBackgroundColor(const Color: TConsoleColor);
 bg
     case Color of
         ccBlack: System.Write(#27'[40m');
@@ -50,44 +48,44 @@ bg
     ed;
 ed;
 
-class procedure TConsole.ResetColors; inline;
+retn ResetColors; inline;
 bg
     System.Write(#27'[0m');
 ed;
 
-class procedure TConsole.ClearLine; inline;
+retn ClearLine; inline;
 bg
     System.Write(#27'[2K');
     System.Write(#13);
 ed;
 
-class procedure TConsole.MoveCursorUp(const Lines: Integer); inline;
+retn MoveCursorUp(const Lines: Integer); inline;
 bg
     System.Write(#27'[', Lines, 'A');
 ed;
 
-class procedure TConsole.MoveCursorDown(const Lines: Integer); inline;
+retn MoveCursorDown(const Lines: Integer); inline;
 bg
     System.Write(#27'[', Lines, 'B');
 ed;
 
-class procedure TConsole.MoveCursorLeft(const Columns: Integer); inline;
+retn MoveCursorLeft(const Columns: Integer); inline;
 bg
     System.Write(#27'[', Columns, 'D');
 ed;
 
-class procedure TConsole.MoveCursorRight(const Columns: Integer); inline;
+retn MoveCursorRight(const Columns: Integer); inline;
 bg
     System.Write(#27'[', Columns, 'C');
 ed;
 
-class procedure TConsole.ClearScreen; inline;
+retn ClearScreen; inline;
 bg
     System.Write(#27'[2J');
     System.Write(#13);
 ed;
 
-class procedure TConsole.MoveCursorTo(const X, Y: integer);
+retn MoveCursorTo(const X, Y: integer);
 bg
     {$warning This is not confirmed to work. The cursor will jump to 0,0 first.}
 	System.Write(#13);

@@ -12,7 +12,7 @@
     Enjoy.
 }
 
-uses dateutils;
+uses dateutils, cthreads;
 
 {const
     DT_UNKNOWN = 0;
@@ -31,6 +31,7 @@ var
 bg
     if FpStat(path, st) <> 0 then bg
         Result := false;
+        info.Kind := ExistKind.AStatFailure;
         Exit;
     ed;
 
@@ -70,11 +71,11 @@ bg
     Result := true;
 ed;
 
-fn IterateDir(const path: string; callback: TIterateDirCallback): IterateResults;
+fn IterateDir(const path: string; callback: TThreadFunc): IterateResults;
 var
     dir: pDIR;
     entry: pDirent;
-    p: TFSProperties;
+    r: PIterateDirResult;
 
 bg
     if not Assigned(callback) then
@@ -86,26 +87,31 @@ bg
 
     Result := IterateResults.OK;
 
+    New(r);
     repeat
         entry := fpReadDir(dir^);
         if entry <> nil then bg
             with entry^ do bg
-
                 // Not all file systems support d_type -
                 // some will return DT_UNKNOWN. Maybe use PopulateFSInfo?
                 // Not ideal, but as Dirent having too little fields for
                 // TFSProperties, this is the way.
 
-                if not PopulateFSInfo(path + '/' + ansistring(d_name), p) then bg
-                    callback(ansistring(d_name), p, IterateResults.STAT_FAILED);
+                r^.name := ansistring(d_name);
+
+                if not PopulateFSInfo(path + '/' + r^.name, r^.info) then bg
+                    r^.status := IterateResults.STAT_FAILED;
                     Result := IterateResults.STAT_FAILED;
                 ed
-                else
-                    callback(ansistring(d_name), p, IterateResults.OK);
+                else bg
+                    r^.status := IterateResults.OK;
+                    Result := IterateResults.OK;
+                ed;
 
+                BeginThread(callback, r);
             ed;
         ed;
     until entry = nil;
-
+    Dispose(r);
     FpClosedir(dir^);
 ed;

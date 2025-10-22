@@ -46,16 +46,43 @@ var
     GotChar: char;
     NonOptions: TStringList;
     HelpMessage: string;
+    ShortArgs: string;
 
 {$I vers.inc}
 
 retn AddOption(option: TOption; info: TCmdLineOptInfo);
+var
+    lineToAdd: string;
 bg
     SetLength(Options, Length(Options) + 1);
     Options[High(Options)] := option;
 
     SetLength(OptionInfos, Length(OptionInfos) + 1);
     OptionInfos[High(OptionInfos)] := info;
+
+    with option do bg
+        if Value <> #0 then bg
+            ShortArgs += Value;
+
+            if Has_Arg = Required_argument then
+                ShortArgs += ':';
+
+            lineToAdd += ('-' + Value);
+        ed;
+
+        if Name <> #0 then bg
+            if Value <> #0 then
+                lineToAdd += ' / ';
+            lineToAdd += ('--' + Name);
+        ed;
+
+        lineToAdd += Format(
+            '%-20s' + sLineBreak + #09 +
+            '%-20s' + sLineBreak,
+            [ info.ArgumentName, info.HelpMsg ]);
+
+        HelpMessage += lineToAdd;
+    ed;
 ed;
 
 retn AddOption(short: char; long, arg, description: string);
@@ -77,42 +104,7 @@ bg
 ed;
 
 retn Start;
-var
-    I: integer;
-    lineToAdd: string;
-    shortArgs: string;
-
 bg
-
-{$region Help message}
-    for I := Low(Options) to High(Options) do
-    bg
-        lineToAdd := '';
-
-        with Options[I] do bg
-            if (Value <> #0) then bg // short option name
-                shortArgs += Value;
-
-                if (Has_arg = Required_argument) then
-                    shortArgs += ':';
-
-                lineToAdd += ('-' + Value);
-            ed;
-
-            if (Name <> '') then // long option name
-                lineToAdd += (' / --' + Name);
-
-            lineToAdd += Format('%-20s', [OptionInfos[I].ArgumentName]) +
-                         sLineBreak + #09 +
-                         Format('%-20s', [OptionInfos[I].HelpMsg]) +
-                         sLineBreak;
-
-            HelpMessage += lineToAdd;
-        ed;
-    ed;
-{$endregion}
-
-{$region Parse}
     repeat
         GotChar := GetLongOpts(shortArgs, @Options[0], OptionIndex);
         case GotChar of
@@ -146,7 +138,6 @@ bg
         NonOptions.Append(ParamStr(OptInd));
         Inc(OptInd);
     ed;
-{$endregion}
 ed;
 
 retn ShowHelp; inline;
@@ -187,5 +178,10 @@ OptErr := true;
 
 AddOption('h', 'help', '', 'Show this help message');
 AddOption('V', 'version', '', 'Show the project version');
+
+finalization
+
+if NonOptions <> nil then
+    NonOptions.Free;
 
 end.

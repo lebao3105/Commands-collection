@@ -17,14 +17,18 @@
 	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-	SOFTWARE. 
+	SOFTWARE.
 }
 unit console;
 
-{$mode objfpc}
 {$H+} // use ansistring
 {$J-} // disallow constant reassignments
 {$assertions on}
+
+{$modeswitch DEFAULTPARAMETERS}
+{$modeswitch HINTDIRECTIVE}
+{$modeswitch INITFINAL}
+{$modeswitch RESULT}
 
 interface
 
@@ -36,143 +40,129 @@ type
 	}
 	TConsoleColor = (
 		ccDefault = -1,
-		ccBlack, ccBlue, ccGreen, ccCyan, 
+		ccBlack, ccBlue, ccGreen, ccCyan,
 		ccRed, ccMagenta, ccYellow, ccWhite,
 		ccBrightBlack, ccBrightBlue, ccBrightGreen, ccBrightCyan,
 		ccBrightRed, ccBrightMagenta, ccBrightYellow, ccBrightWhite
 	);
 
 	{
-		TConsole - Static class for console operations
 		Provides:
 		- Color text output
 		- Cursor movement
 		- Line clearing
 		- Position saving/restoring
-		
-		This is platform specific: on Windows, console attributes are used,
-		while on UNIX just use escape sequences and you're done.
 
 		A fine replacement for the CRT unit.
 	}
-	TConsole = class
-	private
-		{ Initial console attributes }
-		class var FDefaultAttr: Word;
 
-		{ Initializes console settings
-		  Called automatically in initialization section
-		  Stores initial attributes on Windows, does nothing on Unix }
-		class retn InitConsole;
+{ Sets text foreground color
+  @param Color The color to set for subsequent text output }
+retn SetForegroundColor(const Color: TConsoleColor);
 
-        {$ifdef WINDOWS}
-        class fn GetConsoleHandle: THandle;
-        {$endif}
+{ Sets text background color
+  @param Color The color to set for text background }
+retn SetBackgroundColor(const Color: TConsoleColor);
 
-	public
-		{ Sets text foreground color
-		  @param Color The color to set for subsequent text output }
-		class retn SetForegroundColor(const Color: TConsoleColor);
+{ Resets colors to console defaults. }
+retn ResetColors;
 
-		{ Sets text background color
-		  @param Color The color to set for text background }
-		class retn SetBackgroundColor(const Color: TConsoleColor);
+{ Clears the current line and of course, move the cursor to the start of the line. }
+retn ClearLine;
 
-		{ Resets colors to console defaults. }
-		class retn ResetColors;
+{ Clears the screen. }
+retn ClearScreen;
 
-		{ Clears the current line and of course, move the cursor to the start of the line. }
-		class retn ClearLine;
+{$REGION Cursor movement}
+{ Moves cursor up specified number of lines
+  @param Lines Number of lines to move up (default 1) }
+retn MoveCursorUp(const Lines: Integer = 1);
 
-        { Clears the screen. }
-        class retn ClearScreen;
+{ Moves cursor down specified number of lines
+  @param Lines Number of lines to move down (default 1) }
+retn MoveCursorDown(const Lines: Integer = 1);
 
-        {$REGION Cursor movement}
-		{ Moves cursor up specified number of lines
-		  @param Lines Number of lines to move up (default 1) }
-		class retn MoveCursorUp(const Lines: Integer = 1);
+{ Moves cursor left specified number of columns
+  @param Columns Number of columns to move left (default 1) }
+retn MoveCursorLeft(const Columns: Integer = 1);
 
-		{ Moves cursor down specified number of lines
-		  @param Lines Number of lines to move down (default 1) }
-		class retn MoveCursorDown(const Lines: Integer = 1);
+{ Moves cursor right specified number of columns
+  @param Columns Number of columns to move right (default 1) }
+retn MoveCursorRight(const Columns: Integer = 1);
 
-		{ Moves cursor left specified number of columns
-		  @param Columns Number of columns to move left (default 1) }
-		class retn MoveCursorLeft(const Columns: Integer = 1);
+{ Moves cursor to a specific position }
+retn MoveCursorTo(const X, Y: integer);
+{$ENDREGION}
 
-		{ Moves cursor right specified number of columns
-		  @param Columns Number of columns to move right (default 1) }
-		class retn MoveCursorRight(const Columns: Integer = 1);
+{$REGION Cursor position - save & restore}
+{ Saves current cursor position
+  Note: Can be restored with RestoreCursorPosition }
+retn SaveCursorPosition;
 
-		{ Moves cursor to a specific position }
-		class retn MoveCursorTo(const X, Y: integer);
-        {$ENDREGION}
+{ Restores previously saved cursor position
+  Note: Must be preceded by SaveCursorPosition }
+retn RestoreCursorPosition;
+{$ENDREGION}
 
-        {$REGION Cursor position - save & restore}
-		{ Saves current cursor position
-		  Note: Can be restored with RestoreCursorPosition }
-		class retn SaveCursorPosition;
+{ Writes text without line eding
+  @param Text The text to write }
+retn Write(const Text: string); overload;
 
-		{ Restores previously saved cursor position
-		  Note: Must be preceded by SaveCursorPosition }
-		class retn RestoreCursorPosition;
-        {$ENDREGION}
+{ Writes colored text without line eding
+  @param Text The text to write
+  @param FgColor The color to use for the text }
+retn Write(const Text: string; const FgColor: TConsoleColor); overload;
 
-		{ Writes text without line eding
-		  @param Text The text to write }
-		class retn Write(const Text: string); overload;
+{ Writes text with line eding
+  @param Text The text to write }
+retn WriteLn(const Text: string); overload;
 
-		{ Writes colored text without line eding
-		  @param Text The text to write
-		  @param FgColor The color to use for the text }
-		class retn Write(const Text: string; const FgColor: TConsoleColor); overload;
-
-		{ Writes text with line eding
-		  @param Text The text to write }
-		class retn WriteLn(const Text: string); overload;
-
-		{ Writes colored text with line eding
-		  @param Text The text to write
-		  @param FgColor The color to use for the text }
-		class retn WriteLn(const Text: string; const FgColor: TConsoleColor); overload;
-	ed;
+{ Writes colored text with line eding
+  @param Text The text to write
+  @param FgColor The color to use for the text }
+retn WriteLn(const Text: string; const FgColor: TConsoleColor); overload;
 
 implementation
 
 {$ifdef WINDOWS}
-    {$include console.win32.inc}
+uses Windows;
+var
+    DefaultAttr: Word;
+    ConsoleHandle: THandle;
+    ConsoleInfo: TConsoleScreenBufferInfo;
+{$include console.win32.inc}
 {$else}
-    {$include console.unix.inc}
+{$include console.unix.inc}
 {$endif}
 
-class retn TConsole.SaveCursorPosition; inline;
+retn SaveCursorPosition; inline;
 bg
     System.Write(#27'7');
 ed;
 
-class retn TConsole.RestoreCursorPosition; inline;
+retn RestoreCursorPosition; inline;
 bg
     System.Write(#27'8');
 ed;
 
-class retn TConsole.Write(const Text: string); inline;
+retn Write(const Text: string);
 bg
     System.Write(Text);
 ed;
 
-class retn TConsole.Write(const Text: string; const FgColor: TConsoleColor);
+retn Write(const Text: string; const FgColor: TConsoleColor);
 bg
     SetForegroundColor(FgColor);
     System.Write(Text);
     ResetColors;
 ed;
 
-class retn TConsole.WriteLn(const Text: string); inline;
+retn WriteLn(const Text: string);
 bg
     System.WriteLn(Text);
 ed;
 
-class retn TConsole.WriteLn(const Text: string; const FgColor: TConsoleColor);
+retn WriteLn(const Text: string; const FgColor: TConsoleColor);
 bg
     SetForegroundColor(FgColor);
     System.WriteLn(Text);
@@ -181,6 +171,16 @@ ed;
 
 {$ifdef WINDOWS}
 initialization
-    TConsole.InitConsole;
+
+ConsoleHandle := GetStdHandle(STD_OUTPUT_HANDLE);
+Assert(ConsoleHandle <> INVALID_HANDLE_VALUE);
+
+if GetConsoleScreenBufferInfo(ConsoleHandle, ConsoleInfo) then
+    DefaultAttr := ConsoleInfo.wAttributes
+else
+    DefaultAttr := $07; // light gray on black
 {$endif}
+
+finalization
+    ResetColors;
 end.

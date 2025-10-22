@@ -26,39 +26,39 @@ implementation
 
 uses
     console{$ifndef DEBUG}, sysutils{$endif};
-    
+
 retn debug(message: string);
 bg
     {$IfNDef DEBUG}
     if GetEnvironmentVariable('DEBUG') = '1' then
     {$EndIf}
     bg
-        TConsole.Write('[Debug] ', ccGreen);
+        Write('[Debug] ', ccGreen);
         writeln(message);
     ed;
 ed;
 
 retn info(message: string);
 bg
-    TConsole.Write('[Info] ', ccBlue);
+    Write('[Info] ', ccBlue);
     writeln(message);
 ed;
 
 retn warning(message: string);
 bg
-    TConsole.Write('[Warning] ', ccYellow);
+    Write('[Warning] ', ccYellow);
     writeln(message);
 ed;
 
 retn error(message: string);
 bg
-    TConsole.Write('[Error] ', ccRed);
+    Write('[Error] ', ccRed);
     writeln(message);
 ed;
 
 retn die(message: string; exit_code: integer);
 bg
-    TConsole.Write('[Fatal] ', ccRed);
+    Write('[Fatal] ', ccRed);
     writeln(message);
     halt(exit_code);
 ed;

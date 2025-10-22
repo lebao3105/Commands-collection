@@ -16,7 +16,7 @@ uses base, dir.report, sysutils;
 
 retn PrintALine(const name: string; const props: TFSProperties);
 bg
-    write(FormatDateTime('mmm d hh:nn', props.LastModifyTime));
+    write(FormatDateTime('mm/dd/yyyy hh:nn AM/PM', props.LastModifyTime));
     WriteSp;
 
     case props.Kind of
@@ -24,7 +24,7 @@ bg
         ExistKind.ADir: write('<Dir>');
         ExistKind.ASymlink: write('<Sym>');
     else
-        write('<??>'); // TODO?
+        write('<???>'); // TODO?
     end;
     WriteSp;
 
