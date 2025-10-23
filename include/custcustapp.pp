@@ -109,7 +109,6 @@ bg
         GotChar := GetLongOpts(shortArgs, @Options[0], OptionIndex);
         case GotChar of
             '?': if not IgnoreErrors then bg
-                // TODO: Handle more things like how GetOpts did
                 ShowHelp;
                 raise Exception.Create('Something went wrong with this: ' + OptArg);
             ed;

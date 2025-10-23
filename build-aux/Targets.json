@@ -1,25 +1,25 @@
 {
-    "$schema": "./TargetsSchema.json",
-    "programs": [
-        { "name": "calltime" },
-        { "name": "cat" },
-        { "name": "chk_type" },
-        { "name": "dir", "dependencies": ["regexpr"] },
-        { "name": "env", "dependencies": ["fcl-process"] },
-        { "name": "inp" },
-        { "name": "mkdir" },
-        { "name": "rename" },
-        { "name": "rm", "dependencies": ["regexpr"] },
-        { "name": "rmdir", "dependencies": ["regexpr"] },
-        { "name": "touch" },
-        { "name": "uname" },
-        { "name": "uptime" }
-    ],
-    "units": [
-        { "name": "base" },
-        { "name": "console" },
-        { "name": "custcustapp" },
-        { "name": "logging" },
-        { "name": "utils" }
-    ]
+  "$schema": "./TargetsSchema.json",
+  "programs": [
+    { "name": "calltime" },
+    { "name": "cat" },
+    { "name": "chk_type" },
+    { "name": "dir", "dependencies": ["regexpr"] },
+    { "name": "env", "dependencies": ["fcl-process"] },
+    { "name": "inp" },
+    { "name": "mkdir" },
+    { "name": "rename" },
+    { "name": "rm", "dependencies": ["regexpr"] },
+    { "name": "rmdir", "dependencies": ["regexpr"] },
+    { "name": "touch" },
+    { "name": "uname", "unix-only": true },
+    { "name": "uptime", "unix-only": true }
+  ],
+  "units": [
+    { "name": "base" },
+    { "name": "console" },
+    { "name": "custcustapp" },
+    { "name": "logging" },
+    { "name": "utils" }
+  ]
 }

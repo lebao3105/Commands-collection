@@ -82,7 +82,7 @@ procedure ApplySettings;
 var
     jObj : TJSONObject;
     fpcdir: string;
-    
+
     extraArgs, searchPaths: TJSONArray;
     lineinfo, heaptrace, debug: TJSONBoolean;
     unitOutPath, exeOutPath: TJSONString;
@@ -92,9 +92,9 @@ var
 begin
     if not Assigned(JSNInput) then
         raise Exception.Create('JSNInput is empty. Fill it with something!');
-    
+
     jObj := JSNInput as TJSONObject;
-    
+
     if not jObj.Find('extraArgs', extraArgs) then
         extraArgs := TJSONArray.Create;
 
@@ -129,10 +129,10 @@ begin
 
     if not jObj.Find('lineinfo', lineinfo) then
         lineinfo := TJSONBoolean.Create(true);
-    
+
     if heaptrace.AsBoolean then
         extraArgs.Add('-gh');
-    
+
     if lineinfo.AsBoolean then
         extraArgs.Add('-gl');
 
@@ -151,6 +151,7 @@ var
     splits: array of ansistring;
     cached: TJSONObject;
     isFound: boolean = true;
+    unixOnly: TJSONBoolean;
 
 begin
     jObj := JSNInput as TJSONObject;
@@ -163,6 +164,9 @@ begin
             for I := 0 to programList.Count - 1 do
             begin
                 cached := programList.Objects[I];
+                if cached.Find('unix-only', unixOnly) and unixOnly.AsBoolean then
+                    if not (Defaults.OS in AllUnixOSes) then continue;
+
                 if not cached.Find('dependencies', cachedList) then
                     cachedList := TJSONArray.Create;
                 AddProgram(cached.Strings['name'], cachedList);
@@ -174,6 +178,9 @@ begin
             for I := 0 to unitList.Count - 1 do
             begin
                 cached := unitList.Objects[I];
+                if cached.Find('unix-only', unixOnly) and unixOnly.AsBoolean then
+                    if not (Defaults.OS in AllUnixOSes) then continue;
+
                 if not cached.Find('dependencies', cachedList) then
                     cachedList := TJSONArray.Create;
                 AddUnit(cached.Strings['name'], cachedList);

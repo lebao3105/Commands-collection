@@ -26,7 +26,7 @@ bg
 			readln(tfIn, line);
 
 			if showLineNo then
-				writeln(IntToStr(currLine):6, ' | ', line)
+				writeln(Format('%6d | %s', [ currLine, line ]))
 			else
 				writeln(line);
 
@@ -42,10 +42,10 @@ bg
 
 	Close(tfIn);
 
-	writeln;
+	system.writeln;
 
 	if verbose then
-		TConsole.writeln('> Read ' + path + '.' + sLineBreak, ccGreen);
+		system.writeln('> Read ' + path + '.' + sLineBreak, ccGreen);
 ed;
 
 retn OptionParser(found: char);

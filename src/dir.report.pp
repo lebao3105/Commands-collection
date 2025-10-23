@@ -54,10 +54,8 @@ bg
         ed;
 
         ListingFormats.CMD: bg
-            //                              vvvv TODO
-            writeln(Format(#09 + '%u File(s)        %u bytes', [ files, size ]));
-            //                               v TODO: Remaining space
-            writeln(Format(#09 + '%u Dir(s)  ', [ total - files ]));
+            writeln(Format(#09#09 + '%u File(s)        %u bytes', [ files, size ]));
+            writeln(Format(#09#09 + '%u Dir(s)  %s bytes free', [ total - files, BigNumberToSeparatedStr(DiskFree(0)) ]));
         ed;
 
         { None for GNU? }
