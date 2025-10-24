@@ -66,7 +66,7 @@ bg
         'm': PrintElement(Inf.machine, 'Machine hardware name');
 
         // End old macOSes env
-        
+
         // GNU handles this more strictly, can be seen by calls to
         // sysinfo / sysctl (prob it's platform-specific)
         'p': PrintElement({$I %FPCTARGET%}, 'Processor type');
@@ -99,6 +99,9 @@ bg
 ed;
 
 begin
+    if ParamCount = 0 then
+        OptionParser('a');
+
     MoreHelpFunction := @ExtraHelp;
     OptionHandler := @OptionParser;
 

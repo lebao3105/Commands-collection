@@ -2,7 +2,6 @@
   "$schema": "./TargetsSchema.json",
   "programs": [
     { "name": "calltime" },
-    { "name": "cat" },
     { "name": "chk_type" },
     { "name": "dir", "dependencies": ["regexpr"] },
     { "name": "env", "dependencies": ["fcl-process"] },

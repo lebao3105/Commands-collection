@@ -8,7 +8,6 @@ A collection of system commands written in Free Pascal.
 They are:
 
 * `calltime` = time & date getter
-* `cat`
 * `chk_type` = file / folder information getter
 * `dir`
 * `env`
@@ -22,11 +21,11 @@ They are:
 
 They are NOT:
 
-* Copycats (although some are intended to behave like ones in GNU coreutils)
+* Copycats (although some are intended to behave like original counterparts)
 * Made to be laughed at
 * Suitable for daily-use
 * Fully optimized (atm)
-* Object-oriented (although `TStringList` is used sometimes)
+* Object-oriented (although classes like `TStringList` is used sometimes)
 * Battle-tested
 
 ## Building
@@ -53,7 +52,18 @@ The universal usage documentation is [here](USAGE.md).
 ## References
 
 * Linux man pages
+* Windows API documentations
 * GNU Coreutils [source code](https://github.com/coreutils/coreutils)
 * Free Pascal's Run time [library](https://www.freepascal.org/docs-html/rtl/index.html) (RTL) and [Wiki](https://wiki.freepascal.org) and [docs](https://www.freepascal.org/docs.html)
 * Procps-ng [source code](https://gitlab.com/procps-ng/procps)
 * Free Pascal Compiler's [packages](https://gitlab.com/freepascal.org/fpc/source/-/tree/main/packages?ref_type=heads)
+
+## TODO
+
+* Complete existing commands
+* Add man pages?
+* Fix CI uploading - it's never been done properly
+* Add tests
+* If needed: add C. For example, there is no `stdin` or `stdout` in Pascal
+* Improve the program's performance
+* Handle errors nicely

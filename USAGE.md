@@ -49,7 +49,7 @@ A: Hell no.
 <details>
 <summary>A: Yes.</summary>
 
-(for those who don't know: r/masterhacker is a subreddit that does NOT
+(for those who don't know: r/masterhacker is a subreddit that is NOT
  about any **actual** hacking stuff, it instead shows pictures of kids
  running `sudo apt update` and say that "Hey, I'm a hacker now". We,
  Commands-Collection developers, do NOT have any command that can attack

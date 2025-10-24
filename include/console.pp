@@ -135,6 +135,10 @@ var
 {$include console.unix.inc}
 {$endif}
 
+(*
+    Windows 10 1607 seems to be the first Windows
+    that officially supports virtual sequences.
+*)
 retn SaveCursorPosition; inline;
 bg
     System.Write(#27'7');

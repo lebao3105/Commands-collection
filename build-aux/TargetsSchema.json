@@ -21,8 +21,7 @@
           },
           "unix-only": {
             "description": "Is the target UNIX only?",
-            "type": "boolean",
-            "default": false
+            "type": "boolean"
           }
         },
         "required": ["name"]
@@ -47,8 +46,7 @@
           },
           "unix-only": {
             "description": "Is the target UNIX only?",
-            "type": "boolean",
-            "default": false
+            "type": "boolean"
           }
         },
         "required": ["name"]

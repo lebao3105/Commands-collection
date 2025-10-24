@@ -1,3 +1,12 @@
+{
+    File system related tasks, implementation for Windows.
+    To be honest I don't like using this API a bit:
+    * More types that I must know
+    * Quite complicated
+    The performance of dir, which uses this, is poor.
+    0.1s instead of average 0.3x seconds with the same directory.
+}
+
 const
     // Days between 1601-01-01 and 1899-12-30
     FILETIME_TO_DATETIME_OFFSET = 109205.0;
