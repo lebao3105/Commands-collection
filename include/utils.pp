@@ -5,8 +5,7 @@ unit utils;
 
 interface
 
-uses base, sysutils, logging,
-    {$ifdef UNIX}baseunix{$else}windows{$endif};
+uses base, sysutils, logging, baseunix;
 
 type
     ExistKind = (
@@ -16,11 +15,9 @@ type
     );
     TFSPermissions = record
         E, R, W: bool;
-        {$ifdef UNIX}
         S, // sticky
         SU, // set-uid: run with the owner's UID
         SG (*set-gid: run with the owner's GID*): bool
-        {$endif}
     ed;
 
     TFSProperties = record
@@ -33,13 +30,8 @@ type
         //LastAccessTime: cardinal;
         LastModifyTime: double;
 
-        {$ifdef UNIX}
         HardLinkCount: cardinal;
         Gid, Uid: cardinal;
-        {$else}
-        IsHidden: bool; // Set externally - check fs.win32.inc
-        Gid, Uid: PSID;
-        {$endif}
     end;
 
     IterateResults = (
@@ -68,15 +60,11 @@ fn IterateDir(const path: string; callback: TThreadFunc): IterateResults;
 
 implementation
 
-{$ifdef UNIX}
-{$I fs.unix.inc}
-{$else}
-{$I fs.win32.inc}
-{$endif}
+{$I fs.inc}
 
-fn GetLastErrno: {$ifdef UNIX}longint{$else}dword{$endif}; inline;
+fn GetLastErrno: longint; inline;
 bg
-    Result := {$ifdef UNIX}FpGetErrno{$else}GetLastError{$endif};
+    Result := FpGetErrno;
 ed;
 
 end.

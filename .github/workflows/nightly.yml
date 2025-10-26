@@ -7,8 +7,6 @@ on:
     paths:
       - "*/**.pp"
       - "*/**.inc"
-      - "Makefile.fpc"
-      - "Makefile"
       - ".github/workflows/nightly.yml"
 
   pull_request:
@@ -17,8 +15,6 @@ on:
     paths:
       - "*/**.pp"
       - "*/**.inc"
-      - "Makefile.fpc"
-      - "Makefile"
       - ".github/workflows/nightly.yml"
 
   workflow_dispatch:
@@ -27,7 +23,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -40,16 +36,9 @@ jobs:
           sudo apt update
           sudo apt install fp-{compiler,units-{base,rtl,fcl,misc}} -y --no-install-recommends
 
-      - name: Install compiler (Windows)
+      - name: Install compiler (not Ubuntu)
         if: ${{ matrix.os != 'ubuntu-latest' }}
         uses: lebao3105/setup-lazarus@master
-
-      # - name: Install compiler (macOS)
-      #   if: ${{ matrix.os == 'macos-latest' }}
-      #   run: |
-      #     brew update
-      #     brew upgrade
-      #     brea install fpc-laz
 
       - name: Download fcl-jsonschema
         working-directory: build-aux
@@ -80,22 +69,3 @@ jobs:
           path: build/bin/*
           if-no-files-found: error
           name: Commands Collection (Nightly) for ${{ matrix.os }}
-
-  publish:
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    needs: build
-
-    permissions:
-      contents: write
-
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/download-artifact@v5
-
-      - name: Publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release delete nightly -y --cleanup-tag
-          gh release create nightly "Commands Collection*" --generate-notes -p -t Nightly

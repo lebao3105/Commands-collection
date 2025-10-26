@@ -16,7 +16,7 @@ They are:
 * `rename` = file / folder renamer
 * `uname`
 * `uptime`
-* Overall: cross-platform programs that are seen in daily computer life
+* Overall: ~~cross-platform~~ UNIX programs that are seen in daily computer life
 * Overall: proof-of-concept (POC)s
 
 They are NOT:
@@ -33,6 +33,7 @@ They are NOT:
 ### Setup
 
 * FPC (Free Pascal Compiler) 3.x
+* ***(Soon)*** A C compiler (it may come with FPC by default)
 * Git, to show the repository's revision in program's `-V`
 
 ### Build

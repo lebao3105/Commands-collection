@@ -2,14 +2,6 @@
 
 Thank you for installing this product. Here goes a quick, universal guide for all programs made by Commands-Collection team.
 
-## Launch a shell with Commands-Collection in `PATH`
-
-Make sure you enable "Install Start Menu/Desktop/Task bar shortcuts" option first.
-
-Then, using any way you please, open CommandsCollection. A CMD window will open, telling you that `%PATH%` has been updated.
-
-That's what you will do on Windows.
-
 ## Arguments and flags
 
 Flags sets different stuff of the program.

@@ -46,7 +46,7 @@ ed;
 
 var
 	targetProg: ansistring;
-	progArgs, NonOpts: TStringList;
+	progArgs: TStringList;
 	aProcess: TProcess;
     i : uint16;
 
@@ -66,14 +66,13 @@ begin
 		AddOption('s', 'set', 'VAR=VALUE', 'Set variable(s)');
 
 		custcustapp.Start;
-		NonOpts := GetNonOptions;
 
-		if (NonOpts.Count = 0) then
+		if Length(custcustapp.NonOptions) = 0 then
     	bg
             if (Length(getValues) = 0) then
             bg
           		ShowHelp;
-          		logging.die('No program specifiend. ENV won''t set evironment variables for your shell/user-wide/OS.');
+          		logging.die('No program specified. ENV won''t set environment variables for your shell/user-wide/OS.');
             ed
 
             else bg
@@ -86,10 +85,10 @@ begin
     	ed;
 
         progArgs := TStringList.Create;
-    	progArgs.SetStrings(NonOpts);
+    	progArgs.SetStrings(custcustapp.NonOptions);
     	progArgs.Delete(0); // the target program
 
-    	targetProg := NonOpts[0];
+    	targetProg := custcustapp.NonOptions[0];
     	if not FileExists(targetProg) then
     		targetProg := ExeSearch(targetProg, sysutils.GetEnvironmentVariable('PATH'));
 
@@ -124,7 +123,7 @@ begin
     		die(Format(
     			'''%s'' is not recognized as a program, alias, operable object.' + sLineBreak +
     			'Ensure it exists and can be found either on PATH environment variable or the current directory.',
-    			[ NonOpts[0] ]
+    			[ custcustapp.NonOptions[0] ]
     		));
     	ed;
 	ed;

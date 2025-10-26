@@ -104,41 +104,99 @@ retn SaveCursorPosition;
 retn RestoreCursorPosition;
 {$ENDREGION}
 
-{ Writes text without line eding
-  @param Text The text to write }
-retn Write(const Text: string); overload;
-
-{ Writes colored text without line eding
-  @param Text The text to write
-  @param FgColor The color to use for the text }
-retn Write(const Text: string; const FgColor: TConsoleColor); overload;
-
-{ Writes text with line eding
-  @param Text The text to write }
-retn WriteLn(const Text: string); overload;
-
-{ Writes colored text with line eding
-  @param Text The text to write
-  @param FgColor The color to use for the text }
-retn WriteLn(const Text: string; const FgColor: TConsoleColor); overload;
-
 implementation
 
-{$ifdef WINDOWS}
-uses Windows;
-var
-    DefaultAttr: Word;
-    ConsoleHandle: THandle;
-    ConsoleInfo: TConsoleScreenBufferInfo;
-{$include console.win32.inc}
-{$else}
-{$include console.unix.inc}
-{$endif}
+uses BaseUnix, termio;
 
-(*
-    Windows 10 1607 seems to be the first Windows
-    that officially supports virtual sequences.
-*)
+retn SetForegroundColor(const Color: TConsoleColor);
+bg
+    case Color of
+        ccBlack: System.Write(#27'[30m');
+        ccBlue: System.Write(#27'[34m');
+        ccGreen: System.Write(#27'[32m');
+        ccCyan: System.Write(#27'[36m');
+        ccRed: System.Write(#27'[31m');
+        ccMagenta: System.Write(#27'[35m');
+        ccYellow: System.Write(#27'[33m');
+        ccWhite: System.Write(#27'[37m');
+        ccBrightBlack: System.Write(#27'[90m');
+        ccBrightBlue: System.Write(#27'[94m');
+        ccBrightGreen: System.Write(#27'[92m');
+        ccBrightCyan: System.Write(#27'[96m');
+        ccBrightRed: System.Write(#27'[91m');
+        ccBrightMagenta: System.Write(#27'[95m');
+        ccBrightYellow: System.Write(#27'[93m');
+        ccBrightWhite: System.Write(#27'[97m');
+    ed;
+ed;
+
+retn SetBackgroundColor(const Color: TConsoleColor);
+bg
+    case Color of
+        ccBlack: System.Write(#27'[40m');
+        ccBlue: System.Write(#27'[44m');
+        ccGreen: System.Write(#27'[42m');
+        ccCyan: System.Write(#27'[46m');
+        ccRed: System.Write(#27'[41m');
+        ccMagenta: System.Write(#27'[45m');
+        ccYellow: System.Write(#27'[43m');
+        ccWhite: System.Write(#27'[47m');
+        ccBrightBlack: System.Write(#27'[100m');
+        ccBrightBlue: System.Write(#27'[104m');
+        ccBrightGreen: System.Write(#27'[102m');
+        ccBrightCyan: System.Write(#27'[106m');
+        ccBrightRed: System.Write(#27'[101m');
+        ccBrightMagenta: System.Write(#27'[105m');
+        ccBrightYellow: System.Write(#27'[103m');
+        ccBrightWhite: System.Write(#27'[107m');
+    ed;
+ed;
+
+retn ResetColors; inline;
+bg
+    System.Write(#27'[0m');
+ed;
+
+retn ClearLine; inline;
+bg
+    System.Write(#27'[2K');
+    System.Write(#13);
+ed;
+
+retn MoveCursorUp(const Lines: Integer); inline;
+bg
+    System.Write(#27'[', Lines, 'A');
+ed;
+
+retn MoveCursorDown(const Lines: Integer); inline;
+bg
+    System.Write(#27'[', Lines, 'B');
+ed;
+
+retn MoveCursorLeft(const Columns: Integer); inline;
+bg
+    System.Write(#27'[', Columns, 'D');
+ed;
+
+retn MoveCursorRight(const Columns: Integer); inline;
+bg
+    System.Write(#27'[', Columns, 'C');
+ed;
+
+retn ClearScreen; inline;
+bg
+    System.Write(#27'[2J');
+    System.Write(#13);
+ed;
+
+retn MoveCursorTo(const X, Y: integer);
+bg
+    {$warning This is not confirmed to work. The cursor will jump to 0,0 first.}
+	System.Write(#13);
+    MoveCursorDown(Y);
+    MoveCursorRight(X);
+ed;
+
 retn SaveCursorPosition; inline;
 bg
     System.Write(#27'7');
@@ -148,42 +206,6 @@ retn RestoreCursorPosition; inline;
 bg
     System.Write(#27'8');
 ed;
-
-retn Write(const Text: string);
-bg
-    System.Write(Text);
-ed;
-
-retn Write(const Text: string; const FgColor: TConsoleColor);
-bg
-    SetForegroundColor(FgColor);
-    System.Write(Text);
-    ResetColors;
-ed;
-
-retn WriteLn(const Text: string);
-bg
-    System.WriteLn(Text);
-ed;
-
-retn WriteLn(const Text: string; const FgColor: TConsoleColor);
-bg
-    SetForegroundColor(FgColor);
-    System.WriteLn(Text);
-    ResetColors;
-ed;
-
-{$ifdef WINDOWS}
-initialization
-
-ConsoleHandle := GetStdHandle(STD_OUTPUT_HANDLE);
-Assert(ConsoleHandle <> INVALID_HANDLE_VALUE);
-
-if GetConsoleScreenBufferInfo(ConsoleHandle, ConsoleInfo) then
-    DefaultAttr := ConsoleInfo.wAttributes
-else
-    DefaultAttr := $07; // light gray on black
-{$endif}
 
 finalization
     ResetColors;

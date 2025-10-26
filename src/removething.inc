@@ -5,7 +5,7 @@
 }
 
 uses
-    custcustapp, sysutils, regexpr, logging, classes;
+    custcustapp, sysutils, regexpr, logging;
 
 var
     r: TRegExpr;
@@ -13,7 +13,7 @@ var
     ignoreIneligible: bool = false;
     interactive: bool = false;
     verbose: bool = false;
-    
+
     {$ifdef RMDIR}
     recursively: bool = false;
     {$endif}
@@ -67,7 +67,7 @@ var f: TSearchRec;
 bg
     if verbose then
         info('Attemping to delete ' + which);
-    
+
     if not IsEligible(which) then
     bg
         if not ignoreIneligible then
@@ -101,7 +101,6 @@ bg
 ed;
 
 var
-    NonOpts: TStringList;
     I: int;
 
 begin
@@ -118,9 +117,8 @@ begin
     OptionHandler := @OptHandler;
     Start;
 
-    NonOpts := GetNonOptions;
-    for I := 0 to NonOpts.Count do
-        DeleteThing(NonOpts[i]);
+    for I := 0 to High(custcustapp.NonOptions) do
+        DeleteThing(custcustapp.NonOptions[i]);
 
     if Assigned(r) then r.Free;
 end.

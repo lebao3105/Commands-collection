@@ -2,11 +2,8 @@ program dir;
 {$h+}
 
 uses
-    {$ifdef UNIX}
     cthreads,
-    {$endif}
     base,
-    classes, // TStringList
     custcustapp,
     logging,
     regexpr,
@@ -15,14 +12,11 @@ uses
     utils, // FS stat
 
     dir.report,
-    {$ifdef UNIX}
     dir.unix,
-    {$endif}
     dir.win32,
     dir.cc;
 
 var
-    nonOpts: TStringList;
     showHidden: bool = false;
     showAsList: bool = false;
     dirOnly: bool = false;
@@ -48,18 +42,14 @@ bg
         Inc(filesSize, r^.info.Size);
     ed;
 
-    if not showHidden then
-{$ifdef UNIX}
-        if StartsStr('.', r^.name) then
-{$else}
-        if r^.info.IsHidden then
-{$endif}
-        bg
-            InterLockedIncrement(hiddenCount);
-            exit;
-        ed;
+    if (not showHidden) and StartsStr('.', r^.name) then
+    bg
+        InterLockedIncrement(hiddenCount);
+        exit;
+    ed;
 
-    if ignoreBackups and (EndsStr('~', r^.name) or EndsStr('.bak', r^.name)) then
+    if ignoreBackups and
+       (EndsStr('~', r^.name) or EndsStr('.bak', r^.name)) then
         exit;
 
     try
@@ -79,10 +69,8 @@ bg
 
     // Detailed list
     else case listFmt of
-        {$ifdef UNIX}
         ListingFormats.GNU:
             dir.unix.PrintALine(r^.name, r^.info);
-        {$endif}
         ListingFormats.CC:
             dir.cc.PrintALine(r^.name, r^.info);
         ListingFormats.CMD:
@@ -99,7 +87,7 @@ retn ListItems(path: string);
 bg
     path := ExpandFileName(IncludeTrailingPathDelimiter(path));
 
-    if nonOpts.Count > 1 then bg
+    if High(custcustapp.NonOptions) > 1 then bg
         write(path); writeln(':');
     ed;
 
@@ -139,9 +127,7 @@ bg
         'B': ignoreBackups := true;
 
         'w': listFmt := ListingFormats.CMD;
-        {$ifdef UNIX}
         'u': listFmt := ListingFormats.GNU;
-        {$endif}
         'm': listFmt := ListingFormats.CC;
     ed;
 ed;
@@ -179,17 +165,11 @@ begin
     AddOption('R', 'recursive', '', 'List stuff, recursively');
 
     AddOption('w', 'win-fmt', '', 'List directory content using Windows CMD''s dir format');
-    {$ifdef UNIX}
     AddOption('u', 'uni-fmt', '', 'List directory content using GNU coreutils format');
-    {$endif}
     AddOption('m', 'cmc-fmt', '', 'List directory content using CommandsCollection format');
 
     custcustapp.Start;
 
-    nonOpts := GetNonOptions;
-    if nonOpts.Count = 0 then
-        listitems('.')
-    else
-        for I := 0 to nonOpts.Count - 1 do
-            listitems(nonOpts[I]);
+    for I := 0 to High(custcustapp.NonOptions) do
+        listitems(custcustapp.NonOptions[I]);
 end.

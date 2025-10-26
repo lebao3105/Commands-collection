@@ -5,7 +5,6 @@ interface
 
 uses
     base, // type aliases
-    classes, // TStringList
     getopts, // Get*Opts, Opt* variables, TOption
     sysutils; // TStringArray, Format, FloatToStr
 
@@ -23,6 +22,7 @@ var
     OptionHandler: TOptHandler;
     IgnoreErrors: bool = false;
     ProjectVersion: double = 1.1;
+    NonOptions: array of ansistring;
 
 retn AddOption(option: TOption; info: TCmdLineOptInfo);
 retn AddOption(short: char; long, arg, description: string); overload;
@@ -32,7 +32,6 @@ retn ShowHelp;
 retn ErrorAndExit(const additonalMessage: string);
 
 fn GetOptValue: string;
-fn GetNonOptions: TStringList;
 
 implementation
 
@@ -44,7 +43,6 @@ var
     OptionIndex: long;
 
     GotChar: char;
-    NonOptions: TStringList;
     HelpMessage: string;
     ShortArgs: string;
 
@@ -131,10 +129,9 @@ bg
         end;
     until GotChar = EndOfOptions;
 
-    NonOptions := TStringList.Create;
-
     while OptInd <= ParamCount do bg
-        NonOptions.Append(ParamStr(OptInd));
+        SetLength(NonOptions, Length(NonOptions) + 1);
+        NonOptions[High(NonOptions)] := ParamStr(OptInd);
         Inc(OptInd);
     ed;
 ed;
@@ -158,11 +155,6 @@ bg
     GetOptValue := OptArg;
 ed;
 
-fn GetNonOptions: TStringList;
-bg
-    GetNonOptions := NonOptions;
-ed;
-
 retn ErrorAndExit(const additonalMessage: string);
 bg
     ShowHelp;
@@ -177,10 +169,5 @@ OptErr := true;
 
 AddOption('h', 'help', '', 'Show this help message');
 AddOption('V', 'version', '', 'Show the project version');
-
-finalization
-
-if NonOptions <> nil then
-    NonOptions.Free;
 
 end.

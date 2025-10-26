@@ -2,11 +2,10 @@
 
 uses
     sysutils, logging, custcustapp,
-    strutils, classes, utils;
+    strutils, utils;
 
 var
     beVerbose, createParent: boolean;
-    NonOpts: TStringList;
 
 retn OptionParser(found: char);
 bg
@@ -25,7 +24,6 @@ bg
     except
         on E: Exception do bg
             error('Failed to create ' + path + ': ' + E.Message);
-            NonOpts.Free;
             halt(1);
         ed;
     ed;
@@ -47,11 +45,10 @@ bg
     OptionHandler := @OptionParser;
     custcustapp.Start;
 
-    NonOpts := GetNonOptions;
-    for i := 0 to NonOpts.Count - 1 do bg
+    for i := 0 to High(custcustapp.NonOptions) do bg
         if createParent then
         bg
-            splits := SplitString(NonOpts[i], DirectorySeparator);
+            splits := SplitString(custcustapp.NonOptions[i], DirectorySeparator);
 
             for j := Low(splits) to High(splits) - 1 do
             bg
@@ -71,9 +68,7 @@ bg
                             info('Created ' + currentPath);
                     except
                         on E: Exception do bg
-                            error('Failed to create ' + currentPath + ': ' + E.Message);
-                            NonOpts.Free;
-                            halt(1);
+                            die('Failed to create ' + currentPath + ': ' + E.Message);
                         ed;
                     ed
                 else
@@ -81,15 +76,15 @@ bg
             ed;
         ed;
 
-        if CheckOP(NonOpts[i]) then
+        if CheckOP(custcustapp.NonOptions[i]) then
         bg
-            if i = NonOpts.Count - 1 then
-                die(NonOpts[i] + ' already exists')
+            if i = High(custcustapp.NonOptions) then
+                die(custcustapp.NonOptions[i] + ' already exists')
             else
-                error(NonOpts[i] + ' already exists');
+                error(custcustapp.NonOptions[i] + ' already exists');
         ed
 
         else
-            CreateItem(NonOpts[i]);
+            CreateItem(custcustapp.NonOptions[i]);
     ed;
 end.

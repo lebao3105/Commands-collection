@@ -81,8 +81,8 @@ In the main block:
 * Start using `custcustapp.Start`;
 * Continue the program routine: handle flags, options etc set by the handler.
 
-Non options (ones that do not belong to any option) can be retrieved by `GetNonOptions`.
-They only available after parsing.
+Non options (ones that do not belong to any option) can be retrieved by `custcustapp.NonOptions`.
+Only use that after parsing.
 
 Errors while parsing can be skipped by setting `custcustapp.IgnoreErrors` to true.
 

@@ -40,3 +40,10 @@ CompileOptions.json
 *.fpm
 include/vers.inc
 *.lst
+
+# fpmake deps
+build-aux/*.tar*
+build-aux/*.zip
+build-aux/*.gz
+build-aux/*.xz
+build-aux/source*

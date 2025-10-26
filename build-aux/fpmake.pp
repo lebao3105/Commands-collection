@@ -40,7 +40,7 @@ var
 
 const
     opts =
-        '-Sa -Si -Sm -Sc -Sx -Co -CO -Cr -CR ' +
+        '-Sa -Si -Sm -Sc -Sx -Co -CO -Cr -CR -Mfpc ' +
 		'-dbg:=begin -ded:=end -dretn:=procedure ' +
 		'-dfn:=function -dlong:=longint -dulong:=longword ' +
 		'-dint:=integer -dbool:=boolean -dreturn:=exit ' +
