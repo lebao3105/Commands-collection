@@ -1,0 +1,37 @@
+.TH UPTIME1 "2025-10-26" "Commands-collection" "User Commands"
+.SH NAME
+uptime \- show system uptime and load information
+.SH SYNOPSIS
+.B uptime
+[\fIOPTIONS\fR]
+.SH DESCRIPTION
+\fBuptime\fR prints system uptime and load averages. It can also print raw machine-readable values or the boot time.
+.SH OPTIONS
+.TP
+\fB-p, --pretty\fR
+Pretty-print the uptime and load information.
+.TP
+\fB-r, --raw\fR
+Print raw, machine-readable values.
+.TP
+\fB-s, --since\fR
+Print the system boot time in a standard date/time format.
+.SH EXAMPLES
+.TP
+Show uptime in human-readable form:
+.RS
+.nf
+$ uptime
+.fi
+.RE
+.TP
+Show the time since boot:
+.RS
+.nf
+$ uptime -s
+.fi
+.RE
+.SH SEE ALSO
+\fBwho(1)\fR
+.SH AUTHOR
+Commands-collection project

@@ -1,0 +1,31 @@
+.TH CALLTIME1 "2025-10-26" "Commands-collection" "User Commands"
+.SH NAME
+calltime \- print the current time using a custom format
+.SH SYNOPSIS
+.B calltime
+[\fIOPTIONS\fR]
+.SH DESCRIPTION
+\fBcalltime\fR prints the current date and/or time using a format string compatible with the host's date/time formatting functions.
+.SH OPTIONS
+.TP
+\fB-f, --format \fR \fISTRING\fR
+Specify a custom date/time format string. If omitted a default format is used.
+.SH EXAMPLES
+.TP
+Print the current time using the default format:
+.RS
+.nf
+$ calltime
+.fi
+.RE
+.TP
+Print the current date/time using a custom format:
+.RS
+.nf
+$ calltime -f "yyyy-mm-dd HH:MM:SS"
+.fi
+.RE
+.SH SEE ALSO
+\fBdate(1)\fR
+.SH AUTHOR
+Commands-collection project

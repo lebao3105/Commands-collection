@@ -1,0 +1,51 @@
+.TH UNAME1 "2025-10-26" "Commands-collection" "User Commands"
+.SH NAME
+uname \- print system information
+.SH SYNOPSIS
+.B uname
+[\fIOPTIONS\fR]
+.SH DESCRIPTION
+\fBuname\fR prints information about the operating system and machine.
+.SH OPTIONS
+.TP
+\fB-a, --all\fR
+Print all available information.
+.TP
+\fB-s, --kernel-name\fR
+Print the kernel name.
+.TP
+\fB-n, --nodename\fR
+Print the network node hostname.
+.TP
+\fB-r, --kernel-release\fR
+Print the kernel release.
+.TP
+\fB-v, --kernel-version\fR
+Print the kernel version.
+.TP
+\fB-m, --machine\fR
+Print the machine hardware name.
+.TP
+\fB-p, --processor\fR
+Print the processor type.
+.TP
+\fB-i, --hardware-platform\fR
+Print the hardware platform.
+.TP
+\fB-o, --operating-system\fR
+Print the operating system.
+.TP
+\fB-f, --pretty-print\fR
+Pretty-print output with labels.
+.SH EXAMPLES
+.TP
+Print all information:
+.RS
+.nf
+$ uname -a
+.fi
+.RE
+.SH SEE ALSO
+\fBhostname(1)\fR
+.SH AUTHOR
+Commands-collection project

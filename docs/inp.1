@@ -1,0 +1,81 @@
+.TH INP1 "2025-10-26" "Commands-collection" "User Commands"
+.SH NAME
+inp \- prompt for a key or input and exit with its character code
+.SH SYNOPSIS
+.B inp
+[\fIOPTIONS\fR]
+.SH DESCRIPTION
+\fBinp\fR displays a message and waits for a key or input. The program exits with the ASCII value of the entered character (or a non-zero code if input is unexpected).
+.SH OPTIONS
+.TP
+\fB-c, --message \fR \fIMESSAGE\fR
+Set a custom message to display.
+.TP
+\fB-d, --hide-input\fR
+Do not echo the keyboard input as it is typed. Characters will not be shown or replaced by placeholders such as "*".
+.TP
+\fB-e, --need-enter\fR
+Require the Enter key after the input character. Use this when you need an explicit confirmation step from the user; it can be combined with other options (for example, prompting for a key and then requiring Enter to verify).
+.TP
+\fB-k, --key \fR \fICHARACTER/STRING\fR
+Specify accepted key(s). Can be used multiple times.
+.TP
+\fB-l, --loop\fR
+Keep prompting until an accepted key is pressed.
+.TP
+\fB-o, --show-availables\fR
+Show the available accepted keys in the prompt.
+.TP
+\fB-s, --case-sensitive\fR
+Make key matching case-sensitive.
+.SH EXAMPLES
+.TP
+Prompt with a custom message and accept only 'y' or 'n':
+.RS
+.nf
+$ inp -c "Continue?" -k y -k n
+Continue? [yn] y
+$
+.fi
+.RE
+.TP
+Hide input while the user types (useful for passwords or sensitive keys). Note: characters are not echoed or replaced by stars:
+.RS
+.nf
+$ inp -d -c "Enter PIN:"
+# Prompt appears; typed characters are not shown
+$
+.fi
+.RE
+.TP
+Require the user to press Enter after the key (useful when you want an explicit verification step):
+.RS
+.nf
+$ inp -e -k q
+Press Enter after q
+$
+.fi
+.RE
+.TP
+Keep prompting until one of the accepted keys is pressed (example transcript showing repeated prompts):
+.RS
+.nf
+$ inp -l -k y -k n -o -c "Are you sure?"
+Are you sure? [yn] x
+Are you sure? [yn] no
+Are you sure? [yn] y
+# exits with code for 'y'
+$
+.fi
+.RE
+.TP
+Display available accepted keys in the prompt:
+.RS
+.nf
+$ inp -o -k y -k n -c "Continue?"
+Continue? [y] y
+$
+.fi
+.RE
+.SH AUTHOR
+Commands-collection project

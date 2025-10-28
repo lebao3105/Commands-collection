@@ -1,0 +1,112 @@
+.TH DIR1 "2025-10-26" "Commands-collection" "User Commands"
+.SH NAME
+dir \- list directory contents
+.SH SYNOPSIS
+.B dir
+[\fIOPTIONS\fR] [\fIDIRECTORIES...\fR]
+.SH DESCRIPTION
+\fBdir\fR lists directory contents. By default it prints object names only (column/space separated).
+Use the list option (\fB-l\fR/\fB--list\fR) to obtain a detailed, one-entry-per-line listing. Several detailed output formats are available.
+
+.SH OPTIONS
+.TP
+\fB-l, --list\fR
+Show the output as a list (one entry per line with details).
+.TP
+\fB-a, --all\fR
+Show everything including hidden files and folders (names starting with a dot).
+.TP
+\fB-c, --color\fR
+Use colors in the output when supported by the terminal.
+.TP
+\fB-d, --directory\fR
+Only show directories (do not list regular files).
+.TP
+\fB-i, --ignore\fR \fIPATTERN\fR
+Ignore entities matching \fIPATTERN\fR. The pattern is interpreted as a regular expression (TRegExpr implementation).
+.TP
+\fB-B, --ignore-backups\fR
+Ignore entries whose names end with a tilde (\fB~\fR) or \fB.bak\fR.
+.TP
+\fB-R, --recursive\fR
+List directory contents recursively.
+.TP
+\fB-w, --win-fmt\fR
+Use Windows CMD-style detailed format for per-line listings.
+.TP
+\fB-u, --uni-fmt\fR
+Use GNU coreutils-style detailed format for per-line listings.
+.TP
+\fB-m, --cmc-fmt\fR
+Use Commands-Collection format for per-line listings.
+.SH DETAILED FORMATS
+The program implements three detailed listing formats; each prints different fields extracted from filesystem metadata:
+.PP
+\fBGNU coreutils format\fR (\fB-u\fR): file type + permissions, owner, group, size, modification time, name.
+.PP
+\fBCommands-Collection format\fR (\fB-m\fR): modification time, file-type character, permissions (owner/group/other triples), size, name.
+.PP
+\fBWindows CMD format\fR (\fB-w\fR): Windows-style detailed output (implementation platform-specific).
+.SH FILE TYPE CHARACTERS
+Detailed formats encode an entry's kind using a single leading character. This applies to UNIX and Commands-Collection formats.
+.TP
+\fBd\fR
+Directory
+.TP
+\fBs\fR
+Socket
+.TP
+\fBl\fR
+Symbolic link
+.TP
+\fBb\fR
+Block device
+.TP
+\fBp\fR
+Pipe (FIFO)
+.TP
+\fBc\fR
+Character device
+.TP
+\fB-\fR
+Regular file
+.TP
+\fB?\fR
+Unknown or stat failure
+.SH PERMISSIONS
+Permissions are printed as three \fBrwx\fR triplets (owner, group, others). Each triplet contains \fBr\fR when readable, \fBw\fR when writable, \fBx\fR when executable and \fB-\fR when the respective permission is absent.
+.SH EXAMPLES
+.TP
+List current directory in name-only mode:
+.RS
+.nf
+$ dir
+.fi
+.RE
+.TP
+List everything including hidden items in detailed GNU format:
+.RS
+.nf
+$ dir -a -l -u
+.fi
+.RE
+.TP
+Recursively list directories only, ignoring backup files:
+.RS
+.nf
+$ dir -R -d -B
+.fi
+.RE
+.SH NOTES
+The \fB-i\fR/\fB--ignore\fR option accepts a regular expression; matching entries are skipped. The exact fields available and their formatting may vary by platform and the filesystem metadata the program reads.
+
+When an entity's failed to be stat-ed:
+.TP
+\fBIn non-detailed mode (-l is not used):\fR
+<name>(E <error code>)
+.TP
+\fBIn detailed mode (-l is used):\fR
+Failed to read <name>: error code
+
+.SH AUTHOR
+Commands-collection project
