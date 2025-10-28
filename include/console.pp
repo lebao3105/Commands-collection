@@ -1,5 +1,6 @@
 {
 	Copyright (c) 2024 CLI Framework for Free Pascal, ikelaiah
+    Modified by Le Bao Nguyen in 2025.
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal

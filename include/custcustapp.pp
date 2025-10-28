@@ -4,31 +4,23 @@ unit custcustapp;
 interface
 
 uses
-    base, // type aliases
-    getopts, // Get*Opts, Opt* variables, TOption
+    base, // IfThenElse
+    getopts, // GetLongOpts, Opt* variables, TOption
     sysutils; // TStringArray, Format, FloatToStr
 
 type
     TMoreHelpFunction = fn: string;
     TOptHandler = retn(found: char);
 
-    TCmdLineOptInfo = packed record
-        HelpMsg: string;
-        ArgumentName: string;
-    end;
-
 var
     MoreHelpFunction: TMoreHelpFunction = Nil;
-    OptionHandler: TOptHandler;
-    IgnoreErrors: bool = false;
+    OptionHandler: TOptHandler = Nil;
     ProjectVersion: double = 1.1;
     NonOptions: array of ansistring;
 
-retn AddOption(option: TOption; info: TCmdLineOptInfo);
-retn AddOption(short: char; long, arg, description: string); overload;
-
 retn Start;
 retn ShowHelp;
+retn AddOption(const short: char; long, arg, description: string);
 retn ErrorAndExit(const additonalMessage: string);
 
 fn GetOptValue: string;
@@ -39,7 +31,6 @@ uses logging;
 
 var
     Options: array of TOption;
-    OptionInfos: array of TCmdLineOptInfo;
     OptionIndex: long;
 
     GotChar: char;
@@ -48,67 +39,49 @@ var
 
 {$I vers.inc}
 
-retn AddOption(option: TOption; info: TCmdLineOptInfo);
-var
-    lineToAdd: string;
-bg
-    SetLength(Options, Length(Options) + 1);
-    Options[High(Options)] := option;
-
-    SetLength(OptionInfos, Length(OptionInfos) + 1);
-    OptionInfos[High(OptionInfos)] := info;
-
-    with option do bg
-        if Value <> #0 then bg
-            ShortArgs += Value;
-
-            if Has_Arg = Required_argument then
-                ShortArgs += ':';
-
-            lineToAdd += ('-' + Value);
-        ed;
-
-        if Name <> #0 then bg
-            if Value <> #0 then
-                lineToAdd += ' / ';
-            lineToAdd += ('--' + Name);
-        ed;
-
-        lineToAdd += Format(
-            '%-20s' + sLineBreak + #09 +
-            '%-20s' + sLineBreak,
-            [ info.ArgumentName, info.HelpMsg ]);
-
-        HelpMessage += lineToAdd;
-    ed;
-ed;
-
-retn AddOption(short: char; long, arg, description: string);
+retn AddOption(const short: char; long, arg, description: string);
 var
     newOpt: TOption;
-    newOptInfo: TCmdLineOptInfo;
 bg
-    with newOptInfo do bg
-        HelpMsg := description;
-    ed;
+    Assert(NOT ( (short = #0) and (long = #0) ));
 
     with newOpt do bg
-        Name := long;
         Has_Arg := IfThenElse(arg <> '', 1, 0);
-        Value := short;
-    ed;
 
-    AddOption(newOpt, newOptInfo);
+        if long <> '' then bg
+            Name := long;
+            HelpMessage += ('--' + long + ' ');
+        ed;
+
+        if short <> '' then bg
+            Value := short;
+            ShortArgs += short;
+
+            if Has_Arg = 1 then
+                ShortArgs += ':';
+
+            HelpMessage += ('-' + short);
+        ed;
+
+        Flag := nil;
+
+        HelpMessage += Format(' %s' + #13#10#09 + '%-20s' + #13#10, [ arg, description ]);
+    ed;
+    
+    SetLength(Options, Length(Options) + 1);
+    Options[High(Options)] := newOpt;
 ed;
 
 retn Start;
 bg
+    Assert(Assigned(OptionHandler));
+
     repeat
         GotChar := GetLongOpts(shortArgs, @Options[0], OptionIndex);
         case GotChar of
-            '?': if not IgnoreErrors then bg
-                ShowHelp;
-                raise Exception.Create('Something went wrong with this: ' + OptArg);
+            '?': bg
+                writeln('Run the program with -h or --help to see all available options and their right syntax.');
+                halt(1);
             ed;
 
             'h': bg
@@ -123,8 +96,8 @@ bg
                 halt(0);
             ed;
 
-            #0: OptionHandler(Options[OptionIndex - 1].Value);
-
+            //#0: OptionHandler(Options[OptionIndex - 1].Value);
+            
             else OptionHandler(GotChar);
         end;
     until GotChar = EndOfOptions;
@@ -145,9 +118,6 @@ bg
     writeln(HelpMessage);
     if (MoreHelpFunction <> Nil) then
         writeln(MoreHelpFunction() + sLineBreak);
-
-    //writeln('Online flag usage: https://github.com/lebao3105/Commands-collection/blob/master/USAGE.md');
-    //writeln('Commands-Collection homepage: https://github.com/lebao3105/Commands-collection');
 ed;
 
 fn GetOptValue: string;
@@ -162,10 +132,6 @@ bg
 ed;
 
 initialization
-
-// GetOpt writes errors to stdout if this
-// is set to true
-OptErr := true;
 
 AddOption('h', 'help', '', 'Show this help message');
 AddOption('V', 'version', '', 'Show the project version');
