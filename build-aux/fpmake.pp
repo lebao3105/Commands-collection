@@ -1,5 +1,6 @@
 program fpmake;
-{$mode objfpc}
+
+{$modeswitch exceptions}
 {$macro on}
 {$coperators on}
 {$assertions on}
@@ -40,7 +41,7 @@ var
 
 const
     opts =
-        '-Sa -Si -Sm -Sc -Sx -Co -CO -Cr -CR -Mfpc ' +
+        '-Mfpc -Sa -Si -Sm -Sc -Sx -Co -CO -Cr -CR ' +
 		'-dbg:=begin -ded:=end -dretn:=procedure ' +
 		'-dfn:=function -dlong:=longint -dulong:=longword ' +
 		'-dint:=integer -dbool:=boolean -dreturn:=exit ' +
