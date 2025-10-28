@@ -1,11 +1,9 @@
 unit utils;
-{$modeswitch result}
 {$modeswitch out}
+{$scopedenums on}
 {$H+}
 
 interface
-
-uses base, sysutils, logging, baseunix;
 
 type
     ExistKind = (
@@ -35,36 +33,41 @@ type
     end;
 
     IterateResults = (
-        OK, NO_CALLBACK, INACCESSIBLE,
-        STAT_FAILED
+        OK, INACCESSIBLE
     );
 
     TIterateDirResult = record
         name: ansistring;
         info: TFSProperties;
-        status: IterateResults
     end;
 
     PIterateDirResult = ^TIterateDirResult;
 
-fn PopulateFSInfo(const path: string; out info: TFSProperties): bool;
-fn GetLastErrno: {$ifdef UNIX}longint{$else}dword{$endif};
+    TIterateDirCallback = retn(const p: PIterateDirResult; toBeIterated: bool);
 
-{ Iterates path, and run callback on each entry.
-  If the callback is nil, returns NO_CALLBACK.
-  If path is not accessible, INACCESSIBLE.
-  When IterateDir fails to get an entry's stats, STAT_FAILED will be returned
-  at the end of the iteration, and STAT_FAILED will also be passed to the callback.
-  If everything passes, OK will be returned. }
-fn IterateDir(const path: string; callback: TThreadFunc): IterateResults;
+fn GetLastErrno: longint;
+
+{ Stringtify an UNIX error code, localized. }
+fn StrError(errno: longint): pchar; external 'c' name 'strerror';
+
+fn PopulateFSInfo(const path: string; out info: TFSProperties): bool;
+
+{ Iterates p, and run cb on each entry. Print the directory name if pr is true.
+  Iterates recursively when r is true.
+  If an element / p itself is unreadable (fpOpenDir / fpReadDir / fpStat),
+  the provided TIterateDirResult will have its info.Kind set to ExistKind.AStatFailure. }
+retn IterateDir(const p: string; cb: TIterateDirCallback; r: bool; pr: bool);
 
 implementation
+
+uses base, sysutils,
+     logging, baseunix, dateutils;
 
 {$I fs.inc}
 
 fn GetLastErrno: longint; inline;
 bg
-    Result := FpGetErrno;
+    GetLastErrno := FpGetErrno;
 ed;
 
 end.

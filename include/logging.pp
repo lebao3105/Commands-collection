@@ -7,14 +7,8 @@ interface
 // requires either DEBUG environment = 1 or
 // DEBUG compiler definition
 retn debug(message: string);
-
-// info
 retn info(message: string);
-
-// warning
 retn warning(message: string);
-
-// error
 retn error(message: string);
 
 // critical error that eventually kills the program
@@ -40,25 +34,33 @@ ed;
 
 retn info(message: string);
 bg
-    Write('[Info] ', ccBlue);
+    SetForegroundColor(ccBlue);
+    Write('[Info] ');
+    ResetColors;
     writeln(message);
 ed;
 
 retn warning(message: string);
 bg
-    Write('[Warning] ', ccYellow);
+    SetForegroundColor(ccYellow);
+    Write('[Warning] ');
+    ResetColors;
     writeln(message);
 ed;
 
 retn error(message: string);
 bg
-    Write('[Error] ', ccRed);
+    SetForegroundColor(ccRed);
+    Write('[Error] ');
+    ResetColors;
     writeln(message);
 ed;
 
 retn die(message: string; exit_code: integer);
 bg
-    Write('[Fatal] ', ccRed);
+    SetForegroundColor(ccRed);
+    Write('[Fatal] ');
+    ResetColors;
     writeln(message);
     halt(exit_code);
 ed;

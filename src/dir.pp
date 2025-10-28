@@ -2,7 +2,8 @@ program dir;
 {$h+}
 
 uses
-    cthreads,
+    //cthreads, cmem,
+    clocale,
     base,
     custcustapp,
     logging,
@@ -17,47 +18,69 @@ uses
     dir.cc;
 
 var
-    showHidden: bool = false;
     showAsList: bool = false;
-    dirOnly: bool = false;
+    recursively: bool = false;
     ignoreBackups: bool = false;
-
-var
     rg: TRegExpr;
-    filesCount: ulong = 0;
-    filesSize: qword = 0;
-    hiddenCount: longword = 0;
-    count: longint = 0;
 
-fn ShowDirEntry(p: pointer): ptrint;
-var r: PIterateDirResult;
+    // The rest are placed in dir.report.
+
+retn ShowDirEntry(const r: PIterateDirResult; knownAsDir: bool);
+
+    fn IsNameValid: bool;
+    bg
+        IsNameValid := false;
+
+        if StartsStr('.', r^.name) then bg
+            if showHidden then bg
+            (*InterLocked*)Inc(*rement*)(hiddenCount);
+                return(true);
+            ed;
+            exit;
+        ed;
+
+        if ignoreBackups and
+           (EndsStr('~', r^.name) or EndsStr('.bak', r^.name)) then
+            exit;
+
+        try
+            if Assigned(rg) and rg.Exec(r^.name) then
+                exit;
+        except
+            // TODO
+        end;
+
+        IsNameValid := true;
+    ed;
+
 bg
-    r := PIterateDirResult(p);
-    if r^.status <> IterateResults.OK then exit; // TODO
+    if r^.info.Kind = ExistKind.AStatFailure then
+    bg
+        (*InterLocked*)Inc(*rement*)(statFailCount);
+
+        if IsNameValid then bg
+            if knownAsDir then bg
+                error(Format(OpenDirFailed, [ r^.name, StrError(GetLastErrno) ]));
+                writeln;
+                exit;
+            ed;
+
+            if showAsList then
+                writeln(Format(StatFailed, [ r^.name, StrError(GetLastErrno) ]))
+            else
+                write(Format('%s(E %d)', [ r^.name, GetLastErrno ]));
+        ed;
+        exit;
+    ed;
+
+    if not IsNameValid then exit;
 
     if r^.info.Kind <> ExistKind.ADir then
     bg
+        (*InterLocked*)Inc(*rement*)(filesCount);
         if dirOnly then exit;
-        InterLockedIncrement(filesCount);
         Inc(filesSize, r^.info.Size);
     ed;
-
-    if (not showHidden) and StartsStr('.', r^.name) then
-    bg
-        InterLockedIncrement(hiddenCount);
-        exit;
-    ed;
-
-    if ignoreBackups and
-       (EndsStr('~', r^.name) or EndsStr('.bak', r^.name)) then
-        exit;
-
-    try
-        if Assigned(rg) and rg.Exec(r^.name) then
-            exit;
-    except
-        // TODO
-    end;
 
     Inc(count);
 
@@ -76,41 +99,15 @@ bg
         ListingFormats.CMD:
             dir.win32.PrintALine(r^.name, r^.info);
     ed;
-
-    ShowDirEntry := 0;
 ed;
 
-retn ListItems(path: string);
-//var
-//    statFailCount: uint16 = 0;
-
+retn ListItems(path: string); inline;
+{$define WantToPrintName:=(High(custcustapp.NonOptions) > 1) or recursively}
 bg
-    path := ExpandFileName(IncludeTrailingPathDelimiter(path));
-
-    if High(custcustapp.NonOptions) > 1 then bg
-        write(path); writeln(':');
-    ed;
-
-    case IterateDir(path, @ShowDirEntry) of
-        INACCESSIBLE: bg
-            error(path + ' is inaccessible.');
-            writeln('Make sure that it either exists, is a directory, and you have enough permissions to read it.');
-        ed;
-
-        // TODO
-        //STAT_FAILED: Inc(statFailCount);
-
-        OK: bg
-            Report(filesCount, count, hiddenCount, filesSize, dirOnly);
-            filesCount := 0;
-            count := 0;
-            hiddenCount := 0;
-            filesSize := 0;
-        ed;
-    end;
-
-    if Assigned(rg) then rg.Free;
+    IterateDir(path, @ShowDirEntry, recursively, WantToPrintName);
+    Report;
 ed;
+{$undef WantToPrintName}
 
 retn OptionParser(found: char);
 bg
@@ -125,6 +122,7 @@ bg
             rg.Expression := GetOptValue;
         ed;
         'B': ignoreBackups := true;
+        'R': recursively := true;
 
         'w': listFmt := ListingFormats.CMD;
         'u': listFmt := ListingFormats.GNU;
@@ -132,15 +130,9 @@ bg
     ed;
 ed;
 
-fn AdditionalHelpMessages: string;
+retn OnExit;
 bg
-    AdditionalHelpMessages :=
-        'If -l / --list is passed: this program will use the format ' +
-        'that the current OS families most (GNU coreutils format on UNIX, ' +
-        'Windows''s dir format on Windows).' + sLineBreak +
-
-        'The last related flag will be used, e.g: -w -u will use Coreutils format.' +
-        sLineBreak + sLineBreak + 'Directory sizes are not calculated.';
+    if Assigned(rg) then rg.Free;
 ed;
 
 var
@@ -153,23 +145,27 @@ begin
         exit;
     ed;
 
-    MoreHelpFunction := @AdditionalHelpMessages;
+    AddExitProc(@OnExit);
+
     OptionHandler := @OptionParser;
 
-    AddOption('l', 'list', '', 'Show the output as a list');
-    AddOption('a', 'all', '', 'Show everything, including hidden stuff and folders');
-    AddOption('c', 'color', '', 'Use colors in the output');
-    AddOption('d', 'directory', '', 'Only show directories');
-    AddOption('i', 'ignore', 'PATTERN', 'Ignore entities that match the specified pattern');
-    AddOption('B', 'ignore-backups', '', 'Ignore entities that end with ~ OR .bak');
-    AddOption('R', 'recursive', '', 'List stuff, recursively');
+    AddOption('l', 'list', '', ListDes);
+    AddOption('a', 'all', '', AllDes);
+    AddOption('c', 'color', '', ColorDes);
+    AddOption('d', 'directory', '', DirOnlyDes);
+    AddOption('i', 'ignore', 'PATTERN', IgnoreDes);
+    AddOption('B', 'ignore-backups', '', IgnoreBckDes);
+    AddOption('R', 'recursive', '', RecursiveDes);
 
-    AddOption('w', 'win-fmt', '', 'List directory content using Windows CMD''s dir format');
-    AddOption('u', 'uni-fmt', '', 'List directory content using GNU coreutils format');
-    AddOption('m', 'cmc-fmt', '', 'List directory content using CommandsCollection format');
+    AddOption('w', 'win-fmt', '', WinFmtDes);
+    AddOption('u', 'gnu-fmt', '', GNUFmtDes);
+    AddOption('m', 'cmc-fmt', '', CCFmtDes);
 
     custcustapp.Start;
 
-    for I := 0 to High(custcustapp.NonOptions) do
-        listitems(custcustapp.NonOptions[I]);
+    if Length(custcustapp.NonOptions) = 0 then
+        ListItems('.')
+    else
+        for I := 0 to High(custcustapp.NonOptions) do
+            listitems(custcustapp.NonOptions[I]);
 end.

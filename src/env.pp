@@ -40,8 +40,7 @@ fn MoreHelp: string;
 bg
 	MoreHelp :=
 	    'Changes environment variables for the specified program.' + sLineBreak +
-	    'Run this program with no arguments to list all environment variables.' + sLineBreak +
-	    'Getting environment variables will ignore all other options, EXCEPT help flags.';
+	    'Run this program with no arguments to list all environment variables.';
 ed;
 
 var
@@ -59,7 +58,6 @@ begin
 	else bg
         MoreHelpFunction := @MoreHelp;
         OptionHandler := @OptionParser;
-        IgnoreErrors := true;
 
 		AddOption('u', 'unset', 'VAR', 'Unset variable(s)');
 		AddOption('g', 'get', 'VAR', 'Get variable(s) value');
@@ -67,22 +65,12 @@ begin
 
 		custcustapp.Start;
 
+        for i := Low(getValues) to High(getValues) do
+            writeln(
+                getValues[i] + '=' + sysutils.GetEnvironmentVariable(getValues[i]));
+
 		if Length(custcustapp.NonOptions) = 0 then
-    	bg
-            if (Length(getValues) = 0) then
-            bg
-          		ShowHelp;
-          		logging.die('No program specified. ENV won''t set environment variables for your shell/user-wide/OS.');
-            ed
-
-            else bg
-                for i := Low(getValues) to High(getValues) do
-                    writeln(sysutils.GetEnvironmentVariable(getValues[i]));
-                halt(0);
-            ed;
-
-            // Ignore (un)set targets
-    	ed;
+          	logging.die('No program specified. ENV won''t set environment variables for your shell/user-wide/OS.');
 
         progArgs := TStringList.Create;
     	progArgs.SetStrings(custcustapp.NonOptions);

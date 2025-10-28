@@ -18,23 +18,28 @@ uses base, dateutils, dir.report, sysutils;
 
 fn FSPermAsString(const perms: TFSPermissions): string;
 bg
-    FSPermAsString := IfThenElse(perms.R, 'r', '-') +
-              IfThenElse(perms.W, 'w', '-') +
-              IfThenElse(perms.E, 'x', '-');
+    FSPermAsString :=
+        IfThenElse(perms.R, 'r', '-') +
+        IfThenElse(perms.W, 'w', '-') +
+        IfThenElse(perms.E, 'x', '-');
 ed;
 
 retn PrintALine(const name: string; const props: TFSProperties);
 bg
     write(FormatDateTime('mmm d hh:nn', props.LastModifyTime));
     WriteSp;
-
+    
     case props.Kind of
         ExistKind.ADir: write('d');
         ExistKind.ASocket: write('s');
         ExistKind.ASymlink: write('l');
+        ExistKind.ABlock: write('b');
+        ExistKind.APipe: write('p');
+        ExistKind.ACharDev: write('c');
+        ExistKind.AFile: write('-');
     else
-        write('-');
-    ed;
+        write('?');
+    end;
 
     write(FSPermAsString(props.Perms[0]));
     write(FSPermAsString(props.Perms[1]));

@@ -7,14 +7,22 @@ unit dir.report;
 
 interface
 
-uses base, console, utils;
+uses console, utils;
 
 type
-    ListingFormats = ( CMD, {$ifdef UNIX}GNU,{$endif} CC );
+    ListingFormats = ( CMD, GNU, CC );
 
 var
-    addColors: bool = false;
+    addColors: bool = true;
+    dirOnly: bool = false;
+    showHidden: bool = false;
     listFmt: ListingFormats = ListingFormats.{$ifdef UNIX}GNU{$else}CMD{$endif};
+
+    filesCount: ulong = 0;
+    filesSize: qword = 0;
+    hiddenCount: ulong = 0;
+    count: ulong = 0;
+    statFailCount: ulong = 0;
 
 const
     foreAndBack: array of array[0..1] of TConsoleColor = (
@@ -34,32 +42,55 @@ const
         // Reference: https://github.com/coreutils/coreutils/blob/master/src/ls.c#L634
     );
 
-retn Report(const files, total, hiddens: uint16; size: qword; dirOnly: bool);
+retn Report;
 retn PrintObjectName(const name: string; const props: TFSProperties);
+
+{$I ../po/src/dir.inc}
 
 implementation
 
-uses logging, sysutils;
+uses base, sysutils;
 
-retn Report(const files, total, hiddens: uint16; size: qword; dirOnly: bool);
+retn Report;
 bg
     case listFmt of
         ListingFormats.CC: bg
-            info('Found ' +
-                IfThenElse(not dirOnly, Format('%u files, ', [files]), '') +
-                Format('%u directories, and ', [ total - files ]) +
-                Format('%u hidden items.', [ hiddens ]));
-
-            info(Format('%u bytes of files', [ size ]));
+            writeln('Found ' +
+                IfThenElse(not dirOnly, Format('%u files, ', [ filesCount ]), '') +
+                Format('%u directories', [ count - filesCount ]) +
+                IfThenElse(showHidden, Format(', and %u hidden items.', [ hiddenCount ]), ''));
+            writeln(Format('%u bytes of files', [ filesSize ]));
+            writeln(Format(
+                #09#09 + 'Failed to read %u', [ statFailCount ]));
+            writeln;
         ed;
 
         ListingFormats.CMD: bg
-            writeln(Format(#09#09 + '%u File(s)        %u bytes', [ files, size ]));
-            writeln(Format(#09#09 + '%u Dir(s)  %s bytes free', [ total - files, BigNumberToSeparatedStr(DiskFree(0)) ]));
+            if showHidden then
+                writeln(Format(#09#09 + '%u Hidden(s)', [ hiddenCount ]));
+
+            if not dirOnly then
+                writeln(Format(#09#09 + '%u File(s)        %u bytes', [ filesCount, filesSize ]));
+
+            writeln(Format(
+                #09#09 + '%u Dir(s)  %s bytes free',
+                [ count - filesCount, BigNumberToSeparatedStr(DiskFree(0)) ]));
+                // DiskFree(0): Will use WSL's space if run inside WSL
+
+            writeln(Format(
+                #09#09 + 'Failed to read %u', [ statFailCount ]));
+
+            writeln;
         ed;
 
-        { None for GNU? }
+        ListingFormats.GNU: writeln(sLineBreak);
     ed;
+    
+    filesCount := 0;
+    filesSize := 0;
+    hiddenCount := 0;
+    count := 0;
+    statFailCount := 0;
 ed;
 
 retn PrintObjectName(const name: string; const props: TFSProperties);

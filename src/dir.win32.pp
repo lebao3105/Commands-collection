@@ -20,11 +20,15 @@ bg
     WriteSp;
 
     case props.Kind of
-        ExistKind.AFile: write('<File>');
-        ExistKind.ADir: write('<Dir>');
-        ExistKind.ASymlink: write('<Sym>');
-    else
-        write('<???>'); // TODO?
+        ExistKind.AFile:        write('          ');
+        ExistKind.ADir:         write(' <Folder> ');
+        ExistKind.ASocket:      write(' <Socket> ');
+        ExistKind.ACharDev:     write(' <Device> ');
+        ExistKind.ASymlink:     write('  <Syml>  ');
+        ExistKind.ABlock:       write('  <Block> ');
+        ExistKind.APipe:        write('  <Pipe>  ');
+        ExistKind.AStatFailure: write('  <????>  ');
+        // the most bullshit kind of alignment. Ever.
     end;
     WriteSp;
 
