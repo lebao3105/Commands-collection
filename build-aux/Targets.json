@@ -1,23 +1,30 @@
 {
-  "$schema": "./TargetsSchema.json",
-  "programs": [
-    { "name": "calltime" },
-    { "name": "dir", "dependencies": ["regexpr"] },
-    { "name": "env", "dependencies": ["fcl-process"] },
-    { "name": "inp" },
-    { "name": "mkdir" },
-    { "name": "rename" },
-    { "name": "rm", "dependencies": ["regexpr"] },
-    { "name": "rmdir", "dependencies": ["regexpr"] },
-    { "name": "touch" },
-    { "name": "uname", "unix-only": true },
-    { "name": "uptime", "unix-only": true }
-  ],
-  "units": [
-    { "name": "base" },
-    { "name": "console" },
-    { "name": "custcustapp" },
-    { "name": "logging" },
-    { "name": "utils" }
-  ]
+	"$schema": "./TargetsSchema.json",
+	"programs": [
+		{ "name": "calltime" },
+		{ "name": "dir", "dependencies": ["regexpr"] },
+		{ "name": "env", "dependencies": ["fcl-process"] },
+		{ "name": "inp" },
+		{ "name": "mkdir", "override-src": "makethings" },
+		{ "name": "rename" },
+		{
+			"name": "rm",
+			"dependencies": ["regexpr"],
+			"override-src": "removethings"
+		},
+		{
+			"name": "rmdir",
+			"dependencies": ["regexpr"],
+			"override-src": "removethings"
+		},
+		{ "name": "touch", "override-src": "makethings" },
+		{ "name": "uname", "unix-only": true },
+		{ "name": "uptime", "unix-only": true }
+	],
+	"units": [
+		{ "name": "base" },
+		{ "name": "console" },
+		{ "name": "logging" },
+		{ "name": "utils" }
+	]
 }

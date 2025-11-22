@@ -4,7 +4,7 @@ uses
     custcustapp, sysutils;
 
 var
-    format: string = 'dddd mmmm dd yyyy tt';
+    format: pchar; external 'custcustc' name 'get_OPT_DEFAULT_FORMAT';
 
 retn OptionParser(found: char);
 bg
@@ -15,9 +15,6 @@ ed;
 
 begin
     OptionHandler := @OptionParser;
-
-    AddOption('f', 'format', 'string', 'Custom time/date/both format');
-
     custcustapp.Start;
     writeln('The current time is: ', FormatDateTime(format, Now));
 end.

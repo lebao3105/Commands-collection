@@ -1,8 +1,8 @@
 # CC's build auxiliaries
 
-The tool used to build Commands-Collection (CC for short, hope that doesn't confuse C++ users) is fpmake.
+The tool used to build Commands-Collection (CC for short, hope that doesn't confuse Makefile users) is fpmake.
 
-Unusual placement of the tool - it should be outside this folder - but this is literally cleaner while still fits the role of fpmake.
+Unusual placement of the tool - as it is normally seen in .. - but this is literally cleaner while still fits the role of fpmake.
 
 This file covers its usage, and most importantly: its compilance. Yes - it is a bit compiler-dependent.
 
@@ -40,6 +40,12 @@ fpmake must be run on this folder!
 
 ## Usage
 
+Some programs requires C - verify that by finding for C files: ones with '.h' / '.c' extensions.
+
+If the target program indeed needs C, use your C compiler, tell it to compile [../include/custcustapp.c] into a shared library named `libcustcustc.so` (the extension will not be `so` on non-UNIX, e.g `.dll` on Windows or `.dylib` on macOS although it is UNIX-like).
+
+The built library must be placed in a memorable place. It **IS** different for EACH PROGRAMS.
+
 To build program(s) and/or unit(s):
 
 ```bash
@@ -51,6 +57,10 @@ To build program(s) and/or unit(s):
     # to build ones in ../include only:
     ./fpmake build -v --CompileTarget=all-units
 ```
+
+If the program you want to compile uses C, pass `--options="-Fl<WHERE YOUR CUSTCUSTC IS, DIRECTORY PATH>"` into fpmake.
+
+Afterwards, set `LD_LIBRARY_PATH` environment variable to custcustc folder too. Otherwise you'll get a symbol file error.
 
 To clean:
 

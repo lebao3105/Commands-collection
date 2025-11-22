@@ -25,7 +25,7 @@ type
         Perms: array[0..2] of TFSPermissions;
         Kind: ExistKind;
         Size: qword;
-        //LastAccessTime: cardinal;
+        LastAccessTime: cardinal;
         LastModifyTime: double;
 
         HardLinkCount: cardinal;

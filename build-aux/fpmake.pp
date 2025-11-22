@@ -41,7 +41,7 @@ var
 
 const
     opts =
-        '-Mfpc -Sa -Si -Sm -Sc -Sx -Co -CO -Cr -CR ' +
+        '-Mfpc -Sa -Si -Sm -Sc -Sx -Co -CO -Cr -CR -vewnhcl ' +
 		'-dbg:=begin -ded:=end -dretn:=procedure ' +
 		'-dfn:=function -dlong:=longint -dulong:=longword ' +
 		'-dint:=integer -dbool:=boolean -dreturn:=exit ' +

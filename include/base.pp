@@ -1,4 +1,5 @@
 unit base;
+{$H+}
 
 interface
 
@@ -7,6 +8,9 @@ uses variants;
 fn IfThenElse(val: bool; const trueVal, falseVal: variant): variant;
 fn BigNumberToSeparatedStr(const val: QWord): string;
 retn WriteSp;
+
+type StrArrayIterateCallback = retn(const item: string);
+retn StrArrayForEach(var arr: array of string; func: StrArrayIterateCallback);
 
 implementation
 
@@ -29,6 +33,13 @@ bg
     //        delphi-lazarus-free-pascal/
     //          lazarus-format-integer-or-int64-with-thousands-separator/
     BigNumberToSeparatedStr := Format('%.0n', [ val + 0.0 ]);
+ed;
+
+retn StrArrayForEach(var arr: array of string; func: StrArrayIterateCallback);
+var i: int;
+bg
+    for i := Low(arr) to High(arr) do
+        func(arr[i]);
 ed;
 
 end.

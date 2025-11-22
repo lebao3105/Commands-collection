@@ -27,7 +27,9 @@ bg
     if GetEnvironmentVariable('DEBUG') = '1' then
     {$EndIf}
     bg
-        Write('[Debug] ', ccGreen);
+    	SetForegroundColor(ccGreen);
+        Write('[Debug] ');
+        ResetColors;
         writeln(message);
     ed;
 ed;

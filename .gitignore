@@ -17,9 +17,11 @@ build
 !.gitkeep
 
 src/*
-!src/*.pp
-!src/*.pas
-!src/*.inc
+!src/*/*.pp
+!src/*/*.pas
+!src/*/*.inc
+!src/*/*.h
+!src/*/*.c
 
 include/*
 !include/*.pp

@@ -7,17 +7,9 @@ A collection of system commands written in Free Pascal.
 
 They are:
 
-* `calltime` = time & date getter
-* `chk_type` = file / folder information getter
-* `dir`
-* `env`
-* `inp` = asks for an input (e.g Press Enter to continue)
-* `mkdir` + `touch` + `rm`
-* `rename` = file / folder renamer
-* `uname`
-* `uptime`
-* Overall: ~~cross-platform~~ UNIX programs that are seen in daily computer life
-* Overall: proof-of-concept (POC)s
+* Programs put in `src` (sorry but I'm too lazy to update the list manually);
+* UNIX-only (for now) programs that are seen in daily computer life
+* Proof-of-concept (POC)s
 
 They are NOT:
 
@@ -25,15 +17,17 @@ They are NOT:
 * Made to be laughed at
 * Suitable for daily-use
 * Fully optimized (atm)
-* Object-oriented (although classes like `TStringList` is used sometimes)
+* Object-oriented (although some like `TRegExpr` is used sometimes)
 * Battle-tested
 
 ## Building
 
 ### Setup
 
+Go install:
+
 * FPC (Free Pascal Compiler) 3.x
-* ***(Soon)*** A C compiler (it may come with FPC by default)
+* A C compiler - required C Standard version is unclear, but target C23 if you can
 * Git, to show the repository's revision in program's `-V`
 
 ### Build
@@ -49,6 +43,7 @@ The universal usage documentation is [here](USAGE.md).
 ## Credits
 
 * [@ikelaiah](https://github.com/ikelaiah) for cli-fp library. Part of it is used and modified.
+* Everyone who made resources for us to [refer](#references)
 
 ## References
 
@@ -57,7 +52,8 @@ The universal usage documentation is [here](USAGE.md).
 * GNU Coreutils [source code](https://github.com/coreutils/coreutils)
 * Free Pascal's Run time [library](https://www.freepascal.org/docs-html/rtl/index.html) (RTL) and [Wiki](https://wiki.freepascal.org) and [docs](https://www.freepascal.org/docs.html)
 * Procps-ng [source code](https://gitlab.com/procps-ng/procps)
-* Free Pascal Compiler's [packages](https://gitlab.com/freepascal.org/fpc/source/-/tree/main/packages?ref_type=heads)
+* Free Pascal Compiler's [packages](https://gitlab.com/freepascal.org/fpc/source/-/tree/main/packages?ref_type=heads). FPMake source code and examples can be found there.
+* [TRegExpr](https://github.com/andgineer/TRegExpr)
 
 ## TODO
 
@@ -65,6 +61,7 @@ The universal usage documentation is [here](USAGE.md).
 * Add man pages?
 * Fix CI uploading - it's never been done properly
 * Add tests
-* If needed: add C. For example, there is no `stdin` or `stdout` in Pascal
+* If needed: add C. For example, ~~there is no `stdin` or `stdout` in Pascal~~ (I'm stupid, they are placed in system unit)
 * Improve the program's performance
 * Handle errors nicely
+* Unicode support

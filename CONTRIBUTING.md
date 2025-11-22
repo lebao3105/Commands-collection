@@ -55,6 +55,9 @@ They are defined globally:
 
 ## Create a new program
 
+> Note: Parts of this section are outdated due to the use of C GetOpt. Will update later.
+> For now, check programs like calltime and dir for examples.
+
 ### Write a new file
 
 Create a new file with the `.pp` extension in [src](src). Some units to [include](include) (not required to add all of them) and update (if you want and the thing to add is fit):
@@ -101,3 +104,32 @@ You do not need to write a function and assign `MoreHelpFunction` with its addre
 ### Tell fpmake the program's exisitence
 
 Edit [Targets.json](build-aux/Targets.json).
+
+## FAQ
+
+### Does Free Pascal have `constexpr`?
+
+Yes, according to its [wiki](https://wiki.freepascal.org/Const):
+
+> The declaration const in a Pascal program is used to inform the compiler that certain identifiers which are being declared are constants, that is, they are **initialized with a specific value at compile time** as opposed to a variable which is initialized at run time.
+
+Just use the `const` keyword as usual.
+
+Also one thing: constants are...re-assignable by DEFAULT. While nobody would read a `const` and try to reassign it, to totally avoid that case, use `{$J-}` or `{$WriteableConst OFF}`.
+
+## How do I call C stuff from Pascal?
+
+Include `ctypes` unit.
+
+Here are some quick convertions:
+* C int => ctypes's cint(32) = Pascal's longint;
+* C char => ctypes's cchar;
+* C string (pointer of char) => Pascal's pchar;
+* C bool => ctypes's cbool => Pascal's longbool;
+* C struct => make the same one in Pascal. Don't forget to `packed` it if needed.
+
+As always, it's good to check [this](https://www.freepascal.org/docs-html/rtl/ctypes/index-3.html).
+
+Declare your whatever as usual. Append `extern`, following by a **library** name, e.g 'c' for libC. Add `name` modifier (next to the library name) if you want to change the name of your thing in Pascal.
+
+Samples can be seen in `custcustapp`.

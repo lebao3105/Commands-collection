@@ -1,0 +1,45 @@
+# To learn more about .editorconfig see https://aka.ms/editorconfigdocs
+###############################
+# Core EditorConfig Options   #
+###############################
+# All files
+[*]
+indent_style = tab
+indent_size = 4
+
+# Code files
+[*.{c++,cc,cpp,cxx,h,h++,hh,hpp,hxx,inl,ipp,tlh,tli}]
+
+## Indentation
+cpp_indent_braces = false
+cpp_indent_multi_line_relative_to = statement_begin
+cpp_indent_within_parentheses = align_to_parentheses
+cpp_indent_case_contents = true
+cpp_indent_case_labels = false
+cpp_indent_case_contents_when_block = false
+cpp_indent_goto_labels = one_left
+cpp_indent_preprocessor = none
+cpp_indent_namespace_contents = true
+cpp_indent_preserve_comments = true
+
+## Newline
+cpp_new_line_before_open_brace_namespace = new_line
+cpp_new_line_before_open_brace_type = new_line
+cpp_new_line_before_open_brace_function = new_line
+cpp_new_line_before_open_brace_block = new_line
+cpp_new_line_before_open_brace_lambda = new_line
+cpp_new_line_close_brace_same_line_empty_type = true
+cpp_new_line_close_brace_same_line_empty_function = true
+cpp_new_line_scope_braces_on_separate_lines = true
+cpp_new_line_before_catch = true
+cpp_new_line_before_else = true
+cpp_new_line_before_while_in_do_while = true
+
+## Spacing
+cpp_space_before_function_open_parenthesis = remove
+cpp_space_within_parameter_list_parentheses = true
+cpp_space_between_empty_parameter_list_parentheses = false
+cpp_space_after_keywords_in_control_flow_statements = true
+cpp_space_within_control_flow_statement_parentheses = true
+cpp_space_before_lambda_open_parenthesis = false
+cpp_space_after_comma = true
