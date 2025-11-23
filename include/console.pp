@@ -107,8 +107,6 @@ retn RestoreCursorPosition;
 
 implementation
 
-uses BaseUnix, termio;
-
 retn SetForegroundColor(const Color: TConsoleColor);
 bg
     case Color of

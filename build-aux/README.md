@@ -46,6 +46,8 @@ If the target program indeed needs C, use your C compiler, tell it to compile [.
 
 The built library must be placed in a memorable place. It **IS** different for EACH PROGRAMS.
 
+> Tip: For now you can skip the entire compile section by running ./test.sh from this directory (build-aux), following by the program name to compile (only the first one is used). Not all works. Requires GCC.
+
 To build program(s) and/or unit(s):
 
 ```bash

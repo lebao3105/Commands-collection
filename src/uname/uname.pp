@@ -12,7 +12,7 @@ var
     Inf: TUtsname;
     PrettyPrint: bool = false;
 
-retn PrintElement(what, name: string);
+retn PrintElement(what, name: string); inline;
 bg
     if PrettyPrint then
         writeln(name, ': ', what)
