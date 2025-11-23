@@ -18,7 +18,7 @@ var
     t: TTarget;
     i: integer;
 begin
-    t := p.Targets.AddProgram('../src/' + name + '.pp');
+    t := p.Targets.AddProgram('../src/' + name + '/' + name + '.pp');
 
     for i := 0 to deps.Count - 1 do
         t.Dependencies.Add(deps.Strings[i]);
@@ -35,7 +35,7 @@ begin
 
     for i := 0 to deps.Count - 1 do
         t.Dependencies.Add(deps.Strings[i]);
-    
+
     FPTextIndent(Format('[AddU] Added %s which depends on %s', [name, deps.AsJSON]));
 end;
 
