@@ -36,13 +36,6 @@ bg
     ed;
 ed;
 
-fn MoreHelp: string;
-bg
-	MoreHelp :=
-	    'Changes environment variables for the specified program.' + sLineBreak +
-	    'Run this program with no arguments to list all environment variables.';
-ed;
-
 var
 	targetProg: ansistring;
 	progArgs: TStringList;
@@ -56,12 +49,7 @@ begin
 	ed
 
 	else bg
-        MoreHelpFunction := @MoreHelp;
         OptionHandler := @OptionParser;
-
-		AddOption('u', 'unset', 'VAR', 'Unset variable(s)');
-		AddOption('g', 'get', 'VAR', 'Get variable(s) value');
-		AddOption('s', 'set', 'VAR=VALUE', 'Set variable(s)');
 
 		custcustapp.Start;
 

@@ -15,8 +15,8 @@ var
 retn OptionParser(found: char);
 bg
     case found of
-        'c': customMessage := OptArg;
-        'd': hiddenFlag := true;
+        'm': customMessage := OptArg;
+        't': hiddenFlag := true;
         'e': needEnter := true;
         'k': wantedKeys += OptArg;
         'l': loopFlag := true;
@@ -68,31 +68,14 @@ bg
 	readln;
 ed;
 
-fn ExtraHelp: string;
-bg
-	writeln('Shows a sentence, could be a question, and waits for user input.');
-	writeln('The exit code will be the ASCII value of the input character;');
-	writeln('or -1 if the loop option is turned off and this program gets unexpected answer.');
-ed;
-
-bg
+begin
 	if ParamCount = 0 then bg
 		writeln('Press any key to continue...');
 		readln;
-	ed
-	else bg
-        MoreHelpFunction := @ExtraHelp;
-        OptionHandler := @OptionParser;
-
-		AddOption('c', 'message', 'MESSAGE', 'Set a message to be shown');
-		AddOption('d', 'hide-input', '', 'Do not show the keyboard input');
-		AddOption('e', 'need-enter', '', 'Need to press enter after the key is pressed');
-		AddOption('k', 'key', 'CHARACTER/STRING', 'Use a character as the required input. Can be used multiple times');
-		AddOption('l', 'loop', '', 'Loop until one of the accepted keys gets pressed');
-		AddOption('o', 'show-availables', '', 'Show available keys to press: for example [yn]. Supports -s flag');
-		AddOption('s', 'case-sensitive', '', 'Case sensitive key input');
-
-		custcustapp.Start;
-    	NeedKeyInput;
+		exit;
 	ed;
+
+    OptionHandler := @OptionParser;
+	custcustapp.Start;
+   	NeedKeyInput;
 end.

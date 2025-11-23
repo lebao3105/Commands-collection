@@ -25,21 +25,19 @@ GET_DEFINITION_VAL(FREE_SPACE)
 	{"recursive",      0, 0, 'R'}, \
 	{"win-fmt",        0, 0, 'w'}, \
 	{"gnu-fmt",        0, 0, 'u'}, \
-	{"cmc-fmt",        0, 0, 'm'}, \
-	ARGA_SUFFIX
+	{"cmc-fmt",        0, 0, 'm'},
 
 #define PROGRAM_HELP \
 	CREATE_ARG_HELP("l", "list", LIST_DES) \
 	CREATE_ARG_HELP("a", "all", ALL_DES) \
 	CREATE_ARG_HELP("c", "color", COLOR_DES) \
 	CREATE_ARG_HELP("d", "directory", DIR_ONLY_DES) \
-	CREATE_ARG_VAL_HELP("i", "ignore", "[PATTERN]", IGNORE_DES) \
+	CREATE_ARG_VAL_HELP("i", "ignore", "PATTERN", IGNORE_DES) \
 	CREATE_ARG_HELP("B", "ignore-backups", IGNORE_BCK_DES) \
 	CREATE_ARG_HELP("R", "recursive", RECURSIVE_DES) \
 	CREATE_ARG_HELP("w", "win-fmt", WIN_FMT_DES) \
 	CREATE_ARG_HELP("u", "gnu-fmt", GNU_FMT_DES) \
-	CREATE_ARG_HELP("m", "cmc-fmt", CC_FMT_DES) \
-	HELP_SUFFIX
+	CREATE_ARG_HELP("m", "cmc-fmt", CC_FMT_DES)
 
 #define PROGRAM_BONUS_HELP \
 	"Ignore pattern is a single regular expression, which can be modified by " \
@@ -47,11 +45,12 @@ GET_DEFINITION_VAL(FREE_SPACE)
 	"If -B is used, pattern matching ~ and .bak suffixes will be appended.\n" \
 	"If -a is NOT used, pattern matching . (literally a dot) prefix will be appended.\n" \
 	"By default, the ignore pattern is case-INsensitive. Currently you can't change that.\n" \
+	\
+	PARAGRAPH \
 	"Comments and line breaks are allowed like this:\n" \
 	"( # this is a comment\n" \
 	"abc\n" \
 	"def\n" \
 	") # done \n"
 
-
-#define PROGRAM_SHORTOPTS "lacdi:BRwumhV"
+#define PROGRAM_SHORTOPTS "lacdi:BRwum"

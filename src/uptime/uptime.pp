@@ -45,13 +45,9 @@ ed;
 
 begin
     if sysinfo(@inf) <> 0 then bg
-        die('sysinfo() failed with code ' + IntToStr(FpGetErrno));
+        die('sysinfo() failed: ' + StrError(FpGetErrno));
     ed;
 
     OptionHandler := @OptHandler;
-
-    AddOption('p', 'pretty', '', 'pretty-print values');
-    AddOption('r', 'raw', '', 'raw values');
-    AddOption('s', 'since', '', 'system up since, in yyyy-mm-dd HH:MM:SS format');
-    Start;
+    custcustapp.Start;
 end.

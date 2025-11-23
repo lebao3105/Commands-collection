@@ -20,14 +20,6 @@ bg
         write(what, ' ');
 ed;
 
-fn ExtraHelp: string;
-bg
-    ExtraHelp :=
-        'With no option, -s will be omitted.' + sLineBreak +
-        '-f must be provided before any other flags, else you will ' +
-        'either get a mixed output, or no -f effect at all.';
-ed;
-
 retn OptionParser(found: char);
 {$ifdef BSD}
 var
@@ -99,25 +91,16 @@ bg
 ed;
 
 begin
-    if ParamCount = 0 then
-        OptionParser('a');
-
-    MoreHelpFunction := @ExtraHelp;
-    OptionHandler := @OptionParser;
-
     if (FpUname(Inf) = -1) then
         die('Something went wrong: uname() failed with errno=' + IntToStr(FpGetErrno), 1);
 
-    AddOption('a', 'all', '', 'Show everything in the order below - except omit -p and -i if unknown');
-    AddOption('s', 'kernel-name', '', 'Show the kernel name');
-    AddOption('n', 'nodename', '', 'Show the network node hostname');
-    AddOption('r', 'kernel-release', '', 'Show the kernel release');
-    AddOption('v', 'kernel-version', '', 'Show the kernel version');
-    AddOption('m', 'machine', '', 'Show the machine hardware name');
-    AddOption('p', 'processor', '', 'Show the processor type');
-    AddOption('i', 'hardware-platform', '', 'Show the hardware platform');
-    AddOption('o', 'operating-system', '', 'Show the OS');
-    AddOption('f', 'pretty-print', '', 'Pretty-print the output');
+    if ParamCount = 0 then bg
+        OptionParser('a');
+        exit;
+    ed;
+
+    MoreHelpFunction := @ExtraHelp;
+    OptionHandler := @OptionParser;
 
     custcustapp.Start;
     writeln;

@@ -15,8 +15,6 @@
 	#ifdef CUSTCUSTC_ARGA
 	#error "CUSTCUSTC_ARGA has been defined, but you forgot to define PROGRAM_SHORTOPTS"
 	#endif
-
-	#define PROGRAM_SHORTOPTS "hV"
 #endif
 
 #ifndef CUSTCUSTC_ARGA
@@ -41,7 +39,7 @@ typedef void (*OptionHandler)(const char);
 OptionHandler option_handler = 0;
 
 char** NonOptions = NULL;
-static struct option options[] = CUSTCUSTC_ARGA;
+static struct option options[] = CUSTCUSTC_ARGA ARGA_SUFFIX;
 
 void custcustapp_start(int argc, char** argv)
 {
@@ -53,7 +51,7 @@ void custcustapp_start(int argc, char** argv)
 
     while (1)
     {
-        c = getopt_long(argc, argv, PROGRAM_SHORTOPTS,
+        c = getopt_long(argc, argv, PROGRAM_SHORTOPTS "hV",
                         options, &option_index);
         if (c == -1)
             break;
@@ -93,7 +91,7 @@ void custcustapp_start(int argc, char** argv)
 void custcustapp_showhelp() {
     printf(PROJECT_NAME " [flags] [flag values] [stuff]\n"
     	   PROJECT_DESC "\n\n"
-           PROGRAM_HELP "\n");
+           PROGRAM_HELP HELP_SUFFIX "\n");
 
     // printf("Copyright (C) 2025 Commands-Collection team.\n");
     // printf("This program is licensed under the GNU General Public License version 3.\n\n");
