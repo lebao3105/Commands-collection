@@ -23,49 +23,45 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        prog: [dir, inp, env] # TODO: Eliminate this
 
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout the source code
+        uses: actions/checkout@v6
+        with:
+          path: CC
 
-      - name: Install compiler (Ubuntu)
-        if: ${{ matrix.os == 'ubuntu-latest' }}
+      - name: Checkout the XMake fork
+        uses: actions/checkout@v6
+        with:
+          repository: lebao3105/xmake
+          path: xmake
+          submodules: "recursive"
+
+      - name: Install compiler
+        uses: gcarreno/setup-lazarus@v3.4.0
+        with:
+          with-cache: true
+
+      - name: Setup XMake
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          actions-cache-folder: ".xmake-cache"
+
+      - name: Build
         run: |
-          sudo apt update
-          sudo apt install fp-{compiler,units-{base,rtl,fcl,misc}} -y --no-install-recommends
-
-      - name: Install compiler (not Ubuntu)
-        if: ${{ matrix.os != 'ubuntu-latest' }}
-        uses: lebao3105/setup-lazarus@master
-
-      - name: Download fcl-jsonschema
-        working-directory: build-aux
-        run: |
-          curl -o fcl-jsonschema.tar "https://gitlab.com/freepascal.org/fpc/source/-/archive/main/source-main.tar?ref_type=heads&path=packages/fcl-jsonschema"
-          tar -xf fcl-jsonschema.tar
-          fpc -gl -Fusource-main-packages-fcl-jsonschema/packages/fcl-jsonschema/src/ -dHAS_JSSC fpmake.pp
-
-      - name: Build all projects (UNIX)
-        working-directory: build-aux
-        if: ${{ matrix.os != 'windows-latest' }}
+          xmake f --target_program=${{ env.TARGET }} -m debug
+          xmake b -ravD
         env:
-          DEBUG: 1
-        run: |
-          ./fpmake build
-
-      - name: Build all projects (Windows)
-        working-directory: build-aux
-        if: ${{ matrix.os == 'windows-latest' }}
-        env:
-          DEBUG: 1
-        run: |
-          .\fpmake.exe build
+          XMAKE_PROGRAM_DIR: ../xmake/xmake
+          TARGET: ${{ matrix.prog }}
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
-        with:
-          path: build/bin/*
+        with: # FIXME: build? not build/<os>/<arch>/<variant>?
+          path: build/
           if-no-files-found: error
           name: Commands Collection (Nightly) for ${{ matrix.os }}
