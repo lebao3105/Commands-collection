@@ -18,16 +18,12 @@ Named using either PascalCase or camelCase convention.
 
 ## Definitions
 
-> Note: these are not APPLIED to fpmake.pp!
-
-They are definied in [fpmake.pp](build-aux/fpmake.pp):
-
 * `bg` = `begin`. Do NOT use it in `program`'s main block;
 * `ed` = `end`. Do NOT use it in `program`'s main block;
 * `retn` = `produce`;
 * `fn` = `function`;
 * `return` = `exit`;
-* and maybe more - check the file.
+* and maybe more.
 
 ## Type aliases
 
@@ -41,8 +37,6 @@ They are defined globally:
 * `int` = `integer`.
 
 ## Additional information
-
-> Note: some are not APPLIED to fpmake.pp!
 
 * `-Sx` is used for Exception keywords (`try`, `except`, `finally`, `raise`);
 * `-Sa` is used for assertions;
@@ -101,10 +95,6 @@ No:v "additional messages" already answered that.
 
 You do not need to write a function and assign `MoreHelpFunction` with its address, at all.
 
-### Tell fpmake the program's exisitence
-
-Edit [Targets.json](build-aux/Targets.json).
-
 ## FAQ
 
 ### Does Free Pascal have `constexpr`?
@@ -117,7 +107,7 @@ Just use the `const` keyword as usual.
 
 Also one thing: constants are...re-assignable by DEFAULT. While nobody would read a `const` and try to reassign it, to totally avoid that case, use `{$J-}` or `{$WriteableConst OFF}`.
 
-## How do I call C stuff from Pascal?
+### How do I call C stuff from Pascal?
 
 Include `ctypes` unit.
 
@@ -133,3 +123,7 @@ As always, it's good to check [this](https://www.freepascal.org/docs-html/rtl/ct
 Declare your whatever as usual. Append `extern`, following by a **library** name, e.g 'c' for libC. Add `name` modifier (next to the library name) if you want to change the name of your thing in Pascal.
 
 Samples can be seen in `custcustapp`.
+
+## Versioning
+
+TODO.
