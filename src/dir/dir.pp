@@ -1,5 +1,6 @@
 program dir;
 {$h+}
+//{$modeswitch exceptions}
 
 uses
     //cthreads, cmem,
@@ -49,7 +50,7 @@ retn ShowDirEntry(const r: PIterateDirResult; knownAsDir: bool);
             	(ignoreRegx.Expression = '') or not ignoreRegx.Exec(r^.name);
         except
             on E: ERegExpr do
-            	die(Format(
+            	fatal_and_terminate(1, Format(
              		'%s: Regular expression failed: %s',
 	             	[ignoreRegx.Expression, ignoreRegx.ErrorMsg(E.ErrorCode)]
              	));

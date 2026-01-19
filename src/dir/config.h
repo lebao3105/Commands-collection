@@ -32,12 +32,10 @@ GET_DEFINITION_VAL(FREE_SPACE)
 	CREATE_ARG_HELP("a", "all", ALL_DES) \
 	CREATE_ARG_HELP("c", "color", COLOR_DES) \
 	CREATE_ARG_HELP("d", "directory", DIR_ONLY_DES) \
-	CREATE_ARG_VAL_HELP("i", "ignore", "PATTERN", IGNORE_DES) \
 	CREATE_ARG_HELP("B", "ignore-backups", IGNORE_BCK_DES) \
 	CREATE_ARG_HELP("R", "recursive", RECURSIVE_DES) \
-	CREATE_ARG_HELP("w", "win-fmt", WIN_FMT_DES) \
-	CREATE_ARG_HELP("u", "gnu-fmt", GNU_FMT_DES) \
-	CREATE_ARG_HELP("m", "cmc-fmt", CC_FMT_DES)
+	CREATE_ARG_VAL_HELP("i", "ignore", "PATTERN", IGNORE_DES) \
+	CREATE_ARG_VAL_HELP("f", "format", "FORMAT", FORMAT_DES)
 
 #define PROGRAM_BONUS_HELP \
 	"Ignore pattern is a single regular expression, which can be modified by " \
