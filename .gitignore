@@ -20,13 +20,13 @@ src/*
 !src/*/*.pp
 !src/*/*.pas
 !src/*/*.inc
-!src/*/*.h
 !src/*/*.c
 
 include/*
 !include/*.pp
 !include/*.pas
 !include/*.inc
+!include/*.h
 
 fpcdebug*
 *.db
@@ -49,3 +49,8 @@ build-aux/*.zip
 build-aux/*.gz
 build-aux/*.xz
 build-aux/source*
+
+# XMake
+compile_commands.json
+.xmake
+.cache
