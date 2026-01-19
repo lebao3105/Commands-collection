@@ -1,75 +1,25 @@
 unit logging;
 {$h+}
+{$modeswitch defaultparameters}
 
 interface
 
-// debug
-// requires either DEBUG environment = 1 or
-// DEBUG compiler definition
-retn debug(message: string);
-retn info(message: string);
-retn warning(message: string);
-retn error(message: string);
+uses ctypes;
 
-// critical error that eventually kills the program
-{$HINT die(...) halts the program. You know what to do.}
-retn die(message: string; exit_code: integer);
-retn die(message: string); overload;
+// requires DEBUG environment variable to be set
+// (to any value) if NDEBUG definition is present
+// (aka non-debug builds)
+retn debug(message: string); cdecl; varargs; external 'custcustc' name 'debug';
+retn info(message: string); cdecl; varargs; external 'custcustc' name 'info';
+retn warning(message: string); cdecl; varargs; external 'custcustc' name 'warn';
+retn error(message: string); cdecl; varargs; external 'custcustc' name 'error';
+
+// fatal won't terminate the program.
+// this allows cleanup tasks before actually terminating the program
+// (in some cases. one can just use atexit)
+retn fatal(message: string); cdecl; varargs; external 'custcustc' name 'fatal';
+retn fatal_and_terminate(const exit_code: cint; message: string); cdecl; varargs; external 'custcustc' name 'fatal_and_terminate';
 
 implementation
-
-uses
-    console{$ifndef DEBUG}, sysutils{$endif};
-
-retn debug(message: string);
-bg
-    {$IfNDef DEBUG}
-    if GetEnvironmentVariable('DEBUG') = '1' then
-    {$EndIf}
-    bg
-    	SetForegroundColor(ccGreen);
-        Write('[Debug] ');
-        ResetColors;
-        writeln(message);
-    ed;
-ed;
-
-retn info(message: string);
-bg
-    SetForegroundColor(ccBlue);
-    Write('[Info] ');
-    ResetColors;
-    writeln(message);
-ed;
-
-retn warning(message: string);
-bg
-    SetForegroundColor(ccYellow);
-    Write('[Warning] ');
-    ResetColors;
-    writeln(message);
-ed;
-
-retn error(message: string);
-bg
-    SetForegroundColor(ccRed);
-    Write('[Error] ');
-    ResetColors;
-    writeln(message);
-ed;
-
-retn die(message: string; exit_code: integer);
-bg
-    SetForegroundColor(ccRed);
-    Write('[Fatal] ');
-    ResetColors;
-    writeln(message);
-    halt(exit_code);
-ed;
-
-retn die(message: string); inline;
-bg
-    die(message, 1);
-ed;
 
 end.

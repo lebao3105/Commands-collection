@@ -1,5 +1,6 @@
 unit custcustapp;
 {$H+}
+{$modeswitch defaultparameters}
 
 interface
 
@@ -11,7 +12,7 @@ var
     NonOptions: array of string;
 
 retn Start;
-retn ShowHelp; external 'custcustc' name 'custcustapp_showhelp';
+retn ShowHelp(const to_stdout: cint = 1); external 'custcustc' name 'custcustapp_showhelp';
 retn ErrorAndExit(const additonalMessage: ansistring);
 fn GetOptValue: pchar; external 'custcustc' name 'custcustapp_get_opt_arg';
 
@@ -39,8 +40,8 @@ ed;
 
 retn ErrorAndExit(const additonalMessage: ansistring);
 bg
-    ShowHelp;
-    die(additonalMessage);
+    ShowHelp(0);
+    fatal_and_terminate(1, additonalMessage);
 ed;
 
 end.
