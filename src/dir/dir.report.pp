@@ -73,23 +73,23 @@ var
 	StatFailed: pchar; external 'custcustc' name 'get_STAT_FAILED';
 	OpenDirFailed: pchar; external 'custcustc' name 'get_OPEN_DIR_FAILED';
 
-const
-    foreAndBack: array of array[0..1] of TConsoleColor = (
-        (ccDefault, ccDefault), // Files
-        (ccBrightBlue, ccDefault), // Directories
-        (ccBrightCyan, ccDefault), // Symlinks
-        (ccBrightMagenta, ccDefault), // Sockets
-        (ccBrightYellow, ccDefault), // Block devices
-        (ccYellow, ccDefault), // Pipes
-        (ccYellow, ccDefault), // Char devices
+// const
+//     foreAndBack: array of array[0..1] of TConsoleColor = (
+//         (ccDefault, ccDefault), // Files
+//         (ccBrightBlue, ccDefault), // Directories
+//         (ccBrightCyan, ccDefault), // Symlinks
+//         (ccBrightMagenta, ccDefault), // Sockets
+//         (ccBrightYellow, ccDefault), // Block devices
+//         (ccYellow, ccDefault), // Pipes
+//         (ccYellow, ccDefault), // Char devices
 
-        // The order for ones above is intended to
-        // match with ones from utils.ExistKind :)
+//         // The order for ones above is intended to
+//         // match with ones from utils.ExistKind :)
 
-        (ccDefault, ccBrightGreen), // executables
-        (ccDefault, ccBrightMagenta) // door(?)
-        // Reference: https://github.com/coreutils/coreutils/blob/master/src/ls.c#L634
-    );
+//         (ccDefault, ccBrightGreen), // executables
+//         (ccDefault, ccBrightMagenta) // door(?)
+//         // Reference: https://github.com/coreutils/coreutils/blob/master/src/ls.c#L634
+//     );
 
 retn Report(const mode: ListingModes);
 retn PrintObjectLine(const name: string; const props: TFSProperties; const mode: ListingModes); overload;
@@ -179,22 +179,22 @@ bg
 ed;
 
 retn PrintObjectName(const name: string; const props: TFSProperties);
-var
-    colorPair: array[0..1] of TConsoleColor;
+// var
+//     colorPair: array[0..1] of TConsoleColor;
 
 bg
-    if addColors then bg
-        colorPair := foreAndBack[ord(props.Kind)];
-        SetForegroundColor(colorPair[0]);
-        SetBackgroundColor(colorPair[1]);
+    // if addColors then bg
+    //     colorPair := foreAndBack[ord(props.Kind)];
+    //     SetForegroundColor(colorPair[0]);
+    //     SetBackgroundColor(colorPair[1]);
 
-        // TODO: Permissions
-        if props.Perms[0].E then
-            SetForegroundColor(ccBrightGreen);
-    ed;
+    //     // TODO: Permissions
+    //     if props.Perms[0].E then
+    //         SetForegroundColor(ccBrightGreen);
+    // ed;
 
     Write(name);
-    ResetColors;
+    reset_colors(stdout);
 ed;
 
 end.

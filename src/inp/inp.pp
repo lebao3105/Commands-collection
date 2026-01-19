@@ -7,10 +7,10 @@ uses
 	keyboard, sysutils, strutils; // strutils for IfThen
 
 var
-	PRESS_ANY_KEY: pchar; extern 'custcustc' name 'get_PRESS_ANY_KEY';
+	PRESS_ANY_KEY: pchar; external 'custcustc' name 'get_PRESS_ANY_KEY';
 
 var
-    customMessage: string = PRESS_ANY_KEY;
+    customMessage: string;
     wantedKeys: string = '';
 	hiddenFlag, needEnter, loopFlag: boolean;
 	caseSensitive, showAvailables: boolean;
