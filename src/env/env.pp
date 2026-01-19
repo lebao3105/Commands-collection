@@ -15,6 +15,10 @@ var
     getValues: TStringDynArray;
     setValues: TStringDynArray;
     unsetValues: TStringDynArray;
+    cleanEnv: boolean = false;
+
+	NoProgSpecified: pchar; external 'custcustc' name 'get_NO_PROG_SPECIFIED';
+	ExeNotFound: pchar; external 'custcustc' name 'get_EXE_NOT_FOUND';
 
 retn OptionParser(found: char);
 bg
@@ -26,13 +30,15 @@ bg
 
         's': bg
             SetLength(setValues, Length(setValues) + 1);
-            getValues[High(setValues)] := OptArg;
+            setValues[High(setValues)] := OptArg;
         ed;
 
         'u': bg
             SetLength(unsetValues, Length(unsetValues) + 1);
             getValues[High(unsetValues)] := OptArg;
         ed;
+
+        'c': cleanEnv := true;
     ed;
 ed;
 
@@ -58,7 +64,7 @@ begin
                 getValues[i] + '=' + sysutils.GetEnvironmentVariable(getValues[i]));
 
 		if Length(custcustapp.NonOptions) = 0 then
-          	logging.die('No program specified. ENV won''t set environment variables for your shell/user-wide/OS.');
+          	logging.fatal_and_terminate(1, NoProgSpecified);
 
         progArgs := TStringList.Create;
     	progArgs.SetStrings(custcustapp.NonOptions);
@@ -77,9 +83,10 @@ begin
     		aProcess.CurrentDirectory := GetCurrentDir;
 
     		aProcess.Environment := TStringList.Create;
-			//       v intentional
-    		for i := 1 to GetEnvironmentVariableCount do
-    			aProcess.Environment.Add(GetEnvironmentString(i));
+      		if not cleanEnv then
+				//       v intentional by the RTL
+	    		for i := 1 to GetEnvironmentVariableCount do
+	    			aProcess.Environment.Add(GetEnvironmentString(i));
 
     		if Length(setValues) > 0 then
     			aProcess.Environment.AddStrings(setValues);
@@ -96,11 +103,7 @@ begin
     	ed
     	else bg
     		progArgs.Free;
-    		die(Format(
-    			'''%s'' is not recognized as a program, alias, operable object.' + sLineBreak +
-    			'Ensure it exists and can be found either on PATH environment variable or the current directory.',
-    			[ custcustapp.NonOptions[0] ]
-    		));
+    		fatal_and_terminate(1, Format(ExeNotFound, [ custcustapp.NonOptions[0] ]));
     	ed;
 	ed;
 end.

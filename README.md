@@ -62,8 +62,9 @@ Most programs have their own `--help` / `-h`.
 
 ## Credits
 
-* [@ikelaiah](https://github.com/ikelaiah) for cli-fp library. Part of it is used and modified.
+* [@ikelaiah](https://github.com/ikelaiah) for cli-fp library. Part of it was used and modified.
 * Everyone who made resources for us to [refer](#references)
+* [Ararslan] for their [termcolor-c](https://github.com/ararslan/termcolor-c/)
 
 ## References
 

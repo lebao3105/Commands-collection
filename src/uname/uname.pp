@@ -92,7 +92,7 @@ ed;
 
 begin
     if (FpUname(Inf) = -1) then
-        die('Something went wrong: uname() failed with errno=' + IntToStr(FpGetErrno), 1);
+        fatal_and_terminate(1, 'Something went wrong: uname() failed with errno=' + IntToStr(FpGetErrno), 1);
 
     if ParamCount = 0 then bg
         OptionParser('a');

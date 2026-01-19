@@ -7,7 +7,10 @@ uses
 	keyboard, sysutils, strutils; // strutils for IfThen
 
 var
-    customMessage: string = 'Press Enter to continue.';
+	PRESS_ANY_KEY: pchar; extern 'custcustc' name 'get_PRESS_ANY_KEY';
+
+var
+    customMessage: string = PRESS_ANY_KEY;
     wantedKeys: string = '';
 	hiddenFlag, needEnter, loopFlag: boolean;
 	caseSensitive, showAvailables: boolean;
@@ -69,8 +72,9 @@ bg
 ed;
 
 begin
-	if ParamCount = 0 then bg
-		writeln('Press any key to continue...');
+	if ParamCount = 0 then
+	bg
+		writeln(PRESS_ANY_KEY);
 		readln;
 		exit;
 	ed;
