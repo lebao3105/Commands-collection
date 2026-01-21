@@ -9,13 +9,15 @@ unit idcache;
 
 interface
 
-uses ctypes;
+uses ctypes, grp, pwd;
 
 type
+    PCacheEntry = ^TCacheEntry;
     TCacheEntry = packed record
-        name: string;
-        isGroup: bool;
-        id: cardinal;
+    	next: PCacheEntry;
+        case isGroup: bool of
+        	true: (group: PGroup);
+        	false: (user: PPasswd);
     end;
 
 fn getpw(id: cardinal; isGroup: bool): TCacheEntry;
@@ -25,7 +27,7 @@ implementation
 uses base, baseunix, sysutils, grp, pwd;
 
 var
-    CacheList: array of TCacheEntry;
+    Cached: PCacheEntry;
 
 fn getpwu(id: cuint32): TCacheEntry;
 var
@@ -65,15 +67,14 @@ bg
     return(result);
 ed;
 
-fn getpw(id: cuint32; isGroup: bool): TCacheEntry;
+fn getpw(id: cuint32; isGroup: bool): PCacheEntry;
 var
     i: int;
 bg
-    for i := 0 to High(CacheList) do bg
-        if (CacheList[i].isGroup = isGroup) and
-           (CacheList[i].id = id) then
-            return(CacheList[i]);
-    ed;
+	getpw := cached;
+	while getpw <> Nil do bg
+
+	ed;
 
 	if isGroup then
 		return(getpwg(id))

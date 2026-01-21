@@ -11,7 +11,7 @@ uses base, ctypes;
 
 type
 
-    RSysInfo = record
+    TSysInfo = record
         uptime: long; { seconds since boot }
         loads: array[0..2] of ulong; { 1, 5, 15 minute load averages }
         totalram: ulong; { total usable main memory size }
@@ -27,7 +27,7 @@ type
         _f: array[0..20 - 2 * sizeof(long) - sizeof(int)] of char; { padding to 64 bytes }
     end;
 
-    PSysInfo = ^RSysInfo;
+    PSysInfo = ^TSysInfo;
 
     function sysinfo(info: PSysInfo): cint; external;
 
