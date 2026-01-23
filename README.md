@@ -79,10 +79,9 @@ Most programs have their own `--help` / `-h`.
 ## TODO
 
 * Complete existing commands
-* Add man pages?
+* Add man pages
 * Fix CI uploading - it's never been done properly
 * Add tests
-* If needed: add C. For example, ~~there is no `stdin` or `stdout` in Pascal~~ (I'm stupid, they are placed in system unit)
 * Improve the program's performance
 * Handle errors nicely
 * Unicode support

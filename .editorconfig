@@ -7,6 +7,10 @@
 indent_style = tab
 indent_size = 4
 
+[*.yml]
+indent_style = space
+indent_size = 2
+
 # Code files
 [*.{c++,cc,cpp,cxx,h,h++,hh,hpp,hxx,inl,ipp,tlh,tli}]
 

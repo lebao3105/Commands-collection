@@ -11,12 +11,17 @@
 #error "CUSTCUSTC_ARGA has been defined, but you forgot to define PROGRAM_SHORTOPTS"
 #endif
 
+#if defined(PROGRAM_SHORTOPTS) && !defined(CUSTCUSTC_ARGA)
+#error "PROGRAM_SHORTOPTS has been defined, but you forgot to define CUSTCUSTC_ARGA"
+#endif
+
 #ifndef CUSTCUSTC_ARGA
 #define CUSTCUSTC_ARGA { ARGA_SUFFIX
 #endif
 
 #ifndef PROGRAM_HELP
-#define PROGRAM_HELP HELP_SUFFIX
+#warning "PROGRAM_HELP is not defined. Really?"
+#define PROGRAM_HELP
 #endif
 
 #endif
@@ -33,12 +38,12 @@
 typedef void (*OptionHandler)(const char);
 OptionHandler option_handler = 0;
 
-char** NonOptions = NULL;
+char **NonOptions = NULL;
 static struct option options[] = CUSTCUSTC_ARGA ARGA_SUFFIX;
 
 void custcustapp_start(int argc, char** argv)
 {
-    //atexit(custcustapp_deinitialize);
+    atexit(custcustapp_deinitialize);
     assert(option_handler != 0);
 
     int c = 0;
@@ -63,6 +68,8 @@ void custcustapp_start(int argc, char** argv)
             break;
 
         case '?':
+	       	custcustapp_showhelp(0);
+			exit(EXIT_FAILURE);
             break;
 
         default:
@@ -73,7 +80,7 @@ void custcustapp_start(int argc, char** argv)
 
     if (optind < argc)
     {
-    	NonOptions = malloc(sizeof(char*) * (argc - optind));
+    	NonOptions = malloc(sizeof(char*) * (argc - optind) + 1);
     	if (!NonOptions) {
     		fprintf(stderr, "Failed to allocate memory for non-option arguments.\n");
     		exit(EXIT_FAILURE);

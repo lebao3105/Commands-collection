@@ -3,7 +3,7 @@
 #define PROJECT_DESC "Iterates directories"
 
 #include "../../include/base.h"
-#include "i18n/dir.h"
+#include "i18n.h"
 
 GET_DEFINITION_VAL(PERMISSION_DENIED)
 GET_DEFINITION_VAL(STAT_FAILED)

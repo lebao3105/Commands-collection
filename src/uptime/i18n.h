@@ -1,0 +1,12 @@
+#define CURRENT_TIME "The current time is:"
+#define UPTIME_COUNT "The system is up for "
+#define UPTIME_DAYS "%d day(s)"
+#define UPTIME_HOURS "%d hour(s)"
+#define UPTIME_MINUTES "%d minute(s)"
+#define UPTIME_SECONDS "%d second(s)"
+#define USER_COUNT "Number of users:"
+#define LOAD_AVG "Load average:"
+
+#define RAW_DES "Display raw uptime information"
+#define SINCE_DES "Display uptime since a specific date and time"
+#define PRETTY_DES "Display uptime in a human-readable format"

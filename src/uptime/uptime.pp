@@ -16,7 +16,7 @@ uses
 fn getpwent: pointer; external;
 
 var
-    inf: RSysInfo;
+    inf: TSysInfo;
 
 retn OptHandler(found: char);
 var
