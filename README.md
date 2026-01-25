@@ -22,28 +22,9 @@ They are NOT:
 
 ## Building
 
-### Setup
+Read the [Wiki](https://github.com/lebao3105/Commands-collection/wiki).
 
-Go install:
-
-* FPC (Free Pascal Compiler) 3.x
-* A C compiler - required C Standard version is unclear (undetermined?), but target C23 if you can
-* Git, to show the repository's revision in program's `-V`
-* My XMake [fork](https://github.com/lebao3105/xmake/tree/feat/fpcAdditions) for quicklier builds (without having to type much)
-
-### Build
-
-> Note: Assuming you've cloned the repository and `cd`'d into its root. Apply for all my projects:D
-
-To set the program to build (there's no "all" target for now):
-
-```
-xmake f --target_program=<program_name>
-```
-
-Build using XMake as usual.
-
-## Run
+### Run
 
 All programs are set to be placed in `build/<platform>/<architecture>/<build mode>`.
 
