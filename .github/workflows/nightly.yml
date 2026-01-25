@@ -58,10 +58,11 @@ jobs:
         env:
           XMAKE_PROGRAM_DIR: ../xmake/xmake
           TARGET: ${{ matrix.prog }}
+        working-directory: CC
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with: # FIXME: build? not build/<os>/<arch>/<variant>?
-          path: build/
+          path: CC/build/
           if-no-files-found: error
           name: Commands Collection (Nightly) for ${{ matrix.os }}

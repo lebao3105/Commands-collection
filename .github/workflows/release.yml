@@ -48,6 +48,7 @@ jobs:
         run: |
           xmake f --target_program=${{ env.TARGET }} -m release
           xmake b -ravD
+        working-directory: CC
         env:
           XMAKE_PROGRAM_DIR: ../xmake/xmake
           TARGET: ${{ matrix.prog }}
@@ -55,7 +56,7 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          path: build/bin/*
+          path: CC/build/*
           if-no-files-found: error
           name: Commands Collection for ${{ matrix.os }}
 
@@ -68,11 +69,11 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/download-artifact@v5
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v7
 
       - name: Publish
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.5.0
         with:
           tag_name: ${{ github.event.inputs.version }}
           prerelease: ${{ github.event.inputs.prerelease }}
