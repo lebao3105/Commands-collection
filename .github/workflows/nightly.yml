@@ -7,6 +7,8 @@ on:
     paths:
       - "*/**.pp"
       - "*/**.inc"
+      - "*/**.c"
+      - "*/**.h"
       - ".github/workflows/nightly.yml"
 
   pull_request:
@@ -15,6 +17,8 @@ on:
     paths:
       - "*/**.pp"
       - "*/**.inc"
+      - "*/**.c"
+      - "*/**.h"
       - ".github/workflows/nightly.yml"
 
   workflow_dispatch:
@@ -24,7 +28,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        prog: [dir, inp, env] # TODO: Eliminate this
+        prog: [calltime, dir, env, inp, rename, uname, uptime] # TODO: Eliminate this
 
     runs-on: ${{ matrix.os }}
 
@@ -34,13 +38,6 @@ jobs:
         with:
           path: CC
 
-      - name: Checkout the XMake fork
-        uses: actions/checkout@v6
-        with:
-          repository: lebao3105/xmake
-          path: xmake
-          submodules: "recursive"
-
       - name: Install compiler
         uses: gcarreno/setup-lazarus@v3.4.0
         with:
@@ -49,7 +46,9 @@ jobs:
       - name: Setup XMake
         uses: xmake-io/github-action-setup-xmake@v1
         with:
+          xmake-version: branch@dev
           actions-cache-folder: ".xmake-cache"
+          actions-cache-key: ${{ matrix.os }}-${{ github.sha }}
 
       - name: Build
         run: |

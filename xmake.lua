@@ -15,6 +15,7 @@ target("selected")
 	set_kind("binary")
 	set_basename("$(target_program)/$(target_program)")
 	set_exceptions("fpc")
+	set_objectdir("$(builddir)/.objs")
 
 	add_deps("custcustc")
 	add_files("src/$(target_program)/$(target_program).pp")
@@ -24,6 +25,7 @@ target("selected")
 	    "int:=integer", "bool:=boolean", "return:=exit",
         "CUSTCUSTC_EXTERN:=external 'custcustc' name"
 	)
-	add_pcflags("-Sa", "-Si", "-Sm", "-Sc", "-Co", "-CO", "-gl")
+	add_pcflags(
+	    "-Sa", "-Si", "-Sm", "-Sc", "-Sh", "-Co", "-CO", "-gl", "-Fusrc")
 	add_includedirs("include")
-	add_unitdirs("src")
+	--add_unitdirs("src")
