@@ -1,4 +1,3 @@
-#define PROJECT_VERSION "1.1.0alpha"
 #define PROJECT_NAME "calltime"
 #define PROJECT_DESC "Returns the current time and date, in style."
 #define PROGRAM_BONUS_HELP \
@@ -6,9 +5,10 @@
 	"for more information about time format strings."
 
 #include "../../include/base.h"
+#include "i18n.h"
 
-#define OPT_DEFAULT_FORMAT "dddd mmmm dd yyyy tt"
 GET_DEFINITION_VAL(OPT_DEFAULT_FORMAT)
+GET_DEFINITION_VAL(TIME_IS)
 
 #define CUSTCUSTC_ARGA \
 { \
