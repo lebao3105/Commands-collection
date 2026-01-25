@@ -1,0 +1,13 @@
+#define RENAMED_TO "Renamed %s to %s"
+#define RENAME_FAIL "Failed to rename %s: %s"
+#define CONFIRM "Rename %s to %s? [ynaq]"
+
+#define SYMLINK_DES 	 "Follow symlinks"
+#define DRY_RUN_DES 	 "Do not actually make changes"
+#define BULK_DES 		 "Replace all occurrences"
+#define REGEX_DES   	 "Use regular expressions"
+#define IGN_EXISTS_DES 	 "Ignore existing files"
+#define INTERACTIVE_DES  "Be interactive"
+#define LAST_OCC_DES 	 "Replace only the last occurrence"
+#define KEEP_ATTRS_DES   "Keep attributes"
+#define OPPOSITES_DES    "Operate on opposite matches"

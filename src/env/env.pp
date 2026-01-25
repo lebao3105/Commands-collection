@@ -1,5 +1,4 @@
 program env;
-{$h+}
 
 uses
 	sysutils, // GetEnvironmentVariable*
@@ -17,8 +16,8 @@ var
     unsetValues: TStringDynArray;
     cleanEnv: boolean = false;
 
-	NoProgSpecified: pchar; external 'custcustc' name 'get_NO_PROG_SPECIFIED';
-	ExeNotFound: pchar; external 'custcustc' name 'get_EXE_NOT_FOUND';
+	NoProgSpecified: pchar; CUSTCUSTC_EXTERN 'get_NO_PROG_SPECIFIED';
+	ExeNotFound: pchar; CUSTCUSTC_EXTERN 'get_EXE_NOT_FOUND';
 
 retn OptionParser(found: char);
 bg
@@ -64,7 +63,7 @@ begin
                 getValues[i] + '=' + sysutils.GetEnvironmentVariable(getValues[i]));
 
 		if Length(custcustapp.NonOptions) = 0 then
-          	logging.fatal_and_terminate(1, NoProgSpecified);
+          	FatalAndTerminate(1, NoProgSpecified);
 
         progArgs := TStringList.Create;
     	progArgs.SetStrings(custcustapp.NonOptions);
@@ -103,7 +102,7 @@ begin
     	ed
     	else bg
     		progArgs.Free;
-    		fatal_and_terminate(1, Format(ExeNotFound, [ custcustapp.NonOptions[0] ]));
+    		FatalAndTerminate(1, Format(ExeNotFound, [ custcustapp.NonOptions[0] ]));
     	ed;
 	ed;
 end.

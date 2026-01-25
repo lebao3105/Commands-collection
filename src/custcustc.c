@@ -38,7 +38,7 @@
 typedef void (*OptionHandler)(const char);
 OptionHandler option_handler = 0;
 
-char **NonOptions = NULL;
+// char **NonOptions = NULL;
 static struct option options[] = CUSTCUSTC_ARGA ARGA_SUFFIX;
 
 void custcustapp_start(int argc, char** argv)
@@ -78,17 +78,7 @@ void custcustapp_start(int argc, char** argv)
         }
     }
 
-    if (optind < argc)
-    {
-    	NonOptions = malloc(sizeof(char*) * (argc - optind) + 1);
-    	if (!NonOptions) {
-    		fprintf(stderr, "Failed to allocate memory for non-option arguments.\n");
-    		exit(EXIT_FAILURE);
-    	}
-    	NonOptions[argc - optind] = NULL;
-        while (optind < argc)
-	        NonOptions[argc - optind] = argv[optind++];
-    }
+    // NonOptions: will be populated later in custcustapp.pp
 }
 
 void custcustapp_showhelp(const int to_stdout)
@@ -101,9 +91,10 @@ void custcustapp_showhelp(const int to_stdout)
 	text_bold(target); text_white(target);
     fputs(" [flags] [flag values] [stuff]\n"
           PROGRAM_HELP HELP_SUFFIX "\n", target);
-	reset_colors(target);
 
+    text_cyan(target);
     fputs(PROJECT_DESC "\n", target);
+	reset_colors(target);
 
 #ifdef PROGRAM_BONUS_HELP
    	fputs(PROGRAM_BONUS_HELP "\n", target);
@@ -112,7 +103,7 @@ void custcustapp_showhelp(const int to_stdout)
 
 void custcustapp_deinitialize()
 {
-	free(NonOptions);
+	// free(NonOptions);
 }
 
 char* custcustapp_get_opt_arg() {

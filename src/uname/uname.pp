@@ -104,7 +104,7 @@ ed;
 
 begin
     if (FpUname(Inf) = -1) then
-        fatal_and_terminate(1, UNAME_FAILED, FpGetErrno);
+        FatalAndTerminate(1, UNAME_FAILED, FpGetErrno);
 
     if ParamCount = 0 then bg
         OptionParser('a');

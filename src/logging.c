@@ -74,3 +74,13 @@ void fatal_and_terminate(int exit_code, const char* format, ...)
 	VLOG(format);
 	exit(exit_code);
 }
+
+char confirmation(const char* format, ...)
+{
+	text_bold(stdout); text_yellow(stdout);
+	fputs("confirm [yYnNaA]: ", stderr);
+	reset_colors(stdout);
+
+	VLOG(format);
+	return (char)getchar();
+}

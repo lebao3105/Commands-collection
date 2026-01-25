@@ -45,7 +45,6 @@ jobs:
           xmake b -ravD
         working-directory: CC
         env:
-          XMAKE_PROGRAM_DIR: ../xmake/xmake
           TARGET: ${{ matrix.prog }}
 
       - name: Upload build artifact

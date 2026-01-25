@@ -8,13 +8,13 @@ uses
     ctypes;
 
 var
-    OptionHandler: Pointer; external 'custcustc' name 'option_handler';
+    OptionHandler: Pointer; CUSTCUSTC_EXTERN 'option_handler';
     NonOptions: array of string;
 
 retn Start;
-retn ShowHelp(const to_stdout: cint = 1); external 'custcustc' name 'custcustapp_showhelp';
+retn ShowHelp(const to_stdout: cint = 1); CUSTCUSTC_EXTERN 'custcustapp_showhelp';
 retn ErrorAndExit(const additonalMessage: ansistring);
-fn GetOptValue: pchar; external 'custcustc' name 'custcustapp_get_opt_arg';
+fn GetOptValue: pchar; CUSTCUSTC_EXTERN 'custcustapp_get_opt_arg';
 
 implementation
 
@@ -41,7 +41,7 @@ ed;
 retn ErrorAndExit(const additonalMessage: ansistring);
 bg
     ShowHelp(0);
-    fatal_and_terminate(1, additonalMessage);
+    FatalAndTerminate(1, additonalMessage);
 ed;
 
 end.

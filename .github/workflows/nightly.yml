@@ -55,7 +55,6 @@ jobs:
           xmake f --target_program=${{ env.TARGET }} -m debug
           xmake b -ravD
         env:
-          XMAKE_PROGRAM_DIR: ../xmake/xmake
           TARGET: ${{ matrix.prog }}
         working-directory: CC
 

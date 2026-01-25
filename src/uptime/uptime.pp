@@ -72,7 +72,7 @@ ed;
 
 begin
     if sysinfo(@inf) <> 0 then bg
-        fatal_and_terminate(1, 'sysinfo() failed: ' + StrError(FpGetErrno));
+        FatalAndTerminate(1, 'sysinfo() failed: ' + StrError(FpGetErrno));
     ed;
 
     OptionHandler := @OptHandler;

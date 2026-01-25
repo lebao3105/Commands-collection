@@ -13,12 +13,13 @@ retn Debug(message: string); varargs; CUSTCUSTC_EXTERN 'debug';
 retn Info(message: string); varargs; CUSTCUSTC_EXTERN 'info';
 retn Warning(message: string); varargs; CUSTCUSTC_EXTERN 'warn';
 retn Error(message: string); varargs; CUSTCUSTC_EXTERN 'error';
+fn Confirmation(message: string): char; varargs; CUSTCUSTC_EXTERN 'confirmation';
 
 // fatal won't terminate the program.
 // this allows cleanup tasks before actually terminating the program
 // (in some cases. one can just use atexit)
 retn Fatal(message: string); varargs; CUSTCUSTC_EXTERN 'fatal';
-retn FatalAndTerminate(const exit_code: cint; message: string); varargs; CUSTCUSTC_EXTERN 'fatal_and_terminate';
+retn FatalAndTerminate(const exit_code: cint; message: string); varargs; CUSTCUSTC_EXTERN 'FatalAndTerminate';
 
 { Returns the errno. }
 fn GetLastErrno: longint;
