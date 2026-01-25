@@ -1,64 +1,52 @@
 program dir;
-{$h+}
-//{$modeswitch exceptions}
 
 uses
-    //cthreads, cmem,
     clocale,
     base,
     custcustapp,
     logging,
-    regexpr,
     sysutils,
     utils,
+    regexpr, // ERegExpr
     dir.report;
 
 var
     showAsList: bool = false;
     recursively: bool = false;
     ignoreBackups: bool = false;
-    ignoreRegx: TRegExpr;
     listMode: ListingModes = ListingModes.{$ifdef UNIX}GNU{$else}CMD{$endif};
 
     // The rest are placed in dir.report.
 
-retn AppendRegExpr(const expr: string); inline;
-bg
-	if ignoreRegx.Expression <> '' then
-		ignoreRegx.Expression := ignoreRegx.Expression + '|';
-	ignoreRegx.Expression := ignoreRegx.Expression + expr;
-ed;
-
 retn RegexPrepare; inline;
 bg
 	if not showHidden then
-		AppendRegExpr('^\.');
+		RegexAppendExpr('^\.');
 
 	if ignoreBackups then bg
-		AppendRegExpr('(\.bak)$');
-		AppendRegExpr('(~)$');
+		RegexAppendExpr('(\.bak)$');
+		RegexAppendExpr('(~)$');
 	ed;
-	debug('Ignore expression: ' + ignoreRegx.Expression);
+	debug('Ignore expression: %s', PChar(RegexGetExpr));
 ed;
 
 retn ShowDirEntry(const r: PIterateDirResult; knownAsDir: bool);
 
-    fn IsNameValid: bool;
+    fn IsNameInvalid: bool;
+    var check: specialize TResult<bool, ERegExpr>;
     bg
-        try
-            IsNameValid :=
-            	(ignoreRegx.Expression = '') or not ignoreRegx.Exec(r^.name);
-        except
-            on E: ERegExpr do
-            	fatal_and_terminate(1, Format(
-             		'%s: Regular expression failed: %s',
-	             	[ignoreRegx.Expression, ignoreRegx.ErrorMsg(E.ErrorCode)]
-             	));
-        end;
+    	check := RegexHasMatches(r^.name);
+     	if check.IsError then
+           	FatalAndTerminate(1,
+          		'%s: Regular expression failed: %s',
+	            PChar(RegexGetExpr), PChar(RegexGetLastError)
+           	)
+        else
+        	exit(check.Value);
     ed;
 
 bg
-    if not IsNameValid then exit;
+    if IsNameInvalid then exit;
 
     case r^.info.Kind of
     	ExistKind.AStatFailure:
@@ -66,7 +54,7 @@ bg
 	        Inc(statFailCount);
 
 	        if knownAsDir then bg
-	            error(Format(OpenDirFailed, [ r^.name, StrError(GetLastErrno) ]));
+	            Error(OpenDirFailed, PChar(r^.name), PChar(StrError(GetLastErrno)));
 	            writeln;
 	            exit;
 	        ed;
@@ -115,7 +103,7 @@ bg
         'a': showHidden := true;
         'c': addColors := true;
         'd': dirOnly := true;
-        'i': AppendRegExpr(GetOptValue);
+        'i': RegexAppendExpr(GetOptValue);
         'B': ignoreBackups := true;
         'R': recursively := true;
 
@@ -125,19 +113,12 @@ bg
     ed;
 ed;
 
-retn OnExit;
-bg
-    ignoreRegx.Free;
-ed;
-
 begin
-	ignoreRegx := TRegExpr.Create;
 	// i: case-INsensitive
 	// x: line breaks + comments (for the expression)
-	// see more in https://regex.sorokin.engineer/regular_expressions/#modifiers
-	ignoreRegx.ModifierStr := 'ix';
-
-	AddExitProc(@OnExit);
+	// r: Russian ranges
+	// g: greediness
+	RegexSetModifiers('ixr-g');
 
     if ParamCount = 0 then
     bg
@@ -154,5 +135,5 @@ begin
     if Length(custcustapp.NonOptions) = 0 then
         ListItems('.')
     else
-    	StrArrayForEach(custcustapp.NonOptions, @ListItems);
+    	specialize TTypeHelper<string>.ArrayForEach(custcustapp.NonOptions, @ListItems);
 end.

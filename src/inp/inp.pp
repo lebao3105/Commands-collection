@@ -7,7 +7,7 @@ uses
 	keyboard, sysutils, strutils; // strutils for IfThen
 
 var
-	PRESS_ANY_KEY: pchar; external 'custcustc' name 'get_PRESS_ANY_KEY';
+	PRESS_ANY_KEY: pchar; CUSTCUSTC_EXTERN 'get_PRESS_ANY_KEY';
 
 var
     customMessage: string;

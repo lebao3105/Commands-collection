@@ -1,6 +1,7 @@
 program rename;
 
 uses
+	custcustapp, regexpr,
 	sysutils, logging;
 
 begin

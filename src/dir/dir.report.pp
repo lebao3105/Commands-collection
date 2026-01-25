@@ -69,9 +69,9 @@ var
     count: ulong = 0;
     statFailCount: ulong = 0;
 
-	PermissionDenied: pchar; external 'custcustc' name 'get_PERMISSION_DENIED';
-	StatFailed: pchar; external 'custcustc' name 'get_STAT_FAILED';
-	OpenDirFailed: pchar; external 'custcustc' name 'get_OPEN_DIR_FAILED';
+	PermissionDenied: pchar; CUSTCUSTC_EXTERN 'get_PERMISSION_DENIED';
+	StatFailed: pchar; CUSTCUSTC_EXTERN 'get_STAT_FAILED';
+	OpenDirFailed: pchar; CUSTCUSTC_EXTERN 'get_OPEN_DIR_FAILED';
 
 // const
 //     foreAndBack: array of array[0..1] of TConsoleColor = (
@@ -103,17 +103,17 @@ uses base, sysutils, idcache, dateutils;
 fn FSPermAsString(const perms: TFSPermissions): string;
 bg
     FSPermAsString :=
-        IfThenElse(perms.R, 'r', '-') +
-        IfThenElse(perms.W, 'w', '-') +
-        IfThenElse(perms.E, 'x', '-');
+        specialize TTypeHelper<char>.IfThenElse(perms.R, 'r', '-') +
+        specialize TTypeHelper<char>.IfThenElse(perms.W, 'w', '-') +
+        specialize TTypeHelper<char>.IfThenElse(perms.E, 'x', '-');
 ed;
 
 var
-	FCount: pchar; external 'custcustc' name 'get_FILES_COUNT';
-	DCount: pchar; external 'custcustc' name 'get_DIRS_COUNT';
-	ICount: pchar; external 'custcustc' name 'get_IGNORED_COUNT';
-	SFCount: pchar; external 'custcustc' name 'get_STATFAIL_COUNT';
-	FreeSpace: pchar; external 'custcustc' name 'get_FREE_SPACE';
+	FCount: pchar; CUSTCUSTC_EXTERN 'get_FILES_COUNT';
+	DCount: pchar; CUSTCUSTC_EXTERN 'get_DIRS_COUNT';
+	ICount: pchar; CUSTCUSTC_EXTERN 'get_IGNORED_COUNT';
+	SFCount: pchar; CUSTCUSTC_EXTERN 'get_STATFAIL_COUNT';
+	FreeSpace: pchar; CUSTCUSTC_EXTERN 'get_FREE_SPACE';
 
 retn Report(const mode: ListingModes);
 bg
@@ -137,7 +137,7 @@ ed;
 retn PrintObjectLine(const name: string; const props: TFSProperties; const format: TListingFormat); overload;
 var
 	i: longint;
-	itemPasswd, itemGroup: TCacheEntry;
+	itemPasswd, itemGroup: PCacheEntry;
 bg
 	itemPasswd := getpw(props.Uid, false);
 	itemGroup := getpw(props.Gid, true);
@@ -160,10 +160,10 @@ bg
 			ed;
 
 			ListingColumns.OWNER_NAME:
-				write(itemPasswd.name);
+				write(itemPasswd^.GetName);
 
 			ListingColumns.OWNER_GROUP:
-				write(itemGroup.name);
+				write(itemGroup^.GetName);
 
 			ListingColumns.LAST_MODIFIED:
 				write(FormatDateTime(format.TimeFormat, props.LastModifyTime));

@@ -46,7 +46,7 @@ GET_DEFINITION_VAL(NETWORK_NODENAME)
 	"-f must be provided before any other flags, else you " \
 	"will either geta mixed output, or no -f effect at all.\n" \
 	"-o output may differ from GNU uname's output due to the " \
-	"underlying implementation.\n Check the following site for all identifies from GNU:" \
+	"underlying implementation.\nCheck the following site for all identifies from GNU:" \
 	"https://github.com/coreutils/gnulib/blob/master/m4/host-os.m4"
 
-#define PROGRAM_SHORTOPTS "rsp"
+#define PROGRAM_SHORTOPTS "afsvrnmnpio"
