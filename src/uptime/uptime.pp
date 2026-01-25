@@ -16,6 +16,16 @@ uses
 fn getpwent: pointer; external;
 
 var
+	CURRENT_TIME: pchar; CUSTCUSTC_EXTERN 'get_CURRENT_TIME';
+	UPTIME_COUNT: pchar; CUSTCUSTC_EXTERN 'get_UPTIME_COUNT';
+	UPTIME_DAYS: pchar; CUSTCUSTC_EXTERN 'get_UPTIME_DAYS';
+	UPTIME_HOURS: pchar; CUSTCUSTC_EXTERN 'get_UPTIME_HOURS';
+	UPTIME_MINUTES: pchar; CUSTCUSTC_EXTERN 'get_UPTIME_MINUTES';
+	UPTIME_SECONDS: pchar; CUSTCUSTC_EXTERN 'get_UPTIME_SECONDS';
+	USER_COUNT: pchar; CUSTCUSTC_EXTERN 'get_USER_COUNT';
+	LOAD_AVG: pchar; CUSTCUSTC_EXTERN 'get_LOAD_AVG';
+
+var
     inf: TSysInfo;
 
 retn OptHandler(found: char);
@@ -42,25 +52,25 @@ bg
             writeln(FormatDateTime('yyyy-mm-dd HH:MM:SS', Now - (inf.uptime / SecsPerDay)));
 
         'p': bg
-        	writeln('The current time is:');
+        	writeln(CURRENT_TIME);
             writeln(FormatDateTime('yyyy-mm-dd HH:mm:ss'#13#10, Now));
 
-			write('The system has been up for ');
+			write(UPTIME_COUNT);
 			updays := Round(inf.uptime / SecsPerDay);
 			uphours := Round(inf.uptime mod SecsPerDay div SecsPerHour);
 			upmins := Round(inf.uptime mod SecsPerDay mod SecsPerHour div 60);
 
 			if (updays > 0) then
-				write(Format('%d day' + IfThenElse(updays > 1, 's ', ' '), [updays]));
+				write(Format(UPTIME_DAYS, [updays]));
 
-			writeln(Format('%d hour(s) %d minute(s)'#13#10, [uphours, upmins]));
+			writeln(Format(UPTIME_HOURS + ' ' + UPTIME_MINUTES, [uphours, upmins]));
 
 			while getpwent <> nil do
                 users += 1;
-            writeln('Number of users:');
+            writeln(USER_COUNT);
 			writeln(IntToStr(users) + ' users'#13#10);
 
-			writeln('Load average:');
+			writeln(LOAD_AVG);
 			write(Format('%.2u %.2u %.2u', [
 				inf.loads[0],
 				inf.loads[1],

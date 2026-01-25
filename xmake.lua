@@ -19,13 +19,12 @@ target("selected")
 
 	add_deps("custcustc")
 	add_files("src/$(target_program)/$(target_program).pp")
+	add_pcflags(
+	    "-Sa", "-Si", "-Sm", "-Sc", "-Sh", "-Co", "-CO", "-gl", "-Fusrc")
 	add_defines(
 		"bg:=begin", "ed:=end", "retn:=procedure",
 		"fn:=function", "long:=longint", "ulong:=longword",
 	    "int:=integer", "bool:=boolean", "return:=exit",
         "CUSTCUSTC_EXTERN:=external 'custcustc' name"
 	)
-	add_pcflags(
-	    "-Sa", "-Si", "-Sm", "-Sc", "-Sh", "-Co", "-CO", "-gl", "-Fusrc")
 	add_includedirs("include")
-	--add_unitdirs("src")

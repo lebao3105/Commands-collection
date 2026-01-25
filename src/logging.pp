@@ -19,7 +19,7 @@ fn Confirmation(message: string): char; varargs; CUSTCUSTC_EXTERN 'confirmation'
 // this allows cleanup tasks before actually terminating the program
 // (in some cases. one can just use atexit)
 retn Fatal(message: string); varargs; CUSTCUSTC_EXTERN 'fatal';
-retn FatalAndTerminate(const exit_code: cint; message: string); varargs; CUSTCUSTC_EXTERN 'FatalAndTerminate';
+retn FatalAndTerminate(const exit_code: cint; message: string); varargs; CUSTCUSTC_EXTERN 'fatal_and_terminate';
 
 { Returns the errno. }
 fn GetLastErrno: longint;
