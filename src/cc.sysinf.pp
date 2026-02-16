@@ -1,4 +1,4 @@
-unit sysinf;
+unit cc.sysinf;
 {$linklib c}
 
 {$ifndef UNIX}
@@ -7,7 +7,14 @@ unit sysinf;
 
 interface
 
-uses base, ctypes;
+uses
+    cc.base,
+    {$ifdef FPC_DOTTEDUNITS}
+    system.ctypes
+    {$else}
+    ctypes
+    {$endif}
+    ;
 
 type
 
