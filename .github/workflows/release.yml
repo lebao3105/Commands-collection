@@ -28,7 +28,7 @@ jobs:
           path: CC
 
       - name: Install compiler
-        uses: gcarreno/setup-lazarus@v3.4.0
+        uses: gcarreno/setup-lazarus@v3.4.1
         with:
           with-cache: true
 
@@ -36,8 +36,6 @@ jobs:
         uses: xmake-io/github-action-setup-xmake@v1
         with:
           xmake-version: branch@dev
-          actions-cache-folder: ".xmake-cache"
-          actions-cache-key: ${{ matrix.os }}-${{ github.sha }}
 
       - name: Build
         run: |
