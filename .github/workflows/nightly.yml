@@ -11,7 +11,7 @@ on:
 
   pull_request:
     branches:
-      - "master"
+      - "main"
     paths:
       - "*/**.pp"
       - "*/**.inc"
@@ -59,4 +59,4 @@ jobs:
         with: # FIXME: build? not build/<os>/<arch>/<variant>?
           path: CC/build/
           if-no-files-found: error
-          name: Commands Collection (Nightly) for ${{ matrix.os }}
+          name: CC (Nightly, ${{ matrix.prog }}) for ${{ matrix.os }}
