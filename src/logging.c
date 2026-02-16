@@ -23,6 +23,7 @@ void debug(const char* format, ...)
 	reset_colors(stdout);
 
 	VLOG(format);
+	fputs("\n", stdout);
 
 	#ifdef NDEBUG
 	}
@@ -36,6 +37,7 @@ void info(const char* format, ...)
 	reset_colors(stdout);
 
 	VLOG(format);
+	fputs("\n", stdout);
 }
 
 void warn(const char* format, ...)
@@ -45,6 +47,7 @@ void warn(const char* format, ...)
 	reset_colors(stdout);
 
 	VLOG(format);
+	fputs("\n", stdout);
 }
 
 void error(const char* format, ...)
@@ -54,6 +57,7 @@ void error(const char* format, ...)
 	reset_colors(stderr);
 
 	VLOG(format);
+	fputs("\n", stderr);
 }
 
 void fatal(const char* format, ...)
@@ -63,6 +67,7 @@ void fatal(const char* format, ...)
 	reset_colors(stderr);
 
 	VLOG(format);
+	fputs("\n", stderr);
 }
 
 void fatal_and_terminate(int exit_code, const char* format, ...)
@@ -72,15 +77,18 @@ void fatal_and_terminate(int exit_code, const char* format, ...)
 	reset_colors(stderr);
 
 	VLOG(format);
+	fputs("\n", stderr);
 	exit(exit_code);
 }
 
 char confirmation(const char* format, ...)
 {
+	VLOG(format);
+	fputs("\n", stdout);
+
 	text_bold(stdout); text_yellow(stdout);
-	fputs("confirm [yYnNaA]: ", stderr);
+	fputs("confirm [yYnNaA]: ", stdout);
 	reset_colors(stdout);
 
-	VLOG(format);
 	return (char)getchar();
 }
