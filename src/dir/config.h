@@ -49,6 +49,10 @@ GET_DEFINITION_VAL(FREE_SPACE)
 	"( # this is a comment\n" \
 	"abc\n" \
 	"def\n" \
-	") # done \n"
+	") # done \n" \
+    PARAGRAPH \
+    "DIR_CONFPATH environment variable points to where dir settings are stored.\n" \
+    "DIR_PRESET environment variable points to the preset that dir will use (gnu, win, ccd).\n" \
+    "Check dir(5) manual page for more informations.\n"
 
 #define PROGRAM_SHORTOPTS "lacdi:BRwum"

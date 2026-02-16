@@ -39,10 +39,11 @@ fn RegexHasMatches(const input: string):
 {$ifdef IMPL}
 bg
 	try
-		Result.Kind := TResultKind.OK;
+		Result.Kind := EResultKind.OK;
 		Result.Value := Regexer.Exec(input);
-	except on E: ERegExpr do bg
-			Result.Kind := TResultKind.ERROR;
+	except
+		on E: ERegExpr do bg
+			Result.Kind := EResultKind.ERROR;
 			Result.Error := E;
 		ed;
 	end;
@@ -63,6 +64,13 @@ bg
 ed;
 {$endif}
 
+fn RegexGetLastCompileErrorPos: int; inline;
+{$ifdef IMPL}
+bg
+	return(Regexer.CompilerErrorPos);
+ed;
+{$endif}
+
 fn RegexGetMatch(const idx: int = 0): string; inline;
 {$ifdef IMPL}
 bg
@@ -71,7 +79,7 @@ ed;
 {$endif}
 
 // see modifiers in https://regex.sorokin.engineer/regular_expressions/#modifiers
-retn RegexAppendExpr(const expr: string); inline;
+retn RegexAppendExpr(const expr: string);
 {$ifdef IMPL}
 bg
 	if Regexer.Expression <> '' then
@@ -91,9 +99,12 @@ fn RegexVerifyExpr: specialize TResult<bool, ERegExpr>;
 {$ifdef IMPL}
 bg
 	try
-		Result.Kind := TResultKind.OK;
-	except on E: ERegExpr do bg
-			Result.Kind := TResultKind.ERROR;
+		Result.Kind := EResultKind.OK;
+		Regexer.Compile;
+		Result.Value := true;
+	except
+		on E: ERegExpr do bg
+			Result.Kind := EResultKind.ERROR;
 			Result.Error := E;
 		ed;
 	end;
