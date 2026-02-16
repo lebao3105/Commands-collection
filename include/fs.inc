@@ -14,7 +14,7 @@
 
 {$ifndef IMPL}
 type
-	ExistKind = (
+	EFSEntityKind = (
 	    AFile = 0, ADir, ASymlink,
 	    ASocket, ABlock, APipe, ACharDev,
 	    AStatFailure
@@ -31,7 +31,7 @@ type
 	    //       1: group
 	    //       2: others
 	    Perms: array[0..2] of TFSPermissions;
-	    Kind: ExistKind;
+	    Kind: EFSEntityKind;
 	    Size: qword;
 	    LastAccessTime: cardinal;
 	    LastModifyTime: double;
@@ -40,7 +40,7 @@ type
 	    Gid, Uid: cardinal;
 	end;
 
-	IterateResults = (
+	EIterateResults = (
 	    OK, INACCESSIBLE
 	);
 
@@ -69,19 +69,19 @@ var
 bg
     if FpStat(path, st) <> 0 then bg
         PopulateFSInfo := false;
-        info.Kind := ExistKind.AStatFailure;
+        info.Kind := EFSEntityKind.AStatFailure;
         Exit;
     ed;
 
     with info do bg
         case (st.st_mode and S_IFMT) of
-            S_IFBLK: Kind := ExistKind.ABlock;
-            S_IFCHR: Kind := ExistKind.ACharDev;
-            S_IFDIR: Kind := ExistKind.ADir;
-            S_IFIFO: Kind := ExistKind.APipe;
-            S_IFLNK: Kind := ExistKind.ASymlink;
-            S_IFREG: Kind := ExistKind.AFile;
-            S_IFSOCK: Kind := ExistKind.ASocket;
+            S_IFBLK: Kind := EFSEntityKind.ABlock;
+            S_IFCHR: Kind := EFSEntityKind.ACharDev;
+            S_IFDIR: Kind := EFSEntityKind.ADir;
+            S_IFIFO: Kind := EFSEntityKind.APipe;
+            S_IFLNK: Kind := EFSEntityKind.ASymlink;
+            S_IFREG: Kind := EFSEntityKind.AFile;
+            S_IFSOCK: Kind := EFSEntityKind.ASocket;
         ed;
 
         Perms[0].E := (st.st_mode and S_IXUSR) <> 0;
@@ -126,7 +126,7 @@ bg
         if dir = nil then bg
             New(r);
             r^.name := path;
-            r^.info.Kind := ExistKind.AStatFailure;
+            r^.info.Kind := EFSEntityKind.AStatFailure;
             callback(r, true);
             Dispose(r);
             exit;
@@ -149,7 +149,7 @@ bg
 
                     // I want to create new threads here, for deeper
                     // iterations. That would break sorting (which isnot even exist yet)
-                    if (r^.info.Kind = ExistKind.ADir) and recursively and
+                    if (r^.info.Kind = EFSEntityKind.ADir) and recursively and
                        (r^.name <> '.') and (r^.name <> '..') then
                         IterateDir(path + '/' + r^.name, callback, true, true);
                 ed;
@@ -168,7 +168,7 @@ ed;
 { Iterates p, and run cb on each entry. Print the directory name if pr is true.
   Iterates recursively when r is true.
   If an element / p itself is unreadable (fpOpenDir / fpReadDir / fpStat),
-  the provided TIterateDirResult will have its info.Kind set to ExistKind.AStatFailure. }
+  the provided TIterateDirResult will have its info.Kind set to EFSEntityKind.AStatFailure. }
 retn IterateDir(const p: string; cb: TIterateDirCallback; r: bool; pr: bool);
 {$ifdef IMPL}
 var

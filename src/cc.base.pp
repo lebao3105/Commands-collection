@@ -1,4 +1,4 @@
-unit base;
+unit cc.base;
 {$H+}
 {$scopedenums on}
 {$modeswitch advancedrecords}
@@ -8,10 +8,10 @@ interface
 
 type
 	// Behold, Rust!
-	TResultKind = (OK, ERROR);
+	EResultKind = (OK, ERROR);
 	generic TResult<T, E> = record
 	private
-		Kind: TResultKind;
+		Kind: EResultKind;
 		Value: T;
 		Error: E;
 
@@ -41,8 +41,10 @@ type
 		class retn ArrayForEach(arr: TArray; func: ArrayForEachCallback); static;
 	end;
 
-fn BigNumberToSeparatedStr(const val: QWord): string;
 retn WriteSp;
+fn BigNumberToSeparatedStr(const val: QWord): string;
+fn StrLowerCase(const val: string): string; inline;
+fn StrUpperCase(const val: string): string; inline;
 
 implementation
 
@@ -59,23 +61,33 @@ bg
     BigNumberToSeparatedStr := Format('%.0n', [ val + 0.0 ]);
 ed;
 
+fn StrLowerCase(const val: string): string; inline;
+bg
+	return(LowerCase(val));
+ed;
+
+fn StrUpperCase(const val: string): string; inline;
+bg
+	return(UpperCase(val));
+ed;
+
 { TResult }
 
 fn TResult.IsOK: bool; inline;
 bg
-    IsOK := Kind = TResultKind.OK;
+    IsOK := Kind = EResultKind.OK;
 ed;
 
 fn TResult.IsError: bool; inline;
 bg
-    IsError := Kind = TResultKind.ERROR;
+    IsError := Kind = EResultKind.ERROR;
 ed;
 
 class fn TResult.Ok(const val: T): specialize TResult<T, E>; static;
 bg
 	with Ok do bg
 		Value := val;
-		Kind := TResultKind.OK;
+		Kind := EResultKind.OK;
 	ed;
 ed;
 
@@ -83,7 +95,7 @@ class fn TResult.Err(const val: E): specialize TResult<T, E>; static;
 bg
 	with Err do bg
 		Error := val;
-		Kind := TResultKind.ERROR;
+		Kind := EResultKind.ERROR;
 	ed;
 ed;
 

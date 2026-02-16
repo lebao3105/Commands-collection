@@ -1,4 +1,4 @@
-unit logging;
+unit cc.logging;
 {$h+}
 {$modeswitch defaultparameters}
 

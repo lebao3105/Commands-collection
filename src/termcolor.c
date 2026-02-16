@@ -1,4 +1,5 @@
 #define IMPL
+#include <unistd.h> /* isatty */
 #include "../include/termcolor.h"
 
 void reset_colors(FILE *stream) {

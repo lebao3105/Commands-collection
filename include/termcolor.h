@@ -39,7 +39,6 @@ extern "C" {
 #error Your platform is currently unsupported
 #endif
 
-#include <unistd.h>
 #include <stdio.h>
 #include <stdbool.h>
 

@@ -2,7 +2,7 @@
     Database of users & groups.
     Known and implemented thanks to the GNU ls source code.
 }
-unit idcache;
+unit cc.idcache;
 {$modeswitch result}
 {$modeswitch advancedrecords}
 
@@ -26,7 +26,15 @@ fn getpw(id: cuint32; isGroup: bool): PCacheEntry;
 
 implementation
 
-uses base, baseunix, sysutils;
+uses
+    cc.base,
+    {$ifdef FPC_DOTTEDUNITS}
+    unixapi.base,
+    system.sysutils,
+    {$else}
+    baseunix, sysutils
+    {$endif}
+    ;
 
 var
     Cached: PCacheEntry;

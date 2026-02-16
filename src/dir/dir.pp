@@ -1,34 +1,19 @@
 program dir;
 
 uses
-    clocale,
-    base,
-    custcustapp,
-    logging,
-    sysutils,
-    utils,
-    regexpr, // ERegExpr
-    dir.report;
-
-var
-    showAsList: bool = false;
-    recursively: bool = false;
-    ignoreBackups: bool = false;
-    listMode: ListingModes = ListingModes.{$ifdef UNIX}GNU{$else}CMD{$endif};
-
-    // The rest are placed in dir.report.
-
-retn RegexPrepare; inline;
-bg
-	if not showHidden then
-		RegexAppendExpr('^\.');
-
-	if ignoreBackups then bg
-		RegexAppendExpr('(\.bak)$');
-		RegexAppendExpr('(~)$');
-	ed;
-	debug('Ignore expression: %s', PChar(RegexGetExpr));
-ed;
+    {$ifdef FPC_DOTTEDUNITS}
+    system.cmem, system.cthreads,
+    system.clocale, system.sysutils,
+    system.regexpr,
+    {$else}
+    cmem, cthreads, clocale, sysutils, regexpr,
+    {$endif}
+    cc.base,
+    cc.custcustapp,
+    cc.logging,
+    cc.utils,
+    dir.report,
+    dir.settings;
 
 retn ShowDirEntry(const r: PIterateDirResult; knownAsDir: bool);
 
@@ -49,7 +34,7 @@ bg
     if IsNameInvalid then exit;
 
     case r^.info.Kind of
-    	ExistKind.AStatFailure:
+    	EFSEntityKind.AStatFailure:
 	    bg
 	        Inc(statFailCount);
 
@@ -59,7 +44,7 @@ bg
 	            exit;
 	        ed;
 
-	        if showAsList then
+	        if Settings.UseLists then
 	            writeln(Format(StatFailed, [ r^.name, StrError(GetLastErrno) ]))
 	        else
 	            write(Format('%s(E %d)', [ r^.name, GetLastErrno ]));
@@ -67,11 +52,11 @@ bg
 	        exit;
 	    ed;
 
-		ExistKind.ADir:
+		EFSEntityKind.ADir:
 			Inc(dirCount);
 
 		else bg
-			if dirOnly then exit;
+			if Settings.DirOnly then exit;
 			Inc(filesSize, r^.info.Size);
     	ed;
     end;
@@ -79,61 +64,78 @@ bg
     Inc(count);
 
     // Name-only list
-    if not showAsList then bg
+    if not Settings.UseLists then bg
         PrintObjectName(r^.name, r^.info);
         WriteSp;
     ed
 
     // Detailed list
-    else PrintObjectLine(r^.name, r^.info, listMode);
+    else PrintObjectName(r^.name, r^.info);
 ed;
 
 retn ListItems(const path: string); inline;
-{$define ShouldPrintName:=(High(custcustapp.NonOptions) > 1) or recursively}
 bg
-    IterateDir(path, @ShowDirEntry, recursively, ShouldPrintName);
-    Report(listMode);
+    IterateDir(path, @ShowDirEntry, Settings.Recursively,
+               (High(cc.custcustapp.NonOptions) > 1) or Settings.Recursively);
+    Report;
 ed;
-{$undef ShouldPrintName}
 
 retn OptionParser(found: char);
 bg
     case found of
-        'l': showAsList := true;
-        'a': showHidden := true;
-        'c': addColors := true;
-        'd': dirOnly := true;
+        'l': Settings.UseLists := true;
+        'a': Settings.IgnoreHiddens := false;
+        'c': Settings.AddColors := true;
+        'd': Settings.DirOnly := true;
         'i': RegexAppendExpr(GetOptValue);
-        'B': ignoreBackups := true;
-        'R': recursively := true;
-
-        'w': listMode := ListingModes.CMD;
-        'u': listMode := ListingModes.GNU;
-        'm': listMode := ListingModes.CC;
+        'B': Settings.IgnoreBackups := true;
+        'R': Settings.Recursively := true;
     ed;
 ed;
 
-begin
-	// i: case-INsensitive
-	// x: line breaks + comments (for the expression)
-	// r: Russian ranges
-	// g: greediness
-	RegexSetModifiers('ixr-g');
+fn RegexCheck: bool;
+var
+    checkr: specialize TResult<bool, ERegExpr>;
+bg
+    if RegexGetExpr = '' then
+        return(true);
+    
+    checkr := RegexVerifyExpr;
+    if not checkr.IsError then
+        return(checkr.Value);
+    
+    FatalAndTerminate(
+        1,
+        'Regular expression verification failed: %s in %d',
+        @RegexGetLastError, @RegexGetLastCompileErrorPos
+    );
+ed;
 
-    if ParamCount = 0 then
+begin
+    case StrLowerCase(GetEnvironmentVariable('DIR_PRESET')) of
+        'win': dir.settings.Settings := WIN_PRESET;
+        'gnu': dir.settings.Settings := GNU_PRESET;
+        'ccd': dir.settings.Settings := CCD_PRESET;
+    else
+        BeginThread(
+            @BeginSettingsThread,
+            PChar(GetEnvironmentVariable('DIR_CONFPATH'))
+        );
+    end;
+
+    if ParamCount > 0 then
     bg
-	    RegexPrepare;
-        ListItems('.');
-        exit;
+        cc.custcustapp.OptionHandler := @OptionParser;
+        cc.custcustapp.Start;
     ed;
 
-    OptionHandler := @OptionParser;
-
-    custcustapp.Start;
     RegexPrepare;
-
-    if Length(custcustapp.NonOptions) = 0 then
+    RegexCheck;
+    if Length(cc.custcustapp.NonOptions) = 0 then
         ListItems('.')
     else
-    	specialize TTypeHelper<string>.ArrayForEach(custcustapp.NonOptions, @ListItems);
+    	specialize TTypeHelper<string>.ArrayForEach(
+            cc.custcustapp.NonOptions,
+            @ListItems
+        );
 end.

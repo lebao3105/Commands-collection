@@ -1,4 +1,4 @@
-unit console;
+unit cc.console;
 {$H+}
 
 interface
