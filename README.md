@@ -3,7 +3,7 @@
 Build status:
 [![Nightly CI](https://github.com/lebao3105/Commands-collection/actions/workflows/nightly.yml/badge.svg)](https://github.com/lebao3105/Commands-collection/actions/workflows/nightly.yml)
 
-A collection of system commands written in Free Pascal.
+A collection of system commands written in Free Pascal and C.
 
 They are:
 
@@ -17,29 +17,11 @@ They are NOT:
 * Made to be laughed at
 * Suitable for daily-use
 * Fully optimized (atm)
-* Object-oriented (although some like `TRegExpr` is used sometimes)
 * Battle-tested
 
-## Building
+## Documentation
 
-Read the [Wiki](https://github.com/lebao3105/Commands-collection/wiki).
-
-### Run
-
-All programs are set to be placed in `build/<platform>/<architecture>/<build mode>`.
-
-For example, [dir](src/dir) + Release build mode on x86_64 Linux:
-
-```
-xmake f -p linux -a x86_64 -m release --target_program=dir
-xmake b -v
-```
-
-Will produce files in `build/linux/x86_64/release/`
-
-The universal usage documentation is [here](USAGE.md).
-
-Most programs have their own `--help` / `-h`.
+Read the [Wiki](https://github.com/lebao3105/Commands-Collection/wiki).
 
 ## Credits
 
