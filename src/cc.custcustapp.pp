@@ -5,7 +5,12 @@ unit cc.custcustapp;
 interface
 
 uses
-    ctypes;
+    {$ifdef FPC_DOTTEDUNITS}
+    system.ctypes
+    {$else}
+    ctypes
+    {$endif}
+    ;
 
 var
     OptionHandler: Pointer; CUSTCUSTC_EXTERN 'option_handler';
@@ -18,7 +23,7 @@ fn GetOptValue: pchar; CUSTCUSTC_EXTERN 'custcustapp_get_opt_arg';
 
 implementation
 
-uses logging;
+uses cc.logging;
 
 retn custcustapp_deinitialize; external 'custcustc';
 fn custcustapp_get_opt_ind: cint; external 'custcustc';

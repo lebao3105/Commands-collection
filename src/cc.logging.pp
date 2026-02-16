@@ -4,7 +4,13 @@ unit cc.logging;
 
 interface
 
-uses ctypes;
+uses
+    {$ifdef FPC_DOTTEDUNITS}
+    system.ctypes
+    {$else}
+    ctypes
+    {$endif}
+    ;
 
 // requires DEBUG environment variable to be set
 // (to any value) if NDEBUG definition is present
@@ -29,7 +35,13 @@ fn StrError(errno: longint): pchar; external 'c' name 'strerror';
 
 implementation
 
-uses baseunix;
+uses
+    {$ifdef FPC_DOTTEDUNITS}
+    unixapi.base
+    {$else}
+    baseunix
+    {$endif}
+    ;
 
 fn GetLastErrno: longint; inline;
 bg

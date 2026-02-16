@@ -8,7 +8,17 @@ unit cc.idcache;
 
 interface
 
-uses ctypes, grp, pwd;
+uses
+    {$ifdef FPC_DOTTEDUNITS}
+    system.ctypes,
+    unixapi.grp,
+    unixapi.pwd
+    {$else}
+    ctypes,
+    grp,
+    pwd
+    {$endif}
+    ;
 
 type
     PCacheEntry = ^TCacheEntry;
@@ -32,7 +42,8 @@ uses
     unixapi.base,
     system.sysutils,
     {$else}
-    baseunix, sysutils
+    baseunix,
+    sysutils
     {$endif}
     ;
 

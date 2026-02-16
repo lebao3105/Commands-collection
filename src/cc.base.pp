@@ -48,7 +48,13 @@ fn StrUpperCase(const val: string): string; inline;
 
 implementation
 
-uses sysutils;
+uses
+    {$ifdef FPC_DOTTEDUNITS}
+    system.sysutils
+    {$else}
+    sysutils
+    {$endif}
+    ;
 
 retn WriteSp; inline; bg write(' ') ed;
 
