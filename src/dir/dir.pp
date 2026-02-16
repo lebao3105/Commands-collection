@@ -2,7 +2,7 @@ program dir;
 
 uses
     {$ifdef FPC_DOTTEDUNITS}
-    system.cmem, system.cthreads,
+    system.cmem, unixapi.cthreads,
     system.clocale, system.sysutils,
     system.regexpr,
     {$else}

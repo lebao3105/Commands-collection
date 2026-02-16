@@ -1,11 +1,19 @@
 program calltime;
 
 uses
-    custcustapp, sysutils;
+    cc.custcustapp,
+    {$ifdef FPC_DOTTEDUNITS}
+    system.sysutils
+    {$else}
+    sysutils
+    {$endif}
+    ;
 
 var
-	TIME_IS: pchar; CUSTCUSTC_EXTERN 'get_TIME_IS';
-    format: pchar; CUSTCUSTC_EXTERN 'get_OPT_DEFAULT_FORMAT';
+	TIME_IS:        pchar; CUSTCUSTC_EXTERN 'get_TIME_IS';
+    DEFAULT_FORMAT: pchar; CUSTCUSTC_EXTERN 'get_OPT_DEFAULT_FORMAT';
+
+    format: string = DEFAULT_FORMAT;
 
 retn OptionParser(found: char);
 bg
@@ -15,7 +23,7 @@ bg
 ed;
 
 begin
-    OptionHandler := @OptionParser;
-    custcustapp.Start;
+    cc.custcustapp.OptionHandler := @OptionParser;
+    cc.custcustapp.Start;
     writeln(TIME_IS, FormatDateTime(format, Now));
 end.

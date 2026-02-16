@@ -2,28 +2,37 @@ program uptime;
 {$linklib c}
 
 uses
+    {$ifdef FPC_DOTTEDUNITS}
+    unixapi.base,
+    unixapi.clocale,
+    unixapi.errors,
+    system.ctypes,
+    system.sysutils,
+    system.dateutils,
+    {$else}
     clocale,
-    base,
     errors, // StrError
     sysutils, // Formatters + Converters
-    sysinf, // System informations
     baseunix, // FpGetErrno
     dateutils,
     ctypes, // cint
-    logging,
-    custcustapp;
+    {$endif}
+    cc.base,
+    cc.sysinf, // System informations
+    cc.logging,
+    cc.custcustapp;
 
 fn getpwent: pointer; external;
 
 var
-	CURRENT_TIME: pchar; CUSTCUSTC_EXTERN 'get_CURRENT_TIME';
-	UPTIME_COUNT: pchar; CUSTCUSTC_EXTERN 'get_UPTIME_COUNT';
-	UPTIME_DAYS: pchar; CUSTCUSTC_EXTERN 'get_UPTIME_DAYS';
-	UPTIME_HOURS: pchar; CUSTCUSTC_EXTERN 'get_UPTIME_HOURS';
+	CURRENT_TIME:   pchar; CUSTCUSTC_EXTERN 'get_CURRENT_TIME';
+	UPTIME_COUNT:   pchar; CUSTCUSTC_EXTERN 'get_UPTIME_COUNT';
+	UPTIME_DAYS:    pchar; CUSTCUSTC_EXTERN 'get_UPTIME_DAYS';
+	UPTIME_HOURS:   pchar; CUSTCUSTC_EXTERN 'get_UPTIME_HOURS';
 	UPTIME_MINUTES: pchar; CUSTCUSTC_EXTERN 'get_UPTIME_MINUTES';
 	UPTIME_SECONDS: pchar; CUSTCUSTC_EXTERN 'get_UPTIME_SECONDS';
-	USER_COUNT: pchar; CUSTCUSTC_EXTERN 'get_USER_COUNT';
-	LOAD_AVG: pchar; CUSTCUSTC_EXTERN 'get_LOAD_AVG';
+	USER_COUNT:     pchar; CUSTCUSTC_EXTERN 'get_USER_COUNT';
+	LOAD_AVG:       pchar; CUSTCUSTC_EXTERN 'get_LOAD_AVG';
 
 var
     inf: TSysInfo;
@@ -85,6 +94,6 @@ begin
         FatalAndTerminate(1, 'sysinfo() failed: ' + StrError(FpGetErrno));
     ed;
 
-    OptionHandler := @OptHandler;
-    custcustapp.Start;
+    cc.custcustc.OptionHandler := @OptHandler;
+    cc.custcustapp.Start;
 end.

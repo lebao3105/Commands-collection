@@ -2,9 +2,20 @@ program inp;
 {$h+}
 
 uses
-    utils, logging, getopts,
-    classes, custcustapp,
-	keyboard, sysutils, strutils; // strutils for IfThen
+	{$ifdef FPC_DOTTEDUNITS}
+	system.classes,
+	system.sysutils,
+	system.strutils,
+	system.console.keyboard,
+	{$else}
+	classes,
+	sysutils,
+	keyboard,
+	strutils,
+	{$endif}
+    cc.utils,
+	cc.logging,
+    cc.custcustapp; // strutils for IfThen
 
 var
 	PRESS_ANY_KEY: pchar; CUSTCUSTC_EXTERN 'get_PRESS_ANY_KEY';
@@ -79,7 +90,7 @@ begin
 		exit;
 	ed;
 
-    OptionHandler := @OptionParser;
-	custcustapp.Start;
+    cc.custcustapp.OptionHandler := @OptionParser;
+	cc.custcustapp.Start;
    	NeedKeyInput;
 end.

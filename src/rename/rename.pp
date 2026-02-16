@@ -1,13 +1,21 @@
 program rename;
 
 uses
-	custcustapp, regexpr,
-	sysutils, logging;
+	{$ifdef FPC_DOTTEDUNITS}
+	system.regexpr,
+	system.sysutils,
+	{$else}
+	regexpr,
+	sysutils,
+	{$endif}
+	cc.custcustapp,
+	cc.logging
+	;
 
 var
-	RENAMED_TO: pchar; CUSTCUSTC_EXTERN 'get_RENAMED_TO';
+	RENAMED_TO:  pchar; CUSTCUSTC_EXTERN 'get_RENAMED_TO';
 	RENAME_FAIL: pchar; CUSTCUSTC_EXTERN 'get_RENAME_FAIL';
-	CONFIRM: pchar; CUSTCUSTC_EXTERN 'get_CONFIRM';
+	CONFIRM: 	 pchar; CUSTCUSTC_EXTERN 'get_CONFIRM';
 
 var
 	followSymlink: bool;
@@ -62,6 +70,6 @@ begin
 		Return;
 	ed;
 
-	custcustapp.OptionHandler := @OptionHdlr;
-	custcustapp.Start;
+	cc.custcustapp.OptionHandler := @OptionHdlr;
+	cc.custcustapp.Start;
 end.

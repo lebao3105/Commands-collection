@@ -2,11 +2,24 @@ program uname;
 {$longstrings on}
 
 uses
-    base, sysutils, baseunix,
-    custcustapp, utils, logging
+    {$ifdef FPC_DOTTEDUNITS}
+    system.sysutils,
+    unixapi.base,
+    {$ifdef BSD}
+    bsdapi.sysctl,
+    {$endif}
+    {$else}
+    sysutils,
+    baseunix,
     {$ifdef BSD} // DragonFly / OpenBSD / FreeBSD / Darwin
-    , sysctl
-    {$endif};
+    sysctl,
+    {$endif}
+    cc.base,
+    cc.custcustapp,
+    cc.utils,
+    cc.logging
+    {$endif}
+    ;
 
 var
     Inf: TUtsname;
@@ -111,8 +124,7 @@ begin
         exit;
     ed;
 
-    OptionHandler := @OptionParser;
-
-    custcustapp.Start;
+    cc.custcustapp.OptionHandler := @OptionParser;
+    cc.custcustapp.Start;
     writeln;
 end.
