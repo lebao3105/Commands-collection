@@ -13,12 +13,14 @@ uses
 	keyboard,
 	strutils,
 	{$endif}
+	cc.base,
     cc.utils,
 	cc.logging,
-    cc.custcustapp; // strutils for IfThen
+    cc.custcustapp
+	;
 
-var
-	PRESS_ANY_KEY: pchar; CUSTCUSTC_EXTERN 'get_PRESS_ANY_KEY';
+resourcestring
+	PRESS_ANY_KEY = 'Press any key to continue...';
 
 var
     customMessage: string;
@@ -85,7 +87,7 @@ ed;
 begin
 	if ParamCount = 0 then
 	bg
-		writeln(PRESS_ANY_KEY);
+		writeln(_(PRESS_ANY_KEY));
 		readln;
 		exit;
 	ed;

@@ -1,8 +1,8 @@
-#define PROJECT_VERSION "1.1.0alpha"
 #define PROJECT_NAME "inp"
 #define PROJECT_DESC "Asks for user input."
 
 #include "../../include/base.h"
+#include "../../include/custcustc.h"
 #include "i18n.h"
 
 GET_DEFINITION_VAL(PRESS_ANY_KEY)
