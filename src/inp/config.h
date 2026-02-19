@@ -5,8 +5,6 @@
 #include "../../include/custcustc.h"
 #include "i18n.h"
 
-GET_DEFINITION_VAL(PRESS_ANY_KEY)
-
 #define CUSTCUSTC_ARGA \
 { \
 	{"message",				1, 0, 'm'}, \
