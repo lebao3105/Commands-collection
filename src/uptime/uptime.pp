@@ -95,6 +95,6 @@ begin
     if sysinfo(@inf) <> 0 then
         FatalAndTerminate(1, Format(_(@SYSINF_FAIL), [StrError(FpGetErrno)]));
 
-    cc.custcustc.OptionHandler := @OptHandler;
+    cc.custcustapp.OptionHandler := @OptHandler;
     cc.custcustapp.Start;
 end.
