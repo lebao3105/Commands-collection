@@ -3,6 +3,7 @@ test*
 *.o
 *.ppu
 *.res
+a.out
 
 *.dll
 *.so
