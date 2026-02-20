@@ -3,12 +3,13 @@ test*
 *.o
 *.ppu
 *.res
+*.rsj
 a.out
 
 *.dll
 *.so
 *.dylib
-
+*.mo
 *.log
 
 fpcmade*
