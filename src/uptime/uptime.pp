@@ -24,15 +24,16 @@ uses
 
 fn getpwent: pointer; external;
 
-var
-	CURRENT_TIME:   pchar; CUSTCUSTC_EXTERN 'get_CURRENT_TIME';
-	UPTIME_COUNT:   pchar; CUSTCUSTC_EXTERN 'get_UPTIME_COUNT';
-	UPTIME_DAYS:    pchar; CUSTCUSTC_EXTERN 'get_UPTIME_DAYS';
-	UPTIME_HOURS:   pchar; CUSTCUSTC_EXTERN 'get_UPTIME_HOURS';
-	UPTIME_MINUTES: pchar; CUSTCUSTC_EXTERN 'get_UPTIME_MINUTES';
-	UPTIME_SECONDS: pchar; CUSTCUSTC_EXTERN 'get_UPTIME_SECONDS';
-	USER_COUNT:     pchar; CUSTCUSTC_EXTERN 'get_USER_COUNT';
-	LOAD_AVG:       pchar; CUSTCUSTC_EXTERN 'get_LOAD_AVG';
+resourcestring
+    CURRENT_TIME = 'The current time is:';
+    UPTIME_COUNT = 'The system is up for ';
+    UPTIME_DAYS = '%d day(s)';
+    UPTIME_HOURS = '%d hour(s)';
+    UPTIME_MINUTES = '%d minute(s)';
+    UPTIME_SECONDS = '%d second(s)';
+    USER_COUNT = '%d users';
+    LOAD_AVG = 'Load average:';
+    SYSINF_FAIL = 'sysinfo() failed: %s';
 
 var
     inf: TSysInfo;
@@ -61,25 +62,26 @@ bg
             writeln(FormatDateTime('yyyy-mm-dd HH:MM:SS', Now - (inf.uptime / SecsPerDay)));
 
         'p': bg
-        	writeln(CURRENT_TIME);
+        	writeln(_(@CURRENT_TIME));
             writeln(FormatDateTime('yyyy-mm-dd HH:mm:ss'#13#10, Now));
 
-			write(UPTIME_COUNT);
+			write(_(@UPTIME_COUNT));
 			updays := Round(inf.uptime / SecsPerDay);
 			uphours := Round(inf.uptime mod SecsPerDay div SecsPerHour);
 			upmins := Round(inf.uptime mod SecsPerDay mod SecsPerHour div 60);
 
 			if (updays > 0) then
-				write(Format(UPTIME_DAYS, [updays]));
+				write(Format(_(@UPTIME_DAYS), [updays]));
 
-			writeln(Format(UPTIME_HOURS + ' ' + UPTIME_MINUTES, [uphours, upmins]));
+            write(Format(_(@UPTIME_HOURS), [uphours]));
+            writeSp;
+            writeln(Format(_(@UPTIME_MINUTES), [upmins]));
 
 			while getpwent <> nil do
                 users += 1;
-            writeln(USER_COUNT);
-			writeln(IntToStr(users) + ' users'#13#10);
+            writeln(Format(_(@USER_COUNT), [users]));
 
-			writeln(LOAD_AVG);
+			writeln(_(@LOAD_AVG));
 			write(Format('%.2u %.2u %.2u', [
 				inf.loads[0],
 				inf.loads[1],
@@ -90,9 +92,8 @@ bg
 ed;
 
 begin
-    if sysinfo(@inf) <> 0 then bg
-        FatalAndTerminate(1, 'sysinfo() failed: ' + StrError(FpGetErrno));
-    ed;
+    if sysinfo(@inf) <> 0 then
+        FatalAndTerminate(1, Format(_(@SYSINF_FAIL), [StrError(FpGetErrno)]));
 
     cc.custcustc.OptionHandler := @OptHandler;
     cc.custcustapp.Start;
