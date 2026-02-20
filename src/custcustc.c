@@ -1,7 +1,11 @@
-#if !defined(PROG_CONFIG_PATH)
+#ifndef PROG_CONFIG_PATH
 #error "No idea what to build for - PROG_CONFIG_PATH must be set"
 #else
 #include PROG_CONFIG_PATH
+
+#ifndef PROJECT_NAME
+#error "PROJECT_NAME must be defined"
+#endif
 
 #ifndef PROJECT_DESC
 #error "PROJECT_DESC must be defined"
@@ -28,7 +32,6 @@
 
 #include "../include/base.h"
 #include "../include/custcustc.h"
-#include "../include/termcolor.h"
 
 #include <assert.h> /* assertions */
 #include <stdio.h> /* FILE, fprintf, fputs */
@@ -37,6 +40,8 @@
 
 typedef void (*OptionHandler)(const char);
 OptionHandler option_handler = 0;
+
+extern void pagedPrintP(const char* data, int useStdErr);
 
 // char **NonOptions = NULL;
 static struct option options[] = CUSTCUSTC_ARGA ARGA_SUFFIX;
@@ -63,8 +68,7 @@ void custcustapp_start(int argc, char** argv)
             break;
 
         case 'V':
-            fprintf(stdout, "Project version: %s\n", PROJECT_VERSION);
-            fprintf(stdout, "Commands-Collection (CC) version %s\n", CC_VERSION);
+            fprintf(stdout, _("Commands-Collection (CC) version %s\n"), CC_VERSION);
             break;
 
         case '?':
@@ -83,22 +87,21 @@ void custcustapp_start(int argc, char** argv)
 
 void custcustapp_showhelp(const int to_stdout)
 {
-	FILE* target = to_stdout ? stdout : stderr;
-	text_red(target);
-	fputs(PROJECT_NAME, target);
-	reset_colors(target);
-
-	text_bold(target); text_white(target);
-    fputs(" [flags] [flag values] [stuff]\n"
-          PROGRAM_HELP HELP_SUFFIX "\n", target);
-
-    text_cyan(target);
-    fputs(PROJECT_DESC "\n", target);
-	reset_colors(target);
-
-#ifdef PROGRAM_BONUS_HELP
-   	fputs(PROGRAM_BONUS_HELP "\n", target);
-#endif
+    pagedPrintP(
+        ANSI_CODE_RED ANSI_CODE_BOLD
+        PROJECT_NAME " [flags] [flag values] [...]\n"
+        ANSI_CODE_GREEN
+        PROJECT_DESC "\n"
+        ANSI_CODE_RESET
+        PROGRAM_HELP
+        HELP_SUFFIX "\n"
+        #ifdef PROGRAM_BONUS_HELP
+        PROGRAM_BONUS_HELP "\n"
+        #endif
+        ANSI_CODE_RESET
+        ,
+        to_stdout == 1
+    );
 }
 
 void custcustapp_deinitialize()
