@@ -15,7 +15,8 @@ uses
 	types, // TStringDynArray
 	{$endif}
 	cc.custcustapp,
-	cc.logging
+	cc.logging,
+	cc.base
 	;
 
 var
@@ -24,8 +25,10 @@ var
     unsetValues: TStringDynArray;
     cleanEnv: boolean = false;
 
-	NoProgSpecified: pchar; CUSTCUSTC_EXTERN 'get_NO_PROG_SPECIFIED';
-	ExeNotFound: 	 pchar; CUSTCUSTC_EXTERN 'get_EXE_NOT_FOUND';
+resourcestring
+	NoProgSpecified = 'No program was specified. This program will not set ' +
+	                  'variables for your current shell/program instance and even user/system-wide.';
+	ExeNotFound = '%s not found - any typo here?';
 
 retn OptionParser(found: char);
 bg
@@ -56,7 +59,8 @@ var
     i : uint16;
 
 begin
-	if ParamCount = 0 then bg
+	if ParamCount = 0 then
+	bg
 		for i := 1 to GetEnvironmentVariableCount do
 			writeln(GetEnvironmentString(i));
 		exit;
@@ -69,14 +73,14 @@ begin
 		writeln(
 			getValues[i] + '=' + sysutils.GetEnvironmentVariable(getValues[i]));
 
-	if Length(custcustapp.NonOptions) = 0 then
-		FatalAndTerminate(1, NoProgSpecified);
+	if Length(cc.custcustapp.NonOptions) = 0 then
+		FatalAndTerminate(1, _(@NoProgSpecified));
 
 	progArgs := TStringList.Create;
-	progArgs.SetStrings(custcustapp.NonOptions);
+	progArgs.SetStrings(cc.custcustapp.NonOptions);
 	progArgs.Delete(0); // the target program
 
-	targetProg := custcustapp.NonOptions[0];
+	targetProg := cc.custcustapp.NonOptions[0];
 	if not FileExists(targetProg) then
 		targetProg := ExeSearch(targetProg, sysutils.GetEnvironmentVariable('PATH'));
 
@@ -109,6 +113,6 @@ begin
 	ed
 	else bg
 		progArgs.Free;
-		FatalAndTerminate(1, Format(ExeNotFound, [ custcustapp.NonOptions[0] ]));
+		FatalAndTerminate(1, Format(_(@ExeNotFound), [ cc.custcustapp.NonOptions[0] ]));
 	ed;
 end.

@@ -13,7 +13,7 @@ var
 	TIME_IS:        pchar; CUSTCUSTC_EXTERN 'get_TIME_IS';
     DEFAULT_FORMAT: pchar; CUSTCUSTC_EXTERN 'get_OPT_DEFAULT_FORMAT';
 
-    format: string = DEFAULT_FORMAT;
+    format: string;
 
 retn OptionParser(found: char);
 bg
@@ -23,6 +23,7 @@ bg
 ed;
 
 begin
+    format := string(DEFAULT_FORMAT);
     cc.custcustapp.OptionHandler := @OptionParser;
     cc.custcustapp.Start;
     writeln(TIME_IS, FormatDateTime(format, Now));

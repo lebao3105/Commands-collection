@@ -22,10 +22,7 @@ retn ShowDirEntry(const r: PIterateDirResult; knownAsDir: bool);
     bg
     	check := RegexHasMatches(r^.name);
      	if check.IsError then
-           	FatalAndTerminate(1,
-          		'%s: Regular expression failed: %s',
-	            PChar(RegexGetExpr), PChar(RegexGetLastError)
-           	)
+           	FatalAndTerminate(1, REGEX_FAILED, @RegexGetExpr, @check.Error.Message)
         else
         	exit(check.Value);
     ed;
@@ -38,14 +35,14 @@ bg
 	    bg
 	        Inc(statFailCount);
 
-	        if knownAsDir then bg
-	            Error(OpenDirFailed, PChar(r^.name), PChar(StrError(GetLastErrno)));
-	            writeln;
-	            exit;
-	        ed;
+	        // if knownAsDir then bg
+	        //     Error(OPEN_DIR_FAILED, @r^.name, @StrError(GetLastErrno));
+	        //     writeln;
+	        //     exit;
+	        // ed;
 
 	        if Settings.UseLists then
-	            writeln(Format(StatFailed, [ r^.name, StrError(GetLastErrno) ]))
+	            writeln(Format(STAT_FAILED, [ r^.name, StrError(GetLastErrno) ]))
 	        else
 	            write(Format('%s(E %d)', [ r^.name, GetLastErrno ]));
 
@@ -106,7 +103,7 @@ bg
     
     FatalAndTerminate(
         1,
-        'Regular expression verification failed: %s in %d',
+        REGEX_FAILED_LOC,
         @RegexGetLastError, @RegexGetLastCompileErrorPos
     );
 ed;
@@ -131,6 +128,7 @@ begin
 
     RegexPrepare;
     RegexCheck;
+
     if Length(cc.custcustapp.NonOptions) = 0 then
         ListItems('.')
     else

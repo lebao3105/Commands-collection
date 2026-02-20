@@ -1,12 +1,8 @@
-#define PROJECT_VERSION "1.1.0alpha"
 #define PROJECT_NAME "env"
 #define PROJECT_DESC "(Un)set environment variables for a will-be-spawned process"
 
 #include "../../include/base.h"
 #include "i18n.h"
-
-GET_DEFINITION_VAL(NO_PROG_SPECIFIED)
-GET_DEFINITION_VAL(EXE_NOT_FOUND)
 
 #define CUSTCUSTC_ARGA \
 { \

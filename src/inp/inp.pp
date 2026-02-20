@@ -31,10 +31,10 @@ var
 retn OptionParser(found: char);
 bg
     case found of
-        'm': customMessage := OptArg;
+        'm': customMessage := GetOptValue;
         't': hiddenFlag := true;
         'e': needEnter := true;
-        'k': wantedKeys += OptArg;
+        'k': wantedKeys += GetOptValue;
         'l': loopFlag := true;
         'o': showAvailables := true;
         's': caseSensitive := true;
@@ -44,7 +44,6 @@ ed;
 retn NeedKeyInput();
 var
     targ: char;
-	K: TKeyEvent;
 bg
 	write(customMessage);
 
@@ -55,8 +54,7 @@ bg
 		if showAvailables then
 			write(' [' + wantedKeys + '] ');
 
-		K := TranslateKeyEvent(GetKeyEvent);
-		targ := GetKeyEventChar(K);
+		targ := GetKeyEventChar(TranslateKeyEvent(GetKeyEvent));
 
 		if not hiddenFlag then
 			write(targ);
@@ -87,12 +85,12 @@ ed;
 begin
 	if ParamCount = 0 then
 	bg
-		writeln(_(PRESS_ANY_KEY));
+		writeln(_(@PRESS_ANY_KEY));
 		readln;
 		exit;
 	ed;
 
     cc.custcustapp.OptionHandler := @OptionParser;
 	cc.custcustapp.Start;
-   	NeedKeyInput;
+    NeedKeyInput;
 end.

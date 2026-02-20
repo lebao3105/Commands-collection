@@ -1,18 +1,9 @@
-#define PROJECT_VERSION "1.1.0alpha"
 #define PROJECT_NAME "dir"
 #define PROJECT_DESC "Iterates directories"
 
 #include "../../include/base.h"
+#include "../../include/custcustc.h"
 #include "i18n.h"
-
-GET_DEFINITION_VAL(PERMISSION_DENIED)
-GET_DEFINITION_VAL(STAT_FAILED)
-GET_DEFINITION_VAL(OPEN_DIR_FAILED)
-GET_DEFINITION_VAL(FILES_COUNT)
-GET_DEFINITION_VAL(DIRS_COUNT)
-GET_DEFINITION_VAL(IGNORED_COUNT)
-GET_DEFINITION_VAL(STATFAIL_COUNT)
-GET_DEFINITION_VAL(FREE_SPACE)
 
 #define CUSTCUSTC_ARGA \
 { \
@@ -22,10 +13,7 @@ GET_DEFINITION_VAL(FREE_SPACE)
 	{"directory",      0, 0, 'd'}, \
 	{"ignore",         1, 0, 'i'}, \
 	{"ignore-backups", 0, 0, 'B'}, \
-	{"recursive",      0, 0, 'R'}, \
-	{"win-fmt",        0, 0, 'w'}, \
-	{"gnu-fmt",        0, 0, 'u'}, \
-	{"cmc-fmt",        0, 0, 'm'},
+	{"recursive",      0, 0, 'R'},
 
 #define PROGRAM_HELP \
 	CREATE_ARG_HELP("l", "list", LIST_DES) \
@@ -34,14 +22,13 @@ GET_DEFINITION_VAL(FREE_SPACE)
 	CREATE_ARG_HELP("d", "directory", DIR_ONLY_DES) \
 	CREATE_ARG_HELP("B", "ignore-backups", IGNORE_BCK_DES) \
 	CREATE_ARG_HELP("R", "recursive", RECURSIVE_DES) \
-	CREATE_ARG_VAL_HELP("i", "ignore", "PATTERN", IGNORE_DES) \
-	CREATE_ARG_VAL_HELP("f", "format", "FORMAT", FORMAT_DES)
+	CREATE_ARG_VAL_HELP("i", "ignore", "PATTERN", IGNORE_DES)
 
 #define PROGRAM_BONUS_HELP \
 	"Ignore pattern is a single regular expression, which can be modified by " \
-	PROJECT_NAME " during its runtime.\n" \
-	"If -B is used, pattern matching ~ and .bak suffixes will be appended.\n" \
-	"If -a is NOT used, pattern matching . (literally a dot) prefix will be appended.\n" \
+	PROJECT_NAME " before iterating directories. This is used to match names, not owner name/group nor permissions.\n" \
+	"If -B is used, entities with ~ or .bak suffix will be ignored.\n" \
+	"If -a is NOT used, entities with . (a literal dot) prefix will be ignored.\n" \
 	"By default, the ignore pattern is case-INsensitive. Currently you can't change that.\n" \
 	\
 	PARAGRAPH \
@@ -55,4 +42,4 @@ GET_DEFINITION_VAL(FREE_SPACE)
     "DIR_PRESET environment variable points to the preset that dir will use (gnu, win, ccd).\n" \
     "Check dir(5) manual page for more informations.\n"
 
-#define PROGRAM_SHORTOPTS "lacdi:BRwum"
+#define PROGRAM_SHORTOPTS "lacdBRi:"

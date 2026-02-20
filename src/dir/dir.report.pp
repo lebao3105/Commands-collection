@@ -1,29 +1,40 @@
 unit dir.report;
-{$scopedenums on}
 
 interface
 
-uses cc.console, cc.utils;
+uses cc.utils;
 
 var
-    dirCount: ulong = 0;
-    filesSize: qword = 0;
-    ignoredCount: ulong = 0;
-    count: ulong = 0;
+    filesSize	 : qword = 0;
+    dirCount	 : ulong = 0;
+    ignoredCount : ulong = 0;
+    count		 : ulong = 0;
     statFailCount: ulong = 0;
-
-	StatFailed: 	  pchar; CUSTCUSTC_EXTERN 'get_STAT_FAILED';
-	OpenDirFailed:	  pchar; CUSTCUSTC_EXTERN 'get_OPEN_DIR_FAILED';
-	PermissionDenied: pchar; CUSTCUSTC_EXTERN 'get_PERMISSION_DENIED';
 
 retn Report;
 retn PrintObjectName(const name: string; const props: TFSProperties);
+
+resourcestring
+	// Fails
+	STAT_FAILED 	  = 'failed to stat %s: %s';
+	PERMISSION_DENIED = '%s: permission denied';
+	OPEN_DIR_FAILED   = 'failed to open directory %s: %s';
+	REGEX_FAILED	  = '%s: regular expression failed: %s';
+	REGEX_FAILED_LOC  = '%s: regular expression failed at index %d';
+
+	// Counts
+	FILES_COUNT    = '%u file(s)';
+	DIRS_COUNT     = '%u dir(s)';
+	IGNORED_COUNT  = '%u ignored';
+	STATFAIL_COUNT = '%u failed to stat()';
+	FREE_SPACE 	   = '%s free';
 
 implementation
 
 uses
 	cc.base,
 	cc.idcache,
+	cc.console,
 	dir.settings,
 	{$ifdef FPC_DOTTEDUNITS}
 	system.dateutils,
@@ -41,13 +52,6 @@ bg
         specialize TTypeHelper<char>.IfThenElse(perms.W, 'w', '-') +
         specialize TTypeHelper<char>.IfThenElse(perms.E, 'x', '-');
 ed;
-
-var
-	FCount:    pchar; CUSTCUSTC_EXTERN 'get_FILES_COUNT';
-	DCount:    pchar; CUSTCUSTC_EXTERN 'get_DIRS_COUNT';
-	ICount:	   pchar; CUSTCUSTC_EXTERN 'get_IGNORED_COUNT';
-	SFCount:   pchar; CUSTCUSTC_EXTERN 'get_STATFAIL_COUNT';
-	FreeSpace: pchar; CUSTCUSTC_EXTERN 'get_FREE_SPACE';
 
 retn Report;
 bg
