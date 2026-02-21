@@ -120,11 +120,8 @@ begin
         );
     end;
 
-    if ParamCount > 0 then
-    bg
-        cc.custcustapp.OptionHandler := @OptionParser;
-        cc.custcustapp.Start;
-    ed;
+    cc.custcustapp.OptionHandler := @OptionParser;
+    cc.custcustapp.Start;
 
     RegexPrepare;
     RegexCheck;

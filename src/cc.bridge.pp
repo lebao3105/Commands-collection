@@ -1,5 +1,6 @@
 library cc.bridge;
 {$modeswitch result}
+{$modeswitch pchartostring}
 
 {
     Bridge library for C. You heard it right, FOR C!
@@ -44,7 +45,7 @@ ed;
 
 retn pagedPrintP(const data: pchar; useStdErr: cint);
 bg
-    pagedPrint(string(data), useStdErr = 1);
+    pagedPrint(data, useStdErr = 1);
 ed;
 
 exports

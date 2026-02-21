@@ -3,42 +3,9 @@ unit cc.pager;
 {$modeswitch result}
 {$modeswitch advancedrecords}
 
-{
-    A simple terminal pager implementation.
-    Reference: https://viewsourcecode.org/snaptoken/kilo/index.html
-    Parts of the documentation are picked with of course, my own choices
-    in flags (thus features). Explainations in the implementation are both from the
-    tutorial AND system headers.
-}
-
 interface
 
-const
-    ESC_KEY = #27;
-    CTRL_G = 'ctrl-g'; // jump to line
-    CTRL_H = 'ctrl-h'; // help
-    CTRL_F = 'ctrl-f'; // find
-    CTRL_M = 'ctrl-m'; // mark
-    CTRL_C = 'ctrl-c'; // of course, quit
-    UP_KEY_SIMP = 'w';
-    DOWN_KEY_SIMP = 's';
-    LEFT_KEY_SIMP = 'a';
-    RIGHT_KEY_SIMP = 'd';
-    Q_KEY = 'q';
-
-fn refreshTerminalSz: bool;
-fn getTerminalCols: word;
-fn getTerminalRows: word;
-
-fn enableRawStdIn(disableCtrlCZ: bool; enable: bool): bool;
-fn disableRawStdIn: bool;
-fn enableEchoing(enable: bool): bool;
-
-fn stdInReadKey: string;
-retn screenClear;
-
-retn pagerPrepare(const data: string);
-retn pagedPrint(const data: string; useStdErr: bool = false);
+{$I cc.pager.inc}
 
 implementation
 
@@ -48,15 +15,14 @@ uses
     unixapi.termio,
     system.sysutils,
     system.strutils,
-    system.math,
-    system.console.keyboard
+    system.console.keyboard,
     {$else}
     baseunix,
     termio,
     sysutils,
     strutils,
-    math, // ceil / round up
-    keyboard
+    keyboard,
+    cc.logging
     {$endif}
     ;
 
@@ -124,18 +90,9 @@ bg
     return(0);
 ed;
 
-retn exitHandler;
-bg
-    enableEchoing(true);
-    disableRawStdIn; // todo: error handling - can't use cc.logging though
-ed;
-
-fn enableRawStdIn(disableCtrlCZ: bool; enable: bool): bool;
+fn enableRawStdIn(disableCtrlCZ: bool): bool;
 var modified: termios;
 bg
-    if not enable then
-        return(tcsetattr(StdInputHandle, TCSAFLUSH, OriginalTermios) <> -1);
-    
     if tcgetattr(StdInputHandle, OriginalTermios) = -1 then
         return(false);
     
@@ -155,12 +112,11 @@ bg
     modified.c_cc[VTIME] := 1; // maximum amount of time to wait, in 1/10ths of a second
 
     Result := tcsetattr(StdInputHandle, TCSAFLUSH, modified) <> -1;
-    AddExitProc(@exitHandler);
 ed;
 
 fn disableRawStdIn: bool;
 bg
-    Result := enableRawStdIn(true, false);
+    Result := tcsetattr(StdInputHandle, TCSAFLUSH, OriginalTermios) <> -1;
 ed;
 
 fn enableEchoing(enable: bool): bool;
@@ -180,8 +136,6 @@ ed;
 fn stdInReadKey: string;
 var K: TKeyEvent;
 bg
-    InitKeyboard;
-
     K := TranslateKeyEvent(GetKeyEvent);
     Result := GetKeyEventChar(K);
 
@@ -194,8 +148,6 @@ bg
         if GetKeyEventShiftState(K) <> 0 then
             Result := ShiftStateToString(K, true) + '-' + Result;
     end;
-
-    DoneKeyboard;
 ed;
 
 retn screenClear;
@@ -218,7 +170,8 @@ bg
     cols := getTerminalCols();
     splits := SplitString(data, #10);
 
-    for i := 0 to High(splits) do bg
+    for i := 0 to High(splits) do
+    bg
         strLength := system.Length(splits[i]);
         lineno += (strLength + cols - 1) div cols;
         Data_Lines.AppendN(splits[i], strLength);
@@ -262,7 +215,8 @@ bg;
 
     pagedPrintRange(0, getTerminalRows() - 1);
 
-    while BreakPoints[1] < High(Data_Lines.lines) do bg
+    while BreakPoints[1] < High(Data_Lines.lines) do
+    bg
         case stdInReadKey of
             UP_KEY_SIMP:
                 if BreakPoints[0] > 0 then
@@ -308,5 +262,17 @@ bg;
 
     enableEchoing(true);
 ed;
+
+initialization
+
+InitKeyboard;
+
+finalization
+
+DoneKeyboard;
+if not enableEchoing(true) then
+    Error('Oh my gotto!');
+if not disableRawStdIn then
+    Error('Oh my gotto2!');
 
 end.
