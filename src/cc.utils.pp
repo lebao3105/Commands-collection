@@ -28,7 +28,6 @@ uses
 implementation
 
 uses
-    cc.logging,
     {$ifdef FPC_DOTTEDUNITS}
     unixapi.base,
     system.dateutils,

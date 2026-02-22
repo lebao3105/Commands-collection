@@ -34,7 +34,11 @@ jobs:
       - name: Setup XMake
         uses: xmake-io/github-action-setup-xmake@v1
         with:
-          xmake-version: branch@dev
+          xmake-version: latest
+          actions-cache-folder: '.xmake-cache'
+          actions-cache-key: ${{ matrix.os }}
+          build-cache: true # We don't need it, but just in case
+          build-cache-path: 'build/.build_cache'
 
       - name: Build
         run: |
