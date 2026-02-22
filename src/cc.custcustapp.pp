@@ -19,6 +19,7 @@ resourcestring
     HELP_USAGE = 'Show this help and exit';
     VERSION_USAGE = 'Show the version of this program and exit';
 
+{$define LineEnding := #13#10} // crlf
 {$I i18n.inc}
 
 implementation
@@ -33,7 +34,6 @@ implementation
     (Name: 'version'; Has_Arg: 0; Flag: nil; Value: 'V'),
     (Name: ''; Has_Arg: 0; Flag: nil; Value: #0)
 }
-{$define LineEnding := #13#10} // crlf
 
 uses
     {$ifdef FPC_DOTTEDUNITS}
@@ -62,6 +62,16 @@ bg
     Result :=
         ANSI_CODE_WHITE + ANSI_CODE_BOLD +
         Format('--%s / -%c [%s = %s]', [long, short, valParam, defaultVal]) + LineEnding +
+        #9 + description + LineEnding;
+ed;
+
+fn CREATE_ARG_VAL_HELP(
+    const short: char;
+    const long, valParam, description: string): string;
+bg
+    Result :=
+        ANSI_CODE_WHITE + ANSI_CODE_BOLD +
+        Format('--%s / -%c [%s]', [long, short, valParam]) + LineEnding +
         #9 + description + LineEnding;
 ed;
 

@@ -37,7 +37,6 @@ fn getpw(id: cuint32; isGroup: bool): PCacheEntry;
 implementation
 
 uses
-    cc.base,
     {$ifdef FPC_DOTTEDUNITS}
     unixapi.base,
     system.sysutils,

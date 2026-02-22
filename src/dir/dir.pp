@@ -22,7 +22,7 @@ retn ShowDirEntry(const r: PIterateDirResult; knownAsDir: bool);
     bg
     	check := RegexHasMatches(r^.name);
      	if check.IsError then
-           	FatalAndTerminate(1, REGEX_FAILED, @RegexGetExpr, @check.Error.Message)
+           	FatalAndTerminate(1, REGEX_FAILED, [RegexGetExpr, check.Error.Message])
         else
         	exit(check.Value);
     ed;
@@ -104,7 +104,7 @@ bg
     FatalAndTerminate(
         1,
         REGEX_FAILED_LOC,
-        @RegexGetLastError, @RegexGetLastCompileErrorPos
+        [RegexGetLastError, RegexGetLastCompileErrorPos]
     );
 ed;
 

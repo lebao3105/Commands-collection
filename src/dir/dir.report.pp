@@ -31,6 +31,8 @@ resourcestring
 
 implementation
 
+{$I cc.termcolors.inc}
+
 uses
 	cc.base,
 	cc.idcache,
@@ -79,7 +81,7 @@ bg
 		case Settings.Columns[i] of
 			EListingColumns.NAME: bg
 				write(name);
-				reset_colors(stdout);
+				write(stdout, ANSI_CODE_RESET);
 			ed;
 
 			EListingColumns.SIZE:

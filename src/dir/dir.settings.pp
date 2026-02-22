@@ -42,7 +42,7 @@ var
     file_path: string;
 bg
     file_path := string(p_file_path);
-    Debug('Started settings thread', '');
+    Debug('Started settings thread', []);
     // parser := TYamlStream.Create(file_path);
     // try
     //     try
@@ -58,7 +58,7 @@ bg
     //     stream.Free;
     //     parser.Free;
     // end;
-    Debug('Settings thread finished');
+    Debug('Settings thread finished', []);
 ed;
 
 retn RegexPrepare;
@@ -78,7 +78,7 @@ bg
         @RegexAppendExpr
     );
 
-    debug('Ignore expression: %s', PChar(RegexGetExpr));
+    debug('Ignore expression: %s', [RegexGetExpr]);
 ed;
 
 fn FSEntityKindToTypeString(tp: EFSEntityKind): string; inline;

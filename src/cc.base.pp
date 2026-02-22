@@ -46,20 +46,6 @@ fn BigNumberToSeparatedStr(const val: QWord): string;
 fn StrLowerCase(const val: string): string; inline;
 fn StrUpperCase(const val: string): string; inline;
 
-// This IS intentional.
-// Locale initialization is done in custcustC, thus getting localized
-// strings must be done from that place as well.
-//
-// Free Pascal has its own implementation of GNU Gettext by the way, but
-// works a bit different from the C implementation: all strings are put into
-// resourcestring block, and yeah, localizations are put there too:
-// resourcestring
-//		Test = 'test';
-// ...
-// TranslateResourceStrings('path/to/mo');
-// writeln(Test); // localized
-fn Gettext(const val: pchar): pchar; external 'c' name 'gettext';
-
 // Reason of not putting this in implementation block:
 // Error: Global Generic template references static symtable
 // (from the compiler, when using strings with gettext in TResult)
