@@ -132,7 +132,7 @@ bg
     if IsOK then
         GetOK := Value
     else
-        raise Exception.Create(gettext(@NOT_OK_RESULT));
+        raise Exception.Create(NOT_OK_RESULT);
 ed;
 
 fn TResult.GetError: E; inline;
@@ -140,7 +140,7 @@ bg
     if IsError then
         GetError := Error
     else
-        raise Exception.Create(gettext(@NOT_ERROR_RESULT));
+        raise Exception.Create(NOT_ERROR_RESULT);
 ed;
 
 { TOptional }

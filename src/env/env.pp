@@ -74,7 +74,7 @@ begin
 			getValues[i] + '=' + sysutils.GetEnvironmentVariable(getValues[i]));
 
 	if Length(cc.custcustapp.NonOptions) = 0 then
-		FatalAndTerminate(1, _(@NoProgSpecified));
+		FatalAndTerminate(1, NoProgSpecified);
 
 	progArgs := TStringList.Create;
 	progArgs.SetStrings(cc.custcustapp.NonOptions);
@@ -113,6 +113,6 @@ begin
 	ed
 	else bg
 		progArgs.Free;
-		FatalAndTerminate(1, Format(_(@ExeNotFound), [ cc.custcustapp.NonOptions[0] ]));
+		FatalAndTerminate(1, Format(ExeNotFound, [ cc.custcustapp.NonOptions[0] ]));
 	ed;
 end.

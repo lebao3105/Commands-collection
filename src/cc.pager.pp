@@ -11,19 +11,15 @@ implementation
 
 uses
     {$ifdef FPC_DOTTEDUNITS}
-    unixapi.base,
-    unixapi.termio,
     system.sysutils,
     system.strutils,
     system.console.keyboard,
     {$else}
-    baseunix,
-    termio,
     sysutils,
     strutils,
     keyboard,
-    cc.logging
     {$endif}
+    cc.console
     ;
 
 type
@@ -36,11 +32,6 @@ type
     end;
 
 var
-    OriginalTermios: termios;
-    NeedToRefreshSz: bool = true;
-    Sz: WinSize;
-    OutputFile: Text;
-    OutputHandle: cint = StdOutputHandle;
     Data_Lines: Strings;
     BreakPoints: array[0..1] of int;
     // ^ 0: start point
@@ -67,95 +58,6 @@ ed;
 
 { Strings end }
 
-fn refreshTerminalSz: bool;
-bg
-    Result := true;
-    if NeedToRefreshSz then bg
-        Result := fpioctl(OutputHandle, TIOCGWINSZ, @Sz) <> -1;
-        if Result then NeedToRefreshSz := false;
-    ed;
-ed;
-
-fn getTerminalCols: word;
-bg
-    if refreshTerminalSz() then
-        return(Sz.ws_col);
-    return(0);
-ed;
-
-fn getTerminalRows: word;
-bg
-    if refreshTerminalSz() then
-        return(Sz.ws_row);
-    return(0);
-ed;
-
-fn enableRawStdIn(disableCtrlCZ: bool): bool;
-var modified: termios;
-bg
-    if tcgetattr(StdInputHandle, OriginalTermios) = -1 then
-        return(false);
-    
-    modified := OriginalTermios;
-    // Turn off canonical mode / line-by-line processing (ICANON)
-    // Turn off Ctrl-V (and more?) events (IEXTEN)
-    modified.c_lflag := modified.c_lflag and not (ICANON or IEXTEN);
-
-    if disableCtrlCZ then
-        modified.c_lflag := modified.c_lflag and not ISIG;
-
-    // Turn off software flow control (IXON, disables Ctrl-S&Q)
-    // Do NOT translate \r to \n (ICRNL)
-    modified.c_iflag := modified.c_iflag and not (IXON or ICRNL);
-
-    modified.c_cc[VMIN] := 0; // minimum number of bytes of input needed before read() can return
-    modified.c_cc[VTIME] := 1; // maximum amount of time to wait, in 1/10ths of a second
-
-    Result := tcsetattr(StdInputHandle, TCSAFLUSH, modified) <> -1;
-ed;
-
-fn disableRawStdIn: bool;
-bg
-    Result := tcsetattr(StdInputHandle, TCSAFLUSH, OriginalTermios) <> -1;
-ed;
-
-fn enableEchoing(enable: bool): bool;
-var modified: termios;
-bg
-    if tcgetattr(StdInputHandle, modified) = -1 then
-        return(false);
-    
-    if enable then
-        modified.c_lflag := modified.c_lflag or ECHO
-    else
-        modified.c_lflag := modified.c_lflag and not ECHO;
-
-    Result := tcsetattr(StdInputHandle, TCSAFLUSH, modified) <> -1;
-ed;
-
-fn stdInReadKey: string;
-var K: TKeyEvent;
-bg
-    K := TranslateKeyEvent(GetKeyEvent);
-    Result := GetKeyEventChar(K);
-
-    case GetKeyEventCode(K) of
-        kbdUp: Result := 'w';
-        kbdDown: Result := 's';
-        kbdLeft: Result := 'a';
-        kbdRight: Result := 'd';
-    else
-        if GetKeyEventShiftState(K) <> 0 then
-            Result := ShiftStateToString(K, true) + '-' + Result;
-    end;
-ed;
-
-retn screenClear;
-bg
-    write(OutputFile, ESC_KEY+'[2J');
-    write(OutputFile, ESC_KEY+'[H'); // move the cursor to the top-left corner
-ed;
-
 retn pagerPrepare(const data: string);
 var
     cols: word;
@@ -167,8 +69,8 @@ bg
     BreakPoints[0] := 0;
     BreakPoints[1] := 0;
     lineno := 0;
-    cols := getTerminalCols();
-    splits := SplitString(data, #10);
+    cols := getTerminalCols;
+    splits := SplitString(data, LineEnding);
 
     for i := 0 to High(splits) do
     bg
@@ -191,28 +93,21 @@ bg
 
     for i := from_ to to_ do
         writeln(OutputFile, Data_Lines.data[i]);
+    write(OutputFile, PAGED_VIEW);
 ed;
 
 retn pagedPrint(const data: string; useStdErr: bool = false);
 bg;
-    if useStdErr then bg
-        OutputFile := stderr;
-        OutputHandle := StdErrorHandle;
-    ed
-    else bg
-        OutputFile := stdout;
-        OutputHandle := StdOutputHandle;
-    ed;
-
+    setOutputStream(useStdErr);
     pagerPrepare(data);
 
     if system.Length(Data_Lines.lines) <= getTerminalRows() - 1 then
     bg
         writeln(OutputFile, data);
-        write(OutputFile, '-- Paged view --');
         exit;
     ed;
 
+    enableRawStdIn(false);
     pagedPrintRange(0, getTerminalRows() - 1);
 
     while BreakPoints[1] < High(Data_Lines.lines) do
@@ -262,17 +157,5 @@ bg;
 
     enableEchoing(true);
 ed;
-
-initialization
-
-InitKeyboard;
-
-finalization
-
-DoneKeyboard;
-if not enableEchoing(true) then
-    Error('Oh my gotto!');
-if not disableRawStdIn then
-    Error('Oh my gotto2!');
 
 end.

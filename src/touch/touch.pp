@@ -52,7 +52,7 @@ var
 
 bg
     if (ParamCount = 0) then
-        FatalAndTerminate(1, gettext(@NOTHING_TO_CREATE));
+        FatalAndTerminate(1, NOTHING_TO_CREATE);
 
     cc.custcustapp.OptionHandler := @OptionParser;
     cc.custcustapp.Start;

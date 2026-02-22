@@ -79,17 +79,17 @@ bg
         // GNU CoreUtils handles this.
         // TODO?
 
-        's': PrintElement(Inf.sysname, _(@KERNEL_NAME));
-        'n': PrintElement(Inf.nodename,_(@NETWORK_NODENAME));
-        'r': PrintElement(Inf.release, _(@KERNEL_RELEASE));
-        'v': PrintElement(Inf.version, _(@KERNEL_VERSION));
-        'm': PrintElement(Inf.machine, _(@MACHINE_HWNAME));
+        's': PrintElement(Inf.sysname, KERNEL_NAME);
+        'n': PrintElement(Inf.nodename,NETWORK_NODENAME);
+        'r': PrintElement(Inf.release, KERNEL_RELEASE);
+        'v': PrintElement(Inf.version, KERNEL_VERSION);
+        'm': PrintElement(Inf.machine, MACHINE_HWNAME);
 
         // End old macOSes env
 
         // GNU handles this more strictly, can be seen by calls to
         // sysinfo / sysctl (prob it's platform-specific)
-        'p': PrintElement({$I %FPCTARGET%}, _(@PROCESSOR_TYPE));
+        'p': PrintElement({$I %FPCTARGET%}, PROCESSOR_TYPE);
         'i': bg
             {$ifdef BSD}
             // Get size required to hold the text
@@ -100,27 +100,27 @@ bg
                 // Actually get the string
                 if (FpSysCtl(PCInt(@MIB), Length(MIB), hardware_pl, @s, Nil, 0) = 0) then
                 bg
-                    PrintElement(hardware_pl, _(@HARDWARE_PLATFORM));
+                    PrintElement(hardware_pl, HARDWARE_PLATFORM);
                     FreeMem(hardware_pl);
                     Exit;
                 ed;
                 FreeMem(hardware_pl);
             ed;
             {$endif}
-                PrintElement(_(@UNKNOWN), _(@HARDWARE_PLATFORM));
+                PrintElement(UNKNOWN, HARDWARE_PLATFORM);
         ed;
 
         // The output is a bit different as GNU uname uses a definition
         // created by one of GNU things:
         // https://github.com/coreutils/gnulib/blob/master/m4/host-os.m4
-        'o': PrintElement({$I %FPCTARGETOS%}, _(@OPERATING_SYSTEM));
+        'o': PrintElement({$I %FPCTARGETOS%}, OPERATING_SYSTEM);
         'f': PrettyPrint := true;
     ed;
 ed;
 
 begin
     if (FpUname(Inf) = -1) then
-        FatalAndTerminate(1, _(@UNAME_FAILED), StrError(GetLastErrno));
+        FatalAndTerminate(1, UNAME_FAILED, StrError(GetLastErrno));
 
     if ParamCount = 0 then bg
         OptionParser('a');

@@ -15,7 +15,5 @@ const
         CREATE_ARG_HELP('s', 'since', SINCE_DES) +
         CREATE_ARG_HELP('p', 'pretty', PRETTY_DES)
     }
-    
     PROGRAM_NAME: string = 'uptime';
-    PROGRAM_DESC: string = 'Displays system uptime';
 {$endif}

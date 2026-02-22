@@ -16,8 +16,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        prog: [calltime, dir, env, inp, rename, uname, uptime] # TODO: Eliminate this
+        os: [ubuntu-latest, macos-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -39,8 +38,8 @@ jobs:
 
       - name: Build
         run: |
-          xmake f --target_program=${{ env.TARGET }} -m release
-          xmake b -ravD
+          xmake f -m release
+          xmake b -v
         working-directory: CC
         env:
           TARGET: ${{ matrix.prog }}
@@ -50,7 +49,7 @@ jobs:
         with:
           path: CC/build/*
           if-no-files-found: error
-          name: Commands Collection for ${{ matrix.os }}
+          name: CC Release for ${{ matrix.os }}
 
   publish:
     runs-on: ubuntu-latest
@@ -71,5 +70,5 @@ jobs:
           prerelease: ${{ github.event.inputs.prerelease }}
           draft: true
           body_path: ${{ github.workspace }}/changelogs/${{ github.event.inputs.version }}.md
-          files: "Commands Collection for*"
+          files: "CC Release*"
           name: v${{ github.event.inputs.version }}

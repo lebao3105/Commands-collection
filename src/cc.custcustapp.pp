@@ -1,16 +1,8 @@
 unit cc.custcustapp;
-{$H+}
 {$modeswitch defaultparameters}
+{$modeswitch result}
 
 interface
-
-uses
-    {$ifdef FPC_DOTTEDUNITS}
-    system.ctypes
-    {$else}
-    ctypes
-    {$endif}
-    ;
 
 var
     OptionHandler: procedure(found: char);
@@ -41,6 +33,7 @@ implementation
     (Name: 'version'; Has_Arg: 0; Flag: nil; Value: 'V'),
     (Name: ''; Has_Arg: 0; Flag: nil; Value: #0)
 }
+{$define LineEnding := #13#10} // crlf
 
 uses
     {$ifdef FPC_DOTTEDUNITS}
@@ -54,14 +47,22 @@ uses
     cc.pager
     ;
 
-fn CREATE_ARG_HELP(const short: char; long, description: string): string;
-const
-    ARG_HELP_MSG_FMT =
-        ANSI_CODE_WHITE + ANSI_CODE_BOLD +
-        '--%s / -%c' + LineEnding +
-        #9'%s' + LineEnding;
+fn CREATE_ARG_HELP(const short: char; const long, description: string): string;
 bg
-    CREATE_ARG_HELP := Format(ARG_HELP_MSG_FMT, [long, short, description]);
+    Result :=
+        ANSI_CODE_WHITE + ANSI_CODE_BOLD +
+        Format('--%s / -%c', [long, short]) + LineEnding +
+        #9 + description + LineEnding;
+ed;
+
+fn CREATE_ARG_VAL_WITH_DEF_HELP(
+    const short: char;
+    const long, valParam, defaultVal, description: string): string;
+bg
+    Result :=
+        ANSI_CODE_WHITE + ANSI_CODE_BOLD +
+        Format('--%s / -%c [%s = %s]', [long, short, valParam, defaultVal]) + LineEnding +
+        #9 + description + LineEnding;
 ed;
 
 retn Start;
@@ -77,9 +78,9 @@ bg
     repeat
         c := getlongopts(ARGA_SHORTOPTS + 'hV', @ARGA[0], option_index);
         case c of
-            'h': ShowHelp(true);
-            'V': WriteLn(Format(CC_VERSION_STR, [CC_VERSION]));
-            '?', ':': FatalAndTerminate(1, Format(INVALID_OPTION, [optopt]));
+            'h': bg ShowHelp(true); Halt(0); ed;
+            'V': bg WriteLn(Format(CC_VERSION_STR, [CC_VERSION])); Halt(0); ed;
+            '?', ':': FatalAndTerminate(1, INVALID_OPTION, [optopt]);
         else
             OptionHandler(c);
         end;
@@ -97,11 +98,11 @@ retn ShowHelp(to_stdout: bool);
 bg
     pagedPrint(
         ANSI_CODE_GREEN + PROGRAM_DESC + LineEnding +
-        ANSI_CODE_RESET +
-            PROGRAM_HELP + CREATE_ARG_HELP('h', 'help', HELP_USAGE) +
-            CREATE_ARG_HELP('V', 'version', VERSION_USAGE) + LineEnding
+        PROGRAM_HELP +
+        CREATE_ARG_HELP('h', 'help', HELP_USAGE) +
+        CREATE_ARG_HELP('V', 'version', VERSION_USAGE)
         {$ifdef HAS_BONUS_HELP}
-        + PROGRAM_BONUS_HELP + LineEnding
+        + LineEnding + PROGRAM_BONUS_HELP
         {$endif}
         , to_stdout
     );
@@ -110,7 +111,7 @@ ed;
 retn ErrorAndExit(const additonalMessage: ansistring);
 bg
     ShowHelp(false);
-    FatalAndTerminate(1, additonalMessage);
+    FatalAndTerminate(1, additonalMessage, []);
 ed;
 
 fn GetOptValue: string;

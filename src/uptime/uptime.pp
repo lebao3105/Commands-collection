@@ -82,7 +82,7 @@ ed;
 
 begin
     if sysinfo(@inf) <> 0 then
-        FatalAndTerminate(1, Format(SYSINF_FAIL, [StrError(FpGetErrno)]));
+        FatalAndTerminate(1, SYSINF_FAIL, [StrError(FpGetErrno)]);
 
     cc.custcustapp.OptionHandler := @OptHandler;
     cc.custcustapp.Start;

@@ -25,8 +25,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        prog: [calltime, dir, env, inp, rename, uname, uptime] # TODO: Eliminate this
+        os: [ubuntu-latest, macos-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -48,10 +47,8 @@ jobs:
 
       - name: Build
         run: |
-          xmake f --target_program=${{ env.TARGET }} -m debug
-          xmake b -ravD
-        env:
-          TARGET: ${{ matrix.prog }}
+          xmake f -m debug
+          xmake b -v
         working-directory: CC
 
       - name: Upload build artifact
@@ -59,4 +56,4 @@ jobs:
         with: # FIXME: build? not build/<os>/<arch>/<variant>?
           path: CC/build/
           if-no-files-found: error
-          name: CC (Nightly, ${{ matrix.prog }}) for ${{ matrix.os }}
+          name: CC Nightly for ${{ matrix.os }}

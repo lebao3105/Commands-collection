@@ -85,7 +85,7 @@ ed;
 begin
 	if ParamCount = 0 then
 	bg
-		writeln(_(@PRESS_ANY_KEY));
+		writeln(PRESS_ANY_KEY);
 		readln;
 		exit;
 	ed;
