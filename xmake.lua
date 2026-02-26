@@ -13,6 +13,9 @@ rule("program_pas")
 		target:add("pcflags", "@$(fpc_conf)", "@fpc.cfg", { force=true })
 		target:add("includedirs", "include", "src/" .. name)
 		target:set("objectdir", "$(builddir)/.objs/" .. name)
+		target:set("basename", name .. "/" .. name)
+		-- For older XMakes
+		target:add("pcflags", "-Fisrc/" .. name, { force=true })
 	end)
 
 for _, dir in ipairs(os.dirs("src/*")) do

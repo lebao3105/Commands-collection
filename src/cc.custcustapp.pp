@@ -50,7 +50,7 @@ uses
 fn CREATE_ARG_HELP(const short: char; const long, description: string): string;
 bg
     Result :=
-        ANSI_CODE_WHITE + ANSI_CODE_BOLD +
+        ANSI_CODE_BOLD +
         Format('--%s / -%c', [long, short]) + LineEnding +
         #9 + description + LineEnding;
 ed;
@@ -60,7 +60,7 @@ fn CREATE_ARG_VAL_WITH_DEF_HELP(
     const long, valParam, defaultVal, description: string): string;
 bg
     Result :=
-        ANSI_CODE_WHITE + ANSI_CODE_BOLD +
+        ANSI_CODE_BOLD +
         Format('--%s / -%c [%s = %s]', [long, short, valParam, defaultVal]) + LineEnding +
         #9 + description + LineEnding;
 ed;
@@ -70,7 +70,7 @@ fn CREATE_ARG_VAL_HELP(
     const long, valParam, description: string): string;
 bg
     Result :=
-        ANSI_CODE_WHITE + ANSI_CODE_BOLD +
+        ANSI_CODE_BOLD +
         Format('--%s / -%c [%s]', [long, short, valParam]) + LineEnding +
         #9 + description + LineEnding;
 ed;
