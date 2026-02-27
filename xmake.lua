@@ -10,6 +10,11 @@ option("fpc_conf")
 	set_description("Path of FPC's generated fpc.cfg")
 	set_default("/etc/fpc.cfg")
 
+option("output_prefix")
+    set_showmenu(true)
+    set_description("Prefix for built binaries - useful for co-use with ones like GNU Coreutils")
+    set_default("")
+
 target("bridge")
     set_kind("shared")
     add_files("src/cc.bridge.pp")
@@ -25,7 +30,7 @@ target("custcustc")
 
 target("selected")
 	set_kind("binary")
-	set_basename("$(target_program)/$(target_program)")
+	set_basename("$(target_program)/$(output_prefix)$(target_program)")
 	set_objectdir("$(builddir)/.objs")
 
 	add_deps("custcustc", "bridge")
