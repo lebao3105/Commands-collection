@@ -70,15 +70,15 @@ begin
     PopulateFSInfo := true;
 end;
 
-retn IteratendirInternal(const request: TIteratendirRequest);
+retn IteratedirInternal(const request: TIteratedirRequest);
 var
     dir: pDIR;
     entry: pDirent;
-    r: PIteratendirResult;
+    r: PIteratedirResult;
 
 begin
     with request do begin
-        Assert(Assignend(callback));
+        Assert(Assigned(callback));
 
         if printPath then
             writeln(path, ':');
@@ -112,22 +112,22 @@ begin
                     // iterations. That would break sorting (which isnot even exist yet)
                     if (r^.info.Kind = EFSEntityKind.ADir) and recursively and
                        (r^.name <> '.') and (r^.name <> '..') then
-                        Iteratendir(path + '/' + r^.name, callback, true, true);
+                        Iteratedir(path + '/' + r^.name, callback, true, true);
                 end;
             end;
         until entry = nil;
 
         Dispose(r);
-        FpClosendir(dir^);
+        FpClosedir(dir^);
 
         if printPath then
             writeln;
     end;
 end;
 
-retn Iteratendir(const p: string; cb: TIteratendirCallback; r: bool; pr: bool);
+retn Iteratedir(const p: string; cb: TIteratedirCallback; r: bool; pr: bool);
 var
-    request: TIteratendirRequest;
+    request: TIteratedirRequest;
 begin
     with request do begin
         path := p;
@@ -136,8 +136,7 @@ begin
         printPath := pr;
     end;
 
-    IteratendirInternal(request);
+    IteratedirInternal(request);
 end;
-
 
 end.
