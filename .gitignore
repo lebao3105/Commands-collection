@@ -3,13 +3,11 @@ test*
 *.o
 *.ppu
 *.res
-*.rsj
 a.out
 
 *.dll
 *.so
 *.dylib
-*.mo
 *.log
 
 fpcmade*
@@ -27,5 +25,14 @@ compile_commands.json
 .xmake
 .cache
 
+# Settings for IDEs
 .vscode/
 .zed/
+
+# i18n
+*.mo
+*.rsj
+
+# Backup files
+*.~
+*.bak

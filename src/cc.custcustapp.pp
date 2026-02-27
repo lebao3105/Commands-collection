@@ -4,28 +4,11 @@ unit cc.custcustapp;
 
 interface
 
-var
-    OptionHandler: procedure(found: char);
-    NonOptions: array of string;
-
-retn Start;
-retn ShowHelp(to_stdout: bool = true);
-retn ErrorAndExit(const additonalMessage: ansistring);
-fn GetOptValue: string;
-
-resourcestring
-    CC_VERSION_STR = 'Commands-Collection (CC) version %s';
-    INVALID_OPTION = 'Error with option: %c. Use --help or -h for the usage.';
-    HELP_USAGE = 'Show this help and exit';
-    VERSION_USAGE = 'Show the version of this program and exit';
-
-{$define LineEnding := #13#10} // crlf
-{$I i18n.inc}
+{$I cc.custcustapp.inc}
 
 implementation
 
 {$I cc.termcolors.inc}
-{$define CC_VERSION := '1.1.0alpha'}
 {$define ARGA_VERBOSE :=
     (Name: 'verbose'; Has_Arg: 0; Flag: nil; Value: 'v')
 }
@@ -37,43 +20,40 @@ implementation
 
 uses
     {$ifdef FPC_DOTTEDUNITS}
-    system.getopts,
     system.sysutils, // Format
     {$else}
-    getopts,
     sysutils,
     {$endif}
     cc.logging,
-    cc.pager
+    cc.pager,
+    cc.getopts
     ;
 
 fn CREATE_ARG_HELP(const short: char; const long, description: string): string;
-bg
+begin
     Result :=
         ANSI_CODE_BOLD +
         Format('--%s / -%c', [long, short]) + LineEnding +
         #9 + description + LineEnding;
-ed;
+end;
 
 fn CREATE_ARG_VAL_WITH_DEF_HELP(
     const short: char;
     const long, valParam, defaultVal, description: string): string;
-bg
+begin
     Result :=
-        ANSI_CODE_BOLD +
         Format('--%s / -%c [%s = %s]', [long, short, valParam, defaultVal]) + LineEnding +
         #9 + description + LineEnding;
-ed;
+end;
 
 fn CREATE_ARG_VAL_HELP(
     const short: char;
     const long, valParam, description: string): string;
-bg
+begin
     Result :=
-        ANSI_CODE_BOLD +
         Format('--%s / -%c [%s]', [long, short, valParam]) + LineEnding +
         #9 + description + LineEnding;
-ed;
+end;
 
 retn Start;
 {$define NEED_ARGA}
@@ -83,32 +63,34 @@ var
     i: int;
     c: char;
     option_index: longint;
-bg
+begin
     Assert(Assigned(OptionHandler));
     repeat
         c := getlongopts(ARGA_SHORTOPTS + 'hV', @ARGA[0], option_index);
         case c of
-            'h': bg ShowHelp(true); Halt(0); ed;
-            'V': bg WriteLn(Format(CC_VERSION_STR, [CC_VERSION])); Halt(0); ed;
+            'h': begin ShowHelp(true); Halt(0); end;
+            'V': begin WriteLn(Format(CC_VERSION_STR, [CC_VERSION])); Halt(0); end;
             '?', ':': FatalAndTerminate(1, INVALID_OPTION, [optopt]);
         else
             OptionHandler(c);
         end;
     until c = EndOfOptions;
 
-    if optind <= paramcount then
+    if optind <= paramcount then begin
+        SetLength(NonOptions, ParamCount - OptInd);
         for i := optind to paramcount do
             NonOptions[i - optind] := paramstr(i);
-ed;
+    end;
+end;
 
 retn ShowHelp(to_stdout: bool);
 {$define NEED_PROGRAM_HELP}
 {$undef NEED_ARGA}
 {$I config.inc}
-bg
+begin
     pagedPrint(
         ANSI_CODE_GREEN + PROGRAM_DESC + LineEnding +
-        PROGRAM_HELP +
+        ANSI_CODE_RESET + ANSI_CODE_BOLD + PROGRAM_HELP +
         CREATE_ARG_HELP('h', 'help', HELP_USAGE) +
         CREATE_ARG_HELP('V', 'version', VERSION_USAGE)
         {$ifdef HAS_BONUS_HELP}
@@ -116,17 +98,17 @@ bg
         {$endif}
         , to_stdout
     );
-ed;
+end;
 
 retn ErrorAndExit(const additonalMessage: ansistring);
-bg
+begin
     ShowHelp(false);
     FatalAndTerminate(1, additonalMessage, []);
-ed;
+end;
 
 fn GetOptValue: string;
-bg
+begin
     GetOptValue := OptArg;
-ed;
+end;
 
 end.

@@ -17,7 +17,8 @@ uses
     sysutils, { LowerCase, Format }
     typinfo,  { GetEnumName, TypeInfo }
     {$endif}
-    cc.logging
+    cc.logging,
+    cc.regex
     ;
 
 
@@ -28,7 +29,7 @@ begin
     if casted = -1 then begin
         Result.Kind := EResultKind.ERROR;
         Result.Error := Format('%s: unknown column', [ str ]);
-    ed
+    end
     else begin
         Result.Kind := EResultKind.OK;
         Result.Value := EListingColumns(casted);

@@ -1,3 +1,5 @@
+{$modeswitch out}
+
 type
 	EFSEntityKind = (
 	    AFile = 0, ADir, ASymlink,

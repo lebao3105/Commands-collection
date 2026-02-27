@@ -19,76 +19,76 @@ var
     {$endif}
 
 retn OptHandler(found: char);
-bg
+begin
     case found of
         'g': ignoreIneligible := true;
         'i': interactive := true;
         'v': verbose := true;
-        'x': bg
+        'x': begin
             r := TRegExpr.Create;
             r.Expression := GetOptValue;
-        ed;
+        end;
         {$ifdef RMDIR}
         'r': recursively := true;
         {$endif}
     end;
-ed;
+end;
 
 fn Confirmation(which: string): bool;
 var inp: char;
-bg
+begin
     if not interactive then exit(true);
     write('Do you really want to remove ' + which + '? y OR Y = yes: ');
     readln(inp);
     return( (inp = 'y') or (inp = 'Y') );
-ed;
+end;
 
 var
     doNeedExistentCheck: bool = true;
 
 fn IsEligible(which: string): bool;
     {$define CheckOP:=FileExists(which) or DirectoryExists(which)}
-bg
+begin
     if (not doNeedExistentCheck) or CheckOP then
-    bg
+    begin
         if Assigned(r) then
             return(r.Exec(which)) // TODO: This can raise exceptions
         else
             return(true);
-    ed;
+    end;
 
     return(false);
-ed;
+end;
 
 retn DeleteThing(which: string);
 {$ifdef RMDIR}
 var f: TSearchRec;
 {$endif}
-bg
+begin
     if verbose then
         info('Attemping to delete ' + which);
 
     if not IsEligible(which) then
-    bg
+    begin
         if not ignoreIneligible then
             die(which + ' is not eligible') // TODO: Explain
-        else bg
+        else begin
             error(which + ' is not eligible. Skipping.');
             return;
-        ed;
-    ed;
+        end;
+    end;
 
     if Confirmation(which) then
         try
             {$ifdef RMDIR}
             if recursively and (FindFirst(which + '*',
                     faAnyFile or faDirectory or faHidden, f) = 0) then
-            bg
+            begin
                 doNeedExistentCheck := false;
                 repeat
                     DeleteThing(which + '/' + f.Name);
                 until FindNext(f) <> 0;
-            ed;
+            end;
             {$endif}
             doNeedExistentCheck := true;
             RmOP(which);
@@ -98,7 +98,7 @@ bg
             else
                 error('Failed to remove ' + which + ': ' + E.Message);
         end;
-ed;
+end;
 
 var
     I: int;

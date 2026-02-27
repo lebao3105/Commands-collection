@@ -22,55 +22,55 @@ uses
     ;
 
 fn GetLastErrno: longint; inline;
-bg
+begin
     GetLastErrno := FpGetErrno;
-ed;
+end;
 
 retn Debug(const message: string; args: array of const);
-bg
+begin
     {$ifdef NDEBUG}
     if GetEnvironmentVariable('DEBUG') = '1' then
     {$endif}
         writeln(ANSI_CODE_MAGENTA +
                 'debug: ' + ANSI_CODE_RESET + Format(message, args));
-ed;
+end;
 
 retn Info(const message: string; args: array of const);
-bg
+begin
     writeln(ANSI_CODE_BLUE +
             'info: ' + ANSI_CODE_RESET + Format(message, args));
-ed;
+end;
 
 retn Warning(const message: string; args: array of const);
-bg
+begin
     writeln(ANSI_CODE_YELLOW + 'warning: ' + ANSI_CODE_RESET +
             Format(message, args));
-ed;
+end;
 
 retn Error(const message: string; args: array of const);
-bg
+begin
     writeln(stderr, ANSI_CODE_RED + 'error: ' + ANSI_CODE_RESET +
             Format(message, args));
-ed;
+end;
 
 fn Confirmation(const message: string; args: array of const): char;
-bg
+begin
     writeln(Format(message, args));
     write(ANSI_CODE_GREEN + ANSI_CODE_BOLD + 'confirm: ' + ANSI_CODE_RESET +
           Format(message, args) + ' [yYnNaA]: ');
     readln(Confirmation);
-ed;
+end;
 
 retn Fatal(const message: string; args: array of const);
-bg
+begin
     writeln(stderr, ANSI_CODE_RED + ANSI_CODE_BOLD + 'fatal: ' + ANSI_CODE_RESET +
             Format(message, args));
-ed;
+end;
 
 retn FatalAndTerminate(const exit_code: int; const message: string; args: array of const);
-bg
+begin
     Fatal(message, args);
     Halt(exit_code);
-ed;
+end;
 
 end.

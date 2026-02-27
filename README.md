@@ -27,7 +27,7 @@ Read the [Wiki](https://github.com/lebao3105/Commands-Collection/wiki).
 
 * [@ikelaiah](https://github.com/ikelaiah) for cli-fp library. Part of it was used and modified.
 * Everyone who made resources for us to [refer](#references)
-* [Ararslan] for their [termcolor-c](https://github.com/ararslan/termcolor-c/)
+* [Ararslan] for their [termcolor-c](https://github.com/ararslan/termcolor-c/). It was used.
 
 ## References
 

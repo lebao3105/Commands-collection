@@ -31,26 +31,26 @@ resourcestring
 	ExeNotFound = '%s not found - any typo here?';
 
 retn OptionParser(found: char);
-bg
+begin
     case (found) of
-        'g': bg
+        'g': begin
             SetLength(getValues, Length(getValues) + 1);
             getValues[High(getValues)] := GetOptValue;
-        ed;
+        end;
 
-        's': bg
+        's': begin
             SetLength(setValues, Length(setValues) + 1);
             setValues[High(setValues)] := GetOptValue;
-        ed;
+        end;
 
-        'u': bg
+        'u': begin
             SetLength(unsetValues, Length(unsetValues) + 1);
             getValues[High(unsetValues)] := GetOptValue;
-        ed;
+        end;
 
         'c': cleanEnv := true;
-    ed;
-ed;
+    end;
+end;
 
 var
 	targetProg: ansistring;
@@ -60,11 +60,11 @@ var
 
 begin
 	if ParamCount = 0 then
-	bg
+	begin
 		for i := 1 to GetEnvironmentVariableCount do
 			writeln(GetEnvironmentString(i));
 		exit;
-	ed;
+	end;
 
 	cc.custcustapp.OptionHandler := @OptionParser;
 	cc.custcustapp.Start;
@@ -84,7 +84,7 @@ begin
 	if not FileExists(targetProg) then
 		targetProg := ExeSearch(targetProg, sysutils.GetEnvironmentVariable('PATH'));
 
-	if targetProg <> '' then bg
+	if targetProg <> '' then begin
 		aProcess := TProcess.Create(nil);
 
 		aProcess.Executable := targetProg;
@@ -110,9 +110,9 @@ begin
 		progArgs.Free;
 
 		halt(aProcess.ExitCode);
-	ed
-	else bg
+	end
+	else begin
 		progArgs.Free;
 		FatalAndTerminate(1, Format(ExeNotFound, [ cc.custcustapp.NonOptions[0] ]));
-	ed;
+	end;
 end.

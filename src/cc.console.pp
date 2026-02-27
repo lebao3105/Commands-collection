@@ -29,31 +29,31 @@ var
     Modified: bool;
 
 fn refreshTerminalSz: bool;
-bg
+begin
     Result := true;
-    if NeedToRefreshSz then bg
+    if NeedToRefreshSz then begin
         Result := fpioctl(OutputHandle, TIOCGWINSZ, @Sz) <> -1;
         if Result then NeedToRefreshSz := false;
-    ed;
-ed;
+    end;
+end;
 
 fn getTerminalCols: word;
-bg
+begin
     if refreshTerminalSz() then
         return(Sz.ws_col);
     return(0);
-ed;
+end;
 
 fn getTerminalRows: word;
-bg
+begin
     if refreshTerminalSz() then
         return(Sz.ws_row);
     return(0);
-ed;
+end;
 
 fn enableRawStdIn(disableCtrlCZ: bool): bool;
 var modi: termios;
-bg
+begin
     if tcgetattr(StdInputHandle, OriginalTermios) = -1 then
         return(false);
 
@@ -74,17 +74,17 @@ bg
 
     Result := tcsetattr(StdInputHandle, TCSAFLUSH, modi) <> -1;
     Modified := Result;
-ed;
+end;
 
 fn disableRawStdIn: bool;
-bg
+begin
     Result := tcsetattr(StdInputHandle, TCSAFLUSH, OriginalTermios) <> -1;
     Modified := not Result;
-ed;
+end;
 
 fn enableEchoing(enable: bool): bool;
 var modi: termios;
-bg
+begin
     if tcgetattr(StdInputHandle, modi) = -1 then
         return(false);
     
@@ -95,23 +95,23 @@ bg
 
     Result := tcsetattr(StdInputHandle, TCSAFLUSH, modi) <> -1;
     Modified := Result;
-ed;
+end;
 
 retn setOutputStream(toStdErr: bool);
-bg
-    if toStdErr then bg
+begin
+    if toStdErr then begin
         OutputFile := stderr;
         OutputHandle := StdErrorHandle;
-    ed
-    else bg
+    end
+    else begin
         OutputFile := stdout;
         OutputHandle := StdOutputHandle;
-    ed;
-ed;
+    end;
+end;
 
 fn stdInReadKey: string;
 var K: TKeyEvent;
-bg
+begin
     K := TranslateKeyEvent(GetKeyEvent);
     Result := GetKeyEventChar(K);
 
@@ -124,13 +124,13 @@ bg
         if GetKeyEventShiftState(K) <> 0 then
             Result := ShiftStateToString(K, true) + '-' + Result;
     end;
-ed;
+end;
 
 retn screenClear;
-bg
+begin
     write(OutputFile, ESC_KEY+'[2J');
     write(OutputFile, ESC_KEY+'[H'); // move the cursor to the top-left corner
-ed;
+end;
 
 initialization
 
@@ -140,13 +140,13 @@ finalization
 
 DoneKeyboard;
 
-if Modified then bg
+if Modified then begin
     Debug('Restoring default console attributes...', []);
     if not enableEchoing(true) then
         Error('Oh my gotto!', []);
 
     if not disableRawStdIn then
         Error('Oh my gotto2!', []);
-ed;
+end;
 
 end.

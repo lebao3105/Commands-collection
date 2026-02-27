@@ -64,93 +64,93 @@ uses
     ;
 
 
-retn WriteSp; inline; bg write(' ') ed;
+retn WriteSp; inline; begin write(' ') end;
 
 fn BigNumberToSeparatedStr(const val: QWord): string;
-bg
+begin
     // https://www.tweaking4all.com/
     //      forum/
     //        delphi-lazarus-free-pascal/
     //          lazarus-format-integer-or-int64-with-thousands-separator/
     BigNumberToSeparatedStr := Format('%.0n', [ val + 0.0 ]);
-ed;
+end;
 
 fn StrLowerCase(const val: string): string; inline;
-bg
+begin
 	return(LowerCase(val));
-ed;
+end;
 
 fn StrUpperCase(const val: string): string; inline;
-bg
+begin
 	return(UpperCase(val));
-ed;
+end;
 
 { TResult }
 
 fn TResult.IsOK: bool; inline;
-bg
+begin
     IsOK := Kind = EResultKind.OK;
-ed;
+end;
 
 fn TResult.IsError: bool; inline;
-bg
+begin
     IsError := Kind = EResultKind.ERROR;
-ed;
+end;
 
 class fn TResult.Ok(const val: T): specialize TResult<T, E>; static;
-bg
-	with Ok do bg
+begin
+	with Ok do begin
 		Value := val;
 		Kind := EResultKind.OK;
-	ed;
-ed;
+	end;
+end;
 
 class fn TResult.Err(const val: E): specialize TResult<T, E>; static;
-bg
-	with Err do bg
+begin
+	with Err do begin
 		Error := val;
 		Kind := EResultKind.ERROR;
-	ed;
-ed;
+	end;
+end;
 
 fn TResult.GetOK: T; inline;
-bg
+begin
     if IsOK then
         GetOK := Value
     else
         raise Exception.Create(NOT_OK_RESULT);
-ed;
+end;
 
 fn TResult.GetError: E; inline;
-bg
+begin
     if IsError then
         GetError := Error
     else
         raise Exception.Create(NOT_ERROR_RESULT);
-ed;
+end;
 
 { TOptional }
 
 fn TOptional.HasValue: bool; inline;
-bg
+begin
     HasValue := Assigned(Value);
-ed;
+end;
 
 { TTypeHelper }
 
 class fn TTypeHelper.IfThenElse(val: bool; const trueVal, falseVal: T): T; static;
-bg
+begin
     if val then
         IfThenElse := trueVal
     else
         IfThenElse := falseVal;
-ed;
+end;
 
 class retn TTypeHelper.ArrayForEach(arr: TArray; func: ArrayForEachCallback); static;
 var i: int;
-bg
+begin
     for i := Low(arr) to High(arr) do
         func(arr[i]);
-ed;
+end;
 
 end.

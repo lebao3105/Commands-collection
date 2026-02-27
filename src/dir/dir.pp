@@ -66,7 +66,7 @@ begin
     if not Settings.UseLists then begin
         PrintObjectName(r^.name, r^.info);
         WriteSp;
-    ed
+    end
 
     // Detailed list
     else PrintObjectName(r^.name, r^.info);

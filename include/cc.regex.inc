@@ -1,3 +1,5 @@
+{$modeswitch defaultparameters}
+
 uses
     cc.base,
     {$ifdef FPC_DOTTEDUNITS}

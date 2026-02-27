@@ -40,12 +40,12 @@ var
 { Strings }
 
 retn Strings.Append(const s: string); overload;
-bg
+begin
     AppendN(s, system.Length(s));
-ed;
+end;
 
 retn Strings.AppendN(const s: string; N: int); overload;
-bg
+begin
     // Note: We allow empty lines, thus the N >= 0 check
     assert((N >= 0) and (N <= system.Length(s)));
     SetLength(data, system.Length(data) + 1);
@@ -54,7 +54,7 @@ bg
 
     SetLength(lines, system.Length(lines) + 1);
     lines[High(lines)] := length;
-ed;
+end;
 
 { Strings end }
 
@@ -65,7 +65,7 @@ var
     i: int;
     splits: array of string;
     strLength: int;
-bg
+begin
     BreakPoints[0] := 0;
     BreakPoints[1] := 0;
     lineno := 0;
@@ -73,16 +73,16 @@ bg
     splits := SplitString(data, LineEnding);
 
     for i := 0 to High(splits) do
-    bg
+    begin
         strLength := system.Length(splits[i]);
         lineno += (strLength + cols - 1) div cols;
         Data_Lines.AppendN(splits[i], strLength);
-    ed;
-ed;
+    end;
+end;
 
 retn pagedPrintRange(from_, to_: int);
 var i: int;
-bg
+begin
     assert((from_ >= 0) and (to_ < system.Length(Data_Lines.lines)) and (from_ <= to_));
 
     BreakPoints[0] := from_;
@@ -94,24 +94,24 @@ bg
     for i := from_ to to_ do
         writeln(OutputFile, Data_Lines.data[i]);
     write(OutputFile, PAGED_VIEW);
-ed;
+end;
 
 retn pagedPrint(const data: string; useStdErr: bool = false);
-bg;
+begin;
     setOutputStream(useStdErr);
     pagerPrepare(data);
 
     if system.Length(Data_Lines.lines) <= getTerminalRows() - 1 then
-    bg
+    begin
         writeln(OutputFile, data);
         exit;
-    ed;
+    end;
 
     enableRawStdIn(false);
     pagedPrintRange(0, getTerminalRows() - 1);
 
     while BreakPoints[1] < High(Data_Lines.lines) do
-    bg
+    begin
         case stdInReadKey of
             UP_KEY_SIMP:
                 if BreakPoints[0] > 0 then
@@ -120,7 +120,7 @@ bg;
                         BreakPoints[1] - 1
                     );
 
-            DOWN_KEY_SIMP: bg
+            DOWN_KEY_SIMP: begin
                 Inc(BreakPoints[0]);
                 Inc(BreakPoints[1]);
                 writeln(
@@ -128,34 +128,34 @@ bg;
                     Data_Lines.data[BreakPoints[1]],
                     sLineBreak
                 );
-            ed;
+            end;
 
-            LEFT_KEY_SIMP: bg
-            ed;
+            LEFT_KEY_SIMP: begin
+            end;
 
-            RIGHT_KEY_SIMP: bg
-            ed;
+            RIGHT_KEY_SIMP: begin
+            end;
 
             Q_KEY: break;
 
-            CTRL_G: bg // jump to line
+            CTRL_G: begin // jump to line
                 enableEchoing(true);
-            ed;
+            end;
 
-            CTRL_H: bg // help
-            ed;
+            CTRL_H: begin // help
+            end;
 
-            CTRL_F: bg // find
-            ed;
+            CTRL_F: begin // find
+            end;
 
-            CTRL_M: bg // mark
-            ed;
+            CTRL_M: begin // mark
+            end;
 
             CTRL_C: halt(0);
         end;
-    ed;
+    end;
 
     enableEchoing(true);
-ed;
+end;
 
 end.

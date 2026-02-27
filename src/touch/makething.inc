@@ -11,10 +11,10 @@
 {$endif}
 
 if CheckOP(path) then
-bg
+begin
     Error(ALREADY_EXISTS, @path);
     exit;
-ed;
+end;
 
 try
     if beVerbose then
@@ -26,4 +26,4 @@ try
         Info(CREATED_STUFF, @path);
 except on E: Exception do
     FatalAndTerminate(1, FAILED_TO_CREATE, @path, @E.Message);
-ed;
+end;

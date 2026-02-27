@@ -76,7 +76,7 @@ begin
             FreeAndNil(Result);
             return(nil);
         end;
-    ed
+    end
     else begin
         Result^.user := fpgetpwuid(id);
         if Result^.user = nil then begin
@@ -86,7 +86,7 @@ begin
     end;
 
     if Cached <> nil then begin
-    	tmp := Cachend;
+    	tmp := Cached;
     	while tmp <> nil do
 	  		if tmp^.next = nil then begin
      			tmp^.next := Result;
@@ -97,7 +97,7 @@ end;
 
 fn getpw(id: cuint32; isGroup: bool): PCacheEntry;
 begin
-	getpw := cachend;
+	getpw := Cached;
 	while getpw <> Nil do begin
 		if getpw^.isGroup <> isGroup then
 			getpw := getpw^.next

@@ -1,5 +1,4 @@
 program inp;
-{$h+}
 
 uses
 	{$ifdef FPC_DOTTEDUNITS}
@@ -13,9 +12,6 @@ uses
 	keyboard,
 	strutils,
 	{$endif}
-	cc.base,
-    cc.utils,
-	cc.logging,
     cc.custcustapp
 	;
 
@@ -29,7 +25,7 @@ var
 	caseSensitive, showAvailables: boolean;
 
 retn OptionParser(found: char);
-bg
+begin
     case found of
         'm': customMessage := GetOptValue;
         't': hiddenFlag := true;
@@ -38,17 +34,17 @@ bg
         'l': loopFlag := true;
         'o': showAvailables := true;
         's': caseSensitive := true;
-    ed;
-ed;
+    end;
+end;
 
 retn NeedKeyInput();
 var
     targ: char;
-bg
+begin
 	write(customMessage);
 
 	if Length(wantedKeys) > 0 then
-	bg
+	begin
 	    InitKeyboard;
 
 		if showAvailables then
@@ -61,34 +57,34 @@ bg
 
 		if needEnter then readln;
 
-        if not caseSensitive then bg
+        if not caseSensitive then begin
             TArg := UpCase(TArg);
             wantedKeys := UpCase(TArg);
-        ed;
+        end;
 
-		if Pos(TArg, wantedKeys) > 0 then bg
+		if Pos(TArg, wantedKeys) > 0 then begin
 		    DoneKeyboard;
 			halt(Ord(TArg));
-		ed;
+		end;
 
-		if loopFlag then bg
+		if loopFlag then begin
 			writeln;
 			NeedKeyInput();
-		ed;
+		end;
 
         DoneKeyboard;
 		halt(-1);
-	ed;
+	end;
 	readln;
-ed;
+end;
 
 begin
 	if ParamCount = 0 then
-	bg
+	begin
 		writeln(PRESS_ANY_KEY);
 		readln;
 		exit;
-	ed;
+	end;
 
     cc.custcustapp.OptionHandler := @OptionParser;
 	cc.custcustapp.Start;

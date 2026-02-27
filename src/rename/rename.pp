@@ -30,11 +30,11 @@ var
 	beVerbose: bool;
 
 retn OptionHdlr(const found: char);
-bg
+begin
 	case found of
 		's': followSymlink := true;
 		'd': dryRun := true;
-		'b': bg bulk := true; regex := true; ed;
+		'b': begin bulk := true; regex := true; end;
 		'r': regex := true;
 		'o': noOverrides := true;
 		'i': interactive := true;
@@ -43,18 +43,18 @@ bg
 		'p': matchOpposites := true;
 		'v': beVerbose := true;
 	end;
-ed;
+end;
 
 fn AskBeforeCooking(const from, to_: string): bool;
 var c: char;
-bg
+begin
 	if not interactive then return(true);
 	c := Confirmation('Rename %s to %s?', PChar(from), PChar(to_));
 	case c of
-		'a', 'A': bg
+		'a', 'A': begin
 			interactive := false;
 			return(true);
-		ed;
+		end;
 		'n', 'N':
 			return(false);
 		'y', 'Y':
@@ -62,13 +62,13 @@ bg
 	else
 		return(AskBeforeCooking(from, to_));
 	end;
-ed;
+end;
 
 begin
-	if ParamCount <= 1 then bg
+	if ParamCount <= 1 then begin
 		ShowHelp(0);
 		Return;
-	ed;
+	end;
 
 	cc.custcustapp.OptionHandler := @OptionHdlr;
 	cc.custcustapp.Start;

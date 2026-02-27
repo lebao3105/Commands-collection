@@ -36,9 +36,9 @@ retn OptHandler(found: char);
 var
     users: int = 0;
     updays, uphours, upmins, upsecs: int;
-bg
+begin
     case found of
-        'r': bg
+        'r': begin
             while getpwent <> nil do
                 users += 1;
 
@@ -50,12 +50,12 @@ bg
                 inf.loads[1],
                 inf.loads[2]
             ]));
-        ed;
+        end;
 
         's':
             writeln(FormatDateTime('yyyy-mm-dd HH:MM:SS', Now - (inf.uptime / SecsPerDay)));
 
-        'p': bg
+        'p': begin
         	write(CURRENT_TIME); writeSp;
             writeln(FormatDateTime('yyyy-mm-dd HH:mm:ss'#13#10, Now));
 
@@ -76,9 +76,9 @@ bg
 				inf.loads[1],
 				inf.loads[2]
 			]));
-        ed;
-    ed;
-ed;
+        end;
+    end;
+end;
 
 begin
     if sysinfo(@inf) <> 0 then

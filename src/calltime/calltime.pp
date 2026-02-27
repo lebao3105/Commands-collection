@@ -13,11 +13,11 @@ var
     format: string = DEFAULT_FORMAT;
 
 retn OptionParser(found: char);
-bg
+begin
     case found of
         'f': format := GetOptValue;
-    ed;
-ed;
+    end;
+end;
 
 begin
     cc.custcustapp.OptionHandler := @OptionParser;
