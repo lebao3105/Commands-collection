@@ -44,16 +44,17 @@ jobs:
         run: |
           xmake f -m release
           xmake b -v
+          echo "artifacts=$(find build -type f -executable)" >> $GITHUB_ENV
         working-directory: CC
-        env:
-          TARGET: ${{ matrix.prog }}
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
+        working-directory: CC
         with:
-          path: CC/build/*
+          path: ${{ env.artifacts }}
           if-no-files-found: error
-          name: CC Release for ${{ matrix.os }}
+          name: CC ${{ github.event.inputs.version }} for ${{ matrix.os }}
+          compression-level: 0
 
   publish:
     runs-on: ubuntu-latest
@@ -74,5 +75,5 @@ jobs:
           prerelease: ${{ github.event.inputs.prerelease }}
           draft: true
           body_path: ${{ github.workspace }}/changelogs/${{ github.event.inputs.version }}.md
-          files: "CC Release*"
+          files: "CC ${{ github.event.inputs.version }}*"
           name: v${{ github.event.inputs.version }}

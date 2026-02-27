@@ -53,11 +53,14 @@ jobs:
         run: |
           xmake f -m debug
           xmake b -v
+          echo "artifacts=$(find build -type f -executable)" >> $GITHUB_ENV
         working-directory: CC
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with: # FIXME: build? not build/<os>/<arch>/<variant>?
-          path: CC/build/
+        uses: actions/upload-artifact@v6
+        working-directory: CC
+        with:
+          path: ${{ env.artifacts }}
           if-no-files-found: error
           name: CC Nightly for ${{ matrix.os }}
+          compression-level: 0
