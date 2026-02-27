@@ -11,35 +11,37 @@ uses
     cc.base,
     cc.custcustapp,
     cc.logging,
-    cc.utils,
+    cc.regex,
+    cc.fs,
     dir.report,
-    dir.settings;
+    dir.settings
+    ;
 
 retn ShowDirEntry(const r: PIterateDirResult; knownAsDir: bool);
 
     fn IsNameInvalid: bool;
     var check: specialize TResult<bool, ERegExpr>;
-    bg
+    begin
     	check := RegexHasMatches(r^.name);
      	if check.IsError then
            	FatalAndTerminate(1, REGEX_FAILED, [RegexGetExpr, check.Error.Message])
         else
         	exit(check.Value);
-    ed;
+    end;
 
-bg
+begin
     if IsNameInvalid then exit;
 
     case r^.info.Kind of
     	EFSEntityKind.AStatFailure:
-	    bg
+	    begin
 	        Inc(statFailCount);
 
-	        // if knownAsDir then bg
+	        // if knownAsDir then begin
 	        //     Error(OPEN_DIR_FAILED, @r^.name, @StrError(GetLastErrno));
 	        //     writeln;
 	        //     exit;
-	        // ed;
+	        // end;
 
 	        if Settings.UseLists then
 	            writeln(Format(STAT_FAILED, [ r^.name, StrError(GetLastErrno) ]))
@@ -47,38 +49,38 @@ bg
 	            write(Format('%s(E %d)', [ r^.name, GetLastErrno ]));
 
 	        exit;
-	    ed;
+	    end;
 
 		EFSEntityKind.ADir:
 			Inc(dirCount);
 
-		else bg
+		else begin
 			if Settings.DirOnly then exit;
 			Inc(filesSize, r^.info.Size);
-    	ed;
+    	end;
     end;
 
     Inc(count);
 
     // Name-only list
-    if not Settings.UseLists then bg
+    if not Settings.UseLists then begin
         PrintObjectName(r^.name, r^.info);
         WriteSp;
     ed
 
     // Detailed list
     else PrintObjectName(r^.name, r^.info);
-ed;
+end;
 
 retn ListItems(const path: string); inline;
-bg
+begin
     IterateDir(path, @ShowDirEntry, Settings.Recursively,
                (High(cc.custcustapp.NonOptions) > 1) or Settings.Recursively);
     Report;
-ed;
+end;
 
 retn OptionParser(found: char);
-bg
+begin
     case found of
         'l': Settings.UseLists := true;
         'a': Settings.IgnoreHiddens := false;
@@ -87,13 +89,13 @@ bg
         'i': RegexAppendExpr(GetOptValue);
         'B': Settings.IgnoreBackups := true;
         'R': Settings.Recursively := true;
-    ed;
-ed;
+    end;
+end;
 
 fn RegexCheck: bool;
 var
     checkr: specialize TResult<bool, ERegExpr>;
-bg
+begin
     if RegexGetExpr = '' then
         return(true);
     
@@ -106,7 +108,7 @@ bg
         REGEX_FAILED_LOC,
         [RegexGetLastError, RegexGetLastCompileErrorPos]
     );
-ed;
+end;
 
 begin
     case StrLowerCase(GetEnvironmentVariable('DIR_PRESET')) of

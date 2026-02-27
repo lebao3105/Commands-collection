@@ -1,6 +1,6 @@
 uses
     cc.base,
-    cc.utils { EFSEntityKind }
+    cc.fs { EFSEntityKind }
     ;
 
 type

@@ -2,7 +2,7 @@ unit dir.report;
 
 interface
 
-uses cc.utils;
+uses cc.fs;
 
 var
     filesSize	 : qword = 0;
@@ -35,7 +35,9 @@ implementation
 
 uses
 	cc.base,
+	{$ifndef HAIKU}
 	cc.idcache,
+	{$endif}
 	cc.console,
 	dir.settings,
 	{$ifdef FPC_DOTTEDUNITS}
@@ -48,15 +50,15 @@ uses
 	;
 
 fn FSPermAsString(const perms: TFSPermissions): string;
-bg
+begin
     FSPermAsString :=
         specialize TTypeHelper<char>.IfThenElse(perms.R, 'r', '-') +
         specialize TTypeHelper<char>.IfThenElse(perms.W, 'w', '-') +
         specialize TTypeHelper<char>.IfThenElse(perms.E, 'x', '-');
-ed;
+end;
 
 retn Report;
-bg
+begin
 	// BigNumberToSeparatedStr(DiskFree(0))
 	// ^ To get the free space. To be honest, this is NOT
 	// the right way (hard-coded disk) on Windows
@@ -67,22 +69,27 @@ bg
     ignoredCount := 0;
     count := 0;
     statFailCount := 0;
-ed;
+end;
 
 retn PrintObjectName(const name: string; const props: TFSProperties);
 var
 	i: longint;
+	{$ifndef HAIKU}
 	itemPasswd, itemGroup: PCacheEntry;
-bg
+	{$endif}
+begin
+	{$ifndef HAIKU}
 	itemPasswd := getpw(props.Uid, false);
 	itemGroup := getpw(props.Gid, true);
+	{$endif}
 
-	for i := Low(Settings.Columns) to High(Settings.Columns) do bg
+	for i := Low(Settings.Columns) to High(Settings.Columns) do
+	begin
 		case Settings.Columns[i] of
-			EListingColumns.NAME: bg
+			EListingColumns.NAME: begin
 				write(name);
-				write(stdout, ANSI_CODE_RESET);
-			ed;
+				write(ANSI_CODE_RESET);
+			end;
 
 			EListingColumns.SIZE:
 				write(Format('%.0u', [ props.Size ]));
@@ -90,17 +97,19 @@ bg
 			EListingColumns.KIND:
 				write(FSEntityKindToTypeString(props.Kind));
 
-			EListingColumns.PERMS: bg
+			EListingColumns.PERMS: begin
 				write(FSPermAsString(props.Perms[0]));
 			    write(FSPermAsString(props.Perms[1]));
 			    write(FSPermAsString(props.Perms[2]));
-			ed;
+			end;
 
+			{$ifndef HAIKU}
 			EListingColumns.OWNER_NAME:
 				write(itemPasswd^.GetName);
 
 			EListingColumns.OWNER_GROUP:
 				write(itemGroup^.GetName);
+			{$endif}
 
 			EListingColumns.LAST_MODIFIED:
 				write(FormatDateTime(Settings.TimeFormat, props.LastModifyTime));
@@ -110,9 +119,9 @@ bg
 		end;
 
 		WriteSp;
-	ed;
+	end;
 
 	Writeln;
-ed;
+end;
 
 end.

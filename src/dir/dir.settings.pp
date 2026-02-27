@@ -23,24 +23,24 @@ uses
 
 fn StringToListCol(const str: string): specialize TResult<EListingColumns, string>;
 var casted: int;
-bg
+begin
     casted := GetEnumValue(TypeInfo(EListingColumns), LowerCase(str));
-    if casted = -1 then bg
+    if casted = -1 then begin
         Result.Kind := EResultKind.ERROR;
         Result.Error := Format('%s: unknown column', [ str ]);
     ed
-    else bg
+    else begin
         Result.Kind := EResultKind.OK;
         Result.Value := EListingColumns(casted);
-    ed;
-ed;
+    end;
+end;
 
 fn BeginSettingsThread(p_file_path: pointer): ptrint;
 var
 //     stream: TYamlStream;
 //     parser: TYamlParser;
     file_path: string;
-bg
+begin
     file_path := string(p_file_path);
     Debug('Started settings thread', []);
     // parser := TYamlStream.Create(file_path);
@@ -59,19 +59,19 @@ bg
     //     parser.Free;
     // end;
     Debug('Settings thread finished', []);
-ed;
+end;
 
 retn RegexPrepare;
-bg
+begin
     RegexSetModifiers(Settings.IgnoreRegexModifiers);
 
     if Settings.IgnoreHiddens then
         RegexAppendExpr('^\.');
     
-    if Settings.IgnoreBackups then bg
+    if Settings.IgnoreBackups then begin
         RegexAppendExpr('(\.bak)$');
         RegexAppendExpr('(~)$');
-    ed;
+    end;
 
     specialize TTypeHelper<string>.ArrayForEach(
         Settings.IgnoreRegexPatterns,
@@ -79,12 +79,12 @@ bg
     );
 
     debug('Ignore expression: %s', [RegexGetExpr]);
-ed;
+end;
 
 fn FSEntityKindToTypeString(tp: EFSEntityKind): string; inline;
-bg
+begin
     return(Settings.TypeFormats[ord(tp)]);
-ed;
+end;
 
 initialization
 
