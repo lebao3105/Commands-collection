@@ -26,3 +26,6 @@ fpcdebug*
 compile_commands.json
 .xmake
 .cache
+
+.vscode/
+.zed/
