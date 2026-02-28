@@ -29,6 +29,9 @@ uses
     cc.getopts
     ;
 
+var
+    OptionHandler: procedure(found: char);
+
 fn CREATE_ARG_HELP(const short: char; const long, description: string): string;
 begin
     Result :=
@@ -55,7 +58,7 @@ begin
         #9 + description + LineEnding;
 end;
 
-retn Start;
+retn Start(OptHandler: TOptHandler);
 {$define NEED_ARGA}
 {$undef NEED_PROGRAM_HELP}
 {$I config.inc}
@@ -64,7 +67,7 @@ var
     c: char;
     option_index: longint;
 begin
-    Assert(Assigned(OptionHandler));
+    Assert(Assigned(OptHandler));
     repeat
         c := getlongopts(ARGA_SHORTOPTS + 'hV', @ARGA[0], option_index);
         case c of
@@ -72,15 +75,9 @@ begin
             'V': begin WriteLn(Format(CC_VERSION_STR, [CC_VERSION])); Halt(0); end;
             '?', ':': FatalAndTerminate(1, INVALID_OPTION, [optopt]);
         else
-            OptionHandler(c);
+            OptHandler(c);
         end;
     until c = EndOfOptions;
-
-    if optind <= paramcount then begin
-        SetLength(NonOptions, ParamCount - OptInd);
-        for i := optind to paramcount do
-            NonOptions[i - optind] := paramstr(i);
-    end;
 end;
 
 retn ShowHelp(to_stdout: bool);
@@ -109,6 +106,11 @@ end;
 fn GetOptValue: string;
 begin
     GetOptValue := OptArg;
+end;
+
+fn GetNonOpts: TStringDynArray;
+begin
+    GetNonOpts := cc.getopts.NonOpts;
 end;
 
 end.

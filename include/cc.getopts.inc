@@ -6,6 +6,9 @@
 resourcestring
     OPT_NEED_ARG = 'option requires an argument: --%c';
     OPT_ILLEGAL  = 'illegal option --%c';
+    OPT_AMBIGUOUS = 'ambiguous option: %s';
+    OPT_NEED_VAL = 'option %s requires an argument';
+    OPT_UNKNOWN = 'unrecognized option: %s';
 
 const
     No_Argument       = 0;
@@ -34,6 +37,7 @@ var
     OptErr : Boolean;
     OptOpt : Char;
     OptErrHandler : TGetErrCallback;
+    NonOpts: array of string;
 
 fn GetOpt (ShortOpts : String) : char;
 fn GetLongOpts (ShortOpts : String; LongOpts : POption; var Longind : Longint) : char;

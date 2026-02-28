@@ -75,7 +75,7 @@ end;
 retn ListItems(const path: string); inline;
 begin
     IterateDir(path, @ShowDirEntry, Settings.Recursively,
-               (High(cc.custcustapp.NonOptions) > 1) or Settings.Recursively);
+               (High(cc.custcustapp.GetNonOpts) > 1) or Settings.Recursively);
     Report;
 end;
 
@@ -92,47 +92,25 @@ begin
     end;
 end;
 
-fn RegexCheck: bool;
-var
-    checkr: specialize TResult<bool, ERegExpr>;
-begin
-    if RegexGetExpr = '' then
-        return(true);
-    
-    checkr := RegexVerifyExpr;
-    if not checkr.IsError then
-        return(checkr.Value);
-    
-    FatalAndTerminate(
-        1,
-        REGEX_FAILED_LOC,
-        [RegexGetLastError, RegexGetLastCompileErrorPos]
-    );
-end;
-
 begin
     case StrLowerCase(GetEnvironmentVariable('DIR_PRESET')) of
         'win': dir.settings.Settings := WIN_PRESET;
         'gnu': dir.settings.Settings := GNU_PRESET;
         'ccd': dir.settings.Settings := CCD_PRESET;
     else
+        dir.settings.Settings := CCD_PRESET;
         BeginThread(
             @BeginSettingsThread,
             PChar(GetEnvironmentVariable('DIR_CONFPATH'))
         );
     end;
 
-    cc.custcustapp.OptionHandler := @OptionParser;
-    cc.custcustapp.Start;
-
-    RegexPrepare;
-    RegexCheck;
-
-    if Length(cc.custcustapp.NonOptions) = 0 then
+    cc.custcustapp.Start(@OptionParser);
+    if Length(cc.custcustapp.GetNonOpts) = 0 then
         ListItems('.')
     else
     	specialize TTypeHelper<string>.ArrayForEach(
-            cc.custcustapp.NonOptions,
+            cc.custcustapp.GetNonOpts,
             @ListItems
         );
 end.

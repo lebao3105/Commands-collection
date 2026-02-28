@@ -69,7 +69,6 @@ begin
 	Result := Regexer.Match[idx];
 end;
 
-// see modifiers in https://regex.sorokin.engineer/regular_expressions/#modifiers
 retn RegexAppendExpr(const expr: string);
 begin
 	if Regexer.Expression <> '' then
@@ -82,17 +81,13 @@ begin
 	Result := Regexer.Expression;
 end;
 
-fn RegexVerifyExpr: specialize TResult<bool, ERegExpr>;
+fn RegexVerifyExpr: specialize TOptional<ERegExpr>;
 begin
 	try
-		Result.Kind := EResultKind.OK;
 		Regexer.Compile;
-		Result.Value := true;
 	except
-		on E: ERegExpr do begin
-			Result.Kind := EResultKind.ERROR;
-			Result.Error := E;
-		end;
+		on E: ERegExpr do
+			Result.Value := E;
 	end;
 end;
 

@@ -19,8 +19,6 @@ resourcestring
 	STAT_FAILED 	  = 'failed to stat %s: %s';
 	PERMISSION_DENIED = '%s: permission denied';
 	OPEN_DIR_FAILED   = 'failed to open directory %s: %s';
-	REGEX_FAILED	  = '%s: regular expression failed: %s';
-	REGEX_FAILED_LOC  = '%s: regular expression failed at index %d';
 
 	// Counts
 	FILES_COUNT    = '%u file(s)';

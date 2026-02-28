@@ -78,7 +78,6 @@ end;
 
 procedure getopt_init (var opts : string);
 begin
-{ Initialize some defaults. }
     Optarg:='';
     Optind:=1;
     First_nonopt:=1;
@@ -102,8 +101,8 @@ begin
         end;
 end;
 
-Function Internal_getopt (Var Optstring : string;LongOpts : POption;
-                          LongInd : pointer;Long_only : boolean ) : char;
+function Internal_getopt (var Optstring : string; LongOpts : POption;
+                          LongInd : pointer; Long_only : boolean) : char;
 var
     temp,endopt,
     option_index : byte;
@@ -113,6 +112,20 @@ var
     p,pfound     : POption;
     exact,ambig  : boolean;
     c            : char;
+
+    function isALongOption: bool;
+    begin
+        isALongOption := (currentArg[1] = OptSpecifier) and (currentArg[2] = OptSpecifier);
+    end;
+
+    procedure appendNonOptions;
+    var i: int;
+    begin
+        SetLength(NonOpts, ParamCount - optind);
+        for i := optind to ParamCount do
+            NonOpts[i - optind] := ParamStr(i);
+    end;
+
 begin
     // Initialize if needed.
     optarg := '';
@@ -148,7 +161,7 @@ begin
         );
 
         // Check for '--' argument
-        {$ifdef NEED_TO_MINUSES}
+        {$ifdef NEED_TWO_MINUSES}
         if (optind <> ParamCount) and (currentarg = '--') then
         begin
             inc(optind);
@@ -168,58 +181,56 @@ begin
         if optind>=ParamCount then
         begin
             if first_nonopt<>last_nonopt then
-                optind:=first_nonopt;
-            Internal_getopt := EndOfOptions;
-            exit;
+                optind := first_nonopt;
+            exit(EndOfOptions);
         end;
 
         // This call once again...
         currentarg := specialize TTypeHelper<string>.IfThenElse(
             optind < ParamCount, ParamStr(optind), ''
         );
-   { Are we at a non-option ? }
-     if not(currentarg[1] = OptSpecifier) or (length(currentarg)=1) then
-      begin
-        if ordering=require_order then
-         begin
-           Internal_getopt:=EndOfOptions;
-           exit;
-         end
-        else
-         begin
-           optarg:=strpas(argv[optind]);
-           inc(optind);
-           Internal_getopt:=#0;
-           exit;
-         end;
-      end;
-   { At this point we're at an option ...}
-     nextchar:=2;
-     if (longopts<>nil) and ((currentarg[2]='-') and
-                             (currentArg[1]='-')) then
-      inc(nextchar);
-   { So, now nextchar points at the first character of an option }
-   end;
-{ Check if we have a long option }
-  if longopts<>nil then
-   if length(currentarg)>1 then
-    if ((currentarg[2]='-') and (currentArg[1]='-'))
-       or
-       ((not long_only) and (pos(currentarg[2],optstring)<>0)) then
-     begin
-     { Get option name }
-       endopt:=pos('=',currentarg);
-       if endopt=0 then
-        endopt:=length(currentarg)+1;
-       optname:=copy(currentarg,nextchar,endopt-nextchar);
-     { Match partial or full }
-       p:=longopts;
-       pfound:=nil;
-       exact:=false;
-       ambig:=false;
-       option_index:=0;
-       indfound:=0;
-       while (p^.name<>'') and (not exact) do
+
+        // Are we at a non-option ?
+        if not (currentarg[1] = OptSpecifier) or (length(currentarg) = 1) then
+        begin
+            appendNonOptions;
+
+            // This becomes true if @param optstring starts with + (literal plus).
+            // The parse ends with the first NonOption being found.
+            if ordering = require_order then
+                exit(EndOfOptions);
+
+            optarg := ParamStr(optind);
+            inc(optind);
+            exit(#0);
+        end;
+
+        // At this point we're at a *long* option ...
+        nextchar := 2;
+        if (longopts <> nil) and isALongOption then
+            inc(nextchar);
+            // ^ So, now nextchar points at the first character of an option
+    end;
+
+    // Check if we have to use @param LongOpts
+    if (longopts <> nil) and (length(currentArg) > 1) then
+    if isALongOption or
+       ((not long_only) and (currentarg[2] = optstring)) then
+    begin
+        // Get option name
+        endopt := pos('=',currentarg);
+        if endopt = 0 then
+            endopt := length(currentarg) + 1;
+        optname := copy(currentarg, nextchar, endopt - nextchar);
+
+        { Match partial or full }
+        p:=longopts;
+        pfound:=nil;
+        exact:=false;
+        ambig:=false;
+        option_index:=0;
+        indfound:=0;
+        while (p^.name<>'') and (not exact) do
         begin
           if pos(optname,p^.name)<>0 then
            begin
@@ -281,7 +292,7 @@ begin
                 else
                  begin { no req argument}
                    if opterr then
-                    writeln(argv[0],': option ',pfound^.name,' requires an argument');
+                    error(OPT_NEED_VAL, [pfound^.name]);
                    nextchar:=0;
                    if optstring[1]=':' then
                     Internal_getopt:=':'
@@ -318,7 +329,9 @@ begin
            exit;
         end;
      end; { Of long options.}
-{ We check for a short option. }
+
+
+    // We check for a short option.
   temp:=pos(currentarg[nextchar],optstring);
   c:=currentarg[nextchar];
   inc(nextchar);

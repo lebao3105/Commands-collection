@@ -1,11 +1,19 @@
-var
-    OptionHandler: procedure(found: char);
-    NonOptions: array of string;
+uses
+    {$ifdef FPC_DOTTEDUNITS}
+    system.types
+    {$else}
+    types // TStringDynArray
+    {$endif}
+    ;
 
-retn Start;
+type
+    TOptHandler = retn(found: char);
+
+retn Start(OptHandler: TOptHandler);
 retn ShowHelp(to_stdout: bool = true);
 retn ErrorAndExit(const additonalMessage: ansistring);
 fn GetOptValue: string;
+fn GetNonOpts: TStringDynArray;
 
 resourcestring
     CC_VERSION_STR = 'Commands-Collection (CC) version %s';
@@ -13,5 +21,4 @@ resourcestring
     HELP_USAGE = 'Show this help and exit';
     VERSION_USAGE = 'Show the version of this program and exit';
 
-{$define LineEnding := #13#10} // crlf
-{$I i18n.inc}
+{$I i18n.inc} // application-specific
