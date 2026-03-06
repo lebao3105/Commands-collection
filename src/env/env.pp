@@ -3,60 +3,44 @@ program env;
 uses
 	{$ifdef FPC_DOTTEDUNITS}
 	system.sysutils,
-	system.strutils,
-	system.classes,
-	sysstem.process,
-	system.types,
+	unixapi.base,
 	{$else}
 	sysutils, // GetEnvironmentVariable*
-	strutils,
-	classes, // TStringList
-	process, // TProcess
-	types, // TStringDynArray
+	baseunix,
 	{$endif}
 	cc.custcustapp,
 	cc.logging,
-	cc.base
+	cc.base,
+	cc.pager
 	;
 
 var
-    getValues: TStringDynArray;
-    setValues: TStringDynArray;
-    unsetValues: TStringDynArray;
-    cleanEnv: boolean = false;
+    getValues,
+    setValues,
+    unsetValues
+		: array of string;
+    cleanEnv: bool = false;
 
 resourcestring
 	NoProgSpecified = 'No program was specified. This program will not set ' +
 	                  'variables for your current shell/program instance and even user/system-wide.';
 	ExeNotFound = '%s not found - any typo here?';
+	ProcessExit = 'Process exited with the following message: %s';
 
 retn OptionParser(found: char);
 begin
     case (found) of
-        'g': begin
-            SetLength(getValues, Length(getValues) + 1);
-            getValues[High(getValues)] := GetOptValue;
-        end;
-
-        's': begin
-            SetLength(setValues, Length(setValues) + 1);
-            setValues[High(setValues)] := GetOptValue;
-        end;
-
-        'u': begin
-            SetLength(unsetValues, Length(unsetValues) + 1);
-            getValues[High(unsetValues)] := GetOptValue;
-        end;
-
+        'g': specialize TTypeHelper<string>.ArrayAppend(getValues, GetOptValue);
+        's': specialize TTypeHelper<string>.ArrayAppend(setValues, GetOptValue);
+        'u': specialize TTypeHelper<string>.ArrayAppend(unsetValues, GetOptValue);
         'c': cleanEnv := true;
     end;
 end;
 
 var
-	targetProg: ansistring;
-	progArgs: TStringList;
-	aProcess: TProcess;
-    i : uint16;
+	progArgs, progEnv: PPChar;
+    i: uint16;
+	envc: int;
 
 begin
 	if ParamCount = 0 then
@@ -66,53 +50,42 @@ begin
 		exit;
 	end;
 
-	cc.custcustapp.OptionHandler := @OptionParser;
-	cc.custcustapp.Start;
+	cc.custcustapp.Start(@OptionParser);
 
 	for i := Low(getValues) to High(getValues) do
 		writeln(
-			getValues[i] + '=' + sysutils.GetEnvironmentVariable(getValues[i]));
+			getValues[i] + '=' + GetEnvironmentVariable(getValues[i]));
 
-	if Length(cc.custcustapp.NonOptions) = 0 then
-		FatalAndTerminate(1, NoProgSpecified);
+	if Length(cc.custcustapp.GetNonOpts) = 0 then
+		FatalAndTerminate(1, NoProgSpecified, []);
+	
+	// Create array of arguments
+	GetMem(progArgs, (Length(cc.custcustapp.GetNonOpts) + 1) * SizeOf(PChar));
+	for i := 1 to Length(cc.custcustapp.GetNonOpts) do
+		progArgs[i] := PChar(cc.custcustapp.GetNonOpts[i]);
+	progArgs[Length(cc.custcustapp.GetNonOpts) + 1] := Nil;
 
-	progArgs := TStringList.Create;
-	progArgs.SetStrings(cc.custcustapp.NonOptions);
-	progArgs.Delete(0); // the target program
+	if not FileExists(progArgs[0]) then
+		progArgs[0] := PChar(ExeSearch(progArgs[0], GetEnvironmentVariable('PATH')));
+	
+	if progArgs[0] = '' then
+		FatalAndTerminate(1, ExeNotFound, [ cc.custcustapp.GetNonOpts[0] ]);
 
-	targetProg := cc.custcustapp.NonOptions[0];
-	if not FileExists(targetProg) then
-		targetProg := ExeSearch(targetProg, sysutils.GetEnvironmentVariable('PATH'));
-
-	if targetProg <> '' then begin
-		aProcess := TProcess.Create(nil);
-
-		aProcess.Executable := targetProg;
-		aProcess.Parameters.AddStrings(progArgs);
-		aProcess.Options := aProcess.Options + [poWaitOnExit];
-		aProcess.CurrentDirectory := GetCurrentDir;
-
-		aProcess.Environment := TStringList.Create;
-		if not cleanEnv then
-			//       v intentional by the RTL
-			for i := 1 to GetEnvironmentVariableCount do
-				aProcess.Environment.Add(GetEnvironmentString(i));
-
-		if Length(setValues) > 0 then
-			aProcess.Environment.AddStrings(setValues);
-
-		if Length(unsetValues) > 0 then
-			for i := 0 to High(unsetValues) do
-				aProcess.Environment.Delete(aProcess.Environment.IndexOfName(unsetValues[i]));
-
-		aProcess.Execute;
-		aProcess.Free;
-		progArgs.Free;
-
-		halt(aProcess.ExitCode);
-	end
-	else begin
-		progArgs.Free;
-		FatalAndTerminate(1, Format(ExeNotFound, [ cc.custcustapp.NonOptions[0] ]));
+	// Create array of environment variables
+	envc := GetEnvironmentVariableCount;
+	GetMem(progEnv, (envc + Length(setValues) + 1) * SizeOf(PChar));
+	//       v intentional by the RTL
+	for i := 1 to envc do
+	begin
+		progEnv[i - 1] := PChar(GetEnvironmentString(i));
+		// TODO: Unsets
 	end;
+
+	for i := 0 to Length(setValues) do
+		progEnv[i + envc] := PChar(setValues[i]);
+	progEnv[envc + Length(setValues) + 1] := Nil;
+
+	// Launch.
+	if fpExecVe(progArgs[0], progArgs, progEnv) = -1 then
+		Fatal(ProcessExit, [ StrError(GetLastErrno) ]);
 end.
