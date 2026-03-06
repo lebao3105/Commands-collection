@@ -3,14 +3,6 @@
 {$modeswitch class}
 {$modeswitch result}
 
-uses
-    {$ifdef FPC_DOTTEDUNITS}
-    system.types
-    {$else}
-    types // TStringDynArray
-    {$endif}
-    ;
-
 type
 	// Behold, Rust!
 	EResultKind = (OK, ERROR);

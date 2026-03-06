@@ -23,7 +23,8 @@ uses
     ;
 
 var
-    OriginalTermios: termios;
+    OriginalStdInTermios: termios;
+    OriginalStdOutTermios: termios;
     NeedToRefreshSz: bool = true;
     Sz: WinSize;
     Modified: bool;
@@ -54,10 +55,10 @@ end;
 fn enableRawStdIn(disableCtrlCZ: bool): bool;
 var modi: termios;
 begin
-    if tcgetattr(StdInputHandle, OriginalTermios) = -1 then
+    if tcgetattr(StdInputHandle, OriginalStdInTermios) = -1 then
         return(false);
 
-    modi := OriginalTermios;
+    modi := OriginalStdInTermios;
     // Turn off canonical mode / line-by-line processing (ICANON)
     // Turn off Ctrl-V (and more?) events (IEXTEN)
     modi.c_lflag := modi.c_lflag and not (ICANON or IEXTEN);
@@ -78,7 +79,7 @@ end;
 
 fn disableRawStdIn: bool;
 begin
-    Result := tcsetattr(StdInputHandle, TCSAFLUSH, OriginalTermios) <> -1;
+    Result := tcsetattr(StdInputHandle, TCSANOW, OriginalStdInTermios) <> -1;
     Modified := not Result;
 end;
 
@@ -93,7 +94,7 @@ begin
     else
         modi.c_lflag := modi.c_lflag and not ECHO;
 
-    Result := tcsetattr(StdInputHandle, TCSAFLUSH, modi) <> -1;
+    Result := tcsetattr(StdInputHandle, TCSANOW, modi) <> -1;
     Modified := Result;
 end;
 
@@ -132,9 +133,31 @@ begin
     write(OutputFile, ESC_KEY+'[H'); // move the cursor to the top-left corner
 end;
 
+var
+    modifiedStdOut: termios;
+
 initialization
 
 InitKeyboard;
+if tcgetattr(StdOutputHandle, OriginalStdOutTermios) = -1 then
+begin
+    error('Failed to retrieve stdout attributes: %s', [ StrError(GetLastErrNo) ]);
+    return;
+end;
+
+modifiedStdOut := OriginalStdOutTermios;
+modifiedStdOut.c_oflag := modifiedStdOut.c_oflag or ONLCR;
+modifiedStdOut.c_oflag := modifiedStdOut.c_oflag or ONOCR;
+modifiedStdOut.c_oflag := modifiedStdOut.c_oflag and not OCRNL;
+
+if tcsetattr(StdOutputHandle, TCSANOW, modifiedStdOut) = -1 then
+begin
+    warning('Failed to apply some required stdout attributes: %s', [ StrError(GetLastErrNo) ]);
+    return;
+end;
+
+// TODO: Separate flag for stdout
+// Modified := true;
 
 finalization
 
@@ -142,11 +165,14 @@ DoneKeyboard;
 
 if Modified then begin
     Debug('Restoring default console attributes...', []);
-    if not enableEchoing(true) then
-        Error('Oh my gotto!', []);
+    // if not enableEchoing(true) then
+    //     Error('Oh my gotto!', []);
 
     if not disableRawStdIn then
         Error('Oh my gotto2!', []);
 end;
+
+if tcsetattr(StdOutputHandle, TCSANOW, OriginalStdOutTermios) = -1 then
+    error('oh my gotto3!', []);
 
 end.
