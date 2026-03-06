@@ -36,3 +36,6 @@ compile_commands.json
 # Backup files
 *.~
 *.bak
+
+# Man pages
+*.man

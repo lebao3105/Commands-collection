@@ -45,11 +45,24 @@ rule("program_pas")
 		os.mkdir(objdir)
 	end)
 
+-- rule("program_docs")
+-- 	on_build(function (target)
+-- 		local name = target:name()
+-- 		local scdoc = find_program("scdoc")
+-- 		local inp = "docs/1/" .. name .. ".scd"
+-- 		local out = "docs/1/cc-" .. name .. ".man"
+
+-- 		if os.isfile(inp) and (not scdoc == nil) then
+-- 			os.execv(scdoc, {}, { stdin = inp, stdout = out })
+-- 		end
+-- 	end)
+
 for i, dir in ipairs(os.dirs("src/*", { async = true })) do
 	local name = path.filename(dir)
 
 	if os.isfile("src/" .. name .. "/" .. name .. ".pp") then
 		target(name)
+			-- add_rules("program_pas", "program_docs")
 			add_rules("program_pas")
 
 		programs[i] = name
@@ -63,6 +76,16 @@ target("update-locals")
 		local xgettext = find_program("xgettext")
 		local msgmerge = find_program("msgmerge")
 		local potloc = "i18n/cc.pot"
+
+		if xgettext == nil then
+			error("Failed to find xgettext!")
+			return
+		end
+
+		if msgmerge == nil then
+			error("Failed to find msgmerge!")
+			return
+		end
 		
 		-- Start freshly
 		if os.isfile(potloc) then
@@ -94,8 +117,13 @@ target("update-locals")
 target("compile-locals")
 	on_build(function (_)
 		local msgfmt = find_program("msgfmt")
+
+		if msgfmt == nil then
+			error("Failed to find msgfmt!")
+			return
+		end
+
 		for __, fullpath in ipairs(os.dirs("i18n/*")) do
-			local outpath = fullpath .. "/cc.po"
-			os.execv(msgfmt, { outpath, "-o", fullpath .. "/cc.mo" })
+			os.execv(msgfmt, { fullpath .. "/cc.po", "-o", fullpath .. "/cc.mo" })
 		end
 	end)
