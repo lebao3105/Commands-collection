@@ -5,12 +5,7 @@ set_policy("check.auto_ignore_flags", false)
 local version = "1.1.0alpha"
 local programs = {}
 
-option("fpc-conf")
-	set_showmenu(true)
-	set_description("Path of FPC's generated fpc.cfg")
-	set_default("/etc/fpc.cfg")
-
-option("output-prefix")
+option("output_prefix")
     set_showmenu(true)
     set_description("Prefix for built binaries - useful for co-use with ones like GNU Coreutils")
     set_default("")
