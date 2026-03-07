@@ -1,7 +1,7 @@
 unit cc.logging;
 {$mode objfpc} // for array of const
 {$modeswitch defaultparameters}
-{$modeswitch objfpc-}
+//{$modeswitch objfpc-} // doesn't work
 
 interface
 

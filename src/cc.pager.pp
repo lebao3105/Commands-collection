@@ -88,7 +88,7 @@ begin
     BreakPoints[0] := from_;
     BreakPoints[1] := to_;
 
-    enableEchoing(false);
+    // enableEchoing(false);
     screenClear;
 
     for i := from_ to to_ do
@@ -107,7 +107,7 @@ begin;
         exit;
     end;
 
-    enableRawStdIn(false);
+    // enableRawStdIn(false);
     pagedPrintRange(0, getTerminalRows() - 1);
 
     while BreakPoints[1] < High(Data_Lines.lines) do
