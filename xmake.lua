@@ -45,17 +45,36 @@ rule("program_pas")
 		os.mkdir(objdir)
 	end)
 
--- rule("program_docs")
--- 	on_build(function (target)
--- 		local name = target:name()
--- 		local scdoc = find_program("scdoc")
--- 		local inp = "docs/1/" .. name .. ".scd"
--- 		local out = "docs/1/cc-" .. name .. ".man"
 
--- 		if os.isfile(inp) and (not scdoc == nil) then
--- 			os.execv(scdoc, {}, { stdin = inp, stdout = out })
--- 		end
--- 	end)
+rule("API_docs")
+	set_extensions(".inc", ".pp")
+	on_build_file(function (_, sourcefile, __)
+		import("core.project.depend")
+		local defines = {}
+		local i = 0
+
+		if not os.isdir("docs/api/") then
+			os.mkdir("docs/api/")
+		end
+
+		for line in io.lines("fpc.cfg") do
+			if line:startswith("-d") then
+				defines[i] = '--define ' .. line:split("-d")[1]
+				i = i + 1
+			end
+		end
+
+		depend.on_changed(
+			function ()
+				os.execv("pasdoc", table.join(defines, {"@pasdoc.cfg", "include/*"}))
+			end,
+			{
+				files = {
+					sourcefile
+				}
+			}
+		)
+	end)
 
 for i, dir in ipairs(os.dirs("src/*", { async = true })) do
 	local name = path.filename(dir)
@@ -65,9 +84,24 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
 			-- add_rules("program_pas", "program_docs")
 			add_rules("program_pas")
 
+		target(name .. "-docs")
+			on_build(function (_)
+				local scdoc = find_program("scdoc")
+				local inp = "docs/1/" .. name .. ".scd"
+				local out = "docs/1/cc-" .. name .. ".man"
+
+				if os.isfile(inp) and (not scdoc == nil) then
+					os.execv(scdoc, {}, { stdin = inp, stdout = out })
+				end
+			end)
+
 		programs[i] = name
 	end
 end
+
+target("API-docs")
+	add_rules("API_docs") -- TODO: Rename
+	add_files("include/*.inc")
 
 target("update-locals")
 	add_deps(programs)
