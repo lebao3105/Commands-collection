@@ -65,11 +65,11 @@ type
         printPath: bool;
     end;
 
-{ Reads @param path, and write its attributes into @pram info.
+{ Reads path, and write its attributes into info.
   Returns a boolean indicating whether the operation succeed or not. }
 fn PopulateFSInfo(const path: string; out info: TFSProperties): bool;
 
-{ Iterates @param p, and run @param cb on each entry. Print the directory name if pr is true.
+{ Iterates p, and run cb on each entry. Print the directory name if pr is true.
   Iterates recursively when r is true.
   If an element / p itself is unreadable (fpOpenDir / fpReadDir / fpStat),
   the provided TIterateDirResult will have its info.Kind set to EFSEntityKind.AStatFailure. }

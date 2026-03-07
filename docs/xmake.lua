@@ -45,6 +45,7 @@ target("API-docs")
 		table.append(args, "@docs/pasdoc.cfg")
 		table.append(args, target:get("files"))
 		table.append(args, "-X") -- Copyright header
+        table.append(args, "-DPASDOC")
 
 		depend.on_changed(
 			function ()

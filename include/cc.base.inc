@@ -53,20 +53,20 @@ type
 		type
 			TArray = array of T;
 
-		{ Returns @param trueVal if val is true, falseVal otherwise. }
+		{ Returns trueVal if val is true, falseVal otherwise. }
 		class fn IfThenElse(val: bool; const trueVal, falseVal: T): T; static;
 
-		{ Append @param val into @param arr. }
+		{ Append val into arr. }
         class retn ArrayAppend(var arr: TArray; const val: T); static;
 
-		{ For each element in @param arr, run @param func}
+		{ For each element in arr, run func}
 		class retn ArrayForEach(arr: TArray; func: ArrayForEachCallback); static;
     end;
 
 { Writes a single space. }
 retn WriteSp; inline;
 
-{ Converts @param val to a thousands-separated string. }
+{ Converts val to a thousands-separated string. }
 fn BigNumberToSeparatedStr(const val: QWord): string;
 
 fn StrLowerCase(const val: string): string; inline;

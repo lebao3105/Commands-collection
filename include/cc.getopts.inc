@@ -16,8 +16,7 @@ unit cc.getopts;
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
- **********************************************************************}
+}
 
 {$mode objfpc} // for array of const
 {$modeswitch defaultparameters}
@@ -26,11 +25,6 @@ unit cc.getopts;
 {$scopedenums on}
 
 interface
-
-{<
-    Available, optional definitions for features:
-    * NEED_TWO_MINUSES: Enable -- flag
-}
 
 uses
     {$ifdef FPC_DOTTEDUNITS}

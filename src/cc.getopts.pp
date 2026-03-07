@@ -139,7 +139,6 @@ begin
         );
 
         // Check for '--' argument
-        {$ifdef NEED_TWO_MINUSES}
         if (optind <> ParamCount) and (currentarg = OptDoubleSpecifier) then
         begin
             inc(optind);
@@ -153,7 +152,6 @@ begin
             last_nonopt := ParamCount;
             optind := ParamCount;
         end;
-        {$endif}
 
         // Are we at the end of all arguments ?
         if optind >= ParamCount then

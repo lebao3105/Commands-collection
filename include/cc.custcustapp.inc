@@ -34,4 +34,6 @@ resourcestring
     HELP_USAGE = 'Show this help and exit';
     VERSION_USAGE = 'Show the version of this program and exit';
 
+{$ifndef PASDOC}
 {$I i18n.inc} // application-specific
+{$endif}
