@@ -1,32 +1,3 @@
-{
-    This file is part of the Free Pascal run time library and the
-    Commands-Collection (CC) project.
-
-    Copyright (c) 1999-2000 by Michael Van Canneyt,
-    member of the Free Pascal development team.
-
-    Modified by Le Bao Nguyen for Commands-Collection.
-
-    Getopt implementation for Free Pascal, modeled after GNU getopt.
-
-    See the file COPYING.FPC, included in the distribution of FPC,
-    for details about the copyright.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
- **********************************************************************}
-unit cc.getopts;
-
-{$mode objfpc} // for array of const
-{$modeswitch defaultparameters}
-{$modeswitch pchartostring}
-{$modeswitch result}
-{$scopedenums on}
-
-interface
-
 {$I cc.getopts.inc}
 
 implementation

@@ -1,8 +1,3 @@
-unit cc.console;
-{$modeswitch result}
-
-interface
-
 {$I cc.console.inc}
 
 implementation

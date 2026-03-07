@@ -1,9 +1,3 @@
-unit cc.regex;
-
-{$modeswitch result}
-
-interface
-
 {$I cc.regex.inc}
 
 implementation

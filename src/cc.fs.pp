@@ -1,12 +1,3 @@
-{
-    File system-relatend tasks:
-    * (Recursively or not) iterate directories
-    * stat() an entity (a file / folder / etc)
-}
-unit cc.fs;
-
-interface
-
 {$I cc.fs.inc}
 
 implementation

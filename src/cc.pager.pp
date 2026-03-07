@@ -1,10 +1,3 @@
-unit cc.pager;
-{$modeswitch defaultparameters}
-{$modeswitch result}
-{$modeswitch advancedrecords}
-
-interface
-
 {$I cc.pager.inc}
 
 implementation

@@ -1,9 +1,3 @@
-unit cc.custcustapp;
-{$modeswitch defaultparameters}
-{$modeswitch result}
-
-interface
-
 {$I cc.custcustapp.inc}
 
 implementation

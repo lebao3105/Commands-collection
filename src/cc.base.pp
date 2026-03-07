@@ -1,7 +1,3 @@
-unit cc.base;
-
-interface
-
 {$I cc.base.inc}
 
 implementation
