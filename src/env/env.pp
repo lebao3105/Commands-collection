@@ -44,21 +44,63 @@ begin
     end;
 end;
 
+fn SplitByEqualSign(const inp: string): TStringDynArray;
 var
-	progArgs, progEnv: PPChar;
-    i: uint16;
-	envc: int;
+	p: sizeint;
+begin
+	p := pos('=', inp);
+	if p > 0 then begin
+		SetLength(Result, 2);
+		result[0] := Copy(progArgs[i], 1, p - 1);
+		result[1] := Copy(progArgs[i], p + 1, Length(progArgs[i]));
+		return;
+	end;
+	
+	SetLength(Result, 1);
+	result[0] := inp;
+end;
+
+fn SetUnSetDifferences: TStringDynArray;
+var	
+	i, j: uint16;
+	parts: TStringDynArray;
+begin
+	if (Length(setValues) = 0) or (Length(unsetValues) = 0) or (envc = 0) then
+		return(setValues);
+
+	for i := 1 to envc do begin
+		Insert(GetEnvironmentString(i), Result, Length(Result) + 1);
+
+		for j := Low(unsetValues) to High(unsetValues) do
+			if SplitByEqualSign(Result[i - 1])[0] = unsetValues[j] then
+				Result[i - 1] := '';
+
+		for j := Low(setValues) to High(setValues) do
+		begin
+			parts := SplitByEqualSign(setValues[j]);
+			if SplitByEqualSign(Result[i - 1])[0] = parts[0] then
+				Result[i - 1] := setValues[j];
+		end;
+	end;
+
+	if Length(Result) > 0 then
+	for i := Low(Result) to High(Result) do
+		if Result[i] = '' then
+			Delete(Result, i, 1);
+end;
 
 begin
+	envc := GetEnvironmentVariableCount;
 	if ParamCount = 0 then
 	begin
-		for i := 1 to GetEnvironmentVariableCount do
-			writeln(GetEnvironmentString(i));
+		for i := 1 to envc do
+			pagedPrint(GetEnvironmentString(i), true);
 		exit;
 	end;
 
 	cc.custcustapp.Start(@OptionParser);
 
+	if Length(getValues) > 0 then
 	for i := Low(getValues) to High(getValues) do
 		writeln(
 			getValues[i] + '=' + GetEnvironmentVariable(getValues[i]));
@@ -79,20 +121,13 @@ begin
 		FatalAndTerminate(1, ExeNotFound, [ cc.custcustapp.GetNonOpts[0] ]);
 
 	// Create array of environment variables
-	envc := GetEnvironmentVariableCount;
-	GetMem(progEnv, (envc + Length(setValues) + 1) * SizeOf(PChar));
-	//       v intentional by the RTL
-	for i := 1 to envc do
-	begin
-		progEnv[i - 1] := PChar(GetEnvironmentString(i));
-		// TODO: Unsets
-	end;
-
-	for i := 0 to Length(setValues) do
-		progEnv[i + envc] := PChar(setValues[i]);
-	progEnv[envc + Length(setValues) + 1] := Nil;
+	if not cleanEnv then
+		progEnv := ArrayStringToPPChar(SetUnsetDifferences, 0);
 
 	// Launch.
 	if fpExecVe(progArgs[0], progArgs, progEnv) = -1 then
 		Fatal(ProcessExit, [ StrError(GetLastErrno) ]);
+
+	Dispose(progEnv);
+	Dispose(ProgArgs);
 end.
