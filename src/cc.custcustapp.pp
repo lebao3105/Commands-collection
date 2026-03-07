@@ -10,12 +10,12 @@ implementation
 
 {$I cc.termcolors.inc}
 {$define ARGA_VERBOSE :=
-    (Name: 'verbose'; Has_Arg: 0; Flag: nil; Value: 'v')
+    (Long: 'verbose'; Kind: EOptKind.FLAG; Short: 'v')
 }
 {$define ARGA_SUFFIX :=
-    (Name: 'help'; Has_Arg: 0; Flag: nil; Value: 'h'),
-    (Name: 'version'; Has_Arg: 0; Flag: nil; Value: 'V'),
-    (Name: ''; Has_Arg: 0; Flag: nil; Value: #0)
+    (Long: 'help';    Kind: EOptKind.FLAG; Short: 'h'),
+    (Long: 'version'; Kind: EOptKind.FLAG; Short: 'V'),
+    (Long: '';        Kind: EOptKind.FLAG; Short: #0)
 }
 
 uses
@@ -68,12 +68,12 @@ var
     option_index: longint;
 begin
     Assert(Assigned(OptHandler));
+    OptHelpHandler := @ShowHelp;
     repeat
         c := getlongopts(ARGA_SHORTOPTS + 'hV', @ARGA[0], option_index);
         case c of
             'h': begin ShowHelp(true); Halt(0); end;
             'V': begin WriteLn(Format(CC_VERSION_STR, [CC_VERSION])); Halt(0); end;
-            '?', ':': FatalAndTerminate(1, INVALID_OPTION, [optopt]);
         else
             OptHandler(c);
         end;

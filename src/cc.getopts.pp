@@ -19,14 +19,17 @@
  **********************************************************************}
 unit cc.getopts;
 
+{$mode objfpc} // for array of const
 {$modeswitch defaultparameters}
 {$modeswitch pchartostring}
+{$modeswitch result}
+{$scopedenums on}
 
-Interface
+interface
 
 {$I cc.getopts.inc}
 
-Implementation
+implementation
 
 uses
     cc.base,
@@ -78,27 +81,40 @@ end;
 
 procedure getopt_init (var opts : string);
 begin
-    Optarg:='';
-    Optind:=1;
-    First_nonopt:=1;
-    Last_nonopt:=1;
-    OptOpt:='?';
-    Nextchar:=0;
-    ordering:=permute;
+    Assert(Assigned(OptHelpHandler));
+    Optarg := '';
+    Optind := 1;
+    First_nonopt := 1;
+    Last_nonopt := 1;
+    OptOpt := '?';
+    Nextchar := 0;
+    ordering := EOrderings.permute;
 
     if length(opts) > 0 then
         case opts[1] of
             '-' : begin
-                ordering:=return_in_order;
+                ordering := EOrderings.return_in_order;
                 delete(opts,1,1);
             end;
             '+' : begin
-                ordering:=require_order;
+                ordering := EOrderings.require_order;
                 delete(opts,1,1);
             end;
-        else
-            ordering:=permute; 
         end;
+end;
+
+procedure Meh(message: string; args: array of const); inline;
+begin
+    OptHelpHandler({ to_stdout } false);
+    FatalAndTerminate(1, message, args);
+end;
+
+procedure appendNonOptions;
+var i: int;
+begin
+    SetLength(NonOpts, ParamCount - optind);
+    for i := optind to ParamCount do
+        NonOpts[i - optind] := ParamStr(i);
 end;
 
 function Internal_getopt (var Optstring : string; LongOpts : POption;
@@ -113,17 +129,9 @@ var
     exact,ambig  : boolean;
     c            : char;
 
-    function isALongOption: bool;
+    function isALongOption: bool; inline;
     begin
         isALongOption := (currentArg[1] = OptSpecifier) and (currentArg[2] = OptSpecifier);
-    end;
-
-    procedure appendNonOptions;
-    var i: int;
-    begin
-        SetLength(NonOpts, ParamCount - optind);
-        for i := optind to ParamCount do
-            NonOpts[i - optind] := ParamStr(i);
     end;
 
 begin
@@ -133,13 +141,13 @@ begin
         getopt_init(optstring);
 
     // Check if we need the next argument.
-    // currentarg := specialize TTypeHelper<string>(
+    // currentarg := specialize TTypeHelper<string>.IfThenElse(
     //     optind < ParamCount, ParamStr(optind), ''
     // );
 
     if nextchar = 0 then
     begin
-        if ordering = permute then
+        if ordering = EOrderings.permute then
         begin
             // If we processed options following non-options : exchange
             if last_nonopt <> optind then begin
@@ -149,7 +157,7 @@ begin
                     first_nonopt := optind;
             end;
 
-            while (optind < ParamCount) and (ParamStr(optind)[0] <> OptSpecifier) or
+            while (optind < ParamCount) and (ParamStr(optind)[1] <> OptSpecifier) or
                   (length(ParamStr(optind)) = 1) do
             inc(optind);
 
@@ -162,7 +170,7 @@ begin
 
         // Check for '--' argument
         {$ifdef NEED_TWO_MINUSES}
-        if (optind <> ParamCount) and (currentarg = '--') then
+        if (optind <> ParamCount) and (currentarg = OptDoubleSpecifier) then
         begin
             inc(optind);
             if last_nonopt <> optind then begin
@@ -172,17 +180,17 @@ begin
                     first_nonopt := optind;
             end;
 
-            last_nonopt:=ParamCount;
-            optind:=ParamCount;
+            last_nonopt := ParamCount;
+            optind := ParamCount;
         end;
         {$endif}
 
         // Are we at the end of all arguments ?
-        if optind>=ParamCount then
+        if optind >= ParamCount then
         begin
-            if first_nonopt<>last_nonopt then
+            if first_nonopt <> last_nonopt then
                 optind := first_nonopt;
-            exit(EndOfOptions);
+            return(EndOfOptions);
         end;
 
         // This call once again...
@@ -197,12 +205,12 @@ begin
 
             // This becomes true if @param optstring starts with + (literal plus).
             // The parse ends with the first NonOption being found.
-            if ordering = require_order then
-                exit(EndOfOptions);
+            if ordering = EOrderings.require_order then
+                return(EndOfOptions);
 
             optarg := ParamStr(optind);
             inc(optind);
-            exit(#0);
+            return(#0);
         end;
 
         // At this point we're at a *long* option ...
@@ -218,180 +226,138 @@ begin
        ((not long_only) and (currentarg[2] = optstring)) then
     begin
         // Get option name
-        endopt := pos('=',currentarg);
+        endopt := pos('=', currentarg);
         if endopt = 0 then
             endopt := length(currentarg) + 1;
         optname := copy(currentarg, nextchar, endopt - nextchar);
 
-        { Match partial or full }
         p:=longopts;
         pfound:=nil;
         exact:=false;
         ambig:=false;
         option_index:=0;
         indfound:=0;
-        while (p^.name<>'') and (not exact) do
+
+        // Find for option in @param LongOpts
+        while (p^.Long <> '') and (not exact) do
         begin
-          if pos(optname,p^.name)<>0 then
-           begin
-             if length(optname)=length(p^.name) then
-              begin
-                exact:=true;
-                pfound:=p;
-                indfound:=option_index;
-              end
-             else
-              if pfound=nil then
-               begin
-                 indfound:=option_index;
-                 pfound:=p
-               end
-              else
-               ambig:=true;
-           end;
-          inc(PByte(p),sizeof(toption)); //inc(pointer(p),sizeof(toption)); // for Delphi compatibility
-          inc(option_index);
+            if optname = p^.Long then
+            begin
+                exact := true;
+                pfound := p;
+                indfound := option_index;
+                ambig := false;
+            end
+            else
+                ambig := true;
+
+            inc(PByte(p), sizeof(TOption));
+            inc(option_index);
         end;
-       if ambig and not exact then
+
+        // An ambiguous option is found: quit
+        if ambig then
+            Meh(OPT_AMBIGUOUS, [ optname ]);
+
+        if pfound <> nil then
         begin
-          if opterr then
-           writeln(argv[0],': option "',optname,'" is ambiguous');
-          nextchar:=0;
-          inc(optind);
-          Internal_getopt:='?';
-          exit;
-        end;
-       if pfound<>nil then
-        begin
-          inc(optind);
-          if endopt<=length(currentarg) then
-           begin
-             if pfound^.has_arg>0 then
-              optarg:=copy(currentarg,endopt+1,length(currentarg)-endopt)
-             else
-              begin
-                if opterr then
-                 if currentarg[2]='-' then
-                  writeln(argv[0],': option "--',pfound^.name,'" doesn''t allow an argument')
-                 else
-                  writeln(argv[0],': option "',currentarg[1],pfound^.name,'" doesn''t allow an argument');
-                nextchar:=0;
-                internal_getopt:='?';
-                exit;
-              end;
-           end
-          else { argument in next paramstr...  }
-           begin
-             if pfound^.has_arg=1 then
-              begin
-                if optind<ParamCount then
-                 begin
-                   optarg:=strpas(argv[optind]);
-                   inc(optind);
-                 end { required argument }
+            Inc(OptInd);
+            if endopt <= length(currentarg) then
+            begin
+                if pfound^.Kind <> EOptKind.FLAG then
+                    OptArg := copy(currentarg,endopt+1,length(currentarg)-endopt)
                 else
-                 begin { no req argument}
-                   if opterr then
-                    error(OPT_NEED_VAL, [pfound^.name]);
-                   nextchar:=0;
-                   if optstring[1]=':' then
-                    Internal_getopt:=':'
-                   else
-                    Internal_getopt:='?';
-                   exit;
-                 end;
-              end;
-           end; { argument in next parameter end;}
-          nextchar:=0;
-          if longind<>nil then
-           plongint(longind)^:=indfound+1;
-          if pfound^.flag<>nil then
-           begin
-             pfound^.flag^:=pfound^.value;
-             internal_getopt:=#0;
-             exit;
-           end;
-          internal_getopt:=pfound^.value;
-          exit;
+                    Meh(OPT_NO_ARG, [
+                        specialize TTypeHelper<string>.IfThenElse(
+                            currentArg[2] = OptSpecifier,
+                            OptDoubleSpecifier,
+                            OptSpecifier
+                        ) + pfound^.Long
+                    ]);
+            end
+            else if pfound^.Kind = EOptKind.FLAG_WITH_VAL then { argument in next paramstr...  }
+            begin
+                if optind >= ParamCount then
+                    Meh(OPT_NEED_VAL, [ pfound^.Long ]);
+
+                OptArg := ParamStr(OptInd);
+                Inc(OptInd);
+            end;
+
+            nextchar:=0;
+            if longind<>nil then
+                plongint(longind)^ := indfound + 1;
+            return(pfound^.Short);
         end; { pfound<>nil }
+
       { We didn't find it as an option }
         if (not long_only) or
            ((currentarg[2]='-') or (pos(CurrentArg[nextchar],optstring)=0)) then
-         begin
-           if opterr then
-            if currentarg[2]='-' then
-             writeln(argv[0],' unrecognized option "--',optname,'"')
-            else
-             writeln(argv[0],' unrecognized option "',currentarg[1],optname,'"');
-           nextchar:=0;
-           inc(optind);
-           Internal_getopt:='?';
-           exit;
-        end;
-     end; { Of long options.}
+            Meh(OPT_UNKNOWN, [
+                specialize TTypeHelper<string>.IfThenElse(
+                    currentArg[2] = OptSpecifier,
+                    OptDoubleSpecifier,
+                    OptSpecifier
+                ) + optname
+            ]);
+    end; { Of long options.}
 
 
     // We check for a short option.
-  temp:=pos(currentarg[nextchar],optstring);
-  c:=currentarg[nextchar];
-  inc(nextchar);
-  if nextchar>length(currentarg) then
-   begin
-     inc(optind);
-     nextchar:=0;
-   end;
-  if (temp=0) or (c=':') then
-   begin
-     if opterr then
-      writeln(argv[0],': illegal option -- ',c);
-     optopt:=c;
-     internal_getopt:='?';
-     exit;
-   end;
-  Internal_getopt:=optstring[temp];
-  if (length(optstring)>temp) and (optstring[temp+1]=':') then
-   if (length(optstring)>temp+1) and (optstring[temp+2]=':') then
-    begin { optional argument }
-      if nextchar>0 then
-       begin
-        optarg:=copy (currentarg,nextchar,length(currentarg)-nextchar+1);
+    temp := pos(currentarg[nextchar],optstring);
+    c := currentarg[nextchar];
+    inc(nextchar);
+
+    if nextchar>length(currentarg) then
+    begin
         inc(optind);
-        nextchar:=0;
-       end else if (optind<>ParamCount) then
-       begin
-        optarg:=strpas(argv[optind]);
-        if optarg[1]='-' then
-          optarg:=''
-         else
-          inc(optind);
-        nextchar:=0;
+        nextchar := 0;
+    end;
+
+    if (temp = 0) or (c = ':') then
+    begin
+        Meh(OPT_ILLEGAL, [ c ]); //? (c can be ':')
+    end;
+
+    result := optstring[temp];
+
+    if (length(optstring) > temp) and (optstring[temp + 1] =':') then
+        if (length(optstring) > temp + 1) and (optstring[temp+2] = ':') then
+    begin { optional argument }
+        if nextchar > 0 then
+        begin
+            optarg := copy (currentarg,nextchar,length(currentarg)-nextchar+1);
+            inc(optind);
+            nextchar:=0;
+        end else if (optind <> ParamCount) then
+        begin
+            optarg := ParamStr(optind);
+            if optarg[1] = OptSpecifier then
+                optarg := ''
+            else
+                inc(optind);
+            nextchar:=0;
        end;
     end
-   else
-    begin { required argument }
-      if nextchar>0 then
-       begin
-         optarg:=copy (currentarg,nextchar,length(currentarg)-nextchar+1);
-         inc(optind);
-       end
-      else
-       if (optind=ParamCount) then
+    else begin { required argument }
+        if nextchar>0 then
         begin
-          if opterr then
-           writeln (argv[0],': option requires an argument -- ',optstring[temp]);
-          optopt:=optstring[temp];
-          if optstring[1]=':' then
-           Internal_getopt:=':'
-          else
-           Internal_Getopt:='?';
+            optarg:=copy (currentarg,nextchar,length(currentarg)-nextchar+1);
+            inc(optind);
         end
-       else
-        begin
-          optarg:=strpas(argv[optind]);
-          inc(optind)
+        else if optind = ParamCount then
+            Meh(OPT_NEED_VAL, [OptDoubleSpecifier + optstring[temp]])
+        else begin
+            optarg := ParamStr(optind);
+            inc(optind)
         end;
        nextchar:=0;
     end; { End of required argument}
+
+    if Result = 'h' then begin
+        OptHelpHandler(true);
+        Halt(0);
+    end;
 end; { End of internal getopt...}
 
 
@@ -407,6 +373,5 @@ begin
 end;
 
 initialization
-    Opterr := true;
     Optind := 0;
 end.

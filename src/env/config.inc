@@ -1,10 +1,10 @@
 const
 {$ifdef NEED_ARGA}
 	ARGA: array of TOption = (
-		(Name: 'get'; 	Has_Arg: 1; Flag: Nil; Value: 'g'),
-		(Name: 'set'; 	Has_Arg: 1; Flag: Nil; Value: 's'),
-		(Name: 'unset'; Has_Arg: 1; Flag: Nil; Value: 'u'),
-		(Name: 'clean'; Has_Arg: 0; Flag: Nil; Value: 'c'),
+		(Long: 'get'; 	Kind: EOptKind.FLAG_WITH_VAL; Short: 'g'),
+		(Long: 'set'; 	Kind: EOptKind.FLAG_WITH_VAL; Short: 's'),
+		(Long: 'unset'; Kind: EOptKind.FLAG_WITH_VAL; Short: 'u'),
+		(Long: 'clean'; Kind: EOptKind.FLAG; Short: 'c'),
 		ARGA_SUFFIX
 	);
 	ARGA_SHORTOPTS = 'g:s:u:c';

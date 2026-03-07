@@ -1,12 +1,16 @@
 program env;
+{$modeswitch pchartostring}
+{$modeswitch result}
 
 uses
 	{$ifdef FPC_DOTTEDUNITS}
 	system.sysutils,
+	system.types,
 	unixapi.base,
 	{$else}
 	sysutils, // GetEnvironmentVariable*
-	baseunix,
+	types,	  // TStringDynArray
+	baseunix, // fpExecVe
 	{$endif}
 	cc.custcustapp,
 	cc.logging,
@@ -18,8 +22,11 @@ var
     getValues,
     setValues,
     unsetValues
-		: array of string;
+		: TStringDynArray;
     cleanEnv: bool = false;
+	progArgs, progEnv: PPChar;
+    i, j: uint16;
+	envc: int;
 
 resourcestring
 	NoProgSpecified = 'No program was specified. This program will not set ' +
