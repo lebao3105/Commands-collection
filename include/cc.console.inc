@@ -1,3 +1,8 @@
+unit cc.console;
+{$modeswitch result}
+
+interface
+
 const
     ESC_KEY = #27;
     CTRL_G = 'ctrl-g'; // jump to line
@@ -12,7 +17,10 @@ const
     Q_KEY = 'q';
 
 var
+    { Where to write stuff into. }
     OutputFile: Text;
+
+    { Handle to where to write stuff into. }
     OutputHandle: int = StdOutputHandle;
 
 fn refreshTerminalSz: bool;

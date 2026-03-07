@@ -1,3 +1,11 @@
+unit cc.custcustapp;
+{< Application routine helpers?}
+
+{$modeswitch defaultparameters}
+{$modeswitch result}
+
+interface
+
 uses
     {$ifdef FPC_DOTTEDUNITS}
     system.types
@@ -9,10 +17,15 @@ uses
 type
     TOptHandler = retn(found: char);
 
+{ Start parsing command-line arguments and call @param OptHandler when needed. }
 retn Start(OptHandler: TOptHandler);
 retn ShowHelp(to_stdout: bool = true);
 retn ErrorAndExit(const additonalMessage: ansistring);
+
+{ Get the argument assigned to the last known option that requires a value. }
 fn GetOptValue: string;
+
+{ Get arguments that do not belong to any options. }
 fn GetNonOpts: TStringDynArray;
 
 resourcestring

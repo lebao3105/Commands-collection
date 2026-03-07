@@ -1,4 +1,9 @@
+unit cc.regex;
+
+{$modeswitch result}
 {$modeswitch defaultparameters}
+
+interface
 
 uses
     cc.base,
