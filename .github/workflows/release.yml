@@ -23,8 +23,6 @@ jobs:
     steps:
       - name: Checkout the source code
         uses: actions/checkout@v6
-        with:
-          path: CC
 
       - name: Install compiler
         uses: gcarreno/setup-lazarus@v3.4.1
@@ -45,11 +43,9 @@ jobs:
           xmake f -m release
           xmake b -v
           echo "artifacts=$(find build -type f -executable)" >> $GITHUB_ENV
-        working-directory: CC
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v6
-        working-directory: CC
         with:
           path: ${{ env.artifacts }}
           if-no-files-found: error
