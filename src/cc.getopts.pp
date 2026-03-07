@@ -9,7 +9,6 @@ uses
 
 var
     NextChar,
-    ParamCount,
     first_nonopt,
     last_nonopt   : Longint;
     Ordering      : EOrderings;
@@ -224,6 +223,8 @@ begin
 
             inc(PByte(p), sizeof(TOption));
             inc(option_index);
+
+            if exact then break;
         end;
 
         // An ambiguous option is found: quit

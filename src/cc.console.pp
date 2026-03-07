@@ -158,16 +158,13 @@ finalization
 
 DoneKeyboard;
 
-if Modified then begin
-    Debug('Restoring default console attributes...', []);
-    // if not enableEchoing(true) then
-    //     Error('Oh my gotto!', []);
+Debug('Restoring default console attributes...', []);
 
+if Modified then begin
     if not disableRawStdIn then
-        Error('Oh my gotto2!', []);
+        Error('Failed to restore standard input attributes.', []);
 end;
 
 if tcsetattr(StdOutputHandle, TCSANOW, OriginalStdOutTermios) = -1 then
-    error('oh my gotto3!', []);
-
+    error('Failed to restore standard output attributes: %s', [ StrError(GetLastErrNo) ]);
 end.

@@ -19,14 +19,12 @@ type
 
 	{ Record of file system entity permissions. }
 	TFSPermissions = record
-	    E, //< Executable permission
-		R, //< Read permission
-		W  //< Write permission
-			: bool;
-	    S,  //< Sticky (only owner and root can rename/delete)
-	    SU, //< set-uid: run with the owner's UID
-	    SG  //< set-gid: run with the owner's GID
-			: bool;
+	    E: bool; //< Executable permission
+		R: bool; //< Read permission
+		W: bool; //< Write permission
+	    S: bool; //< Sticky (only owner and root can rename/delete)
+	    SU:bool; //< set-uid: run with the owner's UID
+	    SG:bool; //< set-gid: run with the owner's GID
 	end;
 
 	{ File system entity properties. }

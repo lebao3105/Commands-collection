@@ -39,3 +39,9 @@ compile_commands.json
 
 # Man pages
 *.man
+
+# Documents
+*.html
+*.css
+*.js
+*.gif

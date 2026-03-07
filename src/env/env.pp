@@ -51,8 +51,8 @@ begin
 	p := pos('=', inp);
 	if p > 0 then begin
 		SetLength(Result, 2);
-		result[0] := Copy(progArgs[i], 1, p - 1);
-		result[1] := Copy(progArgs[i], p + 1, Length(progArgs[i]));
+		result[0] := Copy(inp, 1, p - 1);
+		result[1] := Copy(inp, p + 1, Length(inp));
 		return;
 	end;
 	
