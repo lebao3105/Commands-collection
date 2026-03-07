@@ -1,25 +1,45 @@
+unit cc.fs;
+{<
+    File system-relatend tasks:
+    * (Recursively or not) iterate directories
+    * stat() an entity (a file / folder / etc)
+}
+
 {$modeswitch out}
 
+interface
+
 type
+	{ Enum of file system entity types. }
 	EFSEntityKind = (
 	    AFile = 0, ADir, ASymlink,
 	    ASocket, ABlock, APipe, ACharDev,
 	    AStatFailure
 	);
+
+	{ Record of file system entity permissions. }
 	TFSPermissions = record
-	    E, R, W: bool;
-	    S, // sticky
-	    SU, // set-uid: run with the owner's UID
-	    SG (*set-gid: run with the owner's GID*): bool
+	    E, //< Executable permission
+		R, //< Read permission
+		W  //< Write permission
+			: bool;
+	    S,  //< Sticky (only owner and root can rename/delete)
+	    SU, //< set-uid: run with the owner's UID
+	    SG  //< set-gid: run with the owner's GID
+			: bool;
 	end;
 
+	{ File system entity properties. }
 	TFSProperties = record
-	    // index 0: owner
-	    //       1: group
-	    //       2: others
+	    { Entity's permissions.
+		  0st index: Owner
+		  1st index: Groups
+		  2nd index: Others }
 	    Perms: array[0..2] of TFSPermissions;
+
 	    Kind: EFSEntityKind;
 	    Size: qword;
+
 	    LastAccessTime: cardinal;
 	    LastModifyTime: double;
 
@@ -47,9 +67,11 @@ type
         printPath: bool;
     end;
 
+{ Reads @param path, and write its attributes into @pram info.
+  Returns a boolean indicating whether the operation succeed or not. }
 fn PopulateFSInfo(const path: string; out info: TFSProperties): bool;
 
-{ Iterates p, and run cb on each entry. Print the directory name if pr is true.
+{ Iterates @param p, and run @param cb on each entry. Print the directory name if pr is true.
   Iterates recursively when r is true.
   If an element / p itself is unreadable (fpOpenDir / fpReadDir / fpStat),
   the provided TIterateDirResult will have its info.Kind set to EFSEntityKind.AStatFailure. }
