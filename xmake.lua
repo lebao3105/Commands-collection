@@ -19,7 +19,7 @@ rule("program_pas")
 		target:add("files", "src/" .. name .. "/" .. name .. ".pp")
 
 		-- Where to get needed flags
-		target:add("pcflags", "@$(fpc-conf)", "@fpc.cfg")
+		target:add("pcflags", "@cc.cfg")
 
 		-- Define CC_VERSION (this project version)
 		target:add("pcflags", "-dCC_VERSION:=\'" .. version .. "\'")

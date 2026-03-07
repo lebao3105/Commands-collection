@@ -36,7 +36,7 @@ target("API-docs")
 			os.mkdir(api_docs_dir)
 		end
 
-		for line in io.lines("fpc.cfg") do
+		for line in io.lines("cc.cfg") do
 			if line:startswith("-d") then
 				table.append(args, '-D' .. line:split("-d")[1])
 			end
