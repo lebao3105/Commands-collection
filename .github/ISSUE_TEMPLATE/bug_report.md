@@ -25,11 +25,11 @@ If applicable, add screenshots to help explain your problem.
 
 Or, copy-paste the command output in blocks like this:
 
-```markdown
-```
+\`\`\`
+
 content here
-```
-```
+
+\`\`\`
 
 Be sure to preview your edit.
 
