@@ -5,15 +5,20 @@ set_policy("check.auto_ignore_flags", false)
 local version = "1.1.0alpha"
 local programs = {}
 
-option("output_prefix")
+option("output-prefix")
     set_showmenu(true)
     set_description("Prefix for built binaries - useful for co-use with ones like GNU Coreutils")
     set_default("")
 
+option("fpc-conf")
+	set_showmenu(true)
+	set_description("Path to fpc.cfg file - optional")
+	set_default("")
+
 rule("program_pas")
 	on_config(function (target)
 		local name = target:name()
-		local objdir = "$(buildir)/.objs/" .. name
+		local objdir = "$(builddir)/.objs/" .. name
 
 		-- Source files
 		target:add("files", "src/" .. name .. "/" .. name .. ".pp")
@@ -30,9 +35,13 @@ rule("program_pas")
 		-- Set the output directory for .o and .ppu files
 		target:add("pcflags", "-FU" .. objdir)
 
+		if get_config("fpc-conf") ~= "" then
+			target:add("pcflags", "@" .. get_config("fpc-conf"))
+		end
+
 		-- Where to put binaries:
-		-- $(builddir)/<os>/<arch>/<kind>/name/name
-		target:set("basename", name .. "/" .. name)
+		-- $(builddir)/<os>/<arch>/<kind>/<output-prefix>name
+		target:set("basename", get_config("output-prefix") .. name)
 
 		-- Create needed directories
 		os.mkdir(objdir)
