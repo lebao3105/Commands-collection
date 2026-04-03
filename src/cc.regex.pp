@@ -17,29 +17,28 @@ end;
 
 fn RegexGetMatches(const input: string): TStringDynArray; inline;
 var i : int;
+{$push}{$warn 5093 off} // Result seems to be not initialized
 begin
 	i := 0;
 	try
 		if Regexer.Exec(input) then
 		repeat
+			SetLength(Result, i + 1);
 			Result[i] := Regexer.Match[0];
 			Inc(i);
-			SetLength(Result, i);
 		until not Regexer.ExecNext;
 	except on E: ERegExpr do
 	end;
 end;
+{$pop}
 
 fn RegexHasMatches(const input: string): specialize TResult<bool, ERegExpr>;
 begin
 	try
-		Result.Kind := EResultKind.OK;
-		Result.Value := Regexer.Exec(input);
+		Result := specialize TResult<bool, ERegExpr>.Ok(Regexer.Exec(input));
 	except
-		on E: ERegExpr do begin
-			Result.Kind := EResultKind.ERROR;
-			Result.Error := E;
-		end;
+		on E: ERegExpr do
+			Result := specialize TResult<bool, ERegExpr>.Err(E);
 	end;
 end;
 
@@ -84,5 +83,13 @@ begin
 			Result.Value := E;
 	end;
 end;
+
+initialization
+
+Regexer := TRegExpr.Create;
+
+finalization
+
+Regexer.Free;
 
 end.

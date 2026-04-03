@@ -34,14 +34,14 @@ begin
     if isGroup then begin
         Result^.group := fpgetgrgid(id);
         if Result^.group = nil then begin
-            FreeAndNil(Result);
+            FreeMem(Result);
             return(nil);
         end;
     end
     else begin
         Result^.user := fpgetpwuid(id);
         if Result^.user = nil then begin
-            FreeAndNil(Result);
+            FreeMem(Result);
             return(nil);
         end;
     end;
@@ -49,10 +49,11 @@ begin
     if Cached <> nil then begin
     	tmp := Cached;
     	while tmp <> nil do
-	  		if tmp^.next = nil then begin
-     			tmp^.next := Result;
-	      		break;
-      		end;
+            if tmp^.next = nil then
+        begin
+            tmp^.next := Result;
+            break;
+        end;
     end;
 end;
 
