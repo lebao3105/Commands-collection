@@ -1,4 +1,5 @@
 program inp;
+{$modeswitch anonymousfunctions}
 
 uses
 	{$ifdef FPC_DOTTEDUNITS}
@@ -12,32 +13,27 @@ uses
 	keyboard,
 	strutils,
 	{$endif}
-    cc.custcustapp
+    cc.getopts
 	;
 
-resourcestring
-	PRESS_ANY_KEY = 'Press any key to continue...';
+{$undef NEED_PROGRAM_HELP}
+{$I i18n.inc}
 
 var
-    customMessage: string;
+    customMessage: string = PRESS_ANY_KEY;
     wantedKeys: string = '';
 	hiddenFlag, needEnter, loopFlag: boolean;
 	caseSensitive, showAvailables: boolean;
 
-retn OptionParser(found: char);
+retn WaitForEnter;
 begin
-    case found of
-        'm': customMessage := GetOptValue;
-        't': hiddenFlag := true;
-        'e': needEnter := true;
-        'k': wantedKeys += GetOptValue;
-        'l': loopFlag := true;
-        'o': showAvailables := true;
-        's': caseSensitive := true;
-    end;
+	repeat
+		// Do literally nothing
+	until
+		GetKeyEventChar(TranslateKeyEvent(GetKeyEvent)) = #13;
 end;
 
-retn NeedKeyInput();
+retn NeedKeyInput;
 var
     targ: char;
 begin
@@ -50,12 +46,12 @@ begin
 		if showAvailables then
 			write(' [' + wantedKeys + '] ');
 
-		targ := GetKeyEventChar(TranslateKeyEvent(GetKeyEvent));
+		TArg := GetKeyEventChar(TranslateKeyEvent(GetKeyEvent));
 
 		if not hiddenFlag then
 			write(targ);
 
-		if needEnter then readln;
+		if needEnter then WaitForEnter;
 
         if not caseSensitive then begin
             TArg := UpCase(TArg);
@@ -75,18 +71,23 @@ begin
         DoneKeyboard;
 		halt(-1);
 	end;
-	readln;
+
+	halt(Ord(GetKeyEventChar(TranslateKeyEvent(GetKeyEvent))));
 end;
 
 begin
-	if ParamCount = 0 then
+	cc.getopts.OptCharHandler := retn (found: char)
 	begin
-		writeln(PRESS_ANY_KEY);
-		readln;
-		exit;
+		case found of
+			'm': customMessage := OptArg;
+			't': hiddenFlag := true;
+			'e': needEnter := true;
+			'k': wantedKeys += OptArg;
+			'l': loopFlag := true;
+			'o': showAvailables := true;
+			's': caseSensitive := true;
+		end;
 	end;
-
-    cc.custcustapp.OptionHandler := @OptionParser;
-	cc.custcustapp.Start;
+	cc.getopts.GetLongOpts;
     NeedKeyInput;
 end.
