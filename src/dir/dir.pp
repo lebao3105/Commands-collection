@@ -1,15 +1,22 @@
 program dir;
+{$modeswitch anonymousfunctions}
 
 uses
     {$ifdef FPC_DOTTEDUNITS}
+        {$ifdef UNIX}
     system.cmem, unixapi.cthreads,
-    system.clocale, system.sysutils,
+    system.clocale,
+        {$endif}
+    system.sysutils,
     system.regexpr,
     {$else}
-    cmem, cthreads, clocale, sysutils, regexpr,
+        {$ifdef UNIX}
+    cmem, cthreads, clocale,
+        {$endif}
+    sysutils, regexpr,
     {$endif}
     cc.base,
-    cc.custcustapp,
+    cc.getopts,
     cc.logging,
     cc.regex,
     cc.fs,
@@ -24,9 +31,9 @@ retn ShowDirEntry(const r: PIterateDirResult; knownAsDir: bool);
     begin
     	check := RegexHasMatches(r^.name);
      	if check.IsError then
-           	FatalAndTerminate(1, REGEX_FAILED, [RegexGetExpr, check.Error.Message])
+           	FatalAndTerminate(1, REGEX_FAILED, [RegexGetExpr, check.GetError.Message])
         else
-        	exit(check.Value);
+        	exit(check.GetOK);
     end;
 
 begin
@@ -63,7 +70,8 @@ begin
     Inc(count);
 
     // Name-only list
-    if not Settings.UseLists then begin
+    if not Settings.UseLists then
+    begin
         PrintObjectName(r^.name, r^.info);
         WriteSp;
     end
@@ -75,21 +83,8 @@ end;
 retn ListItems(const path: string); inline;
 begin
     IterateDir(path, @ShowDirEntry, Settings.Recursively,
-               (High(cc.custcustapp.GetNonOpts) > 1) or Settings.Recursively);
+               (High(cc.getopts.NonOpts) > 1) or Settings.Recursively);
     Report;
-end;
-
-retn OptionParser(found: char);
-begin
-    case found of
-        'l': Settings.UseLists := true;
-        'a': Settings.IgnoreHiddens := false;
-        'c': Settings.AddColors := true;
-        'd': Settings.DirOnly := true;
-        'i': RegexAppendExpr(GetOptValue);
-        'B': Settings.IgnoreBackups := true;
-        'R': Settings.Recursively := true;
-    end;
 end;
 
 begin
@@ -99,18 +94,32 @@ begin
         'ccd': dir.settings.Settings := CCD_PRESET;
     else
         dir.settings.Settings := CCD_PRESET;
-        BeginThread(
-            @BeginSettingsThread,
-            PChar(GetEnvironmentVariable('DIR_CONFPATH'))
-        );
     end;
 
-    cc.custcustapp.Start(@OptionParser);
-    if Length(cc.custcustapp.GetNonOpts) = 0 then
-        ListItems('.')
+    BeginSettingsThread(
+        // @BeginSettingsThread,
+        PChar(GetEnvironmentVariable('DIR_CONFPATH'))
+    );
+
+    cc.getopts.OptCharHandler := retn (found: char)
+    begin
+        case found of
+            'l': Settings.UseLists := true;
+            'a': Settings.IgnoreHiddens := false;
+            'c': Settings.AddColors := true;
+            'd': Settings.DirOnly := true;
+            'i': RegexAppendExpr(cc.getopts.OptArg);
+            'B': Settings.IgnoreBackups := true;
+            'R': Settings.Recursively := true;
+        end;
+    end;
+    cc.getopts.GetLongOpts;
+
+    if Length(cc.getopts.NonOpts) = 0 then
+        ListItems(GetCurrentDir)
     else
     	specialize TTypeHelper<string>.ArrayForEach(
-            cc.custcustapp.GetNonOpts,
+            cc.getopts.NonOpts,
             @ListItems
         );
 end.

@@ -1,17 +1,15 @@
 const
-{$ifdef NEED_ARGA}
 	ARGA: array of TOption = (
-		(Name: 'list';           Has_Arg: 0; Flag: Nil; Value: 'l'),
-		(Name: 'all';            Has_Arg: 0; Flag: Nil; Value: 'a'),
-		(Name: 'color';          Has_Arg: 0; Flag: Nil; Value: 'c'),
-		(Name: 'directory';      Has_Arg: 0; Flag: Nil; Value: 'd'),
-		(Name: 'ignore';         Has_Arg: 1; Flag: Nil; Value: 'i'),
-		(Name: 'ignore-backups'; Has_Arg: 0; Flag: Nil; Value: 'B'),
-		(Name: 'recursive';      Has_Arg: 0; Flag: Nil; Value: 'R'),
+		(Long: 'list';           Kind: EOptKind.FLAG; Short: 'l'),
+		(Long: 'all';            Kind: EOptKind.FLAG; Short: 'a'),
+		(Long: 'color';          Kind: EOptKind.FLAG; Short: 'c'),
+		(Long: 'directory';      Kind: EOptKind.FLAG; Short: 'd'),
+		(Long: 'ignore';         Kind: EOptKind.FLAG_WITH_VAL; Short: 'i'),
+		(Long: 'ignore-backups'; Kind: EOptKind.FLAG; Short: 'B'),
+		(Long: 'recursive';      Kind: EOptKind.FLAG; Short: 'R'),
 		ARGA_SUFFIX
 	);
 	ARGA_SHORTOPTS = 'lacdBRi:';
-{$endif}
 
 {$ifdef NEED_PROGRAM_HELP}
 {$define PROGRAM_HELP :=

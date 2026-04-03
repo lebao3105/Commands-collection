@@ -25,17 +25,17 @@ uses
 
 
 fn StringToListCol(const str: string): specialize TResult<EListingColumns, string>;
-var casted: int;
+var
+    casted: int;
 begin
     casted := GetEnumValue(TypeInfo(EListingColumns), LowerCase(str));
-    if casted = -1 then begin
-        Result.Kind := EResultKind.ERROR;
-        Result.Error := Format('%s: unknown column', [ str ]);
-    end
-    else begin
-        Result.Kind := EResultKind.OK;
-        Result.Value := EListingColumns(casted);
-    end;
+
+    if casted = -1 then
+        Result := specialize TResult<EListingColumns, string>.Err(
+            Format('%s: unknown column', [ str ]))
+    else
+        Result := specialize TResult<EListingColumns, string>.Ok(
+            EListingColumns(casted));
 end;
 
 fn BeginSettingsThread(p_file_path: pointer): ptrint;
@@ -71,8 +71,12 @@ begin
     debug('Ignore expression: %s', [RegexGetExpr]);
 
     check := RegexVerifyExpr;
-    if check.HasValue then
-        FatalAndTerminate(1, REGEX_FAILED_LOC, [ RegexGetLastCompileErrorPos ]);
+    // if check.HasValue then
+    //     FatalAndTerminate(1, REGEX_FAILED_LOC, [
+    //         RegexGetExpr,
+    //         RegexGetLastCompileErrorPos,
+    //         check.Value.Message
+    //     ]);
 end;
 
 fn FSEntityKindToTypeString(tp: EFSEntityKind): string; inline;
