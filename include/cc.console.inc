@@ -3,6 +3,14 @@ unit cc.console;
 
 interface
 
+uses
+    {$ifdef FPC_DOTTEDUNITS}
+    system.ctypes
+    {$else}
+    ctypes
+    {$endif}
+    ;
+
 const
     ESC_KEY = #27;
     CTRL_G = 'ctrl-g'; // jump to line
@@ -21,17 +29,20 @@ var
     OutputFile: Text;
 
     { Handle to where to write stuff into. }
-    OutputHandle: int = StdOutputHandle;
+    OutputHandle: cint = StdOutputHandle;
+
+{ Check if Handle is a terminal. }
+fn isATerminal(Handle: cint): bool;
 
 fn refreshTerminalSz: bool;
 fn getTerminalCols: word;
 fn getTerminalRows: word;
 
+retn screenClear;
+retn setOutputStream(toStdErr: bool);
+fn ANSIEscapeSequence(seq: string): string;
+
 fn enableRawStdIn(disableCtrlCZ: bool): bool;
 fn disableRawStdIn: bool;
-fn enableEchoing(enable: bool): bool;
-
-retn setOutputStream(toStdErr: bool);
-
+fn enableStdInEchoing(enable: bool): bool;
 fn stdInReadKey: string;
-retn screenClear;

@@ -18,16 +18,24 @@ uses
     ;
 
 var
-    OriginalStdInTermios: termios;
-    OriginalStdOutTermios: termios;
+    originalOuts: array[0..1] of termios;
+    // 0st index: stdout
+    // 1st index: stderr
+    originalStdIn: termios;
     NeedToRefreshSz: bool = true;
     Sz: WinSize;
-    Modified: bool;
+    modifiedStdIn: bool;
+
+fn isATerminal(Handle: cint): bool;
+begin
+    return(isATTY(Handle) = 1);
+end;
 
 fn refreshTerminalSz: bool;
 begin
     Result := true;
-    if NeedToRefreshSz then begin
+    if NeedToRefreshSz and isATerminal(OutputHandle) then
+    begin
         Result := fpioctl(OutputHandle, TIOCGWINSZ, @Sz) <> -1;
         if Result then NeedToRefreshSz := false;
     end;
@@ -47,13 +55,93 @@ begin
     return(0);
 end;
 
+retn setOutputStream(toStdErr: bool);
+begin
+    if toStdErr then begin
+        OutputFile := stderr;
+        OutputHandle := StdErrorHandle;
+    end
+    else begin
+        OutputFile := stdout;
+        OutputHandle := StdOutputHandle;
+    end;
+end;
+
+retn modifyOutputHandle_Internal(for_stderr: bool);
+var
+    indx: int;
+    h: cint;
+    modi: termios;
+{$push} {$warn 5057 off} // Local variable seems to be not initialized
+begin
+    if for_stderr then begin
+        indx := 1;
+        h := StdErrorHandle;
+    end
+    else begin
+        indx := 0;
+        h := StdOutputHandle;
+    end;
+
+    if not isATerminal(h) then
+        return;
+
+    if tcgetattr(h, originalOuts[indx]) = -1 then
+        return; // TODO: Do something
+
+    modi := originalOuts[indx];
+    modi.c_oflag := modi.c_oflag or ONLCR; // (XSI) Map NL to CRNL
+    modi.c_oflag := modi.c_oflag or ONOCR; // Don't output CR at column 0
+    modi.c_oflag := modi.c_oflag and not OCRNL; // Don't map CR to NL
+
+    if tcsetattr(h, TCSANOW, modi) = -1 then
+        return; // TODO: Do something
+end;
+{$pop}
+
+retn restoreStdOut_Internal(for_stderr: bool);
+var
+    indx: int;
+    h: cint;
+begin
+    if for_stderr then begin
+        indx := 1;
+        h := StdErrorHandle;
+    end
+    else begin
+        indx := 0;
+        h := StdOutputHandle;
+    end;
+
+    if not isATerminal(h) then
+        return;
+    
+    if tcsetattr(h, TCSANOW, originalOuts[indx]) = -1 then
+        return; // TODO: Do something
+end;
+
+retn screenClear;
+begin
+    if not isATerminal(OutputHandle) then
+        return;
+
+    write(OutputFile, ESC_KEY+'[2J');
+    write(OutputFile, ESC_KEY+'[H'); // move the cursor to the top-left corner
+end;
+
+fn ANSIEscapeSequence(seq: string): string; inline;
+begin
+    if isATerminal(OutputHandle) then
+        return(seq);
+    return('');
+end;
+
 fn enableRawStdIn(disableCtrlCZ: bool): bool;
 var modi: termios;
 begin
-    if tcgetattr(StdInputHandle, OriginalStdInTermios) = -1 then
+    if tcgetattr(StdInputHandle, modi) = -1 then
         return(false);
 
-    modi := OriginalStdInTermios;
     // Turn off canonical mode / line-by-line processing (ICANON)
     // Turn off Ctrl-V (and more?) events (IEXTEN)
     modi.c_lflag := modi.c_lflag and not (ICANON or IEXTEN);
@@ -69,16 +157,25 @@ begin
     modi.c_cc[VTIME] := 1; // maximum amount of time to wait, in 1/10ths of a second
 
     Result := tcsetattr(StdInputHandle, TCSAFLUSH, modi) <> -1;
-    Modified := Result;
+    modifiedStdIn := Result;
 end;
 
 fn disableRawStdIn: bool;
+var modi: termios;
 begin
-    Result := tcsetattr(StdInputHandle, TCSANOW, OriginalStdInTermios) <> -1;
-    Modified := not Result;
+    if tcgetattr(StdInputHandle, modi) = -1 then
+        return(false);
+    
+    modi.c_lflag := modi.c_lflag or (ICANON or IEXTEN or ISIG);
+    modi.c_iflag := modi.c_iflag or (IXON or ICRNL);
+    modi.c_cc[VMIN] := originalStdin.c_cc[VMIN]; // FIXME: What if originalStdIn is empty?
+    modi.c_cc[VTIME] := originalStdin.c_cc[VTIME];
+
+    Result := tcsetattr(StdInputHandle, TCSANOW, originalStdIn) <> -1;
+    modifiedStdIn := not Result;
 end;
 
-fn enableEchoing(enable: bool): bool;
+fn enableStdInEchoing(enable: bool): bool;
 var modi: termios;
 begin
     if tcgetattr(StdInputHandle, modi) = -1 then
@@ -90,19 +187,7 @@ begin
         modi.c_lflag := modi.c_lflag and not ECHO;
 
     Result := tcsetattr(StdInputHandle, TCSANOW, modi) <> -1;
-    Modified := Result;
-end;
-
-retn setOutputStream(toStdErr: bool);
-begin
-    if toStdErr then begin
-        OutputFile := stderr;
-        OutputHandle := StdErrorHandle;
-    end
-    else begin
-        OutputFile := stdout;
-        OutputHandle := StdOutputHandle;
-    end;
+    modifiedStdIn := Result;
 end;
 
 fn stdInReadKey: string;
@@ -122,49 +207,36 @@ begin
     end;
 end;
 
-retn screenClear;
-begin
-    write(OutputFile, ESC_KEY+'[2J');
-    write(OutputFile, ESC_KEY+'[H'); // move the cursor to the top-left corner
-end;
-
-var
-    modifiedStdOut: termios;
-
 initialization
 
+Debug('Initializing console module...', []);
+
+modifyOutputHandle_Internal({ for stderr }true);
+modifyOutputHandle_Internal(false);
+
+// This one modifies console attributes. Took a good amount of time
+// just to figure it out (I just stumbled upon putting this on
+// a reproduction).
+// As a result, this call lies here. Also it's to make sure that calls of
+// stdin modification functions use modified attributes.
+// Wait. We must back it up first!
+if tcgetattr(StdInputHandle, originalStdIn) = -1 then
+    Error('Unable to backup standard input attributes. Expect weird behavior.', []);
 InitKeyboard;
-if tcgetattr(StdOutputHandle, OriginalStdOutTermios) = -1 then
-begin
-    error('Failed to retrieve stdout attributes: %s', [ StrError(GetLastErrNo) ]);
-    return;
-end;
 
-modifiedStdOut := OriginalStdOutTermios;
-modifiedStdOut.c_oflag := modifiedStdOut.c_oflag or ONLCR;
-modifiedStdOut.c_oflag := modifiedStdOut.c_oflag or ONOCR;
-modifiedStdOut.c_oflag := modifiedStdOut.c_oflag and not OCRNL;
-
-if tcsetattr(StdOutputHandle, TCSANOW, modifiedStdOut) = -1 then
-begin
-    warning('Failed to apply some required stdout attributes: %s', [ StrError(GetLastErrNo) ]);
-    return;
-end;
-
-// TODO: Separate flag for stdout
-// Modified := true;
+SetTextLineEnding(stderr, #13#10);
+SetTextLineEnding(stdout, #13#10);
 
 finalization
 
-DoneKeyboard;
-
 Debug('Restoring default console attributes...', []);
 
-if Modified then begin
-    if not disableRawStdIn then
-        Error('Failed to restore standard input attributes.', []);
-end;
+DoneKeyboard;
 
-if tcsetattr(StdOutputHandle, TCSANOW, OriginalStdOutTermios) = -1 then
-    error('Failed to restore standard output attributes: %s', [ StrError(GetLastErrNo) ]);
+if modifiedStdIn and (tcsetattr(StdInputHandle, TCSANOW, originalStdIn) = -1) then
+    Error('Failed to restore standard input attributes.', []);
+
+restoreStdOut_Internal({ for stderr }true);
+restoreStdOut_Internal(false);
+
 end.
