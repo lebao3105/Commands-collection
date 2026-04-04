@@ -76,7 +76,7 @@ begin
 end;
 
 begin
-	cc.getopts.OptCharHandler := retn (found: char)
+	cc.getopts.OptCharHandler := retn (const found: char)
 	begin
 		case found of
 			'm': customMessage := OptArg;

@@ -71,7 +71,7 @@ begin
         info(FILTERED, [name]);
 end;
 
-retn DeleteThing(const which: string);
+fn DeleteThing(const which: string): bool;
 var
     f: TSearchRec;
 
@@ -80,7 +80,7 @@ begin
         info(ATTEMPTING_TO_DELETE, [which]);
     
     if not RegexFileNameCheck(ExtractFileName(which)) then
-        return;
+        return(not keepGoing);
 
     if Confirmation(which) then
     begin
@@ -102,9 +102,7 @@ begin
 
         else begin
             error(NON_EXISTANT, [which]);
-            if not keepGoing then
-                halt(1);
-            return;
+            return(not keepGoing);
         end;
 
         info(DELETED, [which]);

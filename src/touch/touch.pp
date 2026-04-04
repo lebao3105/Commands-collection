@@ -1,4 +1,5 @@
 program touch;
+{$modeswitch anonymousfunctions}
 
 uses
     {$ifdef FPC_DOTTEDUNITS}
@@ -11,27 +12,13 @@ uses
     cc.base,
     cc.fs,
     cc.logging,
-    cc.custcustapp
+    cc.getopts
     ;
 
-resourcestring
-    NOTHING_TO_CREATE        = 'Nothing to create.';
-    CREATING_STUFF           = 'Creating %s...';
-    CREATED_STUFF            = 'Created %s.';
-    FAILED_TO_CREATE         = 'Failed to create %s: %s';
-    ALREADY_EXISTS           = '%s already exists';
+{$I i18n.inc}
 
 var
     beVerbose, createParent, dirsOnly: boolean;
-
-retn OptionParser(found: char);
-begin
-    case found of
-        'p': createParent := true;
-        'v': beVerbose := true;
-        'd': dirsOnly := true;
-    end;
-end;
 
 retn CreateFolder(path: string);
 begin
@@ -51,16 +38,23 @@ var
     j, i: integer;
 
 begin
-    if (ParamCount = 0) then
-        FatalAndTerminate(1, NOTHING_TO_CREATE);
+    if ParamCount = 0 then
+        FatalAndTerminate(1, NOTHING_TO_CREATE, []);
 
-    cc.custcustapp.OptionHandler := @OptionParser;
-    cc.custcustapp.Start;
+    cc.getopts.OptCharHandler := retn (const found: char)
+    begin
+        case found of
+            'p': createParent := true;
+            'v': beVerbose := true;
+            'd': dirsOnly := true;
+        end;
+    end;
+    cc.getopts.GetLongOpts;
 
-    for i := 0 to High(cc.custcustapp.NonOptions) do begin
+    for i := 0 to High(cc.getopts.NonOpts) do begin
         if createParent then
         begin
-            splits := SplitString(cc.custcustapp.NonOptions[i], DirectorySeparator);
+            splits := SplitString(cc.getopts.NonOpts[i], DirectorySeparator);
 
             for j := Low(splits) to High(splits) - 1 do
             begin
@@ -73,8 +67,8 @@ begin
         end;
 
         if dirsOnly then
-            CreateFolder(cc.custcustapp.NonOptions[i])
+            CreateFolder(cc.getopts.NonOpts[i])
         else
-            CreateFile(cc.custcustapp.NonOptions[i]);
+            CreateFile(cc.getopts.NonOpts[i]);
     end;
 end.

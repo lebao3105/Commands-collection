@@ -1,17 +1,5 @@
 const
-{$ifdef NEED_ARGA}
 	ARGA: array of TOption = (
-		(Name: 'format'; Has_Arg: 1; Flag: Nil; Value: 'f'),
+		(Long: 'format'; Kind: EOptKind.FLAG_WITH_VAL; Short: 'f'; Help: FORMAT_DES),
 		ARGA_SUFFIX
 	);
-	ARGA_SHORTOPTS: string = 'f:';
-{$endif}
-
-{$ifdef NEED_PROGRAM_HELP}
-	{$define PROGRAM_HELP :=
-		CREATE_ARG_VAL_WITH_DEF_HELP(
-			'f', 'format', 'FORMAT', DEFAULT_FORMAT, 'Time format'
-		)
-	}
-	PROGRAM_NAME: string = 'calltime';
-{$endif}

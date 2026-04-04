@@ -16,72 +16,67 @@ msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Content-Type: text/plain; charset=UTF-8\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: rm.attempting_to_delete
+#: rename.renamed_to
 #, object-pascal-format
-msgid   "Attempting to delete %s..."
+msgid   "Renamed %s to %s"
 msgstr  ""
 
-#: rm.delete_confirmation
+#: rename.rename_fail
 #, object-pascal-format
-msgid   "Do you really want to remove %s? [yYnNaA] "
+msgid   "Failed to rename %s: %s"
 msgstr  ""
 
-#: rm.nothing_to_delete
-msgid   "Nothing to sacrifice."
-msgstr  ""
-
-#: rm.failed_to_delete
+#: rename.confirm
 #, object-pascal-format
-msgid   "Failed to delete %s: %s"
+msgid   "Rename %s to %s? [ynaq]"
 msgstr  ""
 
-#: rm.deleted
-#, object-pascal-format
-msgid   "Deleted %s."
-msgstr  ""
-
-#: rm.non_existant
-#, object-pascal-format
-msgid   "%s does not exist"
-msgstr  ""
-
-#: rm.filtered
-#, object-pascal-format
-msgid   "Filtered out %s."
-msgstr  ""
-
-#: cc.regex.regex_failed
-#, object-pascal-format
-msgid   "%s: regular expression failed: %s"
-msgstr  ""
-
-#: cc.regex.regex_failed_loc
-#, object-pascal-format
-msgid   "%s: regular expression failed at index %d : %s"
-msgstr  ""
-
-#: cc.getopts.ignore_des
-msgid   "Ignore entities whose name match the -x pattern"
+#: cc.getopts.symlink_des
+msgid   "Follow symlinks"
 msgstr  ""
 
 #: cc.getopts.dry_run_des
-msgid   "Do not actually remove stuff"
+msgid   "Do not actually make changes"
 msgstr  ""
 
-#: cc.getopts.filter_des
-msgid   "Filter out stuff to delete / keep using regular expressions"
+#: cc.getopts.bulk_des
+msgid   "Replace all occurrences"
 msgstr  ""
 
-#: cc.getopts.recursive_des
-msgid   "Remove recursively"
+#: cc.getopts.regex_des
+msgid   "Use regular expressions"
 msgstr  ""
 
-#: cc.getopts.keep_going_des
-msgid   "Ignore errors"
+#: cc.getopts.ign_exists_des
+msgid   "Ignore existing files"
+msgstr  ""
+
+#: cc.getopts.interactive_des
+msgid   "Be interactive"
+msgstr  ""
+
+#: cc.getopts.last_occ_des
+msgid   "Replace only the last occurrence"
+msgstr  ""
+
+#: cc.getopts.keep_attrs_des
+msgid   "Keep attributes"
+msgstr  ""
+
+#: cc.getopts.opposites_des
+msgid   "Operate on opposite matches"
 msgstr  ""
 
 #: cc.getopts.program_desc
-msgid   "Removes files and directories"
+msgid   "Renames files and folders."
+msgstr  ""
+
+#: cc.getopts.program_bonus_help
+msgid   "-b matches all occurences of the pattern, automatically omitting -r."
+        "\r\n"
+        "-p matches all occurences that do NOT match the specified pattern / "
+        "files.\r\n"
+        "-s follows symlinks, for both target and destination."
 msgstr  ""
 
 #: cc.getopts.cc_version_str

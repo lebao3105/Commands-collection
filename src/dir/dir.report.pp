@@ -14,26 +14,13 @@ var
 retn Report;
 retn PrintObjectName(const name: string; const props: TFSProperties);
 
-resourcestring
-	// Fails
-	STAT_FAILED 	  = 'failed to stat %s: %s';
-	PERMISSION_DENIED = '%s: permission denied';
-	OPEN_DIR_FAILED   = 'failed to open directory %s: %s';
-
-	// Counts
-	FILES_COUNT    = '%u file(s)';
-	DIRS_COUNT     = '%u dir(s)';
-	IGNORED_COUNT  = '%u ignored';
-	STATFAIL_COUNT = '%u failed to stat()';
-	FREE_SPACE 	   = '%s free';
+{$I i18n.inc}
 
 implementation
 
-{$I cc.termcolors.inc}
-
 uses
 	cc.base,
-	{$ifndef HAIKU}
+	{$if not defined(HAIKU) or defined(BEOS)}
 	cc.idcache,
 	{$endif}
 	cc.console,
@@ -46,6 +33,8 @@ uses
 	sysutils
 	{$endif}
 	;
+
+{$I cc.termcolors.inc}
 
 fn FSPermAsString(const perms: TFSPermissions): string;
 begin

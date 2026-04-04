@@ -16,72 +16,25 @@ msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Content-Type: text/plain; charset=UTF-8\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: rm.attempting_to_delete
-#, object-pascal-format
-msgid   "Attempting to delete %s..."
+#: cc.pager.paged_view
+msgid   "-- Paged view. Up/down arrows = scroll. --"
 msgstr  ""
 
-#: rm.delete_confirmation
-#, object-pascal-format
-msgid   "Do you really want to remove %s? [yYnNaA] "
+#: cc.pager.console_too_small
+msgid   "The console is too small. The content will go nuts."
 msgstr  ""
 
-#: rm.nothing_to_delete
-msgid   "Nothing to sacrifice."
-msgstr  ""
-
-#: rm.failed_to_delete
-#, object-pascal-format
-msgid   "Failed to delete %s: %s"
-msgstr  ""
-
-#: rm.deleted
-#, object-pascal-format
-msgid   "Deleted %s."
-msgstr  ""
-
-#: rm.non_existant
-#, object-pascal-format
-msgid   "%s does not exist"
-msgstr  ""
-
-#: rm.filtered
-#, object-pascal-format
-msgid   "Filtered out %s."
-msgstr  ""
-
-#: cc.regex.regex_failed
-#, object-pascal-format
-msgid   "%s: regular expression failed: %s"
-msgstr  ""
-
-#: cc.regex.regex_failed_loc
-#, object-pascal-format
-msgid   "%s: regular expression failed at index %d : %s"
-msgstr  ""
-
-#: cc.getopts.ignore_des
-msgid   "Ignore entities whose name match the -x pattern"
-msgstr  ""
-
-#: cc.getopts.dry_run_des
-msgid   "Do not actually remove stuff"
-msgstr  ""
-
-#: cc.getopts.filter_des
-msgid   "Filter out stuff to delete / keep using regular expressions"
-msgstr  ""
-
-#: cc.getopts.recursive_des
-msgid   "Remove recursively"
-msgstr  ""
-
-#: cc.getopts.keep_going_des
-msgid   "Ignore errors"
+#: cc.getopts.format_des
+msgid   "Time format"
 msgstr  ""
 
 #: cc.getopts.program_desc
-msgid   "Removes files and directories"
+msgid   "Returns the current time and date, in style."
+msgstr  ""
+
+#: cc.getopts.program_bonus_help
+msgid   "Consult https://www.freepascal.org/docs-html/rtl/sysutils/"
+        "formatchars.html for more information about time format strings."
 msgstr  ""
 
 #: cc.getopts.cc_version_str
@@ -140,4 +93,12 @@ msgstr  ""
 
 #: cc.base.not_error_result
 msgid   "Result IS fine!"
+msgstr  ""
+
+#: calltime.time_is
+msgid   "The current time is: "
+msgstr  ""
+
+#: calltime.default_format
+msgid   "dddd mmmm dd yyyy tt"
 msgstr  ""

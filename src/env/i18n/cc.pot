@@ -16,72 +16,56 @@ msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Content-Type: text/plain; charset=UTF-8\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: rm.attempting_to_delete
+#: env.noprogspecified
+msgid   "No program was specified. This program will not set variables for "
+        "your current shell/program instance and even user/system-wide."
+msgstr  ""
+
+#: env.exenotfound
 #, object-pascal-format
-msgid   "Attempting to delete %s..."
+msgid   "%s not found - any typo here?"
 msgstr  ""
 
-#: rm.delete_confirmation
+#: env.processexit
 #, object-pascal-format
-msgid   "Do you really want to remove %s? [yYnNaA] "
+msgid   "Process exited with the following message: %s"
 msgstr  ""
 
-#: rm.nothing_to_delete
-msgid   "Nothing to sacrifice."
+#: cc.pager.paged_view
+msgid   "-- Paged view. Up/down arrows = scroll. --"
 msgstr  ""
 
-#: rm.failed_to_delete
-#, object-pascal-format
-msgid   "Failed to delete %s: %s"
+#: cc.pager.console_too_small
+msgid   "The console is too small. The content will go nuts."
 msgstr  ""
 
-#: rm.deleted
-#, object-pascal-format
-msgid   "Deleted %s."
+#: cc.getopts.get_des
+msgid   "Get environment variables"
 msgstr  ""
 
-#: rm.non_existant
-#, object-pascal-format
-msgid   "%s does not exist"
+#: cc.getopts.set_des
+msgid   "Set environment variables"
 msgstr  ""
 
-#: rm.filtered
-#, object-pascal-format
-msgid   "Filtered out %s."
+#: cc.getopts.unset_des
+msgid   "Unset environment variables"
 msgstr  ""
 
-#: cc.regex.regex_failed
-#, object-pascal-format
-msgid   "%s: regular expression failed: %s"
-msgstr  ""
-
-#: cc.regex.regex_failed_loc
-#, object-pascal-format
-msgid   "%s: regular expression failed at index %d : %s"
-msgstr  ""
-
-#: cc.getopts.ignore_des
-msgid   "Ignore entities whose name match the -x pattern"
-msgstr  ""
-
-#: cc.getopts.dry_run_des
-msgid   "Do not actually remove stuff"
-msgstr  ""
-
-#: cc.getopts.filter_des
-msgid   "Filter out stuff to delete / keep using regular expressions"
-msgstr  ""
-
-#: cc.getopts.recursive_des
-msgid   "Remove recursively"
-msgstr  ""
-
-#: cc.getopts.keep_going_des
-msgid   "Ignore errors"
+#: cc.getopts.clean_des
+msgid   "Clean environment, containing only variables from -s"
 msgstr  ""
 
 #: cc.getopts.program_desc
-msgid   "Removes files and directories"
+msgid   "Launch processes with specified (and maybe modified) environment "
+        "variables."
+msgstr  ""
+
+#: cc.getopts.program_bonus_help
+msgid   "If no argument is specified, all existing environment variables will "
+        "be printed.\r\n"
+        "Otherwise, a program must be specified.\r\n"
+        "Unless otherwise specified via -c, all existing variables will not "
+        "be removed for the upcoming process."
 msgstr  ""
 
 #: cc.getopts.cc_version_str

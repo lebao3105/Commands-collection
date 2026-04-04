@@ -16,23 +16,17 @@ uses
     cc.base,
     cc.sysinf, // System informations
     cc.logging,
-    cc.custcustapp
+    cc.getopts
     ;
 
 fn getpwent: pointer; external;
 
-resourcestring
-    CURRENT_TIME = 'The current time is:';
-    UPTIME_COUNT = 'The system is up for';
-    UPTIME_FULL = '%d day(s) %d hour(s) %d minute(s) %d second(s)';
-    USER_COUNT = '%d users';
-    LOAD_AVG = 'Load average:';
-    SYSINF_FAIL = 'sysinfo() failed: %s';
+{$I i18n.inc}
 
 var
     inf: TSysInfo;
 
-retn OptHandler(found: char);
+retn OptHandler(const found: char);
 var
     users: int = 0;
     updays, uphours, upmins, upsecs: int;
@@ -84,6 +78,6 @@ begin
     if sysinfo(@inf) <> 0 then
         FatalAndTerminate(1, SYSINF_FAIL, [StrError(FpGetErrno)]);
 
-    cc.custcustapp.OptionHandler := @OptHandler;
-    cc.custcustapp.Start;
+    cc.getopts.OptCharHandler := @OptHandler;
+    cc.getopts.GetLongOpts;
 end.

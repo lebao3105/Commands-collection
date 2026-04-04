@@ -16,72 +16,52 @@ msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Content-Type: text/plain; charset=UTF-8\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: rm.attempting_to_delete
+#: uptime.current_time
+msgid   "The current time is:"
+msgstr  ""
+
+#: uptime.uptime_count
+msgid   "The system is up for"
+msgstr  ""
+
+#: uptime.uptime_full
 #, object-pascal-format
-msgid   "Attempting to delete %s..."
+msgid   "%d day(s) %d hour(s) %d minute(s) %d second(s)"
 msgstr  ""
 
-#: rm.delete_confirmation
+#: uptime.user_count
 #, object-pascal-format
-msgid   "Do you really want to remove %s? [yYnNaA] "
+msgid   "%d users"
 msgstr  ""
 
-#: rm.nothing_to_delete
-msgid   "Nothing to sacrifice."
+#: uptime.load_avg
+msgid   "Load average:"
 msgstr  ""
 
-#: rm.failed_to_delete
+#: uptime.sysinf_fail
 #, object-pascal-format
-msgid   "Failed to delete %s: %s"
+msgid   "sysinfo() failed: %s"
 msgstr  ""
 
-#: rm.deleted
-#, object-pascal-format
-msgid   "Deleted %s."
+#: cc.getopts.raw_des
+msgid   "Display raw uptime information"
 msgstr  ""
 
-#: rm.non_existant
-#, object-pascal-format
-msgid   "%s does not exist"
+#: cc.getopts.since_des
+msgid   "Display uptime since a specific date and time"
 msgstr  ""
 
-#: rm.filtered
-#, object-pascal-format
-msgid   "Filtered out %s."
-msgstr  ""
-
-#: cc.regex.regex_failed
-#, object-pascal-format
-msgid   "%s: regular expression failed: %s"
-msgstr  ""
-
-#: cc.regex.regex_failed_loc
-#, object-pascal-format
-msgid   "%s: regular expression failed at index %d : %s"
-msgstr  ""
-
-#: cc.getopts.ignore_des
-msgid   "Ignore entities whose name match the -x pattern"
-msgstr  ""
-
-#: cc.getopts.dry_run_des
-msgid   "Do not actually remove stuff"
-msgstr  ""
-
-#: cc.getopts.filter_des
-msgid   "Filter out stuff to delete / keep using regular expressions"
-msgstr  ""
-
-#: cc.getopts.recursive_des
-msgid   "Remove recursively"
-msgstr  ""
-
-#: cc.getopts.keep_going_des
-msgid   "Ignore errors"
+#: cc.getopts.pretty_des
+msgid   "Display uptime in a human-readable format"
 msgstr  ""
 
 #: cc.getopts.program_desc
-msgid   "Removes files and directories"
+msgid   "Displays system uptime"
+msgstr  ""
+
+#: cc.getopts.program_bonus_help
+msgid   "If you want to use -p, use it before any other flags. Else you will "
+        "get mixed results."
 msgstr  ""
 
 #: cc.getopts.cc_version_str

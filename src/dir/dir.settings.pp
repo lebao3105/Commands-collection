@@ -1,6 +1,7 @@
 unit dir.settings;
 {$scopedenums on}
 {$modeswitch advancedrecords}
+{$modeswitch anonymousfunctions}
 {$modeswitch result}
 
 interface
@@ -65,7 +66,11 @@ begin
 
     specialize TTypeHelper<string>.ArrayForEach(
         Settings.IgnoreRegexPatterns,
-        @RegexAppendExpr
+        fn (const pattern: string): bool
+        begin
+            RegexAppendExpr(pattern);
+            return(false);
+        end
     );
 
     debug('Ignore expression: %s', [RegexGetExpr]);

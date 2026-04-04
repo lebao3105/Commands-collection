@@ -9,5 +9,3 @@ const
 		(Long: 'case-sensitive';    Kind: EOptKind.FLAG;          Short: 's'; Help: CASESENS_DES),
 		ARGA_SUFFIX
 	);
-
-	ARGA_SHORTOPTS: string = 'm:tek:los';

@@ -16,72 +16,40 @@ msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Content-Type: text/plain; charset=UTF-8\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: rm.attempting_to_delete
+#: touch.nothing_to_create
+msgid   "Nothing to create."
+msgstr  ""
+
+#: touch.creating_stuff
 #, object-pascal-format
-msgid   "Attempting to delete %s..."
+msgid   "Creating %s..."
 msgstr  ""
 
-#: rm.delete_confirmation
+#: touch.created_stuff
 #, object-pascal-format
-msgid   "Do you really want to remove %s? [yYnNaA] "
+msgid   "Created %s."
 msgstr  ""
 
-#: rm.nothing_to_delete
-msgid   "Nothing to sacrifice."
-msgstr  ""
-
-#: rm.failed_to_delete
+#: touch.failed_to_create
 #, object-pascal-format
-msgid   "Failed to delete %s: %s"
+msgid   "Failed to create %s: %s"
 msgstr  ""
 
-#: rm.deleted
+#: touch.already_exists
 #, object-pascal-format
-msgid   "Deleted %s."
+msgid   "%s already exists"
 msgstr  ""
 
-#: rm.non_existant
-#, object-pascal-format
-msgid   "%s does not exist"
+#: cc.getopts.parent_des
+msgid   "Create parent directories if needed"
 msgstr  ""
 
-#: rm.filtered
-#, object-pascal-format
-msgid   "Filtered out %s."
-msgstr  ""
-
-#: cc.regex.regex_failed
-#, object-pascal-format
-msgid   "%s: regular expression failed: %s"
-msgstr  ""
-
-#: cc.regex.regex_failed_loc
-#, object-pascal-format
-msgid   "%s: regular expression failed at index %d : %s"
-msgstr  ""
-
-#: cc.getopts.ignore_des
-msgid   "Ignore entities whose name match the -x pattern"
-msgstr  ""
-
-#: cc.getopts.dry_run_des
-msgid   "Do not actually remove stuff"
-msgstr  ""
-
-#: cc.getopts.filter_des
-msgid   "Filter out stuff to delete / keep using regular expressions"
-msgstr  ""
-
-#: cc.getopts.recursive_des
-msgid   "Remove recursively"
-msgstr  ""
-
-#: cc.getopts.keep_going_des
-msgid   "Ignore errors"
+#: cc.getopts.dirs_des
+msgid   "Create directories ONLY"
 msgstr  ""
 
 #: cc.getopts.program_desc
-msgid   "Removes files and directories"
+msgid   "Creates files and directories"
 msgstr  ""
 
 #: cc.getopts.cc_version_str

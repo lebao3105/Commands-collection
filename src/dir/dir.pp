@@ -80,11 +80,12 @@ begin
     else PrintObjectName(r^.name, r^.info);
 end;
 
-retn ListItems(const path: string); inline;
+fn ListItems(const path: string): bool; inline;
 begin
     IterateDir(path, @ShowDirEntry, Settings.Recursively,
                (High(cc.getopts.NonOpts) > 1) or Settings.Recursively);
     Report;
+    return(false);
 end;
 
 begin
@@ -97,11 +98,10 @@ begin
     end;
 
     BeginSettingsThread(
-        // @BeginSettingsThread,
         PChar(GetEnvironmentVariable('DIR_CONFPATH'))
     );
 
-    cc.getopts.OptCharHandler := retn (found: char)
+    cc.getopts.OptCharHandler := retn (const found: char)
     begin
         case found of
             'l': Settings.UseLists := true;

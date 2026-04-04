@@ -25,4 +25,16 @@ resourcestring
         'DIR_CONFPATH environment variable points to where dir settings are stored.' + CRNL +
         'DIR_PRESET environment variable points to the preset that dir will use (gnu, win, ccd).' + CRNL +
         'Check dir(5) manual page for more informations.';
+{$else}
+	// Fails
+	STAT_FAILED 	  = 'failed to stat %s: %s';
+	PERMISSION_DENIED = '%s: permission denied';
+	OPEN_DIR_FAILED   = 'failed to open directory %s: %s';
+
+	// Counts
+	FILES_COUNT    = '%u file(s)';
+	DIRS_COUNT     = '%u dir(s)';
+	IGNORED_COUNT  = '%u ignored';
+	STATFAIL_COUNT = '%u failed to stat()';
+	FREE_SPACE 	   = '%s free';
 {$endif}

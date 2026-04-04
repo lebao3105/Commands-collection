@@ -1,4 +1,7 @@
 program uname;
+{$ifndef UNIX}
+    {$fatal uname only supports UNIX}
+{$endif}
 
 uses
     {$ifdef FPC_DOTTEDUNITS}
@@ -14,10 +17,12 @@ uses
     sysctl,
     {$endif}
     cc.base,
-    cc.custcustapp,
+    cc.getopts,
     cc.logging
     {$endif}
     ;
+
+{$I i18n.inc}
 
 var
     Inf: TUtsname;
@@ -35,7 +40,7 @@ begin
 end;
 
 
-retn OptionParser(found: char);
+retn OptionParser(const found: char);
 {$ifdef BSD}
 var
     // MIB = Management Information Base
@@ -105,6 +110,7 @@ begin
     end;
 end;
 
+{$push}{$warn 5058 off} // Inf does not seem to be initialized
 begin
     if (FpUname(Inf) = -1) then
         FatalAndTerminate(1, UNAME_FAILED, [ StrError(GetLastErrno) ]);
@@ -114,7 +120,8 @@ begin
         exit;
     end;
 
-    cc.custcustapp.OptionHandler := @OptionParser;
-    cc.custcustapp.Start;
+    cc.getopts.OptCharHandler := @OptionParser;
+    cc.getopts.GetLongOpts;
     writeln;
 end.
+{$pop}
