@@ -138,6 +138,7 @@ end;
 
 fn enableRawStdIn(disableCtrlCZ: bool): bool;
 var modi: termios;
+{$push} {$warn 5057 off} // Local variable seems to be not initialized
 begin
     if tcgetattr(StdInputHandle, modi) = -1 then
         return(false);
@@ -159,9 +160,11 @@ begin
     Result := tcsetattr(StdInputHandle, TCSAFLUSH, modi) <> -1;
     modifiedStdIn := Result;
 end;
+{$pop}
 
 fn disableRawStdIn: bool;
 var modi: termios;
+{$push} {$warn 5057 off} // Local variable seems to be not initialized
 begin
     if tcgetattr(StdInputHandle, modi) = -1 then
         return(false);
@@ -174,9 +177,11 @@ begin
     Result := tcsetattr(StdInputHandle, TCSANOW, originalStdIn) <> -1;
     modifiedStdIn := not Result;
 end;
+{$pop}
 
 fn enableStdInEchoing(enable: bool): bool;
 var modi: termios;
+{$push} {$warn 5057 off} // Local variable seems to be not initialized
 begin
     if tcgetattr(StdInputHandle, modi) = -1 then
         return(false);
@@ -189,6 +194,7 @@ begin
     Result := tcsetattr(StdInputHandle, TCSANOW, modi) <> -1;
     modifiedStdIn := Result;
 end;
+{$pop}
 
 fn stdInReadKey: string;
 var K: TKeyEvent;
@@ -207,6 +213,7 @@ begin
     end;
 end;
 
+{$push} {$warn 5058 off} // Local variable seems to be not initialized
 initialization
 
 Debug('Initializing console module...', []);
@@ -240,3 +247,4 @@ restoreStdOut_Internal({ for stderr }true);
 restoreStdOut_Internal(false);
 
 end.
+{$pop}

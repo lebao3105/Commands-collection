@@ -63,7 +63,7 @@ begin
     BreakPoints[1] := 0;
     lineno := 0;
     cols := getTerminalCols;
-    splits := SplitString(data, LineEnding);
+    splits := SplitString(data, CRNL);
 
     for i := 0 to High(splits) do
     begin
@@ -81,8 +81,8 @@ begin
     BreakPoints[0] := from_;
     BreakPoints[1] := to_;
 
-    // enableEchoing(false);
-    screenClear;
+    enableStdInEchoing(false);
+    //screenClear;
 
     for i := from_ to to_ do
         writeln(OutputFile, Data_Lines.data[i]);
@@ -92,6 +92,13 @@ end;
 retn pagedPrint(const data: string; useStdErr: bool = false);
 begin;
     setOutputStream(useStdErr);
+
+    if not isATerminal(OutputHandle) then
+    begin
+        writeln(OutputFile, data);
+        exit;
+    end;
+
     pagerPrepare(data);
 
     if system.Length(Data_Lines.lines) <= getTerminalRows() - 1 then
@@ -100,7 +107,7 @@ begin;
         exit;
     end;
 
-    // enableRawStdIn(false);
+    enableRawStdIn(false);
     pagedPrintRange(0, getTerminalRows() - 1);
 
     while BreakPoints[1] < High(Data_Lines.lines) do
@@ -132,7 +139,7 @@ begin;
             Q_KEY: break;
 
             CTRL_G: begin // jump to line
-                enableEchoing(true);
+                enableStdInEchoing(true);
             end;
 
             CTRL_H: begin // help
@@ -148,7 +155,7 @@ begin;
         end;
     end;
 
-    enableEchoing(true);
+    enableStdInEchoing(true);
 end;
 
 end.

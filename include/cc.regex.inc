@@ -25,10 +25,10 @@ fn RegexGetLastError: string; inline;
 fn RegexGetLastErrorID: int; inline;
 fn RegexGetLastCompileErrorPos: int; inline;
 fn RegexGetMatch(const idx: int = 0): string; inline;
-retn RegexAppendExpr(const expr: string);
 fn RegexGetExpr: string; inline;
 fn RegexVerifyExpr: specialize TOptional<ERegExpr>;
+retn RegexAppendExpr(const expr: string);
 
 resourcestring
 	REGEX_FAILED	  = '%s: regular expression failed: %s';
-	REGEX_FAILED_LOC  = '%s: regular expression failed at index %d';
+	REGEX_FAILED_LOC  = '%s: regular expression failed at index %d : %s';

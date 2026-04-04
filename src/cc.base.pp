@@ -99,11 +99,18 @@ begin
 	arr[High(arr)] := val;
 end;
 
-class retn TTypeHelper.ArrayForEach(arr: TArray; func: ArrayForEachCallback); static;
+class retn TTypeHelper.ArrayForEach(const arr: TArray; func: ArrayForEachCallback); static;
 var i: int;
 begin
     for i := Low(arr) to High(arr) do
-        func(arr[i]);
+        if func(arr[i]) then break;
+end;
+
+class retn TTypeHelper.ArrayForEachIndex(const arr: TArray; func: ArrayForEachIndexCallback); static;
+var i: int;
+begin
+    for i := Low(arr) to High(arr) do
+        if func(i, arr[i]) then break;
 end;
 
 end.

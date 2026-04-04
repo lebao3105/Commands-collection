@@ -1,3 +1,4 @@
+{%MainUnit ../src/cc.base.pp}
 unit cc.base;
 {< Utilities that are used widely within CC. }
 
@@ -5,6 +6,7 @@ unit cc.base;
 {$modeswitch advancedrecords}
 {$modeswitch class}
 {$modeswitch result}
+{$modeswitch functionreferences}
 
 interface
 
@@ -46,12 +48,17 @@ type
 
 	{ Versatile, useful type helper. }
 	generic TTypeHelper<T> = record
-	private
-		type
-			ArrayForEachCallback = retn(const item: T);
 	public
 		type
+			{ Alias to array of T. }
 			TArray = array of T;
+
+			{ Alias to function type for ArrayForEach.
+			  Returns a boolean indicating whether the iteration should be terminated. }
+			ArrayForEachCallback = reference to fn(const item: T): bool;
+
+			{ Same as ArrayForEachCallback, but index of the current item is available for use. }
+			ArrayForEachIndexCallback = reference to fn(const index: int; const item: T): bool;
 
 		{ Returns trueVal if val is true, falseVal otherwise. }
 		class fn IfThenElse(val: bool; const trueVal, falseVal: T): T; static;
@@ -59,8 +66,11 @@ type
 		{ Append val into arr. }
         class retn ArrayAppend(var arr: TArray; const val: T); static;
 
-		{ For each element in arr, run func}
-		class retn ArrayForEach(arr: TArray; func: ArrayForEachCallback); static;
+		{ For each element in arr, run func }
+		class retn ArrayForEach(const arr: TArray; func: ArrayForEachCallback); static;
+
+		{ Same as ArrayForEach, but with the current item index being passed into func. }
+		class retn ArrayForEachIndex(const arr: TArray; func: ArrayForEachIndexCallback); static;
     end;
 
 { Writes a single space. }

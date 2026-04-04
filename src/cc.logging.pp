@@ -7,11 +7,12 @@ implementation
 uses
     {$ifdef FPC_DOTTEDUNITS}
     unixapi.base,
-    system.sysutils
+    system.sysutils,
     {$else}
     baseunix,
-    sysutils
+    sysutils, // Format
     {$endif}
+    cc.console // isATerminal
     ;
 
 fn GetLastErrno: longint; inline;
