@@ -71,7 +71,7 @@ type
     end;
 
     { Type of a procedure that handles caught command-line options. }
-    TOptArgCallback = retn(found: char);
+    TOptArgCallback = retn(const found: char);
 
 var
     { Set to the argument of an option if it needs one (and found one) }
@@ -96,3 +96,6 @@ retn GetOpt;
 
 { Same as GetOpt, but will match long options specified via the program's ARGA. }
 retn GetLongOpts;
+
+{ Prints help messages. }
+retn ShowHelp(to_stdout: bool = true);

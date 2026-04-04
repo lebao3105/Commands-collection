@@ -3,345 +3,277 @@
 implementation
 
 uses
+    {$ifdef FPC_DOTTEDUNITS}
+    system.sysutils, // Format
+    {$else}
+    sysutils,
+    {$endif}
     cc.base,
+    cc.console,
     cc.logging
     ;
 
-var
-    NextChar,
-    first_nonopt,
-    last_nonopt   : Longint;
-    Ordering      : EOrderings;
+resourcestring
+    CC_VERSION_STR = 'Commands-Collection (CC) version %s';
+    HELP_USAGE     = 'Show this help and exit';
+    VERSION_USAGE  = 'Show the version of this program and exit';
+    VERBOSE_USAGE  = 'Add verbosity';
 
-Procedure Exchange;
-var
-    bottom,
-    middle,
-    top,i,len : longint;
-    temp      : pchar;
+    OPT_NEED_VAL  = 'option %s requires an argument';
+    OPT_UNKNOWN   = 'unrecognized option: %s';
+
+{$define ARGA_VERBOSE :=
+    (Long: 'verbose'; Kind: EOptKind.FLAG; Short: 'v'; Help: VERBOSE_USAGE)
+}
+{$define ARGA_SUFFIX :=
+    (Long: 'help';    Kind: EOptKind.FLAG; Short: 'h'; Help: HELP_USAGE),
+    (Long: 'version'; Kind: EOptKind.FLAG; Short: 'V'; Help: VERSION_USAGE),
+    (Long: '';        Kind: EOptKind.FLAG; Short: #0; Help: '')
+}
+
+{$ifndef PASDOC}
+{$I config.inc}
+{$endif}
+{$I cc.termcolors.inc}
+
+fn TOption.WriteFullHelpMessage(defaultVal: string = ''; valParam: string = 'VALUE'): string;
 begin
-    bottom:=first_nonopt;
-    middle:=last_nonopt;
-    top:=optind;
-    while (top>middle) and (middle>bottom) do
+    if Short = #0 then
+        return;
+
+    Result := '';
+    Result += ANSI_CODE_BOLD;
+
+    if Long <> '' then
+        Result += ('--' + Long + '  ');
+    
+    // TOption.Short must not be empty as it's used for command-
+    // line parsing task. However ARGAs are terminated with 0ed
+    // entry, which of course has its Short a #0. Already been
+    // handled above.
+    Result += ('-' + Short + ANSI_CODE_RESET);
+
+    if Kind <> EOptKind.FLAG then
     begin
-        if (top-middle>middle-bottom) then
-        begin
-            len:=middle-bottom;
-            for i:=0 to len-1 do begin
-                temp:=argv[bottom+i];
-                argv[bottom+i]:=argv[top-(middle-bottom)+i];
-                argv[top-(middle-bottom)+i]:=temp;
-            end;
-            top:=top-len;
-            continue;
-        end;
+        if Long <> '' then Result += '  ';
+        Result += valParam;
 
-        len:=top-middle;
-        for i:=0 to len-1 do begin
-            temp:=argv[bottom+i];
-            argv[bottom+i]:=argv[middle+i];
-            argv[middle+i]:=temp;
-        end;
-        bottom:=bottom+len;
+        if defaultVal <> '' then
+            Result += (' = ' + defaultVal);
     end;
-    first_nonopt:=first_nonopt + optind-last_nonopt;
-    last_nonopt:=optind;
+
+    Result += (CRNL + #9 + Help);
 end;
 
-procedure getopt_init (var opts : string);
+retn ShowHelp(to_stdout: bool);
 begin
-    Assert(Assigned(OptHelpHandler));
-    Optarg := '';
-    Optind := 1;
-    First_nonopt := 1;
-    Last_nonopt := 1;
-    OptOpt := '?';
-    Nextchar := 0;
-    ordering := EOrderings.permute;
+{$ifndef PASDOC}
+    setOutputStream(not to_stdout);
+    writeln(OutputFile, PROGRAM_DESC);
 
-    if length(opts) > 0 then
-        case opts[1] of
-            '-' : begin
-                ordering := EOrderings.return_in_order;
-                delete(opts,1,1);
-            end;
-            '+' : begin
-                ordering := EOrderings.require_order;
-                delete(opts,1,1);
-            end;
-        end;
+    specialize TTypeHelper<TOption>.ArrayForEach(ARGA,
+    fn (const opt: TOption): bool
+    begin
+        writeln(OutputFile, opt.WriteFullHelpMessage());
+        return(false);
+    end);
+
+    {$ifdef HAS_BONUS_HELP}
+    writeln(OutputFile, PROGRAM_BONUS_HELP);
+    {$endif}
+{$endif}
 end;
 
-procedure Meh(message: string; args: array of const); inline;
+{$ifndef PASDOC}
+var
+    NextChar: LongInt;
+
+retn Meh(message: string; args: array of const); overload;
 begin
-    OptHelpHandler({ to_stdout } false);
+    ShowHelp({ to_stdout } false);
     FatalAndTerminate(1, message, args);
 end;
 
-procedure appendNonOptions;
-var i: int;
+retn Meh(opt: TOption; message: string; args: array of const); overload;
 begin
-    SetLength(NonOpts, ParamCount - optind);
-    for i := optind to ParamCount do
-        NonOpts[i - optind] := ParamStr(i);
+    setOutputStream(true);
+    writeln(OutputFile, opt.WriteFullHelpMessage);
+    FatalAndTerminate(1, message, args);
 end;
 
-function Internal_getopt (var Optstring : string; LongOpts : POption;
-                          LongInd : pointer; Long_only : boolean) : char;
+fn Internal_getopt (long_only : boolean) : char;
 var
-    temp,endopt,
-    option_index : byte;
-    indfound     : integer;
-    currentarg,
-    optname      : string;
-    p,pfound     : POption;
-    exact,ambig  : boolean;
-    c            : char;
+    exact: bool;
+    optName, optValue: string;
+    foundOptPos: int;
+    eqPos: int; // position of the first equal sign
 
-    function isALongOption: bool; inline;
+    fn currentArg: string; inline;
+    begin
+        return(specialize TTypeHelper<string>.IfThenElse(
+            optind < argc, argv[optind], ''
+        ));
+    end;
+
+    fn isALongOption: bool; inline;
     begin
         isALongOption := (currentArg[1] = OptSpecifier) and (currentArg[2] = OptSpecifier);
     end;
 
+    fn nameToFlag: string;
+    begin
+        if optName = '' then return('');
+        return(specialize TTypeHelper<string>.IfThenElse(
+            length(optName) > 1, '--' + optName, '-' + optName
+        ));
+    end;
+
+    retn appendAllNonOptions;
+    var i: int;
+    begin
+        SetLength(NonOpts, argc - optind);
+        for i := optind to argc do
+            NonOpts[i - optind] := string(argv[i]);
+    end;
+
+    retn appendNonOpt;
+    begin
+        SetLength(NonOpts, Length(NonOpts) + 1);
+        NonOpts[High(NonOpts)] := currentArg;
+    end;
+
 begin
     // Initialize if needed.
-    optarg := '';
-    if optind = 0 then
-        getopt_init(optstring);
-
-    // Check if we need the next argument.
-    // currentarg := specialize TTypeHelper<string>.IfThenElse(
-    //     optind < ParamCount, ParamStr(optind), ''
-    // );
-
+    OptArg := '';
+    if OptInd = 0 then begin
+        OptInd := 1;
+        NextChar := 0;
+    end;
+    
     if nextchar = 0 then
     begin
-        if ordering = EOrderings.permute then
+        {$ifdef ALLOW_DOUBLE_SPECIFIER}
+        // Now check if the current argument is --.
+        if currentArg = OptDoubleSpecifier then
         begin
-            // If we processed options following non-options : exchange
-            if last_nonopt <> optind then begin
-                if first_nonopt <> last_nonopt then
-                    exchange
-                else
-                    first_nonopt := optind;
-            end;
-
-            while (optind < ParamCount) and (ParamStr(optind)[1] <> OptSpecifier) or
-                  (length(ParamStr(optind)) = 1) do
-            inc(optind);
-
-            last_nonopt := optind;
-        end;
-
-        currentarg := specialize TTypeHelper<string>.IfThenElse(
-            optind < ParamCount, ParamStr(optind), ''
-        );
-
-        // Check for '--' argument
-        if (optind <> ParamCount) and (currentarg = OptDoubleSpecifier) then
-        begin
-            inc(optind);
-            if last_nonopt <> optind then begin
-                if first_nonopt <> last_nonopt then
-                    exchange
-                else
-                    first_nonopt := optind;
-            end;
-
-            last_nonopt := ParamCount;
-            optind := ParamCount;
-        end;
-
-        // Are we at the end of all arguments ?
-        if optind >= ParamCount then
-        begin
-            if first_nonopt <> last_nonopt then
-                optind := first_nonopt;
+            appendAllNonOptions;
+            OptInd := argc;
             return(EndOfOptions);
         end;
+        {$endif}
 
-        // This call once again...
-        currentarg := specialize TTypeHelper<string>.IfThenElse(
-            optind < ParamCount, ParamStr(optind), ''
-        );
-
-        // Are we at a non-option ?
-        if not (currentarg[1] = OptSpecifier) or (length(currentarg) = 1) then
+        // Are we at the end?
+        if OptInd >= argc then
+            return(EndOfOptions);
+        
+        // Are we at a non-option?
+        if (currentArg[1] <> OptSpecifier) or (length(currentArg) = 1) then
         begin
-            appendNonOptions;
-
-            // This becomes true if @param optstring starts with + (literal plus).
-            // The parse ends with the first NonOption being found.
-            if ordering = EOrderings.require_order then
-                return(EndOfOptions);
-
-            optarg := ParamStr(optind);
+            // intentional for handling options with required/optional value
+            optValue := currentArg;
+            appendNonOpt;
             inc(optind);
             return(#0);
         end;
 
-        // At this point we're at a *long* option ...
+        // At this point we're at a long option...
         nextchar := 2;
-        if (longopts <> nil) and isALongOption then
+        if long_only and isALongOption then
             inc(nextchar);
-            // ^ So, now nextchar points at the first character of an option
+            // Now it points at the first character of an option
     end;
 
-    // Check if we have to use @param LongOpts
-    if (longopts <> nil) and (length(currentArg) > 1) then
-    if isALongOption or
-       ((not long_only) and (currentarg[2] = optstring)) then
+    // Now handle long options
+    if isALongOption then
     begin
         // Get option name
-        endopt := pos('=', currentarg);
-        if endopt = 0 then
-            endopt := length(currentarg) + 1;
-        optname := copy(currentarg, nextchar, endopt - nextchar);
+        eqPos := Pos('=', currentArg);
+        if eqPos = 0 then
+            eqPos := length(currentArg) + 1;
 
-        p:=longopts;
-        pfound:=nil;
-        exact:=false;
-        ambig:=false;
-        option_index:=0;
-        indfound:=0;
+        optName := Copy(currentArg, nextchar, eqPos - nextchar);
 
-        // Find for option in @param LongOpts
-        while (p^.Long <> '') and (not exact) do
-        begin
-            if optname = p^.Long then
-            begin
-                exact := true;
-                pfound := p;
-                indfound := option_index;
-                ambig := false;
-            end
-            else
-                ambig := true;
-
-            inc(PByte(p), sizeof(TOption));
-            inc(option_index);
-
-            if exact then break;
-        end;
-
-        // An ambiguous option is found: quit
-        if ambig then
-            Meh(OPT_AMBIGUOUS, [ optname ]);
-
-        if pfound <> nil then
-        begin
-            Inc(OptInd);
-            if endopt <= length(currentarg) then
-            begin
-                if pfound^.Kind <> EOptKind.FLAG then
-                    OptArg := copy(currentarg,endopt+1,length(currentarg)-endopt)
-                else
-                    Meh(OPT_NO_ARG, [
-                        specialize TTypeHelper<string>.IfThenElse(
-                            currentArg[2] = OptSpecifier,
-                            OptDoubleSpecifier,
-                            OptSpecifier
-                        ) + pfound^.Long
-                    ]);
-            end
-            else if pfound^.Kind = EOptKind.FLAG_WITH_VAL then { argument in next paramstr...  }
-            begin
-                if optind >= ParamCount then
-                    Meh(OPT_NEED_VAL, [ pfound^.Long ]);
-
-                OptArg := ParamStr(OptInd);
-                Inc(OptInd);
-            end;
-
-            nextchar:=0;
-            if longind<>nil then
-                plongint(longind)^ := indfound + 1;
-            return(pfound^.Short);
-        end; { pfound<>nil }
-
-      { We didn't find it as an option }
-        if (not long_only) or
-           ((currentarg[2]='-') or (pos(CurrentArg[nextchar],optstring)=0)) then
-            Meh(OPT_UNKNOWN, [
-                specialize TTypeHelper<string>.IfThenElse(
-                    currentArg[2] = OptSpecifier,
-                    OptDoubleSpecifier,
-                    OptSpecifier
-                ) + optname
-            ]);
-    end; { Of long options.}
-
-
-    // We check for a short option.
-    temp := pos(currentarg[nextchar],optstring);
-    c := currentarg[nextchar];
-    inc(nextchar);
-
-    if nextchar>length(currentarg) then
-    begin
-        inc(optind);
-        nextchar := 0;
-    end;
-
-    if (temp = 0) or (c = ':') then
-    begin
-        Meh(OPT_ILLEGAL, [ c ]); //? (c can be ':')
-    end;
-
-    result := optstring[temp];
-
-    if (length(optstring) > temp) and (optstring[temp + 1] =':') then
-        if (length(optstring) > temp + 1) and (optstring[temp+2] = ':') then
-    begin { optional argument }
-        if nextchar > 0 then
-        begin
-            optarg := copy (currentarg,nextchar,length(currentarg)-nextchar+1);
-            inc(optind);
-            nextchar:=0;
-        end else if (optind <> ParamCount) then
-        begin
-            optarg := ParamStr(optind);
-            if optarg[1] = OptSpecifier then
-                optarg := ''
-            else
-                inc(optind);
-            nextchar:=0;
-       end;
+        // Get option value, if any
+        if eqPos < Length(currentArg) then
+            optValue := Copy(currentArg, eqPos - nextchar, Length(currentArg) + 1);
     end
-    else begin { required argument }
-        if nextchar>0 then
-        begin
-            optarg:=copy (currentarg,nextchar,length(currentarg)-nextchar+1);
-            inc(optind);
-        end
-        else if optind = ParamCount then
-            Meh(OPT_NEED_VAL, [OptDoubleSpecifier + optstring[temp]])
-        else begin
-            optarg := ParamStr(optind);
-            inc(optind)
-        end;
-       nextchar:=0;
-    end; { End of required argument}
 
-    if Result = 'h' then begin
-        OptHelpHandler(true);
-        Halt(0);
+    // Handle short options
+    else begin
+        optName := Copy(currentArg, nextchar, 1); // short option is always 1 char
+
+        // If there is a value, e.g -x5 where 5 is the value, get it too
+        optValue := Copy(currentArg, nextchar + 1, Length(currentArg) + 1);
     end;
-end; { End of internal getopt...}
 
+    // Now time to use ARGA
+    exact := false;
+    foundOptPos := 0;
 
-Function GetOpt(ShortOpts : String) : char;
-begin
-    getopt := internal_getopt(shortopts,nil,nil,false);
+    specialize TTypeHelper<TOption>.ArrayForEachIndex(ARGA,
+    fn (const indx: smallint; const opt: TOption): bool
+    begin
+        if exact then
+            return(true);
+
+        if (optName = opt.Long) or (optName = opt.Short) then
+        begin
+            exact := true;
+            foundOptPos := indx;
+            return(true);
+        end;
+
+        return(false);
+    end);
+
+    if not exact then
+        Meh(OPT_UNKNOWN, [ optName ]);
+    
+    with ARGA[foundOptPos] do
+    begin
+        Result := Short;
+
+        if Kind <> EOptKind.FLAG then
+        begin
+            if (optValue = '') and (Kind = EOptKind.FLAG_WITH_VAL) then
+                Meh(ARGA[foundOptPos], OPT_NEED_VAL, [ nameToFlag ]);
+            OptArg := optValue;
+        end;
+    end;
 end;
 
-
-Function GetLongOpts(ShortOpts : String;LongOpts : POption;var Longind : Longint) : char;
+retn parseLoop(long_only: boolean);
+var c: char;
 begin
-    getlongopts := internal_getopt(shortopts,longopts,@longind,true);
+    if ParamCount > 0 then
+    repeat
+        c := Internal_getopt(long_only);
+        case c of
+            'h': begin ShowHelp(true); halt(0); end;
+            'V': begin writeln(Format(CC_VERSION_STR, [CC_VERSION])); halt(0); end;
+        else
+            OptCharHandler(c);
+        end;
+    until c = EndOfOptions;
 end;
 
-initialization
-    Optind := 0;
+retn GetOpt;
+begin
+    parseLoop(false);
+end;
+
+retn GetLongOpts;
+begin
+    parseLoop(true);
+end;
+{$else}
+retn GetOpt;
+begin
+end;
+
+retn GetLongOpts;
+begin
+end;
+{$endif}
+
 end.
