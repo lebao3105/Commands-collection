@@ -1,0 +1,143 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid   ""
+msgstr  "Project-Id-Version: PACKAGE VERSION\n"
+        "Report-Msgid-Bugs-To: \n"
+        "POT-Creation-Date: 2026-04-04 14:06+0700\n"
+        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+        "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+        "Language-Team: LANGUAGE <LL@li.org>\n"
+        "Language: \n"
+        "MIME-Version: 1.0\n"
+        "Content-Type: text/plain; charset=UTF-8\n"
+        "Content-Transfer-Encoding: 8bit\n"
+
+#: rm.attempting_to_delete
+#, object-pascal-format
+msgid   "Attempting to delete %s..."
+msgstr  ""
+
+#: rm.delete_confirmation
+#, object-pascal-format
+msgid   "Do you really want to remove %s? [yYnNaA] "
+msgstr  ""
+
+#: rm.nothing_to_delete
+msgid   "Nothing to sacrifice."
+msgstr  ""
+
+#: rm.failed_to_delete
+#, object-pascal-format
+msgid   "Failed to delete %s: %s"
+msgstr  ""
+
+#: rm.deleted
+#, object-pascal-format
+msgid   "Deleted %s."
+msgstr  ""
+
+#: rm.non_existant
+#, object-pascal-format
+msgid   "%s does not exist"
+msgstr  ""
+
+#: rm.filtered
+#, object-pascal-format
+msgid   "Filtered out %s."
+msgstr  ""
+
+#: cc.regex.regex_failed
+#, object-pascal-format
+msgid   "%s: regular expression failed: %s"
+msgstr  ""
+
+#: cc.regex.regex_failed_loc
+#, object-pascal-format
+msgid   "%s: regular expression failed at index %d : %s"
+msgstr  ""
+
+#: cc.getopts.ignore_des
+msgid   "Ignore entities whose name match the -x pattern"
+msgstr  ""
+
+#: cc.getopts.dry_run_des
+msgid   "Do not actually remove stuff"
+msgstr  ""
+
+#: cc.getopts.filter_des
+msgid   "Filter out stuff to delete / keep using regular expressions"
+msgstr  ""
+
+#: cc.getopts.recursive_des
+msgid   "Remove recursively"
+msgstr  ""
+
+#: cc.getopts.keep_going_des
+msgid   "Ignore errors"
+msgstr  ""
+
+#: cc.getopts.program_desc
+msgid   "Removes files and directories"
+msgstr  ""
+
+#: cc.getopts.cc_version_str
+#, object-pascal-format
+msgid   "Commands-Collection (CC) version %s"
+msgstr  ""
+
+#: cc.getopts.invalid_option
+msgid   "Error with option: %c. Use --help or -h for the usage."
+msgstr  ""
+
+#: cc.getopts.help_usage
+msgid   "Show this help and exit"
+msgstr  ""
+
+#: cc.getopts.version_usage
+msgid   "Show the version of this program and exit"
+msgstr  ""
+
+#: cc.getopts.verbose_usage
+msgid   "Add verbosity"
+msgstr  ""
+
+#: cc.getopts.opt_need_arg
+#, object-pascal-format
+msgid   "option requires an argument: %s"
+msgstr  ""
+
+#: cc.getopts.opt_illegal
+msgid   "illegal option: --%c"
+msgstr  ""
+
+#: cc.getopts.opt_ambiguous
+#, object-pascal-format
+msgid   "ambiguous option: %s"
+msgstr  ""
+
+#: cc.getopts.opt_need_val
+#, object-pascal-format
+msgid   "option %s requires an argument"
+msgstr  ""
+
+#: cc.getopts.opt_unknown
+#, object-pascal-format
+msgid   "unrecognized option: %s"
+msgstr  ""
+
+#: cc.getopts.opt_no_arg
+#, object-pascal-format
+msgid   "option %s does NOT allow an argument"
+msgstr  ""
+
+#: cc.base.not_ok_result
+msgid   "Result is NOT OK!"
+msgstr  ""
+
+#: cc.base.not_error_result
+msgid   "Result IS fine!"
+msgstr  ""
