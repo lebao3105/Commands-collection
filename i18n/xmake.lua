@@ -1,58 +1,69 @@
-target("update-locals")
-	add_deps(programs)
+function generate_pot(resource_paths, outpath)
+    local xgettext = find_program("xgettext")
 
-	on_build(function (_)
-		local xgettext = find_program("xgettext")
-		local msgmerge = find_program("msgmerge")
-		local potloc = "i18n/cc.pot"
+    if xgettext == nil then
+        error("Failed to find xgettext!")
+        return
+    end
 
-		if xgettext == nil then
-			error("Failed to find xgettext!")
-			return
-		end
+    if os.isfile(outpath) then
+        os.rm(outpath)
+    end
+    os.touch(outpath)
 
-		if msgmerge == nil then
-			error("Failed to find msgmerge!")
-			return
-		end
-		
-		-- Start freshly
-		if os.isfile(potloc) then
-			os.rm(potloc)
-		end
-		os.touch(potloc)
+    for __, fullpath in ipairs(resource_paths .. "/*.rsj", { async = true })
+    do
+        print("Found a .rsj file for localization: " .. fullpath)
+        os.execv(xgettext, {"-o", outpath, "-E", "-i",
+                            "--add-comments=TRANSLATORS",
+                            "-j", fullpath })
+    end
+end
 
-		-- Generate a template
-		for __, fullpath in ipairs(os.files("$(buildir)/**/*.rsj", { async = true }))
-		do
-			print("Found a .rsj file for localization: " .. fullpath)
-			os.execv(xgettext, {"-o", potloc, "-E", "-i",
-								"--add-comments=TRANSLATORS",
-								"-j", fullpath })
-		end
+function merge_po_files(from, to)
+    local msgmerge = find_program("msgmerge")
 
-		-- Merge existing translations
-		for __, fullpath in ipairs(os.dirs("i18n/*")) do
-			local outpath = fullpath .. "/cc.po"
-			if os.exists(outpath) then
-				os.execv(msgmerge, { "-U", "-i", outpath, potloc })
-			else
-				os.cp(potloc, outpath)
-			end
-		end
+    if msgmerge == nil then
+        error("Failed to find msgmerge!")
+        return
+    end
 
-	end)
+    if os.exists(to) then
+        os.execv(msgmerge, { "-U", "-i", to, from })
+    else
+        os.cp(from, to)
+    end
+end
 
-target("compile-locals")
-	on_build(function (_)
-		local msgfmt = find_program("msgfmt")
+function compile_po_file(from, to)
+    local msgfmt = find_program("msgfmt")
 
-		if msgfmt == nil then
-			error("Failed to find msgfmt!")
-			return
-		end
+    if msgfmt == nil then
+        error("Failed to find msgfmt!")
+        return
+    end
 
-		for __, fullpath in ipairs(os.dirs("i18n/*")) do
-			os.execv(msgfmt, { fullpath .. "/cc.po", "-o", fullpath .. "/cc.mo" })
-		end
-	end)
+    os.execv(msgfmt, { from, "-o", to })
+end
+
+target("API-i18n")
+    set_kind("phony")
+    add_rules("unit_pas")
+
+    on_build(function (target)
+        for __, fullpath in ipairs(os.files("src/cc.*.pp")) do
+            os.execv("$(pc)", table.join(
+                target:get("pcflags"),
+                { fullpath, "-dPASDOC" }))
+        end
+    end)
+
+    after_build(function (target)
+        -- generate_pot(target:objectdir(), "./cc.pot")
+        -- for _, fullpath in os.dirs("*") do
+        --     if os.isfile(fullpath .. "/cc.po") then
+        --         merge_po_files("./cc.pot", fullpath .. "/cc.po")
+        --         compile_po_file(fullpath .. "/cc.po", fullpath .. "/cc.mo")
+        --     end
+        -- end
+    end)

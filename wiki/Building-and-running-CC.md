@@ -27,14 +27,19 @@ Grab the compiler either from FPCUpdeluxe / https://freepascal.org.
 
 Embarcadero's Delphi is not tested. This project does not use Delphi anyways.
 
-~~Since only UNIXes are meant to be supported, ensure that either `/etc/fpc.cfg` (Linux), `/usr/local/etc/fpc.cfg` (FreeBSD) or `~/.fpc.cfg` exists:~~
-* ~~Prebuilt packages normally include `/etc/fpc.cfg`;~~
-* ~~Tar installs from [freepascal.org](https://freepascal.org) will create one;~~
-* ~~FPC installed from FreeBSD's Ports, however, tells you to:~~
+Ensure that either `/etc/fpc.cfg` (Linux), `/usr/local/etc/fpc.cfg` (FreeBSD) or `~/.fpc.cfg` exists:
+* Prebuilt packages normally include `/etc/fpc.cfg`;
+* Tar installs from [freepascal.org](https://freepascal.org) will create one;
+* FPC installed from FreeBSD's Ports, however, tells you:
 
 <img width="850" height="581" alt="image" src="https://github.com/user-attachments/assets/78ca9f78-3c29-49dd-ac03-77c69c2bf87a" />
 
-~~This is not needed since that line has already been put in `/usr/local/etc/fpc.cfg`.~~
+In most installations this is handled automatically and correctly by FPC/packagers.
+
+### Libraries
+
+* A C library (musl or not);
+* RTL (run time library) and more from Free Pascal, see below.
 
 > Note: Since FPC trunk is being used, skip the information below.
 > To strip your FPC installation, you will want to modify its Makefile(.fpc)...
@@ -49,12 +54,6 @@ Default installation of FPC includes a lot of other unneccessary things, which c
 * `fpc-source`: Source code of FPC (compiler, RTL, packages, utils) - OPTIONAL
 
 CC in the past implemented a tool that can pull required packages from FPC's GitLab. Guess I should bring it back...
-
-### Libraries
-
-* A C library (musl or not);
-* A `<getopt.h>` implementation;
-* POSIX-compatible C library (for e.g `<unistd.h>`)
 
 ### Git
 
@@ -96,6 +95,11 @@ $ xmake
 $ xmake b
 ```
 
+To build all programs:
+```bash
+$ xmake b programs
+```
+
 Add `-r` for rebuilds, needed for new changes.
 
 To clean:
@@ -123,6 +127,6 @@ xmake f -p linux -a x86_64 -m release
 xmake b -v dir
 ```
 
-Will produce files in `build/linux/x86_64/release/`
+The executable will be put in `build/linux/x86_64/release/`.
 
 Most programs have their own `--help` / `-h`.

@@ -5,23 +5,19 @@ target("pasdoc")
 	set_kind("binary")
 
 	on_build(function (_)
-		import("core.project.depend")
-		depend.on_changed(
-		function ()
-			os.execv(find_program("make"), {"-C", "docs/pasdoc"})
-		end,
-			{ files = {"docs/pasdoc/source/**.pas", "docs/pasdoc/source/**.lpr",
-					   "docs/pasdoc/source/**.inc", "docs/pasdoc/source/Makefile"} }
-		)
+		os.execv(find_program("make"), {"-C", "docs/pasdoc"})
 	end)
 
 	on_clean(function (_)
 		os.execv(find_program("make"), {"-C", "docs/pasdoc", "clean"})
 	end)
 
+	on_run(function (_)
+		os.run("docs/pasdoc/bin/pasdoc")
+	end)
+
 target("API-docs")
 	set_kind("phony")
-	add_files("../src/cc.*.pp")
 	add_deps("pasdoc")
 
 	on_clean(function (_)
@@ -51,7 +47,7 @@ target("API-docs")
 			function ()
 				os.execv("docs/pasdoc/bin/pasdoc", args)
 			end,
-			{ files = { target:get("files") } }
+			{ files = target:get("files") }
 		)
 	end)
 

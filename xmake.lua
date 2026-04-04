@@ -15,13 +15,13 @@ option("fpc-conf")
 	set_description("Path to fpc.cfg file - optional")
 	set_default("")
 
-rule("program_pas")
+rule("unit_pas")
 	on_config(function (target)
-		local name = target:name()
-		local objdir = "$(builddir)/.objs/" .. name
+		local objdir = "$(builddir)/.objs/" .. target:name()
+		os.mkdir(objdir)
 
-		-- Source files
-		target:add("files", "src/" .. name .. "/" .. name .. ".pp")
+		-- Where to put build outputs
+		target:add("pcflags", "-FU" .. objdir)
 
 		-- Where to get needed flags
 		target:add("pcflags", "@cc.cfg")
@@ -29,23 +29,28 @@ rule("program_pas")
 		-- Define CC_VERSION (this project version)
 		target:add("pcflags", "-dCC_VERSION:=\'" .. version .. "\'")
 
-		-- Add include dirs
-		target:add("pcflags", "-Fisrc/" .. name)
-
-		-- Set the output directory for .o and .ppu files
-		target:add("pcflags", "-FU" .. objdir)
-
 		if get_config("fpc-conf") ~= "" then
 			target:add("pcflags", "@" .. get_config("fpc-conf"))
 		end
+	end)
+
+rule("program_pas")
+	add_deps("unit_pas")
+	on_config(function (target)
+		local name = target:name()
+
+		-- Source files
+		target:add("files", "src/" .. name .. "/" .. name .. ".pp")
+
+		-- Add include dirs
+		target:add("pcflags", "-Fisrc/" .. name)
 
 		-- Where to put binaries:
 		-- $(builddir)/<os>/<arch>/<kind>/<output-prefix>name
 		target:set("basename", get_config("output-prefix") .. name)
-
-		-- Create needed directories
-		os.mkdir(objdir)
 	end)
+
+includes("i18n/xmake.lua")
 
 for i, dir in ipairs(os.dirs("src/*", { async = true })) do
 	local name = path.filename(dir)
@@ -64,10 +69,48 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
 					os.execv(scdoc, {}, { stdin = inp, stdout = out })
 				end
 			end)
+		
+		target(name .. "-i18n")
+			add_deps(name)
+
+			on_build(function (_)
+				local i18n_dir = "src/" .. name .. "/i18n/"
+				local potloc = i18n_dir .. "cc.pot"
+
+				-- Generate a template
+				generate_pot("$(builddir)/.objs/" .. name, potloc)
+
+				-- Merge existing translations from CC
+				for __, fullpath in ipairs(os.dirs(i18n_dir .. "*")) do
+					local language = path.filename(fullpath)
+					local ccpath = "i18n/" .. language
+					local outpath = fullpath .. "/cc.po"
+					
+					merge_po_files(potloc, outpath)
+					
+					if os.isdir(ccpath) then
+						merge_po_files(ccpath .. "/cc.po", outpath)
+					end
+
+					-- Compile .po to .mo
+					compile_po_file(outpath, fullpath .. "/cc.mo")
+				end
+			end)
 
 		programs[i] = name
 	end
 end
 
-includes("i18n/xmake.lua")
+target("programs")
+	set_kind("phony")
+	for _, program in ipairs(programs) do
+		add_deps(program)
+	end
+
+target("programs-i18n")
+	set_kind("phony")
+	for _, program in ipairs(programs) do
+		add_deps(program .. "-i18n")
+	end
+
 includes("docs/xmake.lua")
