@@ -9,7 +9,6 @@ resourcestring
     MACHINE_DES = 'Show the machine hardware name';
     NODENAME_DES = 'Show the network node name';
     PROCESSOR_DES = 'Show the processor type';
-    HARDWARE_DES = 'Show the hardware platform';
     OPERATING_DES = 'Show the operating system';
 
     PROGRAM_DESC = 'Prints system informations';
@@ -17,15 +16,14 @@ resourcestring
         'With nothing else provided, -s will be omitted.' + CRNL +
         '-f must be provided before any other flags, else you ' +
         'will either get a mixed output, or no -f effect at all.' + CRNL +
-        '-o output may differ from GNU uname''s output due to the ' +
+        '-o and -p outputs may differ from GNU uname''s output due to the ' +
         'underlying implementation.' + CRNL +
-        'Check the following site for all identifies from GNU:' +
+        'For -o, check the following site for all identifies from GNU:' +
         'https://github.com/coreutils/gnulib/blob/master/m4/host-os.m4';
 
 {$else}
 
     PROCESSOR_TYPE      = 'Processor type: ';
-    HARDWARE_PLATFORM   = 'Hardware platform: ';
     UNKNOWN             = 'Unknown';
     OPERATING_SYSTEM    = 'Operating system: ';
     UNAME_FAILED        = 'uname() failed: %s';

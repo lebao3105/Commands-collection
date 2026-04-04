@@ -8,7 +8,6 @@ const
 		(Long: 'machine';			Kind: EOptKind.FLAG; Short: 'm'),
 		(Long: 'nodename';			Kind: EOptKind.FLAG; Short: 'n'),
 		(Long: 'processor';			Kind: EOptKind.FLAG; Short: 'p'),
-		(Long: 'hardware-platform'; Kind: EOptKind.FLAG; Short: 'i'),
 		(Long: 'operating-system';  Kind: EOptKind.FLAG; Short: 'o'),
 		ARGA_SUFFIX
 	);

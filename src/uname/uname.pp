@@ -81,26 +81,7 @@ begin
 
         // GNU handles this more strictly, can be seen by calls to
         // sysinfo / sysctl (prob it's platform-specific)
-        'p': PrintElement({$I %FPCTARGET%}, PROCESSOR_TYPE);
-        'i': begin
-            {$ifdef BSD}
-            // Get size required to hold the text
-            if (FpSysCtl(PCInt(@MIB), Length(MIB), Nil, @s, Nil, 0) = 0) then
-            begin
-                GetMem(hardware_pl, s);
-
-                // Actually get the string
-                if (FpSysCtl(PCInt(@MIB), Length(MIB), hardware_pl, @s, Nil, 0) = 0) then
-                begin
-                    PrintElement(hardware_pl, HARDWARE_PLATFORM);
-                    FreeMem(hardware_pl);
-                    Exit;
-                end;
-                FreeMem(hardware_pl);
-            end;
-            {$endif}
-                PrintElement(UNKNOWN, HARDWARE_PLATFORM);
-        end;
+        'p': PrintElement({$I %FPCTARGETCPU%}, PROCESSOR_TYPE);
 
         // The output is a bit different as GNU uname uses a definition
         // created by one of GNU things:
@@ -115,8 +96,9 @@ begin
     if (FpUname(Inf) = -1) then
         FatalAndTerminate(1, UNAME_FAILED, [ StrError(GetLastErrno) ]);
 
-    if ParamCount = 0 then begin
-        OptionParser('a');
+    if ParamCount = 0 then
+    begin
+        OptionParser('s');
         exit;
     end;
 
