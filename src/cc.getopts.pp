@@ -119,8 +119,10 @@ var
     end;
 
     fn isALongOption: bool; inline;
-    begin
-        isALongOption := (currentArg[1] = OptSpecifier) and (currentArg[2] = OptSpecifier);
+    begin // -- doesn't count
+        Result := (length(currentArg) = 2) and
+                  (currentArg[1] = OptSpecifier) and
+                  (currentArg[2] = OptSpecifier);
     end;
 
     fn nameToFlag: string;
@@ -137,12 +139,6 @@ var
         SetLength(NonOpts, argc - optind);
         for i := optind to argc do
             NonOpts[i - optind] := string(argv[i]);
-    end;
-
-    retn appendNonOpt;
-    begin
-        SetLength(NonOpts, Length(NonOpts) + 1);
-        NonOpts[High(NonOpts)] := currentArg;
     end;
 
 begin
@@ -174,7 +170,10 @@ begin
         begin
             // intentional for handling options with required/optional value
             optValue := currentArg;
-            appendNonOpt;
+
+            SetLength(NonOpts, Length(NonOpts) + 1);
+            NonOpts[High(NonOpts)] := optValue;
+
             inc(optind);
             return(#0);
         end;
@@ -197,8 +196,10 @@ begin
         optName := Copy(currentArg, nextchar, eqPos - nextchar);
 
         // Get option value, if any
+        // This disallows combinations of short flags, which means
+        // one has to use -l -a instead of -la.
         if eqPos < Length(currentArg) then
-            optValue := Copy(currentArg, eqPos - nextchar, Length(currentArg) + 1);
+            optValue := Copy(currentArg, eqPos + 1, Length(currentArg) - eqPos);
     end
 
     // Handle short options
@@ -206,7 +207,8 @@ begin
         optName := Copy(currentArg, nextchar, 1); // short option is always 1 char
 
         // If there is a value, e.g -x5 where 5 is the value, get it too
-        optValue := Copy(currentArg, nextchar + 1, Length(currentArg) + 1);
+        if length(currentArg) > 2 then
+            optValue := Copy(currentArg, nextchar + 1, Length(currentArg) - 2);
     end;
 
     // Now time to use ARGA
@@ -243,6 +245,9 @@ begin
             OptArg := optValue;
         end;
     end;
+
+    Inc(OptInd);
+    NextChar := 0;
 end;
 
 retn parseLoop(long_only: boolean);
