@@ -51,9 +51,12 @@ target("API-docs")
 		)
 	end)
 
-target("docs")
+target("program-docs")
 	set_kind("phony")
 	for _, program in ipairs(programs) do
 		add_deps(program .. "-docs")
 	end
-	add_deps("API-docs")
+
+target("docs")
+	set_kind("phony")
+	add_deps("program-docs", "API-docs")
