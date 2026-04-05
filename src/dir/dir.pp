@@ -8,36 +8,29 @@ uses
     system.clocale,
         {$endif}
     system.sysutils,
-    system.regexpr,
     {$else}
         {$ifdef UNIX}
     cmem, cthreads, clocale,
         {$endif}
-    sysutils, regexpr,
+    sysutils,
     {$endif}
     cc.base,
     cc.getopts,
     cc.logging,
     cc.regex,
     cc.fs,
+    dir.i18n,
     dir.report,
     dir.settings
     ;
 
 retn ShowDirEntry(const r: PIterateDirResult; knownAsDir: bool);
-
-    fn IsNameInvalid: bool;
-    var check: specialize TResult<bool, ERegExpr>;
-    begin
-    	check := RegexHasMatches(r^.name);
-     	if check.IsError then
-           	FatalAndTerminate(1, REGEX_FAILED, [RegexGetExpr, check.GetError.Message])
-        else
-        	exit(check.GetOK);
-    end;
-
 begin
-    if IsNameInvalid then exit;
+    if not RegexHasMatches(r^.name) then
+        if RegexGetLastErrorID <> 0 then
+            fatalandterminate(1, REGEX_FAILED, [ RegexGetExpr, RegexGetLastError ])
+        else
+            return;
 
     case r^.info.Kind of
     	EFSEntityKind.AStatFailure:
@@ -97,9 +90,7 @@ begin
         dir.settings.Settings := CCD_PRESET;
     end;
 
-    BeginSettingsThread(
-        PChar(GetEnvironmentVariable('DIR_CONFPATH'))
-    );
+    InitializeSettings;
 
     cc.getopts.OptCharHandler := retn (const found: char)
     begin

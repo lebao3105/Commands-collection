@@ -102,6 +102,6 @@ var
     Settings: TDirSettings;
 
 fn StringToListCol(const str: string): specialize TResult<EListingColumns, string>;
-fn BeginSettingsThread(p_file_path: pointer): ptrint;
+retn InitializeSettings;
 retn RegexPrepare;
 fn FSEntityKindToTypeString(tp: EFSEntityKind): string; inline;

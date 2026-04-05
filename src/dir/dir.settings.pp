@@ -21,7 +21,8 @@ uses
     regexpr,  { ERegExpr }
     {$endif}
     cc.logging,
-    cc.regex
+    cc.regex,
+    dir.i18n
     ;
 
 
@@ -33,16 +34,16 @@ begin
 
     if casted = -1 then
         Result := specialize TResult<EListingColumns, string>.Err(
-            Format('%s: unknown column', [ str ]))
+            Format(INVALID_COLUMN, [ str ]))
     else
         Result := specialize TResult<EListingColumns, string>.Ok(
             EListingColumns(casted));
 end;
 
-fn BeginSettingsThread(p_file_path: pointer): ptrint;
-// var
-//     file_path: string;
+retn InitializeSettings;
+var conf_path: string;
 begin
+    conf_path := GetEnvironmentVariable('DIR_CONFPATH');
     debug('Started settings thread', []);
     // file_path := string(p_file_path);
     RegexPrepare;
@@ -76,12 +77,12 @@ begin
     debug('Ignore expression: %s', [RegexGetExpr]);
 
     check := RegexVerifyExpr;
-    // if check.HasValue then
-    //     FatalAndTerminate(1, REGEX_FAILED_LOC, [
-    //         RegexGetExpr,
-    //         RegexGetLastCompileErrorPos,
-    //         check.Value.Message
-    //     ]);
+    if check.HasValue then
+        FatalAndTerminate(1, REGEX_FAILED_LOC, [
+            RegexGetExpr,
+            RegexGetLastCompileErrorPos,
+            check.Value.Message
+        ]);
 end;
 
 fn FSEntityKindToTypeString(tp: EFSEntityKind): string; inline;

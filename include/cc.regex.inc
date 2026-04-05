@@ -16,16 +16,16 @@ uses
     {$endif}
     ;
 
-fn RegexGetModifierStr: string; inline;
+fn RegexGetModifierStr: string;
 // see modifiers in https://regex.sorokin.engineer/regular_expressions/#modifiers
-retn RegexSetModifiers(const modifiers: string); inline;
-fn RegexGetMatches(const input: string): TStringDynArray; inline;
-fn RegexHasMatches(const input: string): specialize TResult<bool, ERegExpr>;
-fn RegexGetLastError: string; inline;
-fn RegexGetLastErrorID: int; inline;
-fn RegexGetLastCompileErrorPos: int; inline;
-fn RegexGetMatch(const idx: int = 0): string; inline;
-fn RegexGetExpr: string; inline;
+retn RegexSetModifiers(const modifiers: string);
+fn RegexGetMatches(const input: string): TStringDynArray;
+fn RegexHasMatches(const input: string): bool;
+fn RegexGetLastError: string;
+fn RegexGetLastErrorID: int;
+fn RegexGetLastCompileErrorPos: int;
+fn RegexGetMatch(const idx: int = 0): string;
+fn RegexGetExpr: string;
 fn RegexVerifyExpr: specialize TOptional<ERegExpr>;
 retn RegexAppendExpr(const expr: string);
 

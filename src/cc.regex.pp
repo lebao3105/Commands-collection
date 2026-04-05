@@ -5,59 +5,51 @@ implementation
 var
 	Regexer: TRegExpr;
 
-fn RegexGetModifierStr: string; inline;
+fn RegexGetModifierStr: string;
 begin
 	Result := Regexer.ModifierStr;
 end;
 
-retn RegexSetModifiers(const modifiers: string); inline;
+retn RegexSetModifiers(const modifiers: string);
 begin
 	Regexer.ModifierStr := modifiers;
 end;
 
-fn RegexGetMatches(const input: string): TStringDynArray; inline;
+fn RegexGetMatches(const input: string): TStringDynArray;
 var i : int;
 {$push}{$warn 5093 off} // Result seems to be not initialized
 begin
 	i := 0;
-	try
-		if Regexer.Exec(input) then
-		repeat
-			SetLength(Result, i + 1);
-			Result[i] := Regexer.Match[0];
-			Inc(i);
-		until not Regexer.ExecNext;
-	except on E: ERegExpr do
-	end;
+	if RegexHasMatches(input) then
+	repeat
+		SetLength(Result, i + 1);
+		Result[i] := Regexer.Match[0];
+		Inc(i);
+	until not Regexer.ExecNext;
 end;
 {$pop}
 
-fn RegexHasMatches(const input: string): specialize TResult<bool, ERegExpr>;
+fn RegexHasMatches(const input: string): bool;
 begin
-	try
-		Result := specialize TResult<bool, ERegExpr>.Ok(Regexer.Exec(input));
-	except
-		on E: ERegExpr do
-			Result := specialize TResult<bool, ERegExpr>.Err(E);
-	end;
+	Result := Regexer.Exec(input);
 end;
 
-fn RegexGetLastError: string; inline;
+fn RegexGetLastError: string;
 begin
 	return(Regexer.ErrorMsg(Regexer.LastError));
 end;
 
-fn RegexGetLastErrorID: int; inline;
+fn RegexGetLastErrorID: int;
 begin
 	return(Regexer.LastError);
 end;
 
-fn RegexGetLastCompileErrorPos: int; inline;
+fn RegexGetLastCompileErrorPos: int;
 begin
 	return(Regexer.CompilerErrorPos);
 end;
 
-fn RegexGetMatch(const idx: int = 0): string; inline;
+fn RegexGetMatch(const idx: int = 0): string;
 begin
 	Result := Regexer.Match[idx];
 end;
@@ -69,7 +61,7 @@ begin
 	Regexer.Expression := Regexer.Expression + expr;
 end;
 
-fn RegexGetExpr: string; inline;
+fn RegexGetExpr: string;
 begin
 	Result := Regexer.Expression;
 end;
@@ -77,6 +69,7 @@ end;
 fn RegexVerifyExpr: specialize TOptional<ERegExpr>;
 begin
 	try
+		// It will raise exceptions anyway
 		Regexer.Compile;
 	except
 		on E: ERegExpr do
@@ -87,6 +80,7 @@ end;
 initialization
 
 Regexer := TRegExpr.Create;
+Regexer.RaiseForRuntimeError := false;
 
 finalization
 

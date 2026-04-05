@@ -32,9 +32,12 @@ resourcestring
 	OPEN_DIR_FAILED   = 'failed to open directory %s: %s';
 
 	// Counts
-	FILES_COUNT    = '%u file(s)';
-	DIRS_COUNT     = '%u dir(s)';
-	IGNORED_COUNT  = '%u ignored';
-	STATFAIL_COUNT = '%u failed to stat()';
-	FREE_SPACE 	   = '%s free';
+	FILES_COUNT       = '%u file(s)';
+	DIRS_COUNT        = '%u dir(s)';
+	IGNORED_COUNT     = '%u ignored';
+	STATFAIL_COUNT    = '%u failed to stat()';
+	FREE_SPACE 	      = '%s free';
+
+    // More
+    INVALID_COLUMN    = '%s: unknown column type';
 {$endif}

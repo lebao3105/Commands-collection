@@ -7,15 +7,9 @@ uses
     {$ifdef FPC_DOTTEDUNITS}
     system.sysutils,
     unixapi.base,
-    {$ifdef BSD}
-    bsdapi.sysctl,
-    {$endif}
     {$else}
     sysutils,
     baseunix,
-    {$ifdef BSD} // FreeBSD, Darwin and their homies
-    sysctl,
-    {$endif}
     cc.base,
     cc.getopts,
     cc.logging
@@ -39,29 +33,18 @@ begin
     );
 end;
 
-
-retn OptionParser(const found: char);
-{$ifdef BSD}
-var
-    // MIB = Management Information Base
-    MIB: array [0..1] of integer = (
-        CTL_HW, HW_MODEL
-    );
-    hardware_pl: pchar;
-    s: size_t;
-{$endif}
-
+retn OptionHandler(const found: char);
 begin
     case found of
         'a': begin
-            OptionParser('s');
-            OptionParser('n');
-            OptionParser('r');
-            OptionParser('v');
-            OptionParser('m');
-            OptionParser('p');
-            OptionParser('i');
-            OptionParser('o');
+            OptionHandler('s');
+            OptionHandler('n');
+            OptionHandler('r');
+            OptionHandler('v');
+            OptionHandler('m');
+            OptionHandler('p');
+            OptionHandler('i');
+            OptionHandler('o');
             writeln;
             Halt(0);
         end;
@@ -98,11 +81,11 @@ begin
 
     if ParamCount = 0 then
     begin
-        OptionParser('s');
+        OptionHandler('s');
         exit;
     end;
 
-    cc.getopts.OptCharHandler := @OptionParser;
+    cc.getopts.OptCharHandler := @OptionHandler;
     cc.getopts.GetLongOpts;
     writeln;
 end.

@@ -14,17 +14,16 @@ var
 retn Report;
 retn PrintObjectName(const name: string; const props: TFSProperties);
 
-{$I i18n.inc}
-
 implementation
 
 uses
 	cc.base,
-	{$if not defined(HAIKU) or defined(BEOS)}
+	{$if not (defined(HAIKU) or defined(BEOS))}
 	cc.idcache,
 	{$endif}
 	cc.console,
 	dir.settings,
+	dir.i18n,
 	{$ifdef FPC_DOTTEDUNITS}
 	system.dateutils,
 	system.sysutils
@@ -61,11 +60,11 @@ end;
 retn PrintObjectName(const name: string; const props: TFSProperties);
 var
 	i: longint;
-	{$ifndef HAIKU}
+	{$if not (defined(HAIKU) or defined(BEOS))}
 	itemPasswd, itemGroup: PCacheEntry;
 	{$endif}
 begin
-	{$ifndef HAIKU}
+	{$if not (defined(HAIKU) or defined(BEOS))}
 	itemPasswd := getpw(props.Uid, false);
 	itemGroup := getpw(props.Gid, true);
 	{$endif}
@@ -90,7 +89,7 @@ begin
 			    write(FSPermAsString(props.Perms[2]));
 			end;
 
-			{$ifndef HAIKU}
+			{$if not (defined(HAIKU) or defined(BEOS))}
 			EListingColumns.OWNER_NAME:
 				write(itemPasswd^.GetName);
 
