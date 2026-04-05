@@ -5,7 +5,7 @@ target("pasdoc")
 	set_kind("binary")
 
 	on_build(function (_)
-		os.execv(find_program("make"), {"-C", "docs/pasdoc"})
+		os.execv(find_program("make"), {"-C", "docs/pasdoc", "build-fpc-release"})
 	end)
 
 	on_clean(function (_)
