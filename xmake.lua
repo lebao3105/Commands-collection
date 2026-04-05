@@ -57,6 +57,7 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
 
 	if os.isfile("src/" .. name .. "/" .. name .. ".pp") then
 		target(name)
+			set_kind("binary")
 			add_rules("program_pas")
 
 		target(name .. "-docs")
@@ -114,3 +115,18 @@ target("programs-i18n")
 	end
 
 includes("docs/xmake.lua")
+includes("@builtin/xpack")
+
+xpack("commands-collection")
+	set_formats("zip", "nsis", "targz", "rpm", "deb", "dmg")
+	set_title("Commands collection")
+	set_author("lebao3105")
+	set_description("A pack of command-line utilities.")
+	set_homepage("https://gitlab.com/lebao3105/commands-collection")
+	set_licensefile("LICENSE")
+
+	for _, program in ipairs(programs) do
+		add_targets(program)
+		-- add_targets(program .. "-i18n")
+	end
+	-- add_targets("API-docs", "API-i18n")
