@@ -15,6 +15,9 @@ uses
 
 resourcestring
     CC_VERSION_STR = 'Commands-Collection (CC) version %s';
+    // TRANSLATORS:          OS v  CPU v
+    CC_TARGET_STR  = 'Built for %s on %s using FPC %s';
+    CC_BUILD_DATE  = 'Built on %s';
     HELP_USAGE     = 'Show this help and exit';
     VERSION_USAGE  = 'Show the version of this program and exit';
     VERBOSE_USAGE  = 'Add verbosity';
@@ -250,7 +253,12 @@ begin
         c := Internal_getopt(long_only);
         case c of
             'h': begin ShowHelp(true); halt(0); end;
-            'V': begin writeln(Format(CC_VERSION_STR, [CC_VERSION])); halt(0); end;
+            'V': begin
+                writeln(Format(CC_VERSION_STR, [CC_VERSION]));
+                writeln(Format(CC_TARGET_STR, [ {$I %FPCTARGETOS%}, {$I %FPCTARGETCPU%}, {$I %FPCVERSION%} ]));
+                writeln(Format(CC_BUILD_DATE, [ {$I %DATE%}, {$I %TIME%}]));
+                halt(0);
+            end;
         else
             OptCharHandler(c);
         end;
