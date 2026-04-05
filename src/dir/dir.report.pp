@@ -69,45 +69,50 @@ begin
 	itemGroup := getpw(props.Gid, true);
 	{$endif}
 
-	for i := Low(Settings.Columns) to High(Settings.Columns) do
+	if Settings.UseLists then
 	begin
-		case Settings.Columns[i] of
-			EListingColumns.NAME: begin
-				write(name);
-				write(ANSI_CODE_RESET);
+		for i := Low(Settings.Columns) to High(Settings.Columns) do
+		begin
+			case Settings.Columns[i] of
+				EListingColumns.NAME: begin
+					write(name);
+					write(ANSI_CODE_RESET);
+				end;
+
+				EListingColumns.SIZE:
+					write(Format('%.0u', [ props.Size ]));
+
+				EListingColumns.KIND:
+					write(FSEntityKindToTypeString(props.Kind));
+
+				EListingColumns.PERMS: begin
+					write(FSPermAsString(props.Perms[0]));
+					write(FSPermAsString(props.Perms[1]));
+					write(FSPermAsString(props.Perms[2]));
+				end;
+
+				{$if not (defined(HAIKU) or defined(BEOS))}
+				EListingColumns.OWNER_NAME:
+					write(itemPasswd^.GetName);
+
+				EListingColumns.OWNER_GROUP:
+					write(itemGroup^.GetName);
+				{$endif}
+
+				EListingColumns.LAST_MODIFIED:
+					write(FormatDateTime(Settings.TimeFormat, props.LastModifyTime));
+
+				EListingColumns.LAST_ACCESSED:
+					write(FormatDateTime(Settings.TimeFormat, props.LastAccessTime));
 			end;
 
-			EListingColumns.SIZE:
-				write(Format('%.0u', [ props.Size ]));
-
-			EListingColumns.KIND:
-				write(FSEntityKindToTypeString(props.Kind));
-
-			EListingColumns.PERMS: begin
-				write(FSPermAsString(props.Perms[0]));
-			    write(FSPermAsString(props.Perms[1]));
-			    write(FSPermAsString(props.Perms[2]));
-			end;
-
-			{$if not (defined(HAIKU) or defined(BEOS))}
-			EListingColumns.OWNER_NAME:
-				write(itemPasswd^.GetName);
-
-			EListingColumns.OWNER_GROUP:
-				write(itemGroup^.GetName);
-			{$endif}
-
-			EListingColumns.LAST_MODIFIED:
-				write(FormatDateTime(Settings.TimeFormat, props.LastModifyTime));
-
-			EListingColumns.LAST_ACCESSED:
-				write(FormatDateTime(Settings.TimeFormat, props.LastAccessTime));
+			WriteSp;
 		end;
-
-		WriteSp;
+		writeln;
+		return;
 	end;
 
-	Writeln;
+	write(name + ANSI_CODE_RESET);
 end;
 
 end.

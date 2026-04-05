@@ -47,7 +47,7 @@ const
         IgnoreRegexPatterns: ();
         IgnoreHiddens: true;
         IgnoreBackups: true;
-        AddColors: true;
+        AddColors: false;
         UseLists: true;
         Recursively: false;
         DirOnly: false;
@@ -72,7 +72,7 @@ const
         IgnoreHiddens: true;
         IgnoreBackups: true;
         AddColors: true;
-        UseLists: true;
+        UseLists: false;
         Recursively: false;
         DirOnly: false;
     );
@@ -93,7 +93,7 @@ const
         IgnoreHiddens: true;
         IgnoreBackups: true;
         AddColors: true;
-        UseLists: true;
+        UseLists: false;
         Recursively: false;
         DirOnly: false;
     );

@@ -26,11 +26,11 @@ uses
 
 retn ShowDirEntry(const r: PIterateDirResult; knownAsDir: bool);
 begin
-    if not RegexHasMatches(r^.name) then
-        if RegexGetLastErrorID <> 0 then
-            fatalandterminate(1, REGEX_FAILED, [ RegexGetExpr, RegexGetLastError ])
-        else
-            return;
+    // if not RegexHasMatches(r^.name) then
+    //     if RegexGetLastErrorID <> 0 then
+    //         fatalandterminate(1, REGEX_FAILED, [ RegexGetExpr, RegexGetLastError ])
+    //     else
+    //         return;
 
     case r^.info.Kind of
     	EFSEntityKind.AStatFailure:

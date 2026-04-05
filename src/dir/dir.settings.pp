@@ -77,12 +77,12 @@ begin
     debug('Ignore expression: %s', [RegexGetExpr]);
 
     check := RegexVerifyExpr;
-    if check.HasValue then
-        FatalAndTerminate(1, REGEX_FAILED_LOC, [
-            RegexGetExpr,
-            RegexGetLastCompileErrorPos,
-            check.Value.Message
-        ]);
+    // if check.HasValue then
+    //     FatalAndTerminate(1, REGEX_FAILED_LOC, [
+    //         RegexGetExpr,
+    //         RegexGetLastCompileErrorPos,
+    //         check.Value.Message
+    //     ]);
 end;
 
 fn FSEntityKindToTypeString(tp: EFSEntityKind): string; inline;
