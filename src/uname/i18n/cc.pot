@@ -1,0 +1,170 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid   ""
+msgstr  "Project-Id-Version: PACKAGE VERSION\n"
+        "Report-Msgid-Bugs-To: \n"
+        "POT-Creation-Date: 2026-04-04 14:13+0700\n"
+        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+        "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+        "Language-Team: LANGUAGE <LL@li.org>\n"
+        "Language: \n"
+        "MIME-Version: 1.0\n"
+        "Content-Type: text/plain; charset=UTF-8\n"
+        "Content-Transfer-Encoding: 8bit\n"
+
+#: cc.getopts.all_des
+msgid   "Show everything"
+msgstr  ""
+
+#: cc.getopts.formatted_des
+msgid   "More human-friendly output"
+msgstr  ""
+
+#: cc.getopts.kern_name_des
+msgid   "Show the kernel name"
+msgstr  ""
+
+#: cc.getopts.kern_rel_des
+msgid   "Show the kernel release"
+msgstr  ""
+
+#: cc.getopts.kern_ver_des
+msgid   "Show the kernel version"
+msgstr  ""
+
+#: cc.getopts.machine_des
+msgid   "Show the machine hardware name"
+msgstr  ""
+
+#: cc.getopts.nodename_des
+msgid   "Show the network node name"
+msgstr  ""
+
+#: cc.getopts.processor_des
+msgid   "Show the processor type"
+msgstr  ""
+
+#: cc.getopts.hardware_des
+msgid   "Show the hardware platform"
+msgstr  ""
+
+#: cc.getopts.operating_des
+msgid   "Show the operating system"
+msgstr  ""
+
+#: cc.getopts.program_desc
+msgid   "Prints system informations"
+msgstr  ""
+
+#: cc.getopts.program_bonus_help
+msgid   "With nothing else provided, -s will be omitted.\r\n"
+        "-f must be provided before any other flags, else you will either get "
+        "a mixed output, or no -f effect at all.\r\n"
+        "-o output may differ from GNU uname's output due to the underlying "
+        "implementation.\r\n"
+        "Check the following site for all identifies from GNU:https://"
+        "github.com/coreutils/gnulib/blob/master/m4/host-os.m4"
+msgstr  ""
+
+#: cc.getopts.cc_version_str
+#, object-pascal-format
+msgid   "Commands-Collection (CC) version %s"
+msgstr  ""
+
+#: cc.getopts.invalid_option
+msgid   "Error with option: %c. Use --help or -h for the usage."
+msgstr  ""
+
+#: cc.getopts.help_usage
+msgid   "Show this help and exit"
+msgstr  ""
+
+#: cc.getopts.version_usage
+msgid   "Show the version of this program and exit"
+msgstr  ""
+
+#: cc.getopts.verbose_usage
+msgid   "Add verbosity"
+msgstr  ""
+
+#: cc.getopts.opt_need_arg
+#, object-pascal-format
+msgid   "option requires an argument: %s"
+msgstr  ""
+
+#: cc.getopts.opt_illegal
+msgid   "illegal option: --%c"
+msgstr  ""
+
+#: cc.getopts.opt_ambiguous
+#, object-pascal-format
+msgid   "ambiguous option: %s"
+msgstr  ""
+
+#: cc.getopts.opt_need_val
+#, object-pascal-format
+msgid   "option %s requires an argument"
+msgstr  ""
+
+#: cc.getopts.opt_unknown
+#, object-pascal-format
+msgid   "unrecognized option: %s"
+msgstr  ""
+
+#: cc.getopts.opt_no_arg
+#, object-pascal-format
+msgid   "option %s does NOT allow an argument"
+msgstr  ""
+
+#: uname.processor_type
+msgid   "Processor type: "
+msgstr  ""
+
+#: uname.hardware_platform
+msgid   "Hardware platform: "
+msgstr  ""
+
+#: uname.unknown
+msgid   "Unknown"
+msgstr  ""
+
+#: uname.operating_system
+msgid   "Operating system: "
+msgstr  ""
+
+#: uname.uname_failed
+#, object-pascal-format
+msgid   "uname() failed: %s"
+msgstr  ""
+
+#: uname.kernel_name
+msgid   "Kernel name: "
+msgstr  ""
+
+#: uname.kernel_release
+msgid   "Kernel release: "
+msgstr  ""
+
+#: uname.kernel_version
+msgid   "Kernel version: "
+msgstr  ""
+
+#: uname.machine_hwname
+msgid   "Machine hardware name: "
+msgstr  ""
+
+#: uname.network_nodename
+msgid   "Network node name: "
+msgstr  ""
+
+#: cc.base.not_ok_result
+msgid   "Result is NOT OK!"
+msgstr  ""
+
+#: cc.base.not_error_result
+msgid   "Result IS fine!"
+msgstr  ""

@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "*.inc": "objectpascal",
-        "*.pp": "objectpascal",
-        "*.scd": "markdown"
-    },
-    "files.eol": "auto",
-    "files.insertFinalNewline": true
-}

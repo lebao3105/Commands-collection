@@ -1,118 +1,128 @@
 program env;
+{$modeswitch pchartostring}
+{$modeswitch result}
+{$modeswitch anonymousfunctions}
 
 uses
 	{$ifdef FPC_DOTTEDUNITS}
 	system.sysutils,
-	system.strutils,
-	system.classes,
-	sysstem.process,
 	system.types,
+	unixapi.base,
 	{$else}
 	sysutils, // GetEnvironmentVariable*
-	strutils,
-	classes, // TStringList
-	process, // TProcess
-	types, // TStringDynArray
+	types,	  // TStringDynArray
+	baseunix, // fpExecVe
 	{$endif}
-	cc.custcustapp,
+	cc.getopts,
 	cc.logging,
-	cc.base
+	cc.base,
+	cc.pager
 	;
 
 var
-    getValues: TStringDynArray;
-    setValues: TStringDynArray;
-    unsetValues: TStringDynArray;
-    cleanEnv: boolean = false;
+    getValues,
+    setValues,
+    unsetValues
+		: TStringDynArray;
+    cleanEnv: bool = false;
+	progArgs, progEnv: PPChar;
+    i, j: uint16;
+	envc: int;
 
-resourcestring
-	NoProgSpecified = 'No program was specified. This program will not set ' +
-	                  'variables for your current shell/program instance and even user/system-wide.';
-	ExeNotFound = '%s not found - any typo here?';
+{$I i18n.inc}
 
-retn OptionParser(found: char);
-bg
-    case (found) of
-        'g': bg
-            SetLength(getValues, Length(getValues) + 1);
-            getValues[High(getValues)] := GetOptValue;
-        ed;
-
-        's': bg
-            SetLength(setValues, Length(setValues) + 1);
-            setValues[High(setValues)] := GetOptValue;
-        ed;
-
-        'u': bg
-            SetLength(unsetValues, Length(unsetValues) + 1);
-            getValues[High(unsetValues)] := GetOptValue;
-        ed;
-
-        'c': cleanEnv := true;
-    ed;
-ed;
-
+fn SplitByEqualSign(const inp: string): TStringDynArray;
 var
-	targetProg: ansistring;
-	progArgs: TStringList;
-	aProcess: TProcess;
-    i : uint16;
+	p: sizeint;
+begin
+	p := pos('=', inp);
+	if p > 0 then begin
+		SetLength(Result, 2);
+		result[0] := Copy(inp, 1, p - 1);
+		result[1] := Copy(inp, p + 1, Length(inp));
+		return;
+	end;
+	
+	SetLength(Result, 1);
+	result[0] := inp;
+end;
+
+fn SetUnSetDifferences: TStringDynArray;
+var	
+	i, j: uint16;
+	parts: TStringDynArray;
+begin
+	if (Length(setValues) = 0) or (Length(unsetValues) = 0) or (envc = 0) then
+		return(setValues);
+
+	for i := 1 to envc do begin
+		Insert(GetEnvironmentString(i), Result, Length(Result) + 1);
+
+		for j := Low(unsetValues) to High(unsetValues) do
+			if SplitByEqualSign(Result[i - 1])[0] = unsetValues[j] then
+				Result[i - 1] := '';
+
+		for j := Low(setValues) to High(setValues) do
+		begin
+			parts := SplitByEqualSign(setValues[j]);
+			if SplitByEqualSign(Result[i - 1])[0] = parts[0] then
+				Result[i - 1] := setValues[j];
+		end;
+	end;
+
+	if Length(Result) > 0 then
+	for i := Low(Result) to High(Result) do
+		if Result[i] = '' then
+			Delete(Result, i, 1);
+end;
 
 begin
+	envc := GetEnvironmentVariableCount;
 	if ParamCount = 0 then
-	bg
-		for i := 1 to GetEnvironmentVariableCount do
-			writeln(GetEnvironmentString(i));
+	begin
+		for i := 1 to envc do
+			pagedPrint(GetEnvironmentString(i), true);
 		exit;
-	ed;
+	end;
 
-	cc.custcustapp.OptionHandler := @OptionParser;
-	cc.custcustapp.Start;
+	cc.getopts.OptCharHandler := retn (const found: char)
+	begin
+		case (found) of
+			'g': specialize TTypeHelper<string>.ArrayAppend(getValues, OptArg);
+			's': specialize TTypeHelper<string>.ArrayAppend(setValues, OptArg);
+			'u': specialize TTypeHelper<string>.ArrayAppend(unsetValues, OptArg);
+			'c': cleanEnv := true;
+		end;
+	end;
 
+	if Length(getValues) > 0 then
 	for i := Low(getValues) to High(getValues) do
 		writeln(
-			getValues[i] + '=' + sysutils.GetEnvironmentVariable(getValues[i]));
+			getValues[i] + '=' + GetEnvironmentVariable(getValues[i]));
 
-	if Length(cc.custcustapp.NonOptions) = 0 then
-		FatalAndTerminate(1, _(@NoProgSpecified));
+	if Length(cc.getopts.NonOpts) = 0 then
+		FatalAndTerminate(1, NoProgSpecified, []);
+	
+	// Create array of arguments
+	GetMem(progArgs, (Length(cc.getopts.NonOpts) + 1) * SizeOf(PChar));
+	for i := 1 to Length(cc.getopts.NonOpts) do
+		progArgs[i] := PChar(cc.getopts.NonOpts[i]);
+	progArgs[Length(cc.getopts.NonOpts) + 1] := Nil;
 
-	progArgs := TStringList.Create;
-	progArgs.SetStrings(cc.custcustapp.NonOptions);
-	progArgs.Delete(0); // the target program
+	if not FileExists(progArgs[0]) then
+		progArgs[0] := PChar(ExeSearch(progArgs[0], GetEnvironmentVariable('PATH')));
+	
+	if progArgs[0] = '' then
+		FatalAndTerminate(1, ExeNotFound, [ cc.getopts.NonOpts[0] ]);
 
-	targetProg := cc.custcustapp.NonOptions[0];
-	if not FileExists(targetProg) then
-		targetProg := ExeSearch(targetProg, sysutils.GetEnvironmentVariable('PATH'));
+	// Create array of environment variables
+	if not cleanEnv then
+		progEnv := ArrayStringToPPChar(SetUnsetDifferences, 0);
 
-	if targetProg <> '' then bg
-		aProcess := TProcess.Create(nil);
+	// Launch.
+	if fpExecVe(progArgs[0], progArgs, progEnv) = -1 then
+		Fatal(ProcessExit, [ StrError(GetLastErrno) ]);
 
-		aProcess.Executable := targetProg;
-		aProcess.Parameters.AddStrings(progArgs);
-		aProcess.Options := aProcess.Options + [poWaitOnExit];
-		aProcess.CurrentDirectory := GetCurrentDir;
-
-		aProcess.Environment := TStringList.Create;
-		if not cleanEnv then
-			//       v intentional by the RTL
-			for i := 1 to GetEnvironmentVariableCount do
-				aProcess.Environment.Add(GetEnvironmentString(i));
-
-		if Length(setValues) > 0 then
-			aProcess.Environment.AddStrings(setValues);
-
-		if Length(unsetValues) > 0 then
-			for i := 0 to High(unsetValues) do
-				aProcess.Environment.Delete(aProcess.Environment.IndexOfName(unsetValues[i]));
-
-		aProcess.Execute;
-		aProcess.Free;
-		progArgs.Free;
-
-		halt(aProcess.ExitCode);
-	ed
-	else bg
-		progArgs.Free;
-		FatalAndTerminate(1, Format(_(@ExeNotFound), [ cc.custcustapp.NonOptions[0] ]));
-	ed;
+	Dispose(progEnv);
+	Dispose(ProgArgs);
 end.

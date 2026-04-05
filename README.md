@@ -3,7 +3,7 @@
 Build status:
 [![Nightly CI](https://github.com/lebao3105/Commands-collection/actions/workflows/nightly.yml/badge.svg)](https://github.com/lebao3105/Commands-collection/actions/workflows/nightly.yml)
 
-A collection of system commands written in Free Pascal and C.
+A collection of system commands written in Free Pascal and (maybe) C.
 
 They are:
 
@@ -21,13 +21,13 @@ They are NOT:
 
 ## Documentation
 
-Read the [Wiki](https://github.com/lebao3105/Commands-Collection/wiki).
+Read the [Wiki](./wiki).
 
 ## Credits
 
 * [@ikelaiah](https://github.com/ikelaiah) for cli-fp library. Part of it was used and modified.
 * Everyone who made resources for us to [refer](#references)
-* [Ararslan] for their [termcolor-c](https://github.com/ararslan/termcolor-c/)
+* [@Ararslan](https://github.com/ararslan) for their [termcolor-c](https://github.com/ararslan/termcolor-c/). It was used.
 
 ## References
 

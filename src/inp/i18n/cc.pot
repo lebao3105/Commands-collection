@@ -1,0 +1,120 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid   ""
+msgstr  "Project-Id-Version: PACKAGE VERSION\n"
+        "Report-Msgid-Bugs-To: \n"
+        "POT-Creation-Date: 2026-04-04 14:13+0700\n"
+        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+        "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+        "Language-Team: LANGUAGE <LL@li.org>\n"
+        "Language: \n"
+        "MIME-Version: 1.0\n"
+        "Content-Type: text/plain; charset=UTF-8\n"
+        "Content-Transfer-Encoding: 8bit\n"
+
+#: cc.getopts.msg_des
+msgid   "Custom message to show instead of Press any key/Enter to continue"
+msgstr  ""
+
+#: cc.getopts.loop_des
+msgid   "Do not quit until a valid input is sent"
+msgstr  ""
+
+#: cc.getopts.hideokojima_des
+msgid   "Hide inputs from the user"
+msgstr  ""
+
+#: cc.getopts.reqchar_des
+msgid   "Specify valid characters"
+msgstr  ""
+
+#: cc.getopts.reqenter_des
+msgid   "Require Enter to send the input"
+msgstr  ""
+
+#: cc.getopts.showavai_des
+msgid   "Show the user -k value"
+msgstr  ""
+
+#: cc.getopts.casesens_des
+msgid   "Make the input case-sensitive"
+msgstr  ""
+
+#: cc.getopts.program_desc
+msgid   "Asks for user input."
+msgstr  ""
+
+#: cc.getopts.program_bonus_help
+msgid   "-o will show characters from -k inside squared brackets, e.g [ynYn]."
+        "\r\n"
+        "If no arguments are provided, the program will simply ask for a key "
+        "press, quits with exit code 0.\r\n"
+        "Otherwise will quit with the exit code set to the ASCII value of the "
+        "input character."
+msgstr  ""
+
+#: cc.getopts.cc_version_str
+#, object-pascal-format
+msgid   "Commands-Collection (CC) version %s"
+msgstr  ""
+
+#: cc.getopts.invalid_option
+msgid   "Error with option: %c. Use --help or -h for the usage."
+msgstr  ""
+
+#: cc.getopts.help_usage
+msgid   "Show this help and exit"
+msgstr  ""
+
+#: cc.getopts.version_usage
+msgid   "Show the version of this program and exit"
+msgstr  ""
+
+#: cc.getopts.verbose_usage
+msgid   "Add verbosity"
+msgstr  ""
+
+#: cc.getopts.opt_need_arg
+#, object-pascal-format
+msgid   "option requires an argument: %s"
+msgstr  ""
+
+#: cc.getopts.opt_illegal
+msgid   "illegal option: --%c"
+msgstr  ""
+
+#: cc.getopts.opt_ambiguous
+#, object-pascal-format
+msgid   "ambiguous option: %s"
+msgstr  ""
+
+#: cc.getopts.opt_need_val
+#, object-pascal-format
+msgid   "option %s requires an argument"
+msgstr  ""
+
+#: cc.getopts.opt_unknown
+#, object-pascal-format
+msgid   "unrecognized option: %s"
+msgstr  ""
+
+#: cc.getopts.opt_no_arg
+#, object-pascal-format
+msgid   "option %s does NOT allow an argument"
+msgstr  ""
+
+#: inp.press_any_key
+msgid   "Press any key to continue..."
+msgstr  ""
+
+#: cc.base.not_ok_result
+msgid   "Result is NOT OK!"
+msgstr  ""
+
+#: cc.base.not_error_result
+msgid   "Result IS fine!"
+msgstr  ""

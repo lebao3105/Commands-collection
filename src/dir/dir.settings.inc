@@ -1,6 +1,6 @@
 uses
     cc.base,
-    cc.utils { EFSEntityKind }
+    cc.fs { EFSEntityKind }
     ;
 
 type
@@ -47,7 +47,7 @@ const
         IgnoreRegexPatterns: ();
         IgnoreHiddens: true;
         IgnoreBackups: true;
-        AddColors: true;
+        AddColors: false;
         UseLists: true;
         Recursively: false;
         DirOnly: false;
@@ -72,7 +72,7 @@ const
         IgnoreHiddens: true;
         IgnoreBackups: true;
         AddColors: true;
-        UseLists: true;
+        UseLists: false;
         Recursively: false;
         DirOnly: false;
     );
@@ -93,7 +93,7 @@ const
         IgnoreHiddens: true;
         IgnoreBackups: true;
         AddColors: true;
-        UseLists: true;
+        UseLists: false;
         Recursively: false;
         DirOnly: false;
     );
@@ -102,6 +102,6 @@ var
     Settings: TDirSettings;
 
 fn StringToListCol(const str: string): specialize TResult<EListingColumns, string>;
-fn BeginSettingsThread(p_file_path: pointer): ptrint;
+retn InitializeSettings;
 retn RegexPrepare;
 fn FSEntityKindToTypeString(tp: EFSEntityKind): string; inline;

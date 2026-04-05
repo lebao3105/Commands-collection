@@ -1,6 +1,7 @@
 unit dir.settings;
 {$scopedenums on}
 {$modeswitch advancedrecords}
+{$modeswitch anonymousfunctions}
 {$modeswitch result}
 
 interface
@@ -13,81 +14,80 @@ uses
     {$ifdef FPC_DOTTEDUNITS}
     system.sysutils,
     system.typinfo,
+    system.regexpr,
     {$else}
     sysutils, { LowerCase, Format }
     typinfo,  { GetEnumName, TypeInfo }
+    regexpr,  { ERegExpr }
     {$endif}
-    cc.logging
+    cc.logging,
+    cc.regex,
+    dir.i18n
     ;
 
 
 fn StringToListCol(const str: string): specialize TResult<EListingColumns, string>;
-var casted: int;
-bg
-    casted := GetEnumValue(TypeInfo(EListingColumns), LowerCase(str));
-    if casted = -1 then bg
-        Result.Kind := EResultKind.ERROR;
-        Result.Error := Format('%s: unknown column', [ str ]);
-    ed
-    else bg
-        Result.Kind := EResultKind.OK;
-        Result.Value := EListingColumns(casted);
-    ed;
-ed;
-
-fn BeginSettingsThread(p_file_path: pointer): ptrint;
 var
-//     stream: TYamlStream;
-//     parser: TYamlParser;
-    file_path: string;
-bg
-    file_path := string(p_file_path);
-    Debug('Started settings thread', '');
-    // parser := TYamlStream.Create(file_path);
-    // try
-    //     try
-    //         stream := parser.Parse;
-    //     except
-    //         on E: EYamlParser do
-    //             Error('Parsing %s failed at position %d\:%d', p_file_path, E.Pos.Line, E.Pos.Column);
+    casted: int;
+begin
+    casted := GetEnumValue(TypeInfo(EListingColumns), LowerCase(str));
 
-    //         on E: Exception do
-    //             Error('Parsing %s failed with exception: %s', p_file_path, E.Message);
-    //     end;
-    // finally
-    //     stream.Free;
-    //     parser.Free;
-    // end;
-    Debug('Settings thread finished');
-ed;
+    if casted = -1 then
+        Result := specialize TResult<EListingColumns, string>.Err(
+            Format(INVALID_COLUMN, [ str ]))
+    else
+        Result := specialize TResult<EListingColumns, string>.Ok(
+            EListingColumns(casted));
+end;
+
+retn InitializeSettings;
+var conf_path: string;
+begin
+    conf_path := GetEnvironmentVariable('DIR_CONFPATH');
+    debug('Started settings thread', []);
+    // file_path := string(p_file_path);
+    RegexPrepare;
+    // RegexCheck;
+    debug('Settings thread finished', []);
+end;
 
 retn RegexPrepare;
-bg
+var check: specialize TOptional<ERegExpr>;
+begin
+    debug('Ignore modifiers: %s', [ Settings.IgnoreRegexModifiers ]);
     RegexSetModifiers(Settings.IgnoreRegexModifiers);
 
     if Settings.IgnoreHiddens then
         RegexAppendExpr('^\.');
     
-    if Settings.IgnoreBackups then bg
+    if Settings.IgnoreBackups then begin
         RegexAppendExpr('(\.bak)$');
         RegexAppendExpr('(~)$');
-    ed;
+    end;
 
     specialize TTypeHelper<string>.ArrayForEach(
         Settings.IgnoreRegexPatterns,
-        @RegexAppendExpr
+        fn (const pattern: string): bool
+        begin
+            RegexAppendExpr(pattern);
+            return(false);
+        end
     );
 
-    debug('Ignore expression: %s', PChar(RegexGetExpr));
-ed;
+    debug('Ignore expression: %s', [RegexGetExpr]);
+
+    check := RegexVerifyExpr;
+    // if check.HasValue then
+    //     FatalAndTerminate(1, REGEX_FAILED_LOC, [
+    //         RegexGetExpr,
+    //         RegexGetLastCompileErrorPos,
+    //         check.Value.Message
+    //     ]);
+end;
 
 fn FSEntityKindToTypeString(tp: EFSEntityKind): string; inline;
-bg
+begin
     return(Settings.TypeFormats[ord(tp)]);
-ed;
-
-initialization
-
-Settings := CCD_PRESET;
+end;
 
 end.

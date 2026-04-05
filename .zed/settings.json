@@ -1,8 +1,0 @@
-{
-	"languages": {
-		"Lua": {
-			"format_on_save": "off",
-			"auto_indent_on_paste": false,
-		},
-	},
-}

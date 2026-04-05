@@ -1,5 +1,5 @@
 program inp;
-{$h+}
+{$modeswitch anonymousfunctions}
 
 uses
 	{$ifdef FPC_DOTTEDUNITS}
@@ -13,84 +13,81 @@ uses
 	keyboard,
 	strutils,
 	{$endif}
-	cc.base,
-    cc.utils,
-	cc.logging,
-    cc.custcustapp
+    cc.getopts
 	;
 
-resourcestring
-	PRESS_ANY_KEY = 'Press any key to continue...';
+{$undef NEED_PROGRAM_HELP}
+{$I i18n.inc}
 
 var
-    customMessage: string;
+    customMessage: string = PRESS_ANY_KEY;
     wantedKeys: string = '';
 	hiddenFlag, needEnter, loopFlag: boolean;
 	caseSensitive, showAvailables: boolean;
 
-retn OptionParser(found: char);
-bg
-    case found of
-        'm': customMessage := GetOptValue;
-        't': hiddenFlag := true;
-        'e': needEnter := true;
-        'k': wantedKeys += GetOptValue;
-        'l': loopFlag := true;
-        'o': showAvailables := true;
-        's': caseSensitive := true;
-    ed;
-ed;
+retn WaitForEnter;
+begin
+	repeat
+		// Do literally nothing
+	until
+		GetKeyEventChar(TranslateKeyEvent(GetKeyEvent)) = #13;
+end;
 
-retn NeedKeyInput();
+retn NeedKeyInput;
 var
     targ: char;
-bg
+begin
 	write(customMessage);
 
 	if Length(wantedKeys) > 0 then
-	bg
+	begin
 	    InitKeyboard;
 
 		if showAvailables then
 			write(' [' + wantedKeys + '] ');
 
-		targ := GetKeyEventChar(TranslateKeyEvent(GetKeyEvent));
+		TArg := GetKeyEventChar(TranslateKeyEvent(GetKeyEvent));
 
 		if not hiddenFlag then
 			write(targ);
 
-		if needEnter then readln;
+		if needEnter then WaitForEnter;
 
-        if not caseSensitive then bg
+        if not caseSensitive then begin
             TArg := UpCase(TArg);
             wantedKeys := UpCase(TArg);
-        ed;
+        end;
 
-		if Pos(TArg, wantedKeys) > 0 then bg
+		if Pos(TArg, wantedKeys) > 0 then begin
 		    DoneKeyboard;
 			halt(Ord(TArg));
-		ed;
+		end;
 
-		if loopFlag then bg
+		if loopFlag then begin
 			writeln;
 			NeedKeyInput();
-		ed;
+		end;
 
         DoneKeyboard;
 		halt(-1);
-	ed;
-	readln;
-ed;
+	end;
+
+	halt(Ord(GetKeyEventChar(TranslateKeyEvent(GetKeyEvent))));
+end;
 
 begin
-	if ParamCount = 0 then
-	bg
-		writeln(_(@PRESS_ANY_KEY));
-		readln;
-		exit;
-	ed;
-
-    cc.custcustapp.OptionHandler := @OptionParser;
-	cc.custcustapp.Start;
+	cc.getopts.OptCharHandler := retn (const found: char)
+	begin
+		case found of
+			'm': customMessage := OptArg;
+			't': hiddenFlag := true;
+			'e': needEnter := true;
+			'k': wantedKeys += OptArg;
+			'l': loopFlag := true;
+			'o': showAvailables := true;
+			's': caseSensitive := true;
+		end;
+	end;
+	cc.getopts.GetLongOpts;
     NeedKeyInput;
 end.

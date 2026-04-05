@@ -1,45 +1,47 @@
 program dir;
+{$modeswitch anonymousfunctions}
 
 uses
     {$ifdef FPC_DOTTEDUNITS}
+        {$ifdef UNIX}
     system.cmem, unixapi.cthreads,
-    system.clocale, system.sysutils,
-    system.regexpr,
+    system.clocale,
+        {$endif}
+    system.sysutils,
     {$else}
-    cmem, cthreads, clocale, sysutils, regexpr,
+        {$ifdef UNIX}
+    cmem, cthreads, clocale,
+        {$endif}
+    sysutils,
     {$endif}
     cc.base,
-    cc.custcustapp,
+    cc.getopts,
     cc.logging,
-    cc.utils,
+    cc.regex,
+    cc.fs,
+    dir.i18n,
     dir.report,
-    dir.settings;
+    dir.settings
+    ;
 
 retn ShowDirEntry(const r: PIterateDirResult; knownAsDir: bool);
-
-    fn IsNameInvalid: bool;
-    var check: specialize TResult<bool, ERegExpr>;
-    bg
-    	check := RegexHasMatches(r^.name);
-     	if check.IsError then
-           	FatalAndTerminate(1, REGEX_FAILED, @RegexGetExpr, @check.Error.Message)
-        else
-        	exit(check.Value);
-    ed;
-
-bg
-    if IsNameInvalid then exit;
+begin
+    // if not RegexHasMatches(r^.name) then
+    //     if RegexGetLastErrorID <> 0 then
+    //         fatalandterminate(1, REGEX_FAILED, [ RegexGetExpr, RegexGetLastError ])
+    //     else
+    //         return;
 
     case r^.info.Kind of
     	EFSEntityKind.AStatFailure:
-	    bg
+	    begin
 	        Inc(statFailCount);
 
-	        // if knownAsDir then bg
+	        // if knownAsDir then begin
 	        //     Error(OPEN_DIR_FAILED, @r^.name, @StrError(GetLastErrno));
 	        //     writeln;
 	        //     exit;
-	        // ed;
+	        // end;
 
 	        if Settings.UseLists then
 	            writeln(Format(STAT_FAILED, [ r^.name, StrError(GetLastErrno) ]))
@@ -47,66 +49,37 @@ bg
 	            write(Format('%s(E %d)', [ r^.name, GetLastErrno ]));
 
 	        exit;
-	    ed;
+	    end;
 
 		EFSEntityKind.ADir:
 			Inc(dirCount);
 
-		else bg
+		else begin
 			if Settings.DirOnly then exit;
 			Inc(filesSize, r^.info.Size);
-    	ed;
+    	end;
     end;
 
     Inc(count);
 
     // Name-only list
-    if not Settings.UseLists then bg
+    if not Settings.UseLists then
+    begin
         PrintObjectName(r^.name, r^.info);
         WriteSp;
-    ed
+    end
 
     // Detailed list
     else PrintObjectName(r^.name, r^.info);
-ed;
+end;
 
-retn ListItems(const path: string); inline;
-bg
+fn ListItems(const path: string): bool; inline;
+begin
     IterateDir(path, @ShowDirEntry, Settings.Recursively,
-               (High(cc.custcustapp.NonOptions) > 1) or Settings.Recursively);
+               (High(cc.getopts.NonOpts) > 1) or Settings.Recursively);
     Report;
-ed;
-
-retn OptionParser(found: char);
-bg
-    case found of
-        'l': Settings.UseLists := true;
-        'a': Settings.IgnoreHiddens := false;
-        'c': Settings.AddColors := true;
-        'd': Settings.DirOnly := true;
-        'i': RegexAppendExpr(GetOptValue);
-        'B': Settings.IgnoreBackups := true;
-        'R': Settings.Recursively := true;
-    ed;
-ed;
-
-fn RegexCheck: bool;
-var
-    checkr: specialize TResult<bool, ERegExpr>;
-bg
-    if RegexGetExpr = '' then
-        return(true);
-    
-    checkr := RegexVerifyExpr;
-    if not checkr.IsError then
-        return(checkr.Value);
-    
-    FatalAndTerminate(
-        1,
-        REGEX_FAILED_LOC,
-        @RegexGetLastError, @RegexGetLastCompileErrorPos
-    );
-ed;
+    return(false);
+end;
 
 begin
     case StrLowerCase(GetEnvironmentVariable('DIR_PRESET')) of
@@ -114,26 +87,30 @@ begin
         'gnu': dir.settings.Settings := GNU_PRESET;
         'ccd': dir.settings.Settings := CCD_PRESET;
     else
-        BeginThread(
-            @BeginSettingsThread,
-            PChar(GetEnvironmentVariable('DIR_CONFPATH'))
-        );
+        dir.settings.Settings := CCD_PRESET;
     end;
 
-    if ParamCount > 0 then
-    bg
-        cc.custcustapp.OptionHandler := @OptionParser;
-        cc.custcustapp.Start;
-    ed;
+    InitializeSettings;
 
-    RegexPrepare;
-    RegexCheck;
+    cc.getopts.OptCharHandler := retn (const found: char)
+    begin
+        case found of
+            'l': Settings.UseLists := true;
+            'a': Settings.IgnoreHiddens := false;
+            'c': Settings.AddColors := true;
+            'd': Settings.DirOnly := true;
+            'i': RegexAppendExpr(cc.getopts.OptArg);
+            'B': Settings.IgnoreBackups := true;
+            'R': Settings.Recursively := true;
+        end;
+    end;
+    cc.getopts.GetLongOpts;
 
-    if Length(cc.custcustapp.NonOptions) = 0 then
-        ListItems('.')
+    if Length(cc.getopts.NonOpts) = 0 then
+        ListItems(GetCurrentDir)
     else
     	specialize TTypeHelper<string>.ArrayForEach(
-            cc.custcustapp.NonOptions,
+            cc.getopts.NonOpts,
             @ListItems
         );
 end.

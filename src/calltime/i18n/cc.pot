@@ -1,0 +1,104 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid   ""
+msgstr  "Project-Id-Version: PACKAGE VERSION\n"
+        "Report-Msgid-Bugs-To: \n"
+        "POT-Creation-Date: 2026-04-04 14:13+0700\n"
+        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+        "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+        "Language-Team: LANGUAGE <LL@li.org>\n"
+        "Language: \n"
+        "MIME-Version: 1.0\n"
+        "Content-Type: text/plain; charset=UTF-8\n"
+        "Content-Transfer-Encoding: 8bit\n"
+
+#: cc.pager.paged_view
+msgid   "-- Paged view. Up/down arrows = scroll. --"
+msgstr  ""
+
+#: cc.pager.console_too_small
+msgid   "The console is too small. The content will go nuts."
+msgstr  ""
+
+#: cc.getopts.format_des
+msgid   "Time format"
+msgstr  ""
+
+#: cc.getopts.program_desc
+msgid   "Returns the current time and date, in style."
+msgstr  ""
+
+#: cc.getopts.program_bonus_help
+msgid   "Consult https://www.freepascal.org/docs-html/rtl/sysutils/"
+        "formatchars.html for more information about time format strings."
+msgstr  ""
+
+#: cc.getopts.cc_version_str
+#, object-pascal-format
+msgid   "Commands-Collection (CC) version %s"
+msgstr  ""
+
+#: cc.getopts.invalid_option
+msgid   "Error with option: %c. Use --help or -h for the usage."
+msgstr  ""
+
+#: cc.getopts.help_usage
+msgid   "Show this help and exit"
+msgstr  ""
+
+#: cc.getopts.version_usage
+msgid   "Show the version of this program and exit"
+msgstr  ""
+
+#: cc.getopts.verbose_usage
+msgid   "Add verbosity"
+msgstr  ""
+
+#: cc.getopts.opt_need_arg
+#, object-pascal-format
+msgid   "option requires an argument: %s"
+msgstr  ""
+
+#: cc.getopts.opt_illegal
+msgid   "illegal option: --%c"
+msgstr  ""
+
+#: cc.getopts.opt_ambiguous
+#, object-pascal-format
+msgid   "ambiguous option: %s"
+msgstr  ""
+
+#: cc.getopts.opt_need_val
+#, object-pascal-format
+msgid   "option %s requires an argument"
+msgstr  ""
+
+#: cc.getopts.opt_unknown
+#, object-pascal-format
+msgid   "unrecognized option: %s"
+msgstr  ""
+
+#: cc.getopts.opt_no_arg
+#, object-pascal-format
+msgid   "option %s does NOT allow an argument"
+msgstr  ""
+
+#: cc.base.not_ok_result
+msgid   "Result is NOT OK!"
+msgstr  ""
+
+#: cc.base.not_error_result
+msgid   "Result IS fine!"
+msgstr  ""
+
+#: calltime.time_is
+msgid   "The current time is: "
+msgstr  ""
+
+#: calltime.default_format
+msgid   "dddd mmmm dd yyyy tt"
+msgstr  ""

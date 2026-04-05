@@ -11,19 +11,19 @@
 {$endif}
 
 if CheckOP(path) then
-bg
-    Error(_(@ALREADY_EXISTS), @path);
+begin
+    Error(ALREADY_EXISTS, [path]);
     exit;
-ed;
+end;
 
 try
     if beVerbose then
-        Info(_(@CREATING_STUFF), @path);
+        Info(CREATING_STUFF, [path]);
 
     CreateOP(path);
 
     if beVerbose then
-        Info(_(@CREATED_STUFF), @path);
+        Info(CREATED_STUFF, [path]);
 except on E: Exception do
-    FatalAndTerminate(1, _(@FAILED_TO_CREATE), @path, @E.Message);
-ed;
+    FatalAndTerminate(1, FAILED_TO_CREATE, [path, E.Message]);
+end;

@@ -1,0 +1,3 @@
+[submodule "docs/pasdoc"]
+	path = docs/pasdoc
+	url = https://github.com/pasdoc/pasdoc.git

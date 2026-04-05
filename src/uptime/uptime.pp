@@ -5,46 +5,34 @@ uses
     {$ifdef FPC_DOTTEDUNITS}
     unixapi.base,
     unixapi.clocale,
-    unixapi.errors,
-    system.ctypes,
     system.sysutils,
     system.dateutils,
     {$else}
     clocale,
-    errors, // StrError
     sysutils, // Formatters + Converters
     baseunix, // FpGetErrno
     dateutils,
-    ctypes, // cint
     {$endif}
     cc.base,
     cc.sysinf, // System informations
     cc.logging,
-    cc.custcustapp;
+    cc.getopts
+    ;
 
 fn getpwent: pointer; external;
 
-resourcestring
-    CURRENT_TIME = 'The current time is:';
-    UPTIME_COUNT = 'The system is up for ';
-    UPTIME_DAYS = '%d day(s)';
-    UPTIME_HOURS = '%d hour(s)';
-    UPTIME_MINUTES = '%d minute(s)';
-    UPTIME_SECONDS = '%d second(s)';
-    USER_COUNT = '%d users';
-    LOAD_AVG = 'Load average:';
-    SYSINF_FAIL = 'sysinfo() failed: %s';
+{$I i18n.inc}
 
 var
     inf: TSysInfo;
 
-retn OptHandler(found: char);
+retn OptHandler(const found: char);
 var
     users: int = 0;
-    updays, uphours, upmins: int;
-bg
+    updays, uphours, upmins, upsecs: int;
+begin
     case found of
-        'r': bg
+        'r': begin
             while getpwent <> nil do
                 users += 1;
 
@@ -56,45 +44,40 @@ bg
                 inf.loads[1],
                 inf.loads[2]
             ]));
-        ed;
+        end;
 
         's':
             writeln(FormatDateTime('yyyy-mm-dd HH:MM:SS', Now - (inf.uptime / SecsPerDay)));
 
-        'p': bg
-        	writeln(_(@CURRENT_TIME));
+        'p': begin
+        	write(CURRENT_TIME); writeSp;
             writeln(FormatDateTime('yyyy-mm-dd HH:mm:ss'#13#10, Now));
 
-			write(_(@UPTIME_COUNT));
+			write(UPTIME_COUNT); writeSp;
 			updays := Round(inf.uptime / SecsPerDay);
 			uphours := Round(inf.uptime mod SecsPerDay div SecsPerHour);
 			upmins := Round(inf.uptime mod SecsPerDay mod SecsPerHour div 60);
-
-			if (updays > 0) then
-				write(Format(_(@UPTIME_DAYS), [updays]));
-
-            write(Format(_(@UPTIME_HOURS), [uphours]));
-            writeSp;
-            writeln(Format(_(@UPTIME_MINUTES), [upmins]));
+            upsecs := Round(inf.uptime mod 60);
+			writeln(Format(UPTIME_FULL, [updays, uphours, upmins, upsecs]));
 
 			while getpwent <> nil do
                 users += 1;
-            writeln(Format(_(@USER_COUNT), [users]));
+            writeln(Format(USER_COUNT, [users]));
 
-			writeln(_(@LOAD_AVG));
-			write(Format('%.2u %.2u %.2u', [
+			write(LOAD_AVG); writeSp;
+			writeln(Format('%.2u %.2u %.2u', [
 				inf.loads[0],
 				inf.loads[1],
 				inf.loads[2]
 			]));
-        ed;
-    ed;
-ed;
+        end;
+    end;
+end;
 
 begin
     if sysinfo(@inf) <> 0 then
-        FatalAndTerminate(1, Format(_(@SYSINF_FAIL), [StrError(FpGetErrno)]));
+        FatalAndTerminate(1, SYSINF_FAIL, [StrError(FpGetErrno)]);
 
-    cc.custcustapp.OptionHandler := @OptHandler;
-    cc.custcustapp.Start;
+    cc.getopts.OptCharHandler := @OptHandler;
+    cc.getopts.GetLongOpts;
 end.

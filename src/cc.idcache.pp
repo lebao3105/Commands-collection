@@ -1,43 +1,8 @@
-{
-    Database of users & groups.
-    Known and implemented thanks to the GNU ls source code.
-}
-unit cc.idcache;
-{$modeswitch result}
-{$modeswitch advancedrecords}
-
-interface
-
-uses
-    {$ifdef FPC_DOTTEDUNITS}
-    system.ctypes,
-    unixapi.grp,
-    unixapi.pwd
-    {$else}
-    ctypes,
-    grp,
-    pwd
-    {$endif}
-    ;
-
-type
-    PCacheEntry = ^TCacheEntry;
-    TCacheEntry = record
-    public
-	    isGroup: bool;
-        group: PGroup;
-        user: PPasswd;
-
-    	next: PCacheEntry;
-   		fn GetName: string;
-    end;
-
-fn getpw(id: cuint32; isGroup: bool): PCacheEntry;
+{$I cc.idcache.inc}
 
 implementation
 
 uses
-    cc.base,
     {$ifdef FPC_DOTTEDUNITS}
     unixapi.base,
     system.sysutils,
@@ -51,50 +16,51 @@ var
     Cached: PCacheEntry;
 
 fn TCacheEntry.GetName: string;
-bg
+begin
 	if isGroup then
 		return(group^.gr_name)
 	else
 		return(user^.pw_name);
-ed;
+end;
 
 fn AppendEntry(const id: cuint32; const isGroup: bool): PCacheEntry;
 var
     tmp: PCacheEntry;
-bg
+begin
     New(Result);
     Result^.isGroup := isGroup;
     Result^.next := nil;
 
-    if isGroup then bg
+    if isGroup then begin
         Result^.group := fpgetgrgid(id);
-        if Result^.group = nil then bg
-            FreeAndNil(Result);
+        if Result^.group = nil then begin
+            FreeMem(Result);
             return(nil);
-        ed;
-    ed
-    else bg
+        end;
+    end
+    else begin
         Result^.user := fpgetpwuid(id);
-        if Result^.user = nil then bg
-            FreeAndNil(Result);
+        if Result^.user = nil then begin
+            FreeMem(Result);
             return(nil);
-        ed;
-    ed;
+        end;
+    end;
 
-    if Cached <> nil then bg
+    if Cached <> nil then begin
     	tmp := Cached;
     	while tmp <> nil do
-	  		if tmp^.next = nil then bg
-     			tmp^.next := Result;
-	      		break;
-      		ed;
-    ed;
-ed;
+            if tmp^.next = nil then
+        begin
+            tmp^.next := Result;
+            break;
+        end;
+    end;
+end;
 
 fn getpw(id: cuint32; isGroup: bool): PCacheEntry;
-bg
-	getpw := cached;
-	while getpw <> Nil do bg
+begin
+	getpw := Cached;
+	while getpw <> Nil do begin
 		if getpw^.isGroup <> isGroup then
 			getpw := getpw^.next
 		else case getpw^.isGroup of
@@ -102,11 +68,11 @@ bg
 				return(getpw);
 			false: if getpw^.user^.pw_uid = id then
 				return(getpw);
-		ed;
-	ed;
+		end;
+	end;
 
 	if getpw = nil then
 		return(AppendEntry(id, isGroup));
-ed;
+end;
 
 end.

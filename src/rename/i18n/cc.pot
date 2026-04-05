@@ -1,0 +1,138 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid   ""
+msgstr  "Project-Id-Version: PACKAGE VERSION\n"
+        "Report-Msgid-Bugs-To: \n"
+        "POT-Creation-Date: 2026-04-04 14:13+0700\n"
+        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+        "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+        "Language-Team: LANGUAGE <LL@li.org>\n"
+        "Language: \n"
+        "MIME-Version: 1.0\n"
+        "Content-Type: text/plain; charset=UTF-8\n"
+        "Content-Transfer-Encoding: 8bit\n"
+
+#: rename.renamed_to
+#, object-pascal-format
+msgid   "Renamed %s to %s"
+msgstr  ""
+
+#: rename.rename_fail
+#, object-pascal-format
+msgid   "Failed to rename %s: %s"
+msgstr  ""
+
+#: rename.confirm
+#, object-pascal-format
+msgid   "Rename %s to %s? [ynaq]"
+msgstr  ""
+
+#: cc.getopts.symlink_des
+msgid   "Follow symlinks"
+msgstr  ""
+
+#: cc.getopts.dry_run_des
+msgid   "Do not actually make changes"
+msgstr  ""
+
+#: cc.getopts.bulk_des
+msgid   "Replace all occurrences"
+msgstr  ""
+
+#: cc.getopts.regex_des
+msgid   "Use regular expressions"
+msgstr  ""
+
+#: cc.getopts.ign_exists_des
+msgid   "Ignore existing files"
+msgstr  ""
+
+#: cc.getopts.interactive_des
+msgid   "Be interactive"
+msgstr  ""
+
+#: cc.getopts.last_occ_des
+msgid   "Replace only the last occurrence"
+msgstr  ""
+
+#: cc.getopts.keep_attrs_des
+msgid   "Keep attributes"
+msgstr  ""
+
+#: cc.getopts.opposites_des
+msgid   "Operate on opposite matches"
+msgstr  ""
+
+#: cc.getopts.program_desc
+msgid   "Renames files and folders."
+msgstr  ""
+
+#: cc.getopts.program_bonus_help
+msgid   "-b matches all occurences of the pattern, automatically omitting -r."
+        "\r\n"
+        "-p matches all occurences that do NOT match the specified pattern / "
+        "files.\r\n"
+        "-s follows symlinks, for both target and destination."
+msgstr  ""
+
+#: cc.getopts.cc_version_str
+#, object-pascal-format
+msgid   "Commands-Collection (CC) version %s"
+msgstr  ""
+
+#: cc.getopts.invalid_option
+msgid   "Error with option: %c. Use --help or -h for the usage."
+msgstr  ""
+
+#: cc.getopts.help_usage
+msgid   "Show this help and exit"
+msgstr  ""
+
+#: cc.getopts.version_usage
+msgid   "Show the version of this program and exit"
+msgstr  ""
+
+#: cc.getopts.verbose_usage
+msgid   "Add verbosity"
+msgstr  ""
+
+#: cc.getopts.opt_need_arg
+#, object-pascal-format
+msgid   "option requires an argument: %s"
+msgstr  ""
+
+#: cc.getopts.opt_illegal
+msgid   "illegal option: --%c"
+msgstr  ""
+
+#: cc.getopts.opt_ambiguous
+#, object-pascal-format
+msgid   "ambiguous option: %s"
+msgstr  ""
+
+#: cc.getopts.opt_need_val
+#, object-pascal-format
+msgid   "option %s requires an argument"
+msgstr  ""
+
+#: cc.getopts.opt_unknown
+#, object-pascal-format
+msgid   "unrecognized option: %s"
+msgstr  ""
+
+#: cc.getopts.opt_no_arg
+#, object-pascal-format
+msgid   "option %s does NOT allow an argument"
+msgstr  ""
+
+#: cc.base.not_ok_result
+msgid   "Result is NOT OK!"
+msgstr  ""
+
+#: cc.base.not_error_result
+msgid   "Result IS fine!"
+msgstr  ""
