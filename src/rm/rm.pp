@@ -45,29 +45,31 @@ end;
 
 fn RegexFileNameCheck(const name: string): bool;
 var
-    regcheck: specialize TResult<bool, ERegExpr>;
+    regcheck: bool;
 begin
     regcheck := RegexHasMatches(name);
-    if regcheck.IsError then // Should not happen as the pattern must be verified before
+
+    // No matches
+    if not regcheck then
     begin
-        error(REGEX_FAILED, [RegexGetExpr, regcheck.GetError.Message]);
-        if not keepGoing then
-            halt(1);
+        if RegexGetLastErrorID <> 0 then
+        begin
+            error(REGEX_FAILED, [RegexGetExpr, RegexGetLastError]);
+            if not keepGoing then
+                halt(1);
+            return;
+        end;
+
+        Result := ignoreRegexMatch;
+        if not Result and verbose then
+            info(FILTERED, [name]);
+        
         return;
     end;
 
     // There are matches
-    if regcheck.GetOK then
-    begin
-        Result := not ignoreRegexMatch;
-        if Result and verbose then
-            info(FILTERED, [name]);
-        return;
-    end;
-
-    // No matches
-    Result := ignoreRegexMatch;
-    if not Result and verbose then
+    Result := not ignoreRegexMatch;
+    if Result and verbose then
         info(FILTERED, [name]);
 end;
 
