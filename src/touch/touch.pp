@@ -58,7 +58,7 @@ begin
 
             for j := Low(splits) to High(splits) - 1 do
             begin
-                currentPath := specialize TTypeHelper<string>.IfThenElse(
+                currentPath := specialize IfThenElse<string>(
                     j > Low(splits), ConcatPaths([currentPath, splits[j]]), splits[j]
                 ); // hmmmmm
 

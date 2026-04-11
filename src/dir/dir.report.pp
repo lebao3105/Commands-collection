@@ -38,9 +38,9 @@ uses
 fn FSPermAsString(const perms: TFSPermissions): string;
 begin
     FSPermAsString :=
-        specialize TTypeHelper<char>.IfThenElse(perms.R, 'r', '-') +
-        specialize TTypeHelper<char>.IfThenElse(perms.W, 'w', '-') +
-        specialize TTypeHelper<char>.IfThenElse(perms.E, 'x', '-');
+        specialize IfThenElse<char>(perms.R, 'r', '-') +
+        specialize IfThenElse<char>(perms.W, 'w', '-') +
+        specialize IfThenElse<char>(perms.E, 'x', '-');
 end;
 
 retn Report;

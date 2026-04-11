@@ -128,7 +128,7 @@ begin
             'k': keepGoing := true;
         end;
     end;
-    cc.getopts.GetLongOpts;
+    cc.getopts.GetOpt;
 
     if High(cc.getopts.NonOpts) = 0 then
         fatal(NOTHING_TO_DELETE, []);
@@ -139,7 +139,7 @@ begin
             fatal(REGEX_FAILED, [RegexGetExpr, regcheck.Value.Message]);
     end;
 
-    specialize TTypeHelper<string>.ArrayForEach(
+    specialize ArrayForEach<string>(
         cc.getopts.NonOpts,
         @DeleteThing
     );

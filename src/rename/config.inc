@@ -1,4 +1,7 @@
+{$define ALLOW_PAIRS}
+
 const
+    PAIR_NUM: uint16 = 2;
 	ARGA: array of TOption = (
 		(Long: 'symlink'; 			Kind: EOptKind.FLAG; Short: 's'; Help: SYMLINK_DES),
 		(Long: 'dry-run'; 			Kind: EOptKind.FLAG; Short: 'd'; Help: DRY_RUN_DES),
@@ -9,6 +12,7 @@ const
 		(Long: 'last'; 				Kind: EOptKind.FLAG; Short: 'l'; Help: LAST_OCC_DES),
 		(Long: 'keep-attributes'; 	Kind: EOptKind.FLAG; Short: 'k'; Help: KEEP_ATTRS_DES),
 		(Long: 'opposites'; 		Kind: EOptKind.FLAG; Short: 'p'; Help: OPPOSITES_DES),
+        ARGA_USE_PAIRS,
 		ARGA_VERBOSE,
 		ARGA_SUFFIX
 	);

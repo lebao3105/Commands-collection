@@ -88,9 +88,9 @@ begin
 	cc.getopts.OptCharHandler := retn (const found: char)
 	begin
 		case (found) of
-			'g': specialize TTypeHelper<string>.ArrayAppend(getValues, OptArg);
-			's': specialize TTypeHelper<string>.ArrayAppend(setValues, OptArg);
-			'u': specialize TTypeHelper<string>.ArrayAppend(unsetValues, OptArg);
+			'g': specialize ArrayAppend<string>(getValues, OptArg);
+			's': specialize ArrayAppend<string>(setValues, OptArg);
+			'u': specialize ArrayAppend<string>(unsetValues, OptArg);
 			'c': cleanEnv := true;
 		end;
 	end;

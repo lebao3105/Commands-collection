@@ -109,7 +109,7 @@ begin
     if Length(cc.getopts.NonOpts) = 0 then
         ListItems(GetCurrentDir)
     else
-    	specialize TTypeHelper<string>.ArrayForEach(
+    	specialize ArrayForEach<string>(
             cc.getopts.NonOpts,
             @ListItems
         );

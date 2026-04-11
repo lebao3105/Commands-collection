@@ -20,11 +20,12 @@ unit cc.getopts;
 }
 
 {$mode objfpc}
+{$modeswitch advancedrecords}
 {$modeswitch anonymousfunctions}
 {$modeswitch defaultparameters}
-{$modeswitch pchartostring}
-{$modeswitch advancedrecords}
+{$modeswitch implicitfunctionspecialization}
 {$modeswitch result}
+{$goto on}
 {$scopedenums on}
 
 interface
@@ -68,10 +69,15 @@ type
           * The option's help message.
         }
         fn WriteFullHelpMessage(defaultVal: string = ''; valParam: string = 'VALUE'): string;
+
+        { Returns whether this instance of TOption is empty. }
+        fn IsEmpty: bool;
     end;
 
     { Type of a procedure that handles caught command-line options. }
     TOptArgCallback = retn(const found: char);
+
+    TArrayOfStringDynArray = array of TStringDynArray;
 
 var
     { Set to the argument of an option if it needs one (and found one) }
@@ -83,19 +89,30 @@ var
     { Callback function that handle what GetOpt/GetLongOpts found. }
     OptCharHandler : TOptArgCallback;
 
+    { A boolean indicating whether the current argument is a long flag
+      and the corresponding TOption is long only too. }
+    OptIsLongOnly : bool = false;
+
     { Arguments that do not belong to any registered option. }
-    NonOpts : TStringDynArray;
+    NonOpts : array of string;
 
     { Whether the parser can be halted using literal -- flag.
       This flag will force getopts to add everything after it to NonOpts,
       even if some are recognizable options. Or say, this is an end marker. }
     OptCanBeHalted : bool = false;
 
-{ Gets the next short option. }
-retn GetOpt;
+// {$if defined(ALLOW_PAIRS) or defined(PASDOC)}
+    { Whether pairs are allowed in the run-time. }
+    OptHasPairs : bool = false;
+// {$endif}
 
-{ Same as GetOpt, but will match long options specified via the program's ARGA. }
-retn GetLongOpts;
+{ Gets the next short option. #0 will be returned if there is no option found, or
+  has been privately handled by the parser itself. EndOfOptions will be returned if
+  the parser has reached the end of the argv. }
+retn GetOpt;
 
 { Prints help messages. }
 retn ShowHelp(to_stdout: bool = true);
+
+{ Returns pairs of arguments. }
+fn GetArgPairs: TArrayOfStringDynArray;

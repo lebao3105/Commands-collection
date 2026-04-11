@@ -21,9 +21,11 @@ resourcestring
     HELP_USAGE     = 'Show this help and exit';
     VERSION_USAGE  = 'Show the version of this program and exit';
     VERBOSE_USAGE  = 'Add verbosity';
+    UNDOCUMENTED   = '*Undocumented*';
 
-    OPT_NEED_VAL  = 'option %s requires an argument';
-    OPT_UNKNOWN   = 'unrecognized option: %s';
+    OPT_NEED_VAL        = 'option %s requires an argument';
+    OPT_UNKNOWN         = 'unrecognized option: %s';
+    OPT_PAIR_NOT_ENOUGH = 'not enough item for a pair: %d required, got %d';
 
 {$define ARGA_VERBOSE :=
     (Long: 'verbose'; Kind: EOptKind.FLAG; Short: 'v'; Help: VERBOSE_USAGE)
@@ -33,6 +35,8 @@ resourcestring
     (Long: 'version'; Kind: EOptKind.FLAG; Short: 'V'; Help: VERSION_USAGE),
     (Long: '';        Kind: EOptKind.FLAG; Short: #0; Help: '')
 }
+{$define ARGA_USE_PAIRS :=
+    (Long: 'use-pairs'; Kind: EOptKind.FLAG; Short: #0; Help: '')}
 
 {$ifndef PASDOC}
 {$I config.inc}
@@ -41,20 +45,16 @@ resourcestring
 
 fn TOption.WriteFullHelpMessage(defaultVal: string = ''; valParam: string = 'VALUE'): string;
 begin
-    if Short = #0 then
+    if IsEmpty then
         return;
 
-    Result := '';
-    Result += ANSI_CODE_BOLD;
+    Result := ANSI_CODE_BOLD;
+
+    if Short <> '' then
+        Result += ('-' + Short + ANSI_CODE_RESET + ' ');
 
     if Long <> '' then
-        Result += ('--' + Long + '  ');
-    
-    // TOption.Short must not be empty as it's used for command-
-    // line parsing task. However ARGAs are terminated with 0ed
-    // entry, which of course has its Short a #0. Already been
-    // handled above.
-    Result += ('-' + Short + ANSI_CODE_RESET);
+        Result += ('--' + Long);
 
     if Kind <> EOptKind.FLAG then
     begin
@@ -65,7 +65,14 @@ begin
             Result += (' = ' + defaultVal);
     end;
 
+    if Help = '' then
+        Help := UNDOCUMENTED;
     Result += (CRNL + #9 + Help);
+end;
+
+fn TOption.IsEmpty: bool;
+begin
+    Result := (Short = #0) and (Long = '');
 end;
 
 retn ShowHelp(to_stdout: bool);
@@ -74,7 +81,7 @@ begin
     setOutputStream(not to_stdout);
     writeln(OutputFile, PROGRAM_DESC);
 
-    specialize TTypeHelper<TOption>.ArrayForEach(ARGA,
+    ArrayForEach(ARGA,
     fn (const opt: TOption): bool
     begin
         writeln(OutputFile, opt.WriteFullHelpMessage());
@@ -104,7 +111,9 @@ begin
     FatalAndTerminate(1, message, args);
 end;
 
-fn Internal_getopt (long_only : boolean) : char;
+fn Internal_getopt: char;
+label
+    deinit;
 var
     exact: bool;
     optName, optValue: string;
@@ -113,7 +122,7 @@ var
 
     fn currentArg: string; inline;
     begin
-        return(specialize TTypeHelper<string>.IfThenElse(
+        return(IfThenElse(
             optind < argc, argv[optind], ''
         ));
     end;
@@ -128,7 +137,7 @@ var
     fn nameToFlag: string;
     begin
         if optName = '' then return('');
-        return(specialize TTypeHelper<string>.IfThenElse(
+        return(IfThenElse(
             length(optName) > 1, '--' + optName, '-' + optName
         ));
     end;
@@ -180,7 +189,7 @@ begin
 
         // At this point we're at a long option...
         nextchar := 2;
-        if long_only and isALongOption then
+        if isALongOption then
             inc(nextchar);
             // Now it points at the first character of an option
     end;
@@ -215,7 +224,7 @@ begin
     exact := false;
     foundOptPos := 0;
 
-    specialize TTypeHelper<TOption>.ArrayForEachIndex(ARGA,
+    ArrayForEachIndex(ARGA,
     fn (const indx: smallint; const opt: TOption): bool
     begin
         if exact then
@@ -236,7 +245,30 @@ begin
     
     with ARGA[foundOptPos] do
     begin
-        Result := Short;
+        if Short <> #0 then
+        begin
+            Result := Short;
+            OptIsLongOnly := false;
+        end
+
+        else
+            case Long of
+                {$ifdef ALLOW_PAIRS}
+                'use-pairs': begin
+                    OptIsLongOnly := false;
+                    Result := #0;
+                    OptHasPairs := true;
+                    goto deinit;
+                end;
+                {$endif}
+                else begin
+                    Result := Long[1];
+                    OptIsLongOnly := true;
+                    {$ifdef ALLOW_PAIRS}
+                    OptHasPairs := false;
+                    {$endif}
+                end;
+            end;
 
         if Kind <> EOptKind.FLAG then
         begin
@@ -246,16 +278,17 @@ begin
         end;
     end;
 
+deinit:
     Inc(OptInd);
     NextChar := 0;
 end;
 
-retn parseLoop(long_only: boolean);
+retn parseLoop;
 var c: char;
 begin
     if ParamCount > 0 then
     repeat
-        c := Internal_getopt(long_only);
+        c := Internal_getopt;
         case c of
             'h': begin ShowHelp(true); halt(0); end;
             'V': begin
@@ -268,25 +301,64 @@ begin
             OptCharHandler(c);
         end;
     until c = EndOfOptions;
+
+    {$ifdef ALLOW_PAIRS}
+    if (Length(NonOpts) mod PAIR_NUM) <> 0 then
+        Meh(OPT_PAIR_NOT_ENOUGH, [ PAIR_NUM, Length(NonOpts) div PAIR_NUM ]);
+    {$endif}
 end;
 
 retn GetOpt;
 begin
-    parseLoop(false);
+    parseLoop;
 end;
 
-retn GetLongOpts;
+    {$ifdef ALLOW_PAIRS}
+fn GetArgPairs: TArrayOfStringDynArray;
+{$push}{$warn 5093 off}{$warn 5091 off}
+var
+    i, j: smallint;
+    resp: TArrayOfStringDynArray; // FPC won't let us use Result directly, at least in 3.3.1
 begin
-    parseLoop(true);
+    if not OptHasPairs then return;
+
+    // TODO: Throw errors
+    SetLength(resp, Length(NonOpts) div PAIR_NUM);
+
+    i := 0;
+    j := 0;
+
+    ArrayForEachIndex(NonOpts,
+        fn (const indx: smallint; const opt: string): bool
+        begin
+            if (indx mod 3 = 0) then
+            begin
+                SetLength(resp[i], PAIR_NUM);
+                j := 0;
+                resp[i, j] := opt;
+                inc(i);
+                inc(j);
+                return(false);
+            end;
+
+            resp[i - 1, j] := opt;
+            inc(j);
+            return(false);
+        end);
+    
+    return(resp);
 end;
-{$else}
+{$pop}
+    {$endif}
+
+    {$else} // PASDOC
 retn GetOpt;
 begin
 end;
 
-retn GetLongOpts;
+fn GetArgPairs: TArrayOfStringDynArray;
 begin
 end;
-{$endif}
+    {$endif} // PASDOC
 
 end.

@@ -25,7 +25,7 @@ var
 retn PrintElement(what, name: string); inline;
 begin
     write(
-        specialize TTypeHelper<string>.IfThenElse(
+        specialize IfThenElse<string>(
             PrettyPrint,
             name {+ ': '} + what + sLineBreak,
             what + ' '

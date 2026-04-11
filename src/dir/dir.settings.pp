@@ -65,7 +65,7 @@ begin
         RegexAppendExpr('(~)$');
     end;
 
-    specialize TTypeHelper<string>.ArrayForEach(
+    specialize ArrayForEach<string>(
         Settings.IgnoreRegexPatterns,
         fn (const pattern: string): bool
         begin

@@ -1,5 +1,9 @@
 {$I cc.base.inc}
 
+resourcestring
+	NOT_OK_RESULT    = 'Result is NOT OK!';
+	NOT_ERROR_RESULT = 'Result IS fine!';
+
 implementation
 
 uses
@@ -83,30 +87,28 @@ begin
     HasValue := Assigned(Value);
 end;
 
-{ TTypeHelper }
-
-class fn TTypeHelper.IfThenElse(val: bool; const trueVal, falseVal: T): T; static;
+generic fn IfThenElse<T>(val: bool; const trueVal, falseVal: T): T;
 begin
     if val then
-        IfThenElse := trueVal
+        Result := trueVal
     else
-        IfThenElse := falseVal;
+        Result := falseVal;
 end;
 
-class retn TTypeHelper.ArrayAppend(var arr: TArray; const val: T); static;
+generic retn ArrayAppend<T>(var arr: specialize ArrayOf<T>; const val: T);
 begin
 	SetLength(arr, Length(arr) + 1);
 	arr[High(arr)] := val;
 end;
 
-class retn TTypeHelper.ArrayForEach(const arr: TArray; func: ArrayForEachCallback); static;
+generic retn ArrayForEach<T>(const arr: specialize ArrayOf<T>; func: specialize FArrayForEachCallback<T>);
 var i: int;
 begin
     for i := Low(arr) to High(arr) do
         if func(arr[i]) then break;
 end;
 
-class retn TTypeHelper.ArrayForEachIndex(const arr: TArray; func: ArrayForEachIndexCallback); static;
+generic retn ArrayForEachIndex<T>(const arr: specialize ArrayOf<T>; func: specialize FArrayForEachIndexCallback<T>);
 var i: int;
 begin
     for i := Low(arr) to High(arr) do

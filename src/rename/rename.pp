@@ -1,16 +1,20 @@
 program rename;
 {$modeswitch anonymousfunctions}
+{$modeswitch implicitfunctionspecialization}
 
 uses
 	{$ifdef FPC_DOTTEDUNITS}
 	system.regexpr,
 	system.sysutils,
+	system.types,
 	{$else}
 	regexpr,
 	sysutils,
+	types,
 	{$endif}
 	cc.getopts,
-	cc.logging
+	cc.logging,
+	cc.base
 	;
 
 {$I i18n.inc}
@@ -32,7 +36,7 @@ fn AskBeforeCooking(const from, to_: string): bool;
 var c: char;
 begin
 	if not interactive then return(true);
-	c := Confirmation('Rename %s to %s?', [ from, to_ ]);
+	c := Confirmation(CONFIRM, [ from, to_ ]);
 	case c of
 		'a', 'A': begin
 			interactive := false;
@@ -42,8 +46,8 @@ begin
 			return(false);
 		'y', 'Y':
 			return(true);
-	else
-		return(AskBeforeCooking(from, to_));
+		else
+			return(AskBeforeCooking(from, to_));
 	end;
 end;
 
@@ -68,5 +72,11 @@ begin
 			'v': beVerbose := true;
 		end;
 	end;
-	cc.getopts.GetLongOpts;
+
+	cc.getopts.GetOpt;
+
+	ArrayForEachIndex(
+		cc.getopts.GetArgPairs,
+		function(const indx: integer; const pair: TStringDynArray): bool begin end
+	);
 end.
