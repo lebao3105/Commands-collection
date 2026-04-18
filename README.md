@@ -1,8 +1,5 @@
 # Commands-collection
 
-Build status:
-[![Nightly CI](https://github.com/lebao3105/Commands-collection/actions/workflows/nightly.yml/badge.svg)](https://github.com/lebao3105/Commands-collection/actions/workflows/nightly.yml)
-
 A collection of system commands written in Free Pascal and (maybe) C.
 
 They are:
