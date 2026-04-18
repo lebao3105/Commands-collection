@@ -114,7 +114,7 @@ end;
 var regcheck: specialize TOptional<ERegExpr>;
 begin
     if ParamCount = 0 then
-        fatal(NOTHING_TO_DELETE, []);
+        fatal(NOTHING_TO_DELETE);
 
     cc.getopts.OptCharHandler := retn (const found: char)
     begin
@@ -131,7 +131,7 @@ begin
     cc.getopts.GetOpt;
 
     if High(cc.getopts.NonOpts) = 0 then
-        fatal(NOTHING_TO_DELETE, []);
+        fatal(NOTHING_TO_DELETE);
 
     if RegexGetExpr <> '' then begin
         regcheck := RegexVerifyExpr;

@@ -101,7 +101,7 @@ begin
 			getValues[i] + '=' + GetEnvironmentVariable(getValues[i]));
 
 	if Length(cc.getopts.NonOpts) = 0 then
-		FatalAndTerminate(1, NoProgSpecified, []);
+		FatalAndTerminate(1, NoProgSpecified);
 	
 	// Create array of arguments
 	GetMem(progArgs, (Length(cc.getopts.NonOpts) + 1) * SizeOf(PChar));

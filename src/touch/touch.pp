@@ -39,7 +39,7 @@ var
 
 begin
     if ParamCount = 0 then
-        FatalAndTerminate(1, NOTHING_TO_CREATE, []);
+        FatalAndTerminate(1, NOTHING_TO_CREATE);
 
     cc.getopts.OptCharHandler := retn (const found: char)
     begin

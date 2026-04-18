@@ -44,11 +44,11 @@ retn InitializeSettings;
 var conf_path: string;
 begin
     conf_path := GetEnvironmentVariable('DIR_CONFPATH');
-    debug('Started settings thread', []);
+    debug('Started settings thread');
     // file_path := string(p_file_path);
     RegexPrepare;
     // RegexCheck;
-    debug('Settings thread finished', []);
+    debug('Settings thread finished');
 end;
 
 retn RegexPrepare;
