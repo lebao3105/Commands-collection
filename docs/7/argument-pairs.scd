@@ -22,20 +22,26 @@ CC has a special feature: (command-line) argument pairs.
 Look at the example above. There are 2 pairs of arguments, each has 2 arguments inside.
 Packed values like this can be quite useful, not only in cases of renamings like that, but also in cases like this:
 
+```
 vcs commit --use-pairs src/cc.base.pp "fix: Swapped TResult types"
                        src/dir/       "feat: LS_COLORS!"
                        README.md      "Update README.md"
 
     (to commit new changes, using path - message pairs)
+```
 
+```
 cook put --use-pairs  project1    install_prefix1
                       project2    install_prefix2
 
     (to install projects into their corresponding install folder)
+```
 
 CC lets you put flags with their values (if any), safely:
 
+```
 rename --use-pairs one two three --interactive y four
+```
 
 That "y" is for --interactive. CC won't put it into any argument pairs.
 
@@ -43,7 +49,9 @@ That "y" is for --interactive. CC won't put it into any argument pairs.
 
 Not all programs in CC support, or say, need this feature. Run a program with --help or -h and see if the output has:
 
+```
     --use-pairs         Read pairs of X arguments.
+```
 
 If there is, the program supports pairs!
 

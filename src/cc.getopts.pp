@@ -45,7 +45,7 @@ resourcestring
 {$endif}
 {$I cc.termcolors.inc}
 
-fn TOption.WriteFullHelpMessage: {$ifdef UNICODE}unicodestring{$else}string{$endif};
+fn TOption.WriteFullHelpMessage: string;
 begin
     if IsEmpty then
         return;
