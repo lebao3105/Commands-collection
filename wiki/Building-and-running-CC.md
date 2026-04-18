@@ -4,8 +4,8 @@
 
 * CC is written and made to run on Linux;
 * CC has a little bit of code for BSDs + Darwin;
-* CC should run on other UNIXes;
-* CC is NOT guaranteed to be compiled for Windows! You may need MSYS2 / Cygwin / Mingw.
+* CC should run on many other UNIXes - some workarounds maybe required;
+* CC does NOT compile on Windows! WSL doesn't count. Most stuff here is done using UNIX/POSIX functions.
 
 Do not ask for support for dated/dead OSes / versions.
 
@@ -62,8 +62,6 @@ Of course. There may even be Git submodules to be cloned in the future.
 ### XMake
 
 Install from https://xmake.io.
-
-I may support more build tools in the future, like GNU Autotools.
 
 ## Building CC
 

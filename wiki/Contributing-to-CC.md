@@ -34,15 +34,57 @@ One possible fix is to use `SetTextLineEnding` on stdout and stderr (should we u
 But I do have a workaround as well. `CRNL` has been defined, globally. And as the name suggests,
 it's Carriage return+New line!
 
+## Anonymous functions/procedures
+
+> Note: This is available in FPC trunk.
+
+Requires these modeswitches:
+
+* `{$modeswitch anonymousfunctions}` for the feature itself;
+* `{$modeswitch result}` for anonymous **functions** (you know that they're different than procedures)
+
+Usages can be found across the project.
+
+## Implicit generic specialization
+
+> Note: This is available in FPC trunk.
+> This only applies to generic functions/procedures.
+
+Modeswitch: `{$modeswitch implicitfunctionspecialization}`
+
+Pseudo code:
+
+```pascal
+generic procedure aProc<T>(param1, param2, ...: T);
+
+specialize aProc<int>(number1, number2, ...);
+
+aProc(param1, param2, ...); // works
+```
+
+This, however has at least one downside:
+* Different types that are aliases to a specific type (e.g CC's `ArrayOf<string>` and RTL's `TStringDynArray`) will not work.
+* It's still best to not totally remove `specialize`, for the sake of code-understanding and maybe debugging.
+
+## (DO NOT USE) Unicode RTL
+
+> Note: FPC, of course, welcomes contributions.
+
+Unicode RTL exists and is usable, however not in CC. While minimal support for it is here, problems exist in both compile and run time:
+
+* `resourcestring`s cause conversion errors;
+* garbage strings sometimes.
+* a bunch of conversion warnings.
+
 # Pascal-only
 
 ## Dotted units
 
 Or rather say, namespaced units.
 
-Typically, FPC's dotted RTL (and included packages) have `System.` (notice the dot) prefix in their name.
+Typically, FPC's dotted RTL (and included packages) have `System.` (notice the dot) prefix in their name. UNIX-only units are prefixed with `unixapi.`, while Windows ones have `winapi.` prefix.
 
-Not all units have `system.` name prefix. For instance, UNIX-only units are prefixed with `unixapi.` instead.
+Namespaced names can be found in FPC package's `namespaced` folder.
 
 `FPC_DOTTEDUNITS` symbol is also defined for easy `uses` choice:
 
@@ -145,6 +187,29 @@ Strings in `i18n.inc` must be put in `resourcestring` section, and `NEED_PROGRAM
 Some more needed strings:
 - `PROGRAM_DESC`: Program description;
 - `PROGRAM_BONUS_HELP` (optional): Extra help messages - define `HAS_BONUS_HELP` if you use this
+
+### Argument pairs
+
+Pairs is one of the most unique feature that CC offers. Let's advertise this a little bit.
+
+Considering this argv:
+
+```
+rename --use-pairs    bye  hello \
+       --interactive  home world \
+       --uniform-ext  .txt
+```
+
+Pairs:
+
+* `bye` and `hello`;
+* `home` and `world`;
+
+`.txt` is `--uniform-ext`'s value, and if not, it's not enough for another pair.
+
+A pair can consists of 2, 3 or even more values, depending on the purpose of the program. This can be set using `PAIR_NUM` constant in config.inc. It is required.
+
+To enable the feature, define `ALLOW_PAIRS` in config.inc, and add `ARGA_USE_PAIRS` in ARGA array.
 
 # Documentation
 
