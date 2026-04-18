@@ -33,7 +33,7 @@ Read the [Wiki](./wiki).
 * GNU Coreutils [source code](https://github.com/coreutils/coreutils)
 * Free Pascal's Run time [library](https://www.freepascal.org/docs-html/rtl/index.html) (RTL) and [Wiki](https://wiki.freepascal.org) and [docs](https://www.freepascal.org/docs.html)
 * Procps-ng [source code](https://gitlab.com/procps-ng/procps)
-* Free Pascal Compiler's [packages](https://gitlab.com/freepascal.org/fpc/source/-/tree/main/packages?ref_type=heads). FPMake source code and examples can be found there.
+* Free Pascal Compiler's [packages](https://gitlab.com/freepascal.org/fpc/source/-/tree/main/packages?ref_type=heads).
 * [TRegExpr](https://github.com/andgineer/TRegExpr)
 
 ## TODO
