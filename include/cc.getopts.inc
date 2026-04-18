@@ -8,7 +8,7 @@ unit cc.getopts;
 
     Modified by Le Bao Nguyen for Commands-Collection.
 
-    Getopt implementation for Free Pascal, modeled after GNU getopt.
+    Was a Getopt implementation for Free Pascal, modeled after GNU getopt.
     Command-line parser for CC, partially modeled after GNU getopt.
 
     See the file COPYING.FPC, included in the distribution of FPC,

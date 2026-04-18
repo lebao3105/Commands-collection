@@ -39,6 +39,9 @@ resourcestring
 
 {$ifndef PASDOC}
 {$I config.inc}
+{$if defined(ALLOW_PAIRS) and PAIR_NUM < 2}
+    {$error PAIR_NUM is BELOW TWO!}
+{$endif}
 {$endif}
 {$I cc.termcolors.inc}
 
