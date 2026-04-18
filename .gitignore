@@ -45,3 +45,6 @@ compile_commands.json
 *.css
 *.js
 *.gif
+
+# Unicode subtarget
+fpc-unicodertl.cfg

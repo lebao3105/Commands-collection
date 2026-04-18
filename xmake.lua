@@ -15,23 +15,28 @@ option("fpc-conf")
 	set_description("Path to fpc.cfg file - optional")
 	set_default("")
 
+option("use-unicode-rtl")
+	set_showmenu(true)
+	set_description("Use Unicode RTL and packages")
+	set_default(false)
+
 rule("unit_pas")
 	on_config(function (target)
-		local objdir = "$(builddir)/.objs/" .. target:name()
-		os.mkdir(objdir)
-
-		-- Where to put build outputs
-		target:add("pcflags", "-FU" .. objdir)
-
 		-- Where to get needed flags
 		target:add("pcflags", "@cc.cfg")
 
 		-- Define CC_VERSION (this project version)
 		target:add("pcflags", "-dCC_VERSION:=\'" .. version .. "\'")
 
+		if get_config("use-unicode-rtl") then
+			target:add("pcflags", "-Municodestrings")
+		end
+
 		if get_config("fpc-conf") ~= "" then
 			target:add("pcflags", "@" .. get_config("fpc-conf"))
 		end
+
+		os.mkdir(target:objectdir())
 	end)
 
 rule("program_pas")
