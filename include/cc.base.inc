@@ -50,17 +50,26 @@ type
 	generic FArrayForEachCallback<T> = reference to fn(const item: T): bool;
 	generic FArrayForEachIndexCallback<T> = reference to fn(const index: int; const item: T): bool;
 
-{ Returns trueVal if val is true, falseVal otherwise. }
+{ Returns trueVal if val is true, falseVal otherwise.
+  Fact: This exists in sysutils as well (just found it out) 
+  I'm a bit word-less. But as this is a very simple function, it's not
+  worth calling sysutils.IfThen here.
+  There are other overloads of IfThen in RTL. Should they remove all of that,
+  and should system unit contain generics at all? }
 generic fn IfThenElse<T>(val: bool; const trueVal, falseVal: T): T;
 
 { Append val into arr. }
 generic retn ArrayAppend<T>(var arr: specialize ArrayOf<T>; const val: T);
 
 { For each element in arr, run func }
-generic retn ArrayForEach<T>(const arr: specialize ArrayOf<T>; func: specialize FArrayForEachCallback<T>);
+generic retn ArrayForEach<T>(
+	const arr: specialize ArrayOf<T>;
+	const func: specialize FArrayForEachCallback<T>);
 
 { Same as ArrayForEach, but with the current item index being passed into func. }
-generic retn ArrayForEachIndex<T>(const arr: specialize ArrayOf<T>; func: specialize FArrayForEachIndexCallback<T>);
+generic retn ArrayForEachIndex<T>(
+	const arr: specialize ArrayOf<T>;
+	const func: specialize FArrayForEachIndexCallback<T>);
 
 { Writes a single space. }
 retn WriteSp; inline;

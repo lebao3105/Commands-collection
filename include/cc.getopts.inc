@@ -19,7 +19,8 @@ unit cc.getopts;
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 }
 
-{$mode objfpc}
+{$I objfpc.inc}
+
 {$modeswitch advancedrecords}
 {$modeswitch anonymousfunctions}
 {$modeswitch defaultparameters}
@@ -31,6 +32,7 @@ unit cc.getopts;
 interface
 
 uses
+    cc.base,
     {$ifdef FPC_DOTTEDUNITS}
     system.types
     {$else}
@@ -57,10 +59,12 @@ type
 
     { Record of an application-specific option. }
     TOption = record
-        Long    : String;
-        Kind    : EOptKind;
-        Short   : Char;
-        Help    : string;
+        Long      : string;
+        Kind      : EOptKind;
+        Short     : char;
+        Help      : string;
+        DefaultVal: string;
+        ValParam  : string;
 
         { Write the full help message of the option, which includes:
           * Short and long variants;
@@ -68,7 +72,7 @@ type
           * Default option value - if any and the option needs a value;
           * The option's help message.
         }
-        fn WriteFullHelpMessage(defaultVal: string = ''; valParam: string = 'VALUE'): string;
+        fn WriteFullHelpMessage: string;
 
         { Returns whether this instance of TOption is empty. }
         fn IsEmpty: bool;
@@ -94,7 +98,7 @@ var
     OptIsLongOnly : bool = false;
 
     { Arguments that do not belong to any registered option. }
-    NonOpts : array of string;
+    NonOpts : specialize ArrayOf<string>;
 
     { Whether the parser can be halted using literal -- flag.
       This flag will force getopts to add everything after it to NonOpts,

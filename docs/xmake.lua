@@ -5,6 +5,8 @@ target("pasdoc")
 	set_kind("binary")
 
 	on_build(function (_)
+		-- FIXME:
+		-- Pasdoc does not use the changed FPC (via CC's project options), if there is one.
 		os.execv(find_program("make"), {"-C", "docs/pasdoc", "build-fpc-release"})
 	end)
 

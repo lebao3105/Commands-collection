@@ -101,14 +101,14 @@ begin
 	arr[High(arr)] := val;
 end;
 
-generic retn ArrayForEach<T>(const arr: specialize ArrayOf<T>; func: specialize FArrayForEachCallback<T>);
+generic retn ArrayForEach<T>(const arr: specialize ArrayOf<T>; const func: specialize FArrayForEachCallback<T>);
 var i: int;
 begin
     for i := Low(arr) to High(arr) do
         if func(arr[i]) then break;
 end;
 
-generic retn ArrayForEachIndex<T>(const arr: specialize ArrayOf<T>; func: specialize FArrayForEachIndexCallback<T>);
+generic retn ArrayForEachIndex<T>(const arr: specialize ArrayOf<T>; const func: specialize FArrayForEachIndexCallback<T>);
 var i: int;
 begin
     for i := Low(arr) to High(arr) do

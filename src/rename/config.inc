@@ -1,5 +1,6 @@
 {$define ALLOW_PAIRS}
-
+{$push}
+	{$warn 3177 off}
 const
     PAIR_NUM: uint16 = 2;
 	ARGA: array of TOption = (
@@ -16,3 +17,4 @@ const
 		ARGA_VERBOSE,
 		ARGA_SUFFIX
 	);
+{$pop}

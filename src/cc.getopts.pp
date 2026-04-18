@@ -8,20 +8,19 @@ uses
     {$else}
     sysutils,
     {$endif}
-    cc.base,
     cc.console,
     cc.logging
     ;
 
 resourcestring
-    CC_VERSION_STR = 'Commands-Collection (CC) version %s';
+    CC_VERSION_STR      = 'Commands-Collection (CC) version %s';
     // TRANSLATORS:          OS v  CPU v
-    CC_TARGET_STR  = 'Built for %s on %s using FPC %s';
-    CC_BUILD_DATE  = 'Built on %s';
-    HELP_USAGE     = 'Show this help and exit';
-    VERSION_USAGE  = 'Show the version of this program and exit';
-    VERBOSE_USAGE  = 'Add verbosity';
-    UNDOCUMENTED   = '*Undocumented*';
+    CC_TARGET_STR       = 'Built for %s on %s using FPC %s';
+    CC_BUILD_DATE       = 'Built on %s';
+    HELP_USAGE          = 'Show this help and exit';
+    VERSION_USAGE       = 'Show the version of this program and exit';
+    VERBOSE_USAGE       = 'Add verbosity';
+    UNDOCUMENTED        = '*Undocumented*';
 
     OPT_NEED_VAL        = 'option %s requires an argument';
     OPT_UNKNOWN         = 'unrecognized option: %s';
@@ -43,7 +42,7 @@ resourcestring
 {$endif}
 {$I cc.termcolors.inc}
 
-fn TOption.WriteFullHelpMessage(defaultVal: string = ''; valParam: string = 'VALUE'): string;
+fn TOption.WriteFullHelpMessage: {$ifdef UNICODE}unicodestring{$else}string{$endif};
 begin
     if IsEmpty then
         return;
@@ -58,8 +57,13 @@ begin
 
     if Kind <> EOptKind.FLAG then
     begin
-        if Long <> '' then Result += '  ';
-        Result += valParam;
+        if Long <> '' then
+            Result += '  ';
+
+        if ValParam = '' then
+            ValParam := 'VALUE';
+
+        Result += ValParam;
 
         if defaultVal <> '' then
             Result += (' = ' + defaultVal);
@@ -81,7 +85,7 @@ begin
     setOutputStream(not to_stdout);
     writeln(OutputFile, PROGRAM_DESC);
 
-    ArrayForEach(ARGA,
+    specialize ArrayForEach<TOption>(ARGA,
     fn (const opt: TOption): bool
     begin
         writeln(OutputFile, opt.WriteFullHelpMessage());
@@ -94,7 +98,6 @@ begin
 {$endif}
 end;
 
-{$ifndef PASDOC}
 var
     NextChar: LongInt;
 
@@ -111,7 +114,7 @@ begin
     FatalAndTerminate(1, message, args);
 end;
 
-fn Internal_getopt: char;
+fn Internal_getopt: ansichar;
 label
     deinit;
 var
@@ -123,7 +126,7 @@ var
     fn currentArg: string; inline;
     begin
         return(IfThenElse(
-            optind < argc, argv[optind], ''
+            optind < argc, ParamStr(optind), ''
         ));
     end;
 
@@ -147,7 +150,7 @@ var
     begin
         SetLength(NonOpts, argc - optind);
         for i := optind to argc do
-            NonOpts[i - optind] := string(argv[i]);
+            NonOpts[i - optind] := ParamStr(i);
     end;
 
 begin
@@ -283,8 +286,8 @@ deinit:
     NextChar := 0;
 end;
 
-retn parseLoop;
-var c: char;
+retn GetOpt;
+var c: ansichar;
 begin
     if ParamCount > 0 then
     repeat
@@ -308,11 +311,6 @@ begin
     {$endif}
 end;
 
-retn GetOpt;
-begin
-    parseLoop;
-end;
-
     {$ifdef ALLOW_PAIRS}
 fn GetArgPairs: TArrayOfStringDynArray;
 {$push}{$warn 5093 off}{$warn 5091 off}
@@ -328,7 +326,7 @@ begin
     i := 0;
     j := 0;
 
-    ArrayForEachIndex(NonOpts,
+    specialize ArrayForEachIndex<string>(NonOpts,
         fn (const indx: smallint; const opt: string): bool
         begin
             if (indx mod 3 = 0) then
@@ -350,15 +348,4 @@ begin
 end;
 {$pop}
     {$endif}
-
-    {$else} // PASDOC
-retn GetOpt;
-begin
-end;
-
-fn GetArgPairs: TArrayOfStringDynArray;
-begin
-end;
-    {$endif} // PASDOC
-
 end.

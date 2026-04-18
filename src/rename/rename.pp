@@ -1,6 +1,8 @@
 program rename;
 {$modeswitch anonymousfunctions}
+{$modeswitch result} // for anonymous functions
 {$modeswitch implicitfunctionspecialization}
+{$modeswitch functionreferences}
 
 uses
 	{$ifdef FPC_DOTTEDUNITS}
@@ -75,8 +77,9 @@ begin
 
 	cc.getopts.GetOpt;
 
-	ArrayForEachIndex(
+	specialize ArrayForEach<TStringDynArray>(
 		cc.getopts.GetArgPairs,
-		function(const indx: integer; const pair: TStringDynArray): bool begin end
+		fn(const pair: TStringDynArray): boolean
+		     begin writeln(pair[0], ' ', pair[1]); exit(false); end
 	);
 end.
