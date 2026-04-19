@@ -7,7 +7,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: \n"
-        "POT-Creation-Date: 2026-04-04 14:13+0700\n"
+        "POT-Creation-Date: 2026-04-19 15:35+0700\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,10 +48,6 @@ msgstr  ""
 msgid   "Show the processor type"
 msgstr  ""
 
-#: cc.getopts.hardware_des
-msgid   "Show the hardware platform"
-msgstr  ""
-
 #: cc.getopts.operating_des
 msgid   "Show the operating system"
 msgstr  ""
@@ -64,9 +60,9 @@ msgstr  ""
 msgid   "With nothing else provided, -s will be omitted.\r\n"
         "-f must be provided before any other flags, else you will either get "
         "a mixed output, or no -f effect at all.\r\n"
-        "-o output may differ from GNU uname's output due to the underlying "
-        "implementation.\r\n"
-        "Check the following site for all identifies from GNU:https://"
+        "-o and -p outputs may differ from GNU uname's output due to the "
+        "underlying implementation.\r\n"
+        "For -o, check the following site for all identifies from GNU:https://"
         "github.com/coreutils/gnulib/blob/master/m4/host-os.m4"
 msgstr  ""
 
@@ -75,8 +71,14 @@ msgstr  ""
 msgid   "Commands-Collection (CC) version %s"
 msgstr  ""
 
-#: cc.getopts.invalid_option
-msgid   "Error with option: %c. Use --help or -h for the usage."
+#: cc.getopts.cc_target_str
+#, object-pascal-format
+msgid   "Built for %s on %s using FPC %s"
+msgstr  ""
+
+#: cc.getopts.cc_build_date
+#, object-pascal-format
+msgid   "Built on %s"
 msgstr  ""
 
 #: cc.getopts.help_usage
@@ -91,18 +93,8 @@ msgstr  ""
 msgid   "Add verbosity"
 msgstr  ""
 
-#: cc.getopts.opt_need_arg
-#, object-pascal-format
-msgid   "option requires an argument: %s"
-msgstr  ""
-
-#: cc.getopts.opt_illegal
-msgid   "illegal option: --%c"
-msgstr  ""
-
-#: cc.getopts.opt_ambiguous
-#, object-pascal-format
-msgid   "ambiguous option: %s"
+#: cc.getopts.undocumented
+msgid   "*Undocumented*"
 msgstr  ""
 
 #: cc.getopts.opt_need_val
@@ -115,17 +107,13 @@ msgstr  ""
 msgid   "unrecognized option: %s"
 msgstr  ""
 
-#: cc.getopts.opt_no_arg
+#: cc.getopts.opt_pair_not_enough
 #, object-pascal-format
-msgid   "option %s does NOT allow an argument"
+msgid   "not enough item for a pair: %d required, got %d"
 msgstr  ""
 
 #: uname.processor_type
 msgid   "Processor type: "
-msgstr  ""
-
-#: uname.hardware_platform
-msgid   "Hardware platform: "
 msgstr  ""
 
 #: uname.unknown

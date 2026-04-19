@@ -1,4 +1,8 @@
 add_imports("lib.detect.find_program", "lib.detect.find_file")
+
+add_moduledirs(os.projectdir() .. "/build-aux")
+add_imports("i18n", {inherit = true})
+
 add_rules("mode.debug", "mode.release", "mode.releasedbg")
 set_policy("check.auto_ignore_flags", false)
 
@@ -67,15 +71,20 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
 
 		target(name .. "-docs")
 			on_build(function (_)
-				local scdoc = find_program("scdoc")
+				local scdoc = find_program("scdoc", {
+                    paths = { "$(env PATH)", "/usr/bin", "/usr/local/bin" },
+                    check = "-h"
+                })
 				local inp = "docs/1/" .. name .. ".scd"
 				local out = "docs/1/cc-" .. name .. ".man"
 
-				if os.isfile(inp) and (not scdoc == nil) then
+                if (scdoc == nil) then
+                    print("scdoc not found, cannot generate man pages!")
+				elseif os.isfile(inp) then
 					os.execv(scdoc, {}, { stdin = inp, stdout = out })
 				end
 			end)
-		
+
 		target(name .. "-i18n")
 			add_deps(name)
 
@@ -84,22 +93,26 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
 				local potloc = i18n_dir .. "cc.pot"
 
 				-- Generate a template
-				generate_pot("$(builddir)/.objs/" .. name, potloc)
+                local rsjpath = vformat(
+                    "$(builddir)/.objs/" .. name .. "/$(os)/$(arch)/$(mode)",
+                    xmake
+                )
+				i18n.generate_pot(rsjpath, potloc)
 
 				-- Merge existing translations from CC
 				for __, fullpath in ipairs(os.dirs(i18n_dir .. "*")) do
 					local language = path.filename(fullpath)
 					local ccpath = "i18n/" .. language
 					local outpath = fullpath .. "/cc.po"
-					
-					merge_po_files(potloc, outpath)
-					
+
+					i18n.merge_po_files(potloc, outpath)
+
 					if os.isdir(ccpath) then
-						merge_po_files(ccpath .. "/cc.po", outpath)
+						i18n.merge_po_files(ccpath .. "/cc.po", outpath)
 					end
 
 					-- Compile .po to .mo
-					compile_po_file(outpath, fullpath .. "/cc.mo")
+					i18n.compile_po_file(outpath, fullpath .. "/cc.mo")
 				end
 			end)
 
@@ -126,12 +139,17 @@ xpack("commands-collection")
 	set_formats("zip", "nsis", "targz", "rpm", "deb", "dmg")
 	set_title("Commands collection")
 	set_author("lebao3105")
-	set_description("A pack of command-line utilities.")
+	set_description(
+		"A pack of command-line utilities, found in daily usages." ..
+		"While this does not conflict with GNU Coreutils and such, " ..
+		"it is not very nice to add a cc- prefix to programs that this " ..
+		"project provides. Use at your own risk!"
+	)
 	set_homepage("https://gitlab.com/lebao3105/commands-collection")
 	set_licensefile("LICENSE")
 
 	for _, program in ipairs(programs) do
 		add_targets(program)
-		-- add_targets(program .. "-i18n")
+		add_targets(program .. "-i18n")
 	end
-	-- add_targets("API-docs", "API-i18n")
+	add_targets("API-docs", "API-i18n")

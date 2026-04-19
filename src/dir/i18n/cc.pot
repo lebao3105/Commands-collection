@@ -7,7 +7,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: \n"
-        "POT-Creation-Date: 2026-04-04 14:13+0700\n"
+        "POT-Creation-Date: 2026-04-19 15:35+0700\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,44 +16,49 @@ msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Content-Type: text/plain; charset=UTF-8\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: dir.report.stat_failed
+#: dir.i18n.stat_failed
 #, object-pascal-format
 msgid   "failed to stat %s: %s"
 msgstr  ""
 
-#: dir.report.permission_denied
+#: dir.i18n.permission_denied
 #, object-pascal-format
 msgid   "%s: permission denied"
 msgstr  ""
 
-#: dir.report.open_dir_failed
+#: dir.i18n.open_dir_failed
 #, object-pascal-format
 msgid   "failed to open directory %s: %s"
 msgstr  ""
 
-#: dir.report.files_count
+#: dir.i18n.files_count
 #, object-pascal-format
 msgid   "%u file(s)"
 msgstr  ""
 
-#: dir.report.dirs_count
+#: dir.i18n.dirs_count
 #, object-pascal-format
 msgid   "%u dir(s)"
 msgstr  ""
 
-#: dir.report.ignored_count
+#: dir.i18n.ignored_count
 #, object-pascal-format
 msgid   "%u ignored"
 msgstr  ""
 
-#: dir.report.statfail_count
+#: dir.i18n.statfail_count
 #, object-pascal-format
 msgid   "%u failed to stat()"
 msgstr  ""
 
-#: dir.report.free_space
+#: dir.i18n.free_space
 #, object-pascal-format
 msgid   "%s free"
+msgstr  ""
+
+#: dir.i18n.invalid_column
+#, object-pascal-format
+msgid   "%s: unknown column type"
 msgstr  ""
 
 #: cc.regex.regex_failed
@@ -64,14 +69,6 @@ msgstr  ""
 #: cc.regex.regex_failed_loc
 #, object-pascal-format
 msgid   "%s: regular expression failed at index %d : %s"
-msgstr  ""
-
-#: cc.pager.paged_view
-msgid   "-- Paged view. Up/down arrows = scroll. --"
-msgstr  ""
-
-#: cc.pager.console_too_small
-msgid   "The console is too small. The content will go nuts."
 msgstr  ""
 
 #: cc.getopts.list_des
@@ -133,8 +130,14 @@ msgstr  ""
 msgid   "Commands-Collection (CC) version %s"
 msgstr  ""
 
-#: cc.getopts.invalid_option
-msgid   "Error with option: %c. Use --help or -h for the usage."
+#: cc.getopts.cc_target_str
+#, object-pascal-format
+msgid   "Built for %s on %s using FPC %s"
+msgstr  ""
+
+#: cc.getopts.cc_build_date
+#, object-pascal-format
+msgid   "Built on %s"
 msgstr  ""
 
 #: cc.getopts.help_usage
@@ -149,18 +152,8 @@ msgstr  ""
 msgid   "Add verbosity"
 msgstr  ""
 
-#: cc.getopts.opt_need_arg
-#, object-pascal-format
-msgid   "option requires an argument: %s"
-msgstr  ""
-
-#: cc.getopts.opt_illegal
-msgid   "illegal option: --%c"
-msgstr  ""
-
-#: cc.getopts.opt_ambiguous
-#, object-pascal-format
-msgid   "ambiguous option: %s"
+#: cc.getopts.undocumented
+msgid   "*Undocumented*"
 msgstr  ""
 
 #: cc.getopts.opt_need_val
@@ -173,9 +166,9 @@ msgstr  ""
 msgid   "unrecognized option: %s"
 msgstr  ""
 
-#: cc.getopts.opt_no_arg
+#: cc.getopts.opt_pair_not_enough
 #, object-pascal-format
-msgid   "option %s does NOT allow an argument"
+msgid   "not enough item for a pair: %d required, got %d"
 msgstr  ""
 
 #: cc.base.not_ok_result
