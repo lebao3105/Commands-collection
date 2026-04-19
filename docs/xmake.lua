@@ -45,12 +45,12 @@ target("API-docs")
 		table.append(args, "-X") -- Copyright header
         table.append(args, "-DPASDOC")
 
-		depend.on_changed(
-			function ()
-				os.execv("docs/pasdoc/bin/pasdoc", args)
-			end,
-			{ files = target:get("files") }
-		)
+		-- depend.on_changed(
+		-- 	function ()
+		-- 		os.execv("docs/pasdoc/bin/pasdoc", args)
+		-- 	end,
+		-- 	{ files = target:get("files") }
+		-- )
 	end)
 
 target("program-docs")

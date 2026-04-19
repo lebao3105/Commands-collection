@@ -29,19 +29,22 @@ touch - create files and directories
 # EXAMPLES
 
 Create a file:
-
+```
 	$ touch file.txt
+```
 
 Create path/ (folder), path/to/ (folder), then path/to/file.txt (file):
-
+```
 	$ touch -p path/to/file.txt
+```
 
 Create a directory explicitly:
-
+```
 	$ touch -d newdir/
+```
 
 Create files *and* folders:
-
+```
 	$ touch --use-pairs file.txt    f \
 			--parent	path/to/dir d
 			--verbose
@@ -49,3 +52,4 @@ Create files *and* folders:
 	Created folder path.
 	Created folder path/to.
 	Created folder path/to/dir.
+```

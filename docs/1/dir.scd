@@ -63,16 +63,19 @@ Permissions are presented as three triplets (owner, group, others). Each triplet
 # EXAMPLES
 
 List current directory in name-only mode:
-
-    $ dir
+```
+	$ dir
+```
 
 List everything including hidden items in detailed GNU format:
-
-    $ dir -a -l -u
+```
+	$ dir -a -l -u
+```
 
 Recursively list directories only, ignoring backup files:
-
-    $ dir -R -d -B
+```
+	$ dir -R -d -B
+```
 
 # ENVIRONMENT VARIABLES
 

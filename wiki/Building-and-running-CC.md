@@ -128,3 +128,23 @@ xmake b -v dir
 The executable will be put in `build/linux/x86_64/release/`.
 
 Most programs have their own `--help` / `-h`.
+
+## Packaging CC
+
+Run:
+
+```
+xmake pack -y -f [format]
+```
+
+Supported formats:
+
+* tar.gz archive
+* tar archive
+* deb
+* rpm
+* zip archive
+* dmg (for macOS)
+* and maybe more...
+
+All are put in `build/xpack/commands-collection`.

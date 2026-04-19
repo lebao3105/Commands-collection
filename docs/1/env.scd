@@ -26,20 +26,24 @@ Unset (remove) the specified environment variable for the executed program.
 # EXAMPLES
 
 List all environment variables:
-
-    $ env
+```
+	$ env
+```
 
 Print the value of a single variable:
-
-    $ env -g PATH
+```
+	$ env -g PATH
+```
 
 Run a program with a modified environment variable:
-
-    $ env -s "FOO=bar" ./myprog arg1 arg2
+```
+	$ env -s "FOO=bar" ./myprog arg1 arg2
+```
 
 Unset a variable for the executed program:
-
-    $ env -u HOME ./myprog
+```
+	$ env -u HOME ./myprog
+```
 
 # NOTES
 

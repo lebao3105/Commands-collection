@@ -31,9 +31,11 @@ rm - remove files and directories
 # EXAMPLES
 
 Remove a file:
-
+```
 	$ rm file.txt
+```
 
 Remove a directory recursively:
-
+```
 	$ rm -r folder/
+```

@@ -50,13 +50,16 @@ Do we really need a description for this one?
 # EXAMPLES
 
 Rename all .txt files to .bak:
-
+```
 	$ rename .txt .bak *.txt
+```
 
 Use regex to rename files:
-
+```
 	$ rename -r '(\w+)\.txt' '\1.bak' *.txt
+```
 
 Rename bye to hello, home to world:
-
+```
 	$ rename --use-pairs bye hello home world
+```

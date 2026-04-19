@@ -38,34 +38,39 @@ Make key matching case-sensitive.
 # EXAMPLES
 
 Prompt with a custom message and accept only 'y' or 'n':
-
+```
     $ inp -c "Continue?" -k y -k n
     Continue? [yn] y
     $
+```
 
 Hide input while the user types (useful for passwords or sensitive keys). Note: characters are not echoed or replaced by stars:
-
+```
     $ inp -d -c "Enter PIN:"
     # Prompt appears; typed characters are not shown
     $
+```
 
 Require the user to press Enter after the key (useful when you want an explicit verification step):
-
+```
     $ inp -e -k q
     Press Enter after q
     $
+```
 
 Keep prompting until one of the accepted keys is pressed (example transcript showing repeated prompts):
-
+```
     $ inp -l -k y -k n -o -c "Are you sure?"
     Are you sure? [yn] x
     Are you sure? [yn] no
     Are you sure? [yn] y
     # exits with code for 'y'
     $
+```
 
 Display available accepted keys in the prompt:
-
+```
     $ inp -o -k y -k n -c "Continue?"
     Continue? [y] y
     $
+```
