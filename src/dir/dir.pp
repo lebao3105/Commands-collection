@@ -73,7 +73,7 @@ begin
     else PrintObjectName(r^.name, r^.info);
 end;
 
-fn ListItems(const path: string): bool; inline;
+fn ListItems(const path: string): bool;
 begin
     IterateDir(path, @ShowDirEntry, Settings.Recursively,
                (High(cc.getopts.NonOpts) > 1) or Settings.Recursively);
@@ -81,6 +81,7 @@ begin
     return(false);
 end;
 
+var str: string;
 begin
     case StrLowerCase(GetEnvironmentVariable('DIR_PRESET')) of
         'win': dir.settings.Settings := WIN_PRESET;
@@ -104,13 +105,11 @@ begin
             'R': Settings.Recursively := true;
         end;
     end;
-    cc.getopts.GetLongOpts;
+    cc.getopts.GetOpt;
 
     if Length(cc.getopts.NonOpts) = 0 then
         ListItems(GetCurrentDir)
     else
-    	specialize ArrayForEach<string>(
-            cc.getopts.NonOpts,
-            @ListItems
-        );
+    	for str in cc.getopts.NonOpts do
+            ListItems(str);
 end.

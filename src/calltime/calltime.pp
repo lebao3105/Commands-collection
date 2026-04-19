@@ -21,6 +21,6 @@ begin
             'f': format := OptArg;
         end;
     end;
-    cc.getopts.GetLongOpts;
+    cc.getopts.GetOpt;
     writeln(TIME_IS, FormatDateTime(format, Now));
 end.

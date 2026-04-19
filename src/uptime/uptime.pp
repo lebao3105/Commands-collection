@@ -79,5 +79,5 @@ begin
         FatalAndTerminate(1, SYSINF_FAIL, [StrError(FpGetErrno)]);
 
     cc.getopts.OptCharHandler := @OptHandler;
-    cc.getopts.GetLongOpts;
+    cc.getopts.GetOpt;
 end.

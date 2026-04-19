@@ -90,7 +90,7 @@ var
     { Index of the current command line argument. }
     OptInd : Longint = 0;
 
-    { Callback function that handle what GetOpt/GetLongOpts found. }
+    { Callback function that handle what GetOpt. }
     OptCharHandler : TOptArgCallback;
 
     { A boolean indicating whether the current argument is a long flag
@@ -105,10 +105,8 @@ var
       even if some are recognizable options. Or say, this is an end marker. }
     OptCanBeHalted : bool = false;
 
-// {$if defined(ALLOW_PAIRS) or defined(PASDOC)}
     { Whether pairs are allowed in the run-time. }
     OptHasPairs : bool = false;
-// {$endif}
 
 { Gets the next short option. #0 will be returned if there is no option found, or
   has been privately handled by the parser itself. EndOfOptions will be returned if

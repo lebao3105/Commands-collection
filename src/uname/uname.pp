@@ -86,7 +86,7 @@ begin
     end;
 
     cc.getopts.OptCharHandler := @OptionHandler;
-    cc.getopts.GetLongOpts;
+    cc.getopts.GetOpt;
     writeln;
 end.
 {$pop}

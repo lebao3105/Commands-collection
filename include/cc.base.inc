@@ -63,12 +63,12 @@ generic retn ArrayAppend<T>(var arr: specialize ArrayOf<T>; const val: T);
 
 { For each element in arr, run func }
 generic retn ArrayForEach<T>(
-	const arr: specialize ArrayOf<T>;
+	arr: specialize ArrayOf<T>;
 	const func: specialize FArrayForEachCallback<T>);
 
 { Same as ArrayForEach, but with the current item index being passed into func. }
 generic retn ArrayForEachIndex<T>(
-	const arr: specialize ArrayOf<T>;
+	arr: specialize ArrayOf<T>;
 	const func: specialize FArrayForEachIndexCallback<T>);
 
 { Writes a single space. }

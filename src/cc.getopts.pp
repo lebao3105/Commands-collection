@@ -12,6 +12,7 @@ uses
     cc.logging
     ;
 
+{$push}{$warn 5028 off} // Unused resourcestring
 resourcestring
     CC_VERSION_STR      = 'Commands-Collection (CC) version %s';
     // TRANSLATORS:          OS v  CPU v
@@ -25,6 +26,7 @@ resourcestring
     OPT_NEED_VAL        = 'option %s requires an argument';
     OPT_UNKNOWN         = 'unrecognized option: %s';
     OPT_PAIR_NOT_ENOUGH = 'not enough item for a pair: %d required, got %d';
+{$pop}
 
 {$define ARGA_VERBOSE :=
     (Long: 'verbose'; Kind: EOptKind.FLAG; Short: 'v'; Help: VERBOSE_USAGE)
@@ -38,10 +40,14 @@ resourcestring
     (Long: 'use-pairs'; Kind: EOptKind.FLAG; Short: #0; Help: '')}
 
 {$ifndef PASDOC}
-{$I config.inc}
-{$if defined(ALLOW_PAIRS) and PAIR_NUM < 2}
-    {$error PAIR_NUM is BELOW TWO!}
-{$endif}
+    {$push}{$warn 3177 off} // Uninitialized fields
+        {$I config.inc}
+        {$if defined(ALLOW_PAIRS) and defined(PAIR_NUM)}
+            {$if PAIR_NUM < 2}
+                {$fatal PAIR_NUM is BELOW TWO!}
+            {$endif}
+        {$endif}
+    {$pop}
 {$endif}
 {$I cc.termcolors.inc}
 
@@ -259,14 +265,14 @@ begin
 
         else
             case Long of
-                {$ifdef ALLOW_PAIRS}
                 'use-pairs': begin
+                {$ifdef ALLOW_PAIRS}
                     OptIsLongOnly := false;
                     Result := #0;
                     OptHasPairs := true;
                     goto deinit;
-                end;
                 {$endif}
+                end;
                 else begin
                     Result := Long[1];
                     OptIsLongOnly := true;
@@ -314,8 +320,8 @@ begin
     {$endif}
 end;
 
-    {$ifdef ALLOW_PAIRS}
 fn GetArgPairs: TArrayOfStringDynArray;
+{$if defined(ALLOW_PAIRS) or defined(PASDOC)}
 {$push}{$warn 5093 off}{$warn 5091 off}
 var
     i, j: smallint;
@@ -350,5 +356,8 @@ begin
     return(resp);
 end;
 {$pop}
-    {$endif}
+{$else}
+begin
+end;
+{$endif}
 end.

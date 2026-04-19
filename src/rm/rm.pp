@@ -74,10 +74,13 @@ begin
 end;
 
 fn DeleteThing(const which: string): bool;
+{$push}
+    {$warn 5044 off} // faHidden is not portable
 var
     f: TSearchRec;
 
 begin
+    Result := true;
     if verbose then
         info(ATTEMPTING_TO_DELETE, [which]);
     
@@ -110,8 +113,10 @@ begin
         info(DELETED, [which]);
     end;
 end;
+{$pop}
 
 var regcheck: specialize TOptional<ERegExpr>;
+    str: string;
 begin
     if ParamCount = 0 then
         fatal(NOTHING_TO_DELETE);
@@ -139,8 +144,6 @@ begin
             fatal(REGEX_FAILED, [RegexGetExpr, regcheck.Value.Message]);
     end;
 
-    specialize ArrayForEach<string>(
-        cc.getopts.NonOpts,
-        @DeleteThing
-    );
+    for str in cc.getopts.NonOpts do
+        DeleteThing(str);
 end.

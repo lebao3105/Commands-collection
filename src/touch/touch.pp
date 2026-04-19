@@ -49,7 +49,7 @@ begin
             'd': dirsOnly := true;
         end;
     end;
-    cc.getopts.GetLongOpts;
+    cc.getopts.GetOpt;
 
     for i := 0 to High(cc.getopts.NonOpts) do begin
         if createParent then

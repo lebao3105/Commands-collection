@@ -104,20 +104,17 @@ begin
 		FatalAndTerminate(1, NoProgSpecified);
 	
 	// Create array of arguments
-	GetMem(progArgs, (Length(cc.getopts.NonOpts) + 1) * SizeOf(PChar));
-	for i := 1 to Length(cc.getopts.NonOpts) do
-		progArgs[i] := PChar(cc.getopts.NonOpts[i]);
-	progArgs[Length(cc.getopts.NonOpts) + 1] := Nil;
-
-	if not FileExists(progArgs[0]) then
-		progArgs[0] := PChar(ExeSearch(progArgs[0], GetEnvironmentVariable('PATH')));
+	if not FileExists(cc.getopts.NonOpts[0]) then
+		cc.getopts.NonOpts[0] := ExeSearch(cc.getopts.NonOpts[0], GetEnvironmentVariable('PATH'));
 	
-	if progArgs[0] = '' then
+	if cc.getopts.NonOpts[0] = '' then
 		FatalAndTerminate(1, ExeNotFound, [ cc.getopts.NonOpts[0] ]);
+
+	progArgs := @cc.getopts.NonOpts[0];
 
 	// Create array of environment variables
 	if not cleanEnv then
-		progEnv := ArrayStringToPPChar(SetUnsetDifferences, 0);
+		progEnv := @SetUnsetDifferences[0];
 
 	// Launch.
 	if fpExecVe(progArgs[0], progArgs, progEnv) = -1 then

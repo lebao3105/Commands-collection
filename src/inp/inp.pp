@@ -88,6 +88,6 @@ begin
 			's': caseSensitive := true;
 		end;
 	end;
-	cc.getopts.GetLongOpts;
+	cc.getopts.GetOpt;
     NeedKeyInput;
 end.
