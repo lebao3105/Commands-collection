@@ -1,38 +1,38 @@
-local api_docs_dir = "docs/api/"
+local api_docs_dir = "docs/api"
 
 -- Pasdoc 0.17 introduces a much nicer UI so why not using it
 target("pasdoc")
-	set_kind("binary")
-
+	set_kind("phony")
 	on_build(function (_)
 		-- FIXME:
 		-- Pasdoc does not use the changed FPC (via CC's project options), if there is one.
-		os.execv(find_program("make"), {"-C", "docs/pasdoc", "build-fpc-release"})
+        if not os.isfile("docs/pasdoc/bin/pasdoc") then
+            os.execv(find_program("make"), {"-C", "docs/pasdoc", "build-fpc-release"})
+        end
 	end)
 
 	on_clean(function (_)
 		os.execv(find_program("make"), {"-C", "docs/pasdoc", "clean"})
 	end)
 
-	on_run(function (_)
-		os.run("docs/pasdoc/bin/pasdoc")
-	end)
-
 target("API-docs")
 	set_kind("phony")
 	add_deps("pasdoc")
+    add_installfiles(os.projectdir() .. "/docs/7/cc-*.7", { prefixdir = "share/man/man7" })
 
 	on_clean(function (_)
-		os.rm(api_docs_dir .. "*")
+		os.rm(api_docs_dir .. "/*")
+        os.rm("docs/7/cc-*.7")
 	end)
 
 	on_build(function (target)
-		import("core.project.depend")
-		local args = {}
+		local args = {
+            "-E" .. api_docs_dir,
+            "-X", -- Copyright header
+            "-DPASDOC", "-Iinclude/"
+        }
 
-		if not os.isdir(api_docs_dir) then
-			os.mkdir(api_docs_dir)
-		end
+		os.mkdir(api_docs_dir)
 
 		for line in io.lines("cc.cfg") do
 			if line:startswith("-d") then
@@ -40,25 +40,16 @@ target("API-docs")
 			end
 		end
 
-		table.append(args, "@docs/pasdoc.cfg")
-		table.append(args, target:get("files"))
-		table.append(args, "-X") -- Copyright header
-        table.append(args, "-DPASDOC")
+        table.join2(args, os.files("src/cc.*.pp"))
 
-		-- depend.on_changed(
-		-- 	function ()
-		-- 		os.execv("docs/pasdoc/bin/pasdoc", args)
-		-- 	end,
-		-- 	{ files = target:get("files") }
-		-- )
+        os.execv("docs/pasdoc/bin/pasdoc", args)
+
+        for _, file in ipairs(os.files("docs/7/*.scd")) do
+            local out = "docs/7/cc-" .. path.filename(file):split(".scd")[1] .. ".7"
+            miscs.scdoc_to_groff(file, out)
+        end
 	end)
-
-target("program-docs")
-	set_kind("phony")
-	for _, program in ipairs(programs) do
-		add_deps(program .. "-docs")
-	end
 
 target("docs")
 	set_kind("phony")
-	add_deps("program-docs", "API-docs")
+	add_deps("programs-docs", "API-docs")

@@ -1,11 +1,11 @@
 import("lib.detect.find_program")
 
-function generate_pot(resource_path, outpath)
-    local xgettext = find_program("xgettext")
-    print("Using this RSJ path for " .. resource_path)
+local xgettext = find_program("xgettext")
+local msgmerge = find_program("msgmerge")
+local msgfmt = find_program("msgfmt")
 
+function generate_pot(resource_path, outpath)
     if xgettext == nil then
-        print("Failed to find xgettext!")
         return
     end
 
@@ -24,10 +24,7 @@ function generate_pot(resource_path, outpath)
 end
 
 function merge_po_files(from, to)
-    local msgmerge = find_program("msgmerge")
-
     if msgmerge == nil then
-        print("Failed to find msgmerge!")
         return
     end
 
@@ -39,10 +36,7 @@ function merge_po_files(from, to)
 end
 
 function compile_po_file(from, to)
-    local msgfmt = find_program("msgfmt")
-
     if msgfmt == nil then
-        print("Failed to find msgfmt!")
         return
     end
 
