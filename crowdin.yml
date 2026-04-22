@@ -1,6 +1,33 @@
+commit-message: "i18n: Updates for %language% from Crowdin"
+project_id: 891754
+append_commit_message: false
 files:
   - source: /i18n/cc.pot
     translation: /i18n/%two_letters_code%/cc.po
 
-  - source: /src/*/i18n/cc.pot
-    translation: /src/*/i18n/%two_letters_code%/cc.po
+  - source: /src/calltime/i18n/cc.pot
+    translation: /src/calltime/i18n/%two_letters_code%/cc.po
+
+  - source: /src/dir/i18n/cc.pot
+    translation: /src/dir/i18n/%two_letters_code%/cc.po
+
+  - source: /src/env/i18n/cc.pot
+    translation: /src/env/i18n/%two_letters_code%/cc.po
+
+  - source: /src/inp/i18n/cc.pot
+    translation: /src/inp/i18n/%two_letters_code%/cc.po
+
+  - source: /src/rename/i18n/cc.pot
+    translation: /src/rename/i18n/%two_letters_code%/cc.po
+
+  - source: /src/rm/i18n/cc.pot
+    translation: /src/rm/i18n/%two_letters_code%/cc.po
+
+  - source: /src/touch/i18n/cc.pot
+    translation: /src/touch/i18n/%two_letters_code%/cc.po
+
+  - source: /src/uname/i18n/cc.pot
+    translation: /src/uname/i18n/%two_letters_code%/cc.po
+
+  - source: /src/uptime/i18n/cc.pot
+    translation: /src/uptime/i18n/%two_letters_code%/cc.po
