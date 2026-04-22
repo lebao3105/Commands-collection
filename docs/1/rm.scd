@@ -16,7 +16,7 @@ rm - remove files and directories
 *-d, --dry-run*
 	Show what would be removed without changing anything.
 
-*-x, --filter* PATTERN
+*-x, --filter PATTERN*
 	Filter files by regular expression before removing.
 
 *-r, --recursive*

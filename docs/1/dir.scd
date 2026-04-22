@@ -16,26 +16,26 @@ Use the list option (-l / --list) to obtain a detailed, one-entry-per-line listi
 
 # OPTIONS
 
--l, --list
-Show the output as a list (one entry per line with details).
+*-l, --list*
+	Show the output as a list (one entry per line with details).
 
--a, --all
-Show everything including hidden files and folders (names starting with a dot).
+*-a, --all*
+	Show everything including hidden files and folders (names starting with a dot).
 
--c, --color
-Use colors in the output when supported by the terminal.
+*-c, --color*
+	Use colors in the output when supported by the terminal.
 
--d, --directory
-Only show directories (do not list regular files).
+*-d, --directory*
+	Only show directories (do not list regular files).
 
--i, --ignore PATTERN
-Ignore entities matching PATTERN. The pattern is interpreted as a regular expression (TRegExpr implementation).
+*-i, --ignore PATTERN*
+	Ignore entities matching PATTERN. The pattern is interpreted as a regular expression (TRegExpr implementation).
 
--B, --ignore-backups
-Ignore entries whose names end with a tilde (~) or .bak.
+*-B, --ignore-backups*
+	Ignore entries whose names end with a tilde (~) or .bak.
 
--R, --recursive
-List directory contents recursively.
+*-R, --recursive*
+	List directory contents recursively.
 
 # FILE TYPE CHARACTERS
 Detailed formats encode an entry's kind using a single leading character. This applies to UNIX and Commands-Collection formats.

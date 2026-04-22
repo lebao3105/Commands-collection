@@ -13,5 +13,5 @@ It prints the current date and/or time using a format string compatible with the
 
 # OPTIONS
 
--f, --format STRING
-Specify a custom date/time format string. If omitted a default format is used.
+*-f, --format STRING*
+	Specify a custom date/time format string. If omitted a default format is used.

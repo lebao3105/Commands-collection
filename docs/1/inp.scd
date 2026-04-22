@@ -14,26 +14,26 @@ inp displays a message and waits for a key or input. The program exits with the 
 
 # OPTIONS
 
--c, --message  MESSAGE
-Set a custom message to display.
+*-c, --message  MESSAGE*
+	Set a custom message to display.
 
--d, --hide-input
-Do not echo the keyboard input as it is typed. Characters will not be shown or replaced by placeholders such as "*".
+*-d, --hide-input*
+	Do not echo the keyboard input as it is typed. Characters will not be shown or replaced by placeholders such as "\*".
 
--e, --need-enter
-Require the Enter key after the input character. Use this when you need an explicit confirmation step from the user; it can be combined with other options (for example, prompting for a key and then requiring Enter to verify).
+*-e, --need-enter*
+	Require the Enter key after the input character. Use this when you need an explicit confirmation step from the user; it can be combined with other options (for example, prompting for a key and then requiring Enter to verify).
 
--k, --key  CHARACTER/STRING
-Specify accepted key(s). Can be used multiple times.
+*-k, --key  CHARACTER/STRING*
+	Specify accepted key(s). Can be used multiple times.
 
--l, --loop
-Keep prompting until an accepted key is pressed.
+*-l, --loop*
+	Keep prompting until an accepted key is pressed.
 
--o, --show-availables
-Show the available accepted keys in the prompt.
+*-o, --show-availables*
+	Show the available accepted keys in the prompt.
 
--s, --case-sensitive
-Make key matching case-sensitive.
+*-s, --case-sensitive*
+	Make key matching case-sensitive.
 
 # EXAMPLES
 

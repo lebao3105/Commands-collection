@@ -14,14 +14,14 @@ env prints environment variables or runs a program with modified environment var
 
 # OPTIONS
 
--g, --get VAR
-Print the value of the specified environment variable.
+*-g, --get VAR*
+	Print the value of the specified environment variable.
 
--s, --set VAR=VALUE
-Set the specified environment variable for the executed program.
+*-s, --set VAR=VALUE*
+	Set the specified environment variable for the executed program.
 
--u, --unset VAR
-Unset (remove) the specified environment variable for the executed program.
+*-u, --unset VAR*
+	Unset (remove) the specified environment variable for the executed program.
 
 # EXAMPLES
 

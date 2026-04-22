@@ -14,11 +14,11 @@ uptime prints system uptime and load averages. It can also print raw machine-rea
 
 # OPTIONS
 
--p, --pretty
-Pretty-print the uptime and load information.
+*-p, --pretty*
+	Pretty-print the uptime and load information.
 
--r, --raw
-Print raw, machine-readable values.
+*-r, --raw*
+	Print raw, machine-readable values.
 
--s, --since
-Print the system boot time in a standard date/time format.
+*-s, --since*
+	Print the system boot time in a standard date/time format.
