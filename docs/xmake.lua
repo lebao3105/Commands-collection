@@ -29,7 +29,8 @@ target("API-docs")
 		local args = {
             "-E" .. api_docs_dir,
             "-X", -- Copyright header
-            "-DPASDOC", "-Iinclude/"
+            "-DPASDOC", "-Iinclude/",
+            "@pasdoc.cfg"
         }
 
 		os.mkdir(api_docs_dir)
