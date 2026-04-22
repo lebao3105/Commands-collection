@@ -1,0 +1,67 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid   ""
+msgstr  "Project-Id-Version: PACKAGE VERSION\n"
+        "Report-Msgid-Bugs-To: \n"
+        "POT-Creation-Date: 2026-04-22 16:23+0700\n"
+        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+        "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+        "Language-Team: LANGUAGE <LL@li.org>\n"
+        "Language: \n"
+        "MIME-Version: 1.0\n"
+        "Content-Type: text/plain; charset=UTF-8\n"
+        "Content-Transfer-Encoding: 8bit\n"
+
+#: cc.regex.regex_failed
+#, object-pascal-format
+msgid   "%s: regular expression failed: %s"
+msgstr  ""
+
+#: cc.regex.regex_failed_loc
+#, object-pascal-format
+msgid   "%s: regular expression failed at index %d : %s"
+msgstr  ""
+
+#: cc.pager.paged_view
+msgid   "-- Paged view. Up/down arrows = scroll. --"
+msgstr  ""
+
+#: cc.pager.console_too_small
+msgid   "The console is too small. The content will go nuts."
+msgstr  ""
+
+#: cc.logging.sinfo
+msgid   "info:"
+msgstr  ""
+
+#: cc.logging.sdebug
+msgid   "debug:"
+msgstr  ""
+
+#: cc.logging.swarning
+msgid   "warning:"
+msgstr  ""
+
+#: cc.logging.serror
+msgid   "error:"
+msgstr  ""
+
+#: cc.logging.sfatal
+msgid   "fatal:"
+msgstr  ""
+
+#: cc.logging.sconfirm
+msgid   "confirm:"
+msgstr  ""
+
+#: cc.base.not_ok_result
+msgid   "Result is NOT OK!"
+msgstr  ""
+
+#: cc.base.not_error_result
+msgid   "Result IS fine!"
+msgstr  ""
