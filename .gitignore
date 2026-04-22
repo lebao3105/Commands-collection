@@ -34,7 +34,7 @@ compile_commands.json
 *.rsj
 
 # Backup files
-*.~
+*~
 *.bak
 
 # Man pages

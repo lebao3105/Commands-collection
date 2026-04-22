@@ -13,7 +13,7 @@ programs = {}
 option("output-prefix")
     set_showmenu(true)
     set_description("Prefix for built binaries - useful for co-use with ones like GNU Coreutils")
-    set_default("cc-")
+    set_default("")
 
 option("fpc-conf")
 	set_showmenu(true)

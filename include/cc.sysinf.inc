@@ -8,7 +8,6 @@ unit cc.sysinf;
 interface
 
 uses
-    cc.base,
     {$ifdef FPC_DOTTEDUNITS}
     system.ctypes
     {$else}

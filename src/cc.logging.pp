@@ -17,6 +17,14 @@ uses
     cc.console // isATerminal
     ;
 
+resourcestring
+    SINFO         = 'info:';
+    SDEBUG        = 'debug:';
+    SWARNING      = 'warning:';
+    SERROR        = 'error:';
+    SFATAL        = 'fatal:';
+    SCONFIRM      = 'confirm:';
+
 fn GetLastErrno: longint; inline;
 begin
     GetLastErrno := FpGetErrno;
@@ -32,7 +40,7 @@ end;
 
 retn Debug(const message: string); overload;
 begin
-    Logging_Internal(Magenta, 'debug:', message);
+    Logging_Internal(Magenta, SDEBUG, message);
 end;
 
 retn Debug(const message: string; args: array of const); overload;
@@ -44,7 +52,7 @@ end;
 
 retn Info(const message: string); overload;
 begin
-    Logging_Internal(Blue, 'info:', message);
+    Logging_Internal(Blue, SINFO, message);
 end;
 
 retn Info(const message: string; args: array of const); overload;
@@ -56,7 +64,7 @@ end;
 
 retn Warning(const message: string); overload;
 begin
-    Logging_Internal(Yellow, 'warning:', message);
+    Logging_Internal(Yellow, SWARNING, message);
 end;
 
 retn Warning(const message: string; args: array of const); overload;
@@ -68,7 +76,7 @@ end;
 
 retn Error(const message: string); overload;
 begin
-    Logging_Internal(Red, 'error:', message);
+    Logging_Internal(Red, SERROR, message);
 end;
 
 retn Error(const message: string; args: array of const); overload;
@@ -81,7 +89,7 @@ end;
 fn Confirmation(const message: string; args: array of const): char;
 begin
     writeln(Format(message, args));
-    write(ANSI_CODE_GREEN + ANSI_CODE_BOLD + 'confirm: ' + ANSI_CODE_RESET +
+    write(ANSI_CODE_GREEN + ANSI_CODE_BOLD + SCONFIRM + ANSI_CODE_RESET +
           Format(message, args) + ' [yYnNaA]: ');
     readln(Confirmation);
 end;
@@ -90,7 +98,7 @@ end;
 
 retn Fatal(const message: string); overload;
 begin
-    Logging_Internal(Red, 'fatal:', message);
+    Logging_Internal(Red, SFATAL, message);
 end;
 
 retn Fatal(const message: string; args: array of const); overload;
