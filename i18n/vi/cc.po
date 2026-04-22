@@ -1,49 +1,64 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: commands-collection\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: commands-collection\n"
+"X-Crowdin-Project-ID: 891754\n"
+"X-Crowdin-Language: vi\n"
+"X-Crowdin-File: /main/i18n/cc.pot\n"
+"X-Crowdin-File-ID: 80\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: Vietnamese\n"
+"Language: vi_VN\n"
+"PO-Revision-Date: 2026-04-22 13:02\n"
+
 #: cc.regex.regex_failed
 #, object-pascal-format
-msgid   "%s: regular expression failed: %s"
-msgstr  ""
+msgid "%s: regular expression failed: %s"
+msgstr ""
 
 #: cc.regex.regex_failed_loc
 #, object-pascal-format
-msgid   "%s: regular expression failed at index %d : %s"
-msgstr  ""
+msgid "%s: regular expression failed at index %d : %s"
+msgstr ""
 
 #: cc.pager.paged_view
-msgid   "-- Paged view. Up/down arrows = scroll. --"
-msgstr  ""
+msgid "-- Paged view. Up/down arrows = scroll. --"
+msgstr ""
 
 #: cc.pager.console_too_small
-msgid   "The console is too small. The content will go nuts."
-msgstr  ""
+msgid "The console is too small. The content will go nuts."
+msgstr ""
 
 #: cc.logging.sinfo
-msgid   "info:"
-msgstr  ""
+msgid "info:"
+msgstr ""
 
 #: cc.logging.sdebug
-msgid   "debug:"
-msgstr  ""
+msgid "debug:"
+msgstr ""
 
 #: cc.logging.swarning
-msgid   "warning:"
-msgstr  ""
+msgid "warning:"
+msgstr ""
 
 #: cc.logging.serror
-msgid   "error:"
-msgstr  ""
+msgid "error:"
+msgstr ""
 
 #: cc.logging.sfatal
-msgid   "fatal:"
-msgstr  ""
+msgid "fatal:"
+msgstr ""
 
 #: cc.logging.sconfirm
-msgid   "confirm:"
-msgstr  ""
+msgid "confirm:"
+msgstr ""
 
 #: cc.base.not_ok_result
-msgid   "Result is NOT OK!"
-msgstr  ""
+msgid "Result is NOT OK!"
+msgstr ""
 
 #: cc.base.not_error_result
-msgid   "Result IS fine!"
-msgstr  ""
+msgid "Result IS fine!"
+msgstr ""
+
