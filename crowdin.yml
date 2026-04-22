@@ -1,5 +1,6 @@
 files:
-  - source: /src/*.rsj
+  - source: /i18n/cc.pot
     translation: /i18n/%two_letters_code%/cc.po
-  - source: /src/*/i18n/*.rsj
+
+  - source: /src/*/i18n/cc.pot
     translation: /src/*/i18n/%two_letters_code%/cc.po
