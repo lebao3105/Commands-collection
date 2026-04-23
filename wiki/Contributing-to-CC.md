@@ -227,8 +227,6 @@ This will generate HTMLs in `docs/api`.
 
 # Translations
 
-> Note: Once again, this is implemented in the feat/deC branch.
-
 ## In Pascal
 
 In Pascal, strings are put into `resourcestring`, which will be later put into a `.rsj` file.
@@ -239,5 +237,4 @@ Related tasks can be seen via `xmake -h`.
 
 ## For translators
 
-Translate `.po` (NOT `.pot`!) files in i18n/.
-
+Go to this site: https://crowdin.com/project/commands-collection

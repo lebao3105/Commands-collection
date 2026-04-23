@@ -1,5 +1,10 @@
 # Commands-collection
 
+[![Crowdin](https://badges.crowdin.net/commands-collection/localized.svg)](https://crowdin.com/project/commands-collection)
+
+> If you are seeing this on GitHub, I have to remind this once more:
+> This GitHub repository is a mirror, which does not accept any pull requests other than ones from Crowdin (as I don't have any other free intergration slot) and maybe more.
+
 A collection of system commands written in Free Pascal and (maybe) C.
 
 They are:
@@ -10,7 +15,7 @@ They are:
 
 They are NOT:
 
-* Copycats (although some are intended to behave like original counterparts)
+* Copycats (although some are made to behave like original counterparts)
 * Made to be laughed at
 * Suitable for daily-use
 * Fully optimized (atm)
@@ -35,13 +40,3 @@ Read the [Wiki](./wiki).
 * Procps-ng [source code](https://gitlab.com/procps-ng/procps)
 * Free Pascal Compiler's [packages](https://gitlab.com/freepascal.org/fpc/source/-/tree/main/packages?ref_type=heads).
 * [TRegExpr](https://github.com/andgineer/TRegExpr)
-
-## TODO
-
-* Complete existing commands
-* Add man pages
-* Fix CI uploading - it's never been done properly
-* Add tests
-* Improve the program's performance
-* Handle errors nicely
-* Unicode support
