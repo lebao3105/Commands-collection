@@ -82,6 +82,7 @@ begin
     if ParamCount = 0 then
     begin
         OptionHandler('s');
+        writeln;
         exit;
     end;
 
