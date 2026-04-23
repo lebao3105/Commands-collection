@@ -1,49 +1,96 @@
-#: cc.regex.regex_failed
+msgid ""
+msgstr ""
+"Project-Id-Version: commands-collection\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: commands-collection\n"
+"X-Crowdin-Project-ID: 891754\n"
+"X-Crowdin-Language: vi\n"
+"X-Crowdin-File: /main/src/inp/i18n/cc.pot\n"
+"X-Crowdin-File-ID: 94\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: Vietnamese\n"
+"Language: vi_VN\n"
+"PO-Revision-Date: 2026-04-23 10:05\n"
+
+#: cc.getopts.msg_des
+msgid "Custom message to show instead of Press any key/Enter to continue"
+msgstr ""
+
+#: cc.getopts.loop_des
+msgid "Do not quit until a valid input is sent"
+msgstr ""
+
+#: cc.getopts.hideokojima_des
+msgid "Hide inputs from the user"
+msgstr ""
+
+#: cc.getopts.reqchar_des
+msgid "Specify valid characters"
+msgstr ""
+
+#: cc.getopts.reqenter_des
+msgid "Require Enter to send the input"
+msgstr ""
+
+#: cc.getopts.showavai_des
+msgid "Show the user -k value"
+msgstr ""
+
+#: cc.getopts.casesens_des
+msgid "Make the input case-sensitive"
+msgstr ""
+
+#: cc.getopts.program_desc
+msgid "Asks for user input."
+msgstr ""
+
+#: cc.getopts.cc_version_str
 #, object-pascal-format
-msgid   "%s: regular expression failed: %s"
-msgstr  ""
+msgid "Commands-Collection (CC) version %s"
+msgstr ""
 
-#: cc.regex.regex_failed_loc
+#: cc.getopts.cc_target_str
 #, object-pascal-format
-msgid   "%s: regular expression failed at index %d : %s"
-msgstr  ""
+msgid "Built for %s on %s using FPC %s"
+msgstr ""
 
-#: cc.pager.paged_view
-msgid   "-- Paged view. Up/down arrows = scroll. --"
-msgstr  ""
+#: cc.getopts.cc_build_date
+#, object-pascal-format
+msgid "Built on %s"
+msgstr ""
 
-#: cc.pager.console_too_small
-msgid   "The console is too small. The content will go nuts."
-msgstr  ""
+#: cc.getopts.help_usage
+msgid "Show this help and exit"
+msgstr ""
 
-#: cc.logging.sinfo
-msgid   "info:"
-msgstr  ""
+#: cc.getopts.version_usage
+msgid "Show the version of this program and exit"
+msgstr ""
 
-#: cc.logging.sdebug
-msgid   "debug:"
-msgstr  ""
+#: cc.getopts.verbose_usage
+msgid "Add verbosity"
+msgstr ""
 
-#: cc.logging.swarning
-msgid   "warning:"
-msgstr  ""
+#: cc.getopts.undocumented
+msgid "*Undocumented*"
+msgstr ""
 
-#: cc.logging.serror
-msgid   "error:"
-msgstr  ""
+#: cc.getopts.opt_need_val
+#, object-pascal-format
+msgid "option %s requires an argument"
+msgstr ""
 
-#: cc.logging.sfatal
-msgid   "fatal:"
-msgstr  ""
+#: cc.getopts.opt_unknown
+#, object-pascal-format
+msgid "unrecognized option: %s"
+msgstr ""
 
-#: cc.logging.sconfirm
-msgid   "confirm:"
-msgstr  ""
+#: cc.getopts.opt_pair_not_enough
+#, object-pascal-format
+msgid "not enough item for a pair: %d required, got %d"
+msgstr ""
 
-#: cc.base.not_ok_result
-msgid   "Result is NOT OK!"
-msgstr  ""
+#: inp.press_any_key
+msgid "Press any key to continue..."
+msgstr ""
 
-#: cc.base.not_error_result
-msgid   "Result IS fine!"
-msgstr  ""
