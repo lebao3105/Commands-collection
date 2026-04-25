@@ -1,86 +1,43 @@
-msgid ""
-msgstr ""
-"Project-Id-Version: commands-collection\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Crowdin-Project: commands-collection\n"
-"X-Crowdin-Project-ID: 891754\n"
-"X-Crowdin-Language: vi\n"
-"X-Crowdin-File: /main/src/env/i18n/cc.pot\n"
-"X-Crowdin-File-ID: 90\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Language-Team: Vietnamese\n"
-"Language: vi_VN\n"
-"PO-Revision-Date: 2026-04-23 10:05\n"
+#: env.clean_des i18n.clean_des
+msgid   "Clean environment, containing only variables from -s"
+msgstr  ""
 
-#: env.exenotfound
+#: env.exenotfound i18n.exenotfound
 #, object-pascal-format
-msgid "%s not found - any typo here?"
-msgstr ""
+msgid   "%s not found - any typo here?"
+msgstr  ""
 
-#: env.processexit
+#: env.get_des i18n.get_des
+msgid   "Get environment variables"
+msgstr  ""
+
+#: env.noprogspecified i18n.noprogspecified
+msgid   "No program was specified. This program will not set variables for "
+        "your current shell/program instance and even user/system-wide."
+msgstr  ""
+
+#: env.processexit i18n.processexit
 #, object-pascal-format
-msgid "Process exited with the following message: %s"
-msgstr ""
+msgid   "Process exited with the following message: %s"
+msgstr  ""
 
-#: cc.getopts.get_des
-msgid "Get environment variables"
-msgstr ""
+#: env.program_bonus_help i18n.program_bonus_help
+msgid   "If no argument is specified, all existing environment variables will "
+        "be printed.\r\n"
+        "Otherwise, a program must be specified.\r\n"
+        "Unless otherwise specified via -c, all existing variables will not "
+        "be removed for the upcoming process."
+msgstr  ""
 
-#: cc.getopts.set_des
-msgid "Set environment variables"
-msgstr ""
+#: env.program_desc i18n.program_desc
+msgid   "Launch processes with specified (and maybe modified) environment "
+        "variables."
+msgstr  ""
 
-#: cc.getopts.unset_des
-msgid "Unset environment variables"
-msgstr ""
+#: env.set_des i18n.set_des
+msgid   "Set environment variables"
+msgstr  ""
 
-#: cc.getopts.clean_des
-msgid "Clean environment, containing only variables from -s"
-msgstr ""
-
-#: cc.getopts.cc_version_str
-#, object-pascal-format
-msgid "Commands-Collection (CC) version %s"
-msgstr ""
-
-#: cc.getopts.cc_target_str
-#, object-pascal-format
-msgid "Built for %s on %s using FPC %s"
-msgstr ""
-
-#: cc.getopts.cc_build_date
-#, object-pascal-format
-msgid "Built on %s"
-msgstr ""
-
-#: cc.getopts.help_usage
-msgid "Show this help and exit"
-msgstr ""
-
-#: cc.getopts.version_usage
-msgid "Show the version of this program and exit"
-msgstr ""
-
-#: cc.getopts.verbose_usage
-msgid "Add verbosity"
-msgstr ""
-
-#: cc.getopts.undocumented
-msgid "*Undocumented*"
-msgstr ""
-
-#: cc.getopts.opt_need_val
-#, object-pascal-format
-msgid "option %s requires an argument"
-msgstr ""
-
-#: cc.getopts.opt_unknown
-#, object-pascal-format
-msgid "unrecognized option: %s"
-msgstr ""
-
-#: cc.getopts.opt_pair_not_enough
-#, object-pascal-format
-msgid "not enough item for a pair: %d required, got %d"
-msgstr ""
-
+#: env.unset_des i18n.unset_des
+msgid   "Unset environment variables"
+msgstr  ""

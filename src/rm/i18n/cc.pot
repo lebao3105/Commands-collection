@@ -1,121 +1,57 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
-msgid   ""
-msgstr  "Project-Id-Version: PACKAGE VERSION\n"
-        "Report-Msgid-Bugs-To: \n"
-        "POT-Creation-Date: 2026-04-22 18:56+0700\n"
-        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-        "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-        "Language-Team: LANGUAGE <LL@li.org>\n"
-        "Language: \n"
-        "MIME-Version: 1.0\n"
-        "Content-Type: text/plain; charset=UTF-8\n"
-        "Content-Transfer-Encoding: 8bit\n"
-
-#: rm.attempting_to_delete
+#: i18n.attempting_to_delete rm.attempting_to_delete
 #, object-pascal-format
 msgid   "Attempting to delete %s..."
 msgstr  ""
 
-#: rm.delete_confirmation
+#: i18n.delete_confirmation rm.delete_confirmation
 #, object-pascal-format
 msgid   "Do you really want to remove %s? [yYnNaA] "
 msgstr  ""
 
-#: rm.nothing_to_delete
-msgid   "Nothing to sacrifice."
-msgstr  ""
-
-#: rm.failed_to_delete
-#, object-pascal-format
-msgid   "Failed to delete %s: %s"
-msgstr  ""
-
-#: rm.deleted
+#: i18n.deleted rm.deleted
 #, object-pascal-format
 msgid   "Deleted %s."
 msgstr  ""
 
-#: rm.non_existant
-#, object-pascal-format
-msgid   "%s does not exist"
+#: i18n.dry_run_des rm.dry_run_des
+msgid   "Do not actually remove stuff"
 msgstr  ""
 
-#: rm.filtered
+#: i18n.failed_to_delete rm.failed_to_delete
+#, object-pascal-format
+msgid   "Failed to delete %s: %s"
+msgstr  ""
+
+#: i18n.filter_des rm.filter_des
+msgid   "Filter out stuff to delete / keep using regular expressions"
+msgstr  ""
+
+#: i18n.filtered rm.filtered
 #, object-pascal-format
 msgid   "Filtered out %s."
 msgstr  ""
 
-#: cc.getopts.ignore_des
+#: i18n.ignore_des rm.ignore_des
 msgid   "Ignore entities whose name match the -x pattern"
 msgstr  ""
 
-#: cc.getopts.dry_run_des
-msgid   "Do not actually remove stuff"
-msgstr  ""
-
-#: cc.getopts.filter_des
-msgid   "Filter out stuff to delete / keep using regular expressions"
-msgstr  ""
-
-#: cc.getopts.recursive_des
-msgid   "Remove recursively"
-msgstr  ""
-
-#: cc.getopts.keep_going_des
+#: i18n.keep_going_des rm.keep_going_des
 msgid   "Ignore errors"
 msgstr  ""
 
-#: cc.getopts.program_desc
+#: i18n.non_existant rm.non_existant
+#, object-pascal-format
+msgid   "%s does not exist"
+msgstr  ""
+
+#: i18n.nothing_to_delete rm.nothing_to_delete
+msgid   "Nothing to sacrifice."
+msgstr  ""
+
+#: i18n.program_desc rm.program_desc
 msgid   "Removes files and directories"
 msgstr  ""
 
-#: cc.getopts.cc_version_str
-#, object-pascal-format
-msgid   "Commands-Collection (CC) version %s"
-msgstr  ""
-
-#: cc.getopts.cc_target_str
-#, object-pascal-format
-msgid   "Built for %s on %s using FPC %s"
-msgstr  ""
-
-#: cc.getopts.cc_build_date
-#, object-pascal-format
-msgid   "Built on %s"
-msgstr  ""
-
-#: cc.getopts.help_usage
-msgid   "Show this help and exit"
-msgstr  ""
-
-#: cc.getopts.version_usage
-msgid   "Show the version of this program and exit"
-msgstr  ""
-
-#: cc.getopts.verbose_usage
-msgid   "Add verbosity"
-msgstr  ""
-
-#: cc.getopts.undocumented
-msgid   "*Undocumented*"
-msgstr  ""
-
-#: cc.getopts.opt_need_val
-#, object-pascal-format
-msgid   "option %s requires an argument"
-msgstr  ""
-
-#: cc.getopts.opt_unknown
-#, object-pascal-format
-msgid   "unrecognized option: %s"
-msgstr  ""
-
-#: cc.getopts.opt_pair_not_enough
-#, object-pascal-format
-msgid   "not enough item for a pair: %d required, got %d"
+#: i18n.recursive_des rm.recursive_des
+msgid   "Remove recursively"
 msgstr  ""

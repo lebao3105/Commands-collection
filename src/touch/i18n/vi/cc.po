@@ -1,96 +1,35 @@
-msgid ""
-msgstr ""
-"Project-Id-Version: commands-collection\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Crowdin-Project: commands-collection\n"
-"X-Crowdin-Project-ID: 891754\n"
-"X-Crowdin-Language: vi\n"
-"X-Crowdin-File: /main/src/touch/i18n/cc.pot\n"
-"X-Crowdin-File-ID: 88\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Language-Team: Vietnamese\n"
-"Language: vi_VN\n"
-"PO-Revision-Date: 2026-04-23 10:05\n"
-
-#: touch.nothing_to_create
-msgid "Nothing to create."
-msgstr ""
-
-#: touch.creating_stuff
+#: i18n.already_exists touch.already_exists
 #, object-pascal-format
-msgid "Creating %s..."
-msgstr ""
+msgid   "%s already exists"
+msgstr  ""
 
-#: touch.created_stuff
+#: i18n.created_stuff touch.created_stuff
 #, object-pascal-format
-msgid "Created %s."
-msgstr ""
+msgid   "Created %s."
+msgstr  ""
 
-#: touch.failed_to_create
+#: i18n.creating_stuff touch.creating_stuff
 #, object-pascal-format
-msgid "Failed to create %s: %s"
-msgstr ""
+msgid   "Creating %s..."
+msgstr  ""
 
-#: touch.already_exists
+#: i18n.dirs_des touch.dirs_des
+msgid   "Create directories ONLY"
+msgstr  ""
+
+#: i18n.failed_to_create touch.failed_to_create
 #, object-pascal-format
-msgid "%s already exists"
-msgstr ""
+msgid   "Failed to create %s: %s"
+msgstr  ""
 
-#: cc.getopts.parent_des
-msgid "Create parent directories if needed"
-msgstr ""
+#: i18n.nothing_to_create touch.nothing_to_create
+msgid   "Nothing to create."
+msgstr  ""
 
-#: cc.getopts.dirs_des
-msgid "Create directories ONLY"
-msgstr ""
+#: i18n.parent_des touch.parent_des
+msgid   "Create parent directories if needed"
+msgstr  ""
 
-#: cc.getopts.program_desc
-msgid "Creates files and directories"
-msgstr ""
-
-#: cc.getopts.cc_version_str
-#, object-pascal-format
-msgid "Commands-Collection (CC) version %s"
-msgstr ""
-
-#: cc.getopts.cc_target_str
-#, object-pascal-format
-msgid "Built for %s on %s using FPC %s"
-msgstr ""
-
-#: cc.getopts.cc_build_date
-#, object-pascal-format
-msgid "Built on %s"
-msgstr ""
-
-#: cc.getopts.help_usage
-msgid "Show this help and exit"
-msgstr ""
-
-#: cc.getopts.version_usage
-msgid "Show the version of this program and exit"
-msgstr ""
-
-#: cc.getopts.verbose_usage
-msgid "Add verbosity"
-msgstr ""
-
-#: cc.getopts.undocumented
-msgid "*Undocumented*"
-msgstr ""
-
-#: cc.getopts.opt_need_val
-#, object-pascal-format
-msgid "option %s requires an argument"
-msgstr ""
-
-#: cc.getopts.opt_unknown
-#, object-pascal-format
-msgid "unrecognized option: %s"
-msgstr ""
-
-#: cc.getopts.opt_pair_not_enough
-#, object-pascal-format
-msgid "not enough item for a pair: %d required, got %d"
-msgstr ""
-
+#: i18n.program_desc touch.program_desc
+msgid   "Creates files and directories"
+msgstr  ""

@@ -1,58 +1,27 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
-msgid   ""
-msgstr  "Project-Id-Version: PACKAGE VERSION\n"
-        "Report-Msgid-Bugs-To: \n"
-        "POT-Creation-Date: 2026-04-22 18:56+0700\n"
-        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-        "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-        "Language-Team: LANGUAGE <LL@li.org>\n"
-        "Language: \n"
-        "MIME-Version: 1.0\n"
-        "Content-Type: text/plain; charset=UTF-8\n"
-        "Content-Transfer-Encoding: 8bit\n"
-
-#: env.noprogspecified
-msgid   "No program was specified. This program will not set variables for "
-        "your current shell/program instance and even user/system-wide."
+#: env.clean_des i18n.clean_des
+msgid   "Clean environment, containing only variables from -s"
 msgstr  ""
 
-#: env.exenotfound
+#: env.exenotfound i18n.exenotfound
 #, object-pascal-format
 msgid   "%s not found - any typo here?"
 msgstr  ""
 
-#: env.processexit
+#: env.get_des i18n.get_des
+msgid   "Get environment variables"
+msgstr  ""
+
+#: env.noprogspecified i18n.noprogspecified
+msgid   "No program was specified. This program will not set variables for "
+        "your current shell/program instance and even user/system-wide."
+msgstr  ""
+
+#: env.processexit i18n.processexit
 #, object-pascal-format
 msgid   "Process exited with the following message: %s"
 msgstr  ""
 
-#: cc.getopts.get_des
-msgid   "Get environment variables"
-msgstr  ""
-
-#: cc.getopts.set_des
-msgid   "Set environment variables"
-msgstr  ""
-
-#: cc.getopts.unset_des
-msgid   "Unset environment variables"
-msgstr  ""
-
-#: cc.getopts.clean_des
-msgid   "Clean environment, containing only variables from -s"
-msgstr  ""
-
-#: cc.getopts.program_desc
-msgid   "Launch processes with specified (and maybe modified) environment "
-        "variables."
-msgstr  ""
-
-#: cc.getopts.program_bonus_help
+#: env.program_bonus_help i18n.program_bonus_help
 msgid   "If no argument is specified, all existing environment variables will "
         "be printed.\r\n"
         "Otherwise, a program must be specified.\r\n"
@@ -60,48 +29,15 @@ msgid   "If no argument is specified, all existing environment variables will "
         "be removed for the upcoming process."
 msgstr  ""
 
-#: cc.getopts.cc_version_str
-#, object-pascal-format
-msgid   "Commands-Collection (CC) version %s"
+#: env.program_desc i18n.program_desc
+msgid   "Launch processes with specified (and maybe modified) environment "
+        "variables."
 msgstr  ""
 
-#: cc.getopts.cc_target_str
-#, object-pascal-format
-msgid   "Built for %s on %s using FPC %s"
+#: env.set_des i18n.set_des
+msgid   "Set environment variables"
 msgstr  ""
 
-#: cc.getopts.cc_build_date
-#, object-pascal-format
-msgid   "Built on %s"
-msgstr  ""
-
-#: cc.getopts.help_usage
-msgid   "Show this help and exit"
-msgstr  ""
-
-#: cc.getopts.version_usage
-msgid   "Show the version of this program and exit"
-msgstr  ""
-
-#: cc.getopts.verbose_usage
-msgid   "Add verbosity"
-msgstr  ""
-
-#: cc.getopts.undocumented
-msgid   "*Undocumented*"
-msgstr  ""
-
-#: cc.getopts.opt_need_val
-#, object-pascal-format
-msgid   "option %s requires an argument"
-msgstr  ""
-
-#: cc.getopts.opt_unknown
-#, object-pascal-format
-msgid   "unrecognized option: %s"
-msgstr  ""
-
-#: cc.getopts.opt_pair_not_enough
-#, object-pascal-format
-msgid   "not enough item for a pair: %d required, got %d"
+#: env.unset_des i18n.unset_des
+msgid   "Unset environment variables"
 msgstr  ""

@@ -1,99 +1,63 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
-msgid   ""
-msgstr  "Project-Id-Version: PACKAGE VERSION\n"
-        "Report-Msgid-Bugs-To: \n"
-        "POT-Creation-Date: 2026-04-22 18:56+0700\n"
-        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-        "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-        "Language-Team: LANGUAGE <LL@li.org>\n"
-        "Language: \n"
-        "MIME-Version: 1.0\n"
-        "Content-Type: text/plain; charset=UTF-8\n"
-        "Content-Transfer-Encoding: 8bit\n"
-
-#: dir.i18n.stat_failed
-#, object-pascal-format
-msgid   "failed to stat %s: %s"
+#: i18n.all_des
+msgid   "Show everything, even hidden entries. Has exceptions."
 msgstr  ""
 
-#: dir.i18n.permission_denied
-#, object-pascal-format
-msgid   "%s: permission denied"
+#: i18n.color_des
+msgid   "Colorize the output"
 msgstr  ""
 
-#: dir.i18n.open_dir_failed
-#, object-pascal-format
-msgid   "failed to open directory %s: %s"
+#: i18n.dir_only_des
+msgid   "Only show directories"
 msgstr  ""
 
-#: dir.i18n.files_count
-#, object-pascal-format
-msgid   "%u file(s)"
-msgstr  ""
-
-#: dir.i18n.dirs_count
+#: i18n.dirs_count
 #, object-pascal-format
 msgid   "%u dir(s)"
 msgstr  ""
 
-#: dir.i18n.ignored_count
+#: i18n.files_count
 #, object-pascal-format
-msgid   "%u ignored"
+msgid   "%u file(s)"
 msgstr  ""
 
-#: dir.i18n.statfail_count
-#, object-pascal-format
-msgid   "%u failed to stat()"
-msgstr  ""
-
-#: dir.i18n.free_space
+#: i18n.free_space
 #, object-pascal-format
 msgid   "%s free"
 msgstr  ""
 
-#: dir.i18n.invalid_column
+#: i18n.ignore_bck_des
+msgid   "Ignore entities whose name end with ~ or .bak"
+msgstr  ""
+
+#: i18n.ignore_des
+msgid   "Use regular expression to skip entities"
+msgstr  ""
+
+#: i18n.ignored_count
+#, object-pascal-format
+msgid   "%u ignored"
+msgstr  ""
+
+#: i18n.invalid_column
 #, object-pascal-format
 msgid   "%s: unknown column type"
 msgstr  ""
 
-#: cc.getopts.list_des
+#: i18n.list_des
 msgid   "Show the output as a list"
 msgstr  ""
 
-#: cc.getopts.all_des
-msgid   "Show everything, even hidden entries. Has exceptions."
+#: i18n.open_dir_failed
+#, object-pascal-format
+msgid   "failed to open directory %s: %s"
 msgstr  ""
 
-#: cc.getopts.color_des
-msgid   "Colorize the output"
+#: i18n.permission_denied
+#, object-pascal-format
+msgid   "%s: permission denied"
 msgstr  ""
 
-#: cc.getopts.dir_only_des
-msgid   "Only show directories"
-msgstr  ""
-
-#: cc.getopts.ignore_des
-msgid   "Use regular expression to skip entities"
-msgstr  ""
-
-#: cc.getopts.ignore_bck_des
-msgid   "Ignore entities whose name end with ~ or .bak"
-msgstr  ""
-
-#: cc.getopts.recursive_des
-msgid   "List stuff, recursively"
-msgstr  ""
-
-#: cc.getopts.program_desc
-msgid   "Iterate directories."
-msgstr  ""
-
-#: cc.getopts.program_bonus_help
+#: i18n.program_bonus_help
 msgid   "Ignore pattern is a regular expression which is used to filter out "
         "stuff using their name.\r\n"
         "If -B is used, entities with ~ or .bak suffix will be ignored.\r\n"
@@ -115,48 +79,20 @@ msgid   "Ignore pattern is a regular expression which is used to filter out "
         "Check dir(5) manual page for more informations."
 msgstr  ""
 
-#: cc.getopts.cc_version_str
+#: i18n.program_desc
+msgid   "Iterate directories."
+msgstr  ""
+
+#: i18n.recursive_des
+msgid   "List stuff, recursively"
+msgstr  ""
+
+#: i18n.stat_failed
 #, object-pascal-format
-msgid   "Commands-Collection (CC) version %s"
+msgid   "failed to stat %s: %s"
 msgstr  ""
 
-#: cc.getopts.cc_target_str
+#: i18n.statfail_count
 #, object-pascal-format
-msgid   "Built for %s on %s using FPC %s"
-msgstr  ""
-
-#: cc.getopts.cc_build_date
-#, object-pascal-format
-msgid   "Built on %s"
-msgstr  ""
-
-#: cc.getopts.help_usage
-msgid   "Show this help and exit"
-msgstr  ""
-
-#: cc.getopts.version_usage
-msgid   "Show the version of this program and exit"
-msgstr  ""
-
-#: cc.getopts.verbose_usage
-msgid   "Add verbosity"
-msgstr  ""
-
-#: cc.getopts.undocumented
-msgid   "*Undocumented*"
-msgstr  ""
-
-#: cc.getopts.opt_need_val
-#, object-pascal-format
-msgid   "option %s requires an argument"
-msgstr  ""
-
-#: cc.getopts.opt_unknown
-#, object-pascal-format
-msgid   "unrecognized option: %s"
-msgstr  ""
-
-#: cc.getopts.opt_pair_not_enough
-#, object-pascal-format
-msgid   "not enough item for a pair: %d required, got %d"
+msgid   "%u failed to stat()"
 msgstr  ""

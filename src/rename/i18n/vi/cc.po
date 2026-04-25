@@ -1,115 +1,62 @@
-msgid ""
-msgstr ""
-"Project-Id-Version: commands-collection\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Crowdin-Project: commands-collection\n"
-"X-Crowdin-Project-ID: 891754\n"
-"X-Crowdin-Language: vi\n"
-"X-Crowdin-File: /main/src/rename/i18n/cc.pot\n"
-"X-Crowdin-File-ID: 96\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Language-Team: Vietnamese\n"
-"Language: vi_VN\n"
-"PO-Revision-Date: 2026-04-23 10:05\n"
+#: i18n.bulk_des rename.bulk_des
+msgid   "Replace all occurrences"
+msgstr  ""
 
-#: rename.renamed_to
+#: i18n.confirm rename.confirm
 #, object-pascal-format
-msgid "Renamed %s to %s"
-msgstr ""
+msgid   "Rename %s to %s? [ynaq]"
+msgstr  ""
 
-#: rename.rename_fail
+#: i18n.dry_run_des rename.dry_run_des
+msgid   "Do not actually make changes"
+msgstr  ""
+
+#: i18n.ign_exists_des rename.ign_exists_des
+msgid   "Ignore existing files"
+msgstr  ""
+
+#: i18n.interactive_des rename.interactive_des
+msgid   "Be interactive"
+msgstr  ""
+
+#: i18n.keep_attrs_des rename.keep_attrs_des
+msgid   "Keep attributes"
+msgstr  ""
+
+#: i18n.last_occ_des rename.last_occ_des
+msgid   "Replace only the last occurrence"
+msgstr  ""
+
+#: i18n.opposites_des rename.opposites_des
+msgid   "Operate on opposite matches"
+msgstr  ""
+
+#: i18n.program_bonus_help rename.program_bonus_help
+msgid   "-b matches all occurences of the pattern, automatically omitting -r."
+        "\r\n"
+        "-p matches all occurences that do NOT match the specified pattern / "
+        "files.\r\n"
+        "-s follows symlinks, for both target and destination."
+msgstr  ""
+
+#: i18n.program_desc rename.program_desc
+msgid   "Renames files and folders."
+msgstr  ""
+
+#: i18n.regex_des rename.regex_des
+msgid   "Use regular expressions"
+msgstr  ""
+
+#: i18n.rename_fail rename.rename_fail
 #, object-pascal-format
-msgid "Failed to rename %s: %s"
-msgstr ""
+msgid   "Failed to rename %s: %s"
+msgstr  ""
 
-#: rename.confirm
+#: i18n.renamed_to rename.renamed_to
 #, object-pascal-format
-msgid "Rename %s to %s? [ynaq]"
-msgstr ""
+msgid   "Renamed %s to %s"
+msgstr  ""
 
-#: cc.getopts.symlink_des
-msgid "Follow symlinks"
-msgstr ""
-
-#: cc.getopts.dry_run_des
-msgid "Do not actually make changes"
-msgstr ""
-
-#: cc.getopts.bulk_des
-msgid "Replace all occurrences"
-msgstr ""
-
-#: cc.getopts.regex_des
-msgid "Use regular expressions"
-msgstr ""
-
-#: cc.getopts.ign_exists_des
-msgid "Ignore existing files"
-msgstr ""
-
-#: cc.getopts.interactive_des
-msgid "Be interactive"
-msgstr ""
-
-#: cc.getopts.last_occ_des
-msgid "Replace only the last occurrence"
-msgstr ""
-
-#: cc.getopts.keep_attrs_des
-msgid "Keep attributes"
-msgstr ""
-
-#: cc.getopts.opposites_des
-msgid "Operate on opposite matches"
-msgstr ""
-
-#: cc.getopts.program_desc
-msgid "Renames files and folders."
-msgstr ""
-
-#: cc.getopts.cc_version_str
-#, object-pascal-format
-msgid "Commands-Collection (CC) version %s"
-msgstr ""
-
-#: cc.getopts.cc_target_str
-#, object-pascal-format
-msgid "Built for %s on %s using FPC %s"
-msgstr ""
-
-#: cc.getopts.cc_build_date
-#, object-pascal-format
-msgid "Built on %s"
-msgstr ""
-
-#: cc.getopts.help_usage
-msgid "Show this help and exit"
-msgstr ""
-
-#: cc.getopts.version_usage
-msgid "Show the version of this program and exit"
-msgstr ""
-
-#: cc.getopts.verbose_usage
-msgid "Add verbosity"
-msgstr ""
-
-#: cc.getopts.undocumented
-msgid "*Undocumented*"
-msgstr ""
-
-#: cc.getopts.opt_need_val
-#, object-pascal-format
-msgid "option %s requires an argument"
-msgstr ""
-
-#: cc.getopts.opt_unknown
-#, object-pascal-format
-msgid "unrecognized option: %s"
-msgstr ""
-
-#: cc.getopts.opt_pair_not_enough
-#, object-pascal-format
-msgid "not enough item for a pair: %d required, got %d"
-msgstr ""
-
+#: i18n.symlink_des rename.symlink_des
+msgid   "Follow symlinks"
+msgstr  ""
