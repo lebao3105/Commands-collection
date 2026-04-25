@@ -19,7 +19,7 @@ uses
     cc.logging,
     cc.regex,
     cc.fs,
-    dir.i18n,
+    i18n,
     dir.report,
     dir.settings
     ;

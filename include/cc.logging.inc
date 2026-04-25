@@ -1,9 +1,19 @@
 unit cc.logging;
+{< As the name suggests, logging functions.
+   For now only stdout and stderr are used as output streams. }
 
 {$I objfpc.inc} // for array of const
 {$modeswitch defaultparameters}
 
 interface
+
+var
+    { Print a new line after a cc.logging function call. }
+    doNewLine: bool = true;
+
+    { Print the level of the cc.logging function call.
+      (info, debug etc) }
+    doPrintHeader: bool = true;
 
 retn Debug(const message: string); overload;
 retn Debug(const message: string; args: array of const); overload;

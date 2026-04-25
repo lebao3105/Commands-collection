@@ -19,3 +19,21 @@ function get_full_build_path()
 
     return prog_path
 end
+
+function get_custom_fpc_conf()
+    local fpc_conf = get_config("fpc-conf")
+
+    if fpc_conf ~= nil and fpc_conf:trim():len() > 0 then
+        return "@" .. fpc_conf
+    end
+
+    return ""
+end
+
+function single_string_quote(str)
+    return "'" .. str .. "'"
+end
+
+function double_string_quote(str)
+    return '"' .. str '"'
+end

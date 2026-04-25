@@ -23,7 +23,7 @@ uses
 	{$endif}
 	cc.console,
 	dir.settings,
-	dir.i18n,
+	i18n,
 	{$ifdef FPC_DOTTEDUNITS}
 	system.dateutils,
 	system.sysutils

@@ -1,4 +1,3 @@
-{%MainUnit ../src/cc.base.pp}
 unit cc.base;
 {< Utilities that are used widely within CC. }
 
@@ -26,10 +25,10 @@ type
 		fn IsError: bool; inline;
 		fn IsOK: bool; inline;
 
-		{ If IsOK is false, throw an exception. }
+		{ If private.IsOK is false, throw an exception. }
 		fn GetOK: T; inline;
 
-		{ If IsError is false, throw an exception. }
+		{ If private.IsError is false, throw an exception. }
 		fn GetError: E; inline;
 
 		{ Constructor. }
@@ -51,7 +50,7 @@ type
 	generic FArrayForEachIndexCallback<T> = reference to fn(const index: int; const item: T): bool;
 
 { Returns trueVal if val is true, falseVal otherwise.
-  Fact: This exists in sysutils as well (just found it out) 
+  Fact: This exists in sysutils as well (just found it out)
   I'm a bit word-less. But as this is a very simple function, it's not
   worth calling sysutils.IfThen here.
   There are other overloads of IfThen in RTL. Should they remove all of that,
@@ -77,5 +76,8 @@ retn WriteSp; inline;
 { Converts val to a thousands-separated string. }
 fn BigNumberToSeparatedStr(const val: QWord): string;
 
+{ Alias to sysutils.LowerCase. }
 fn StrLowerCase(const val: string): string; inline;
+
+{ Alias to sysutils.UpperCase. }
 fn StrUpperCase(const val: string): string; inline;

@@ -1,3 +1,5 @@
+{$define HAS_BONUS_HELP}
+
 const
 	ARGA: array of TOption = (
 		(Long: 'message';			Kind: EOptKind.FLAG_WITH_VAL; Short: 'm'; Help: MSG_DES),

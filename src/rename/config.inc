@@ -1,4 +1,5 @@
 {$define ALLOW_PAIRS}
+{$define HAS_BONUS_HELP}
 {$push}
 	{$warn 3177 off}
 const

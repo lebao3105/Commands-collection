@@ -27,23 +27,23 @@ uses
 {$define ARGA_USE_PAIRS :=
     (Long: 'use-pairs'; Kind: EOptKind.FLAG; Short: #0; Help: '')}
 
+{$push}{$warn 5028 off} // Unused resourcestring
+resourcestring
+    CC_VERSION_STR      = 'Commands-Collection (CC) version %s';
+    // TRANSLATORS:               OS v  CPU v
+    CC_TARGET_STR       = 'Built for %s on %s using FPC %s';
+    CC_BUILD_DATE       = 'Built on %s';
+    HELP_USAGE          = 'Show this help and exit';
+    VERSION_USAGE       = 'Show the version of this program and exit';
+    VERBOSE_USAGE       = 'Add verbosity';
+    UNDOCUMENTED        = '*Undocumented*';
+
+    OPT_NEED_VAL        = 'option %s requires an argument';
+    OPT_UNKNOWN         = 'unrecognized option: %s';
+    OPT_PAIR_NOT_ENOUGH = 'not enough item for a pair: %d required, got %d';
+{$pop}
+
 {$ifndef PASDOC}
-    {$push}{$warn 5028 off} // Unused resourcestring
-    resourcestring
-        CC_VERSION_STR      = 'Commands-Collection (CC) version %s';
-        // TRANSLATORS:               OS v  CPU v
-        CC_TARGET_STR       = 'Built for %s on %s using FPC %s';
-        CC_BUILD_DATE       = 'Built on %s';
-        HELP_USAGE          = 'Show this help and exit';
-        VERSION_USAGE       = 'Show the version of this program and exit';
-        VERBOSE_USAGE       = 'Add verbosity';
-        UNDOCUMENTED        = '*Undocumented*';
-
-        OPT_NEED_VAL        = 'option %s requires an argument';
-        OPT_UNKNOWN         = 'unrecognized option: %s';
-        OPT_PAIR_NOT_ENOUGH = 'not enough item for a pair: %d required, got %d';
-    {$pop}
-
     {$push}{$warn 3177 off} // Uninitialized fields
         {$I config.inc}
         {$if defined(ALLOW_PAIRS) and defined(PAIR_NUM)}
@@ -52,8 +52,8 @@ uses
             {$endif}
         {$endif}
     {$pop}
-    {$I cc.termcolors.inc}
 {$endif}
+{$I cc.termcolors.inc}
 
 fn TOption.WriteFullHelpMessage: string;
 begin
@@ -94,6 +94,7 @@ end;
 
 retn ShowHelp(to_stdout: bool);
 begin
+{$ifndef PASDOC}
     setOutputStream(not to_stdout);
     writeln(OutputFile, PROGRAM_DESC);
 
@@ -107,6 +108,7 @@ begin
     {$ifdef HAS_BONUS_HELP}
     writeln(OutputFile, PROGRAM_BONUS_HELP);
     {$endif}
+{$endif}
 end;
 
 var
@@ -125,6 +127,7 @@ begin
     FatalAndTerminate(1, message, args);
 end;
 
+{$ifndef PASDOC}
 fn Internal_getopt: ansichar;
 label
     deinit;
@@ -320,6 +323,11 @@ begin
         Meh(OPT_PAIR_NOT_ENOUGH, [ PAIR_NUM, Length(NonOpts) div PAIR_NUM ]);
     {$endif}
 end;
+{$else}
+
+retn GetOpt; begin end;
+
+{$endif PASDOC}
 
 fn GetArgPairs: TArrayOfStringDynArray;
 {$if defined(ALLOW_PAIRS)}

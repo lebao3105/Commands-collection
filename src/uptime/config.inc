@@ -1,3 +1,5 @@
+{$define HAS_BONUS_HELP}
+
 const
     ARGA: array of TOption = (
         (Long: 'raw';    Kind: EOptKind.FLAG; Short: 'r'; Help: RAW_DES),

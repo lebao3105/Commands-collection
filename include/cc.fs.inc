@@ -1,6 +1,6 @@
 unit cc.fs;
 {<
-    File system-relatend tasks:
+    File system-related tasks:
     * (Recursively or not) iterate directories
     * stat() an entity (a file / folder / etc)
 }

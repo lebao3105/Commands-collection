@@ -1,6 +1,4 @@
 resourcestring
-{$ifdef NEED_PROGRAM_HELP}
-{$define HAS_BONUS_HELP}
     ALL_DES = 'Show everything';
     FORMATTED_DES = 'More human-friendly output';
     KERN_NAME_DES = 'Show the kernel name';
@@ -21,8 +19,6 @@ resourcestring
         'For -o, check the following site for all identifies from GNU:' +
         'https://github.com/coreutils/gnulib/blob/master/m4/host-os.m4';
 
-{$else}
-
     PROCESSOR_TYPE      = 'Processor type: ';
     UNKNOWN             = 'Unknown';
     OPERATING_SYSTEM    = 'Operating system: ';
@@ -32,5 +28,3 @@ resourcestring
     KERNEL_VERSION      = 'Kernel version: ';
     MACHINE_HWNAME      = 'Machine hardware name: ';
     NETWORK_NODENAME    = 'Network node name: ';
-
-{$endif}

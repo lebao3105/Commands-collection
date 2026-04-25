@@ -1,6 +1,4 @@
 resourcestring
-{$ifdef NEED_PROGRAM_HELP}
-{$define HAS_BONUS_HELP}
     LIST_DES = 'Show the output as a list';
     ALL_DES = 'Show everything, even hidden entries. Has exceptions.';
     COLOR_DES = 'Colorize the output';
@@ -25,7 +23,7 @@ resourcestring
         'DIR_CONFPATH environment variable points to where dir settings are stored.' + CRNL +
         'DIR_PRESET environment variable points to the preset that dir will use (gnu, win, ccd).' + CRNL +
         'Check dir(5) manual page for more informations.';
-{$else}
+
 	// Fails
 	STAT_FAILED 	  = 'failed to stat %s: %s';
 	PERMISSION_DENIED = '%s: permission denied';
@@ -40,4 +38,3 @@ resourcestring
 
     // More
     INVALID_COLUMN    = '%s: unknown column type';
-{$endif}

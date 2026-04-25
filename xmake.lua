@@ -6,14 +6,20 @@ add_imports("i18n", "miscs", {inherit = true})
 add_rules("mode.debug", "mode.release", "mode.releasedbg")
 set_policy("check.auto_ignore_flags", false)
 
-local version = "1.1.0alpha"
+includes("@builtin/xpack")
+
+version = "1.1.0alpha"
 set_version(version)
 programs = {}
 
 option("output-prefix")
     set_showmenu(true)
     set_description("Prefix for built binaries - useful for co-use with ones like GNU Coreutils")
-    set_default("")
+    if xpack then
+        set_default("cc-")
+    else
+        set_default("")
+    end
 
 option("fpc-conf")
 	set_showmenu(true)
@@ -57,12 +63,21 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
             add_pcflags("-Municodestrings")
         end
 
-        local fpc_conf = get_config("fpc-conf")
-        if fpc_conf ~= nil and fpc_conf:trim():len() > 0 then
-            add_pcflags("@" .. get_config("fpc-conf"))
-        end
-
         before_build(function (target)
+            target:add("pcflags", miscs.get_custom_fpc_conf())
+
+            local locpath = "-dLOC_PATH:="
+            if xpack then
+                locpath = locpath .. miscs.single_string_quote(
+                    "/usr/share/locale/%s/LC_MESSAGES/" .. name .. ".mo"
+                )
+            else
+                locpath = locpath .. miscs.single_string_quote(
+                    os.projectdir() .. "/src/" .. name .. "/i18n/%s/cc.mo"
+                )
+            end
+            target:add("pcflags", locpath)
+
             os.mkdir(target:objectdir())
         end)
 
@@ -82,12 +97,6 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
         set_kind("phony")
 
         local i18n_dir = "src/" .. name .. "/i18n/"
-        for __, fullpath in ipairs(os.dirs(i18n_dir .. "*")) do
-            add_installfiles(fullpath .. "/cc.mo", {
-                prefixdir = "share/locale/" .. path.filename(fullpath),
-                filename = name .. ".mo"
-            })
-        end
 
         on_build(function (_)
             local potloc = i18n_dir .. "cc.pot"
@@ -97,24 +106,28 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
                 "$(builddir)/.objs/" .. name .. "/$(os)/$(arch)/$(mode)",
                 xmake
             )
-            i18n.generate_pot(rsjpath, potloc)
+            i18n.generate_pot(rsjpath, potloc, true)
 
-            -- Merge existing translations from CC
             for __, fullpath in ipairs(os.dirs(i18n_dir .. "*")) do
                 local language = path.filename(fullpath)
                 local ccpath = "i18n/" .. language
                 local outpath = fullpath .. "/cc.po"
 
+                -- Merge application's template to
+                -- language-specific translation
                 i18n.merge_po_files(potloc, outpath)
 
-                if os.isdir(ccpath) then
-                    i18n.merge_po_files(ccpath .. "/cc.po", outpath)
-                end
-
                 -- Compile .po to .mo
-                i18n.compile_po_file(outpath, fullpath .. "/cc.mo")
+                i18n.compile_po_files({outpath, ccpath .. "/cc.po"}, fullpath .. "/cc.mo")
             end
         end)
+
+        for __, fullpath in ipairs(os.dirs(i18n_dir .. "*")) do
+            add_installfiles(fullpath .. "/cc.mo", {
+                prefixdir = "share/locale/" .. path.filename(fullpath) .. "/LC_MESSAGES/",
+                filename = name .. ".mo"
+            })
+        end
 
     ::continue::
 end

@@ -22,7 +22,7 @@ uses
     {$endif}
     cc.logging,
     cc.regex,
-    dir.i18n
+    i18n
     ;
 
 
@@ -44,11 +44,11 @@ retn InitializeSettings;
 var conf_path: string;
 begin
     conf_path := GetEnvironmentVariable('DIR_CONFPATH');
-    debug('Started settings thread');
+    debug('Reading dir settings');
     // file_path := string(p_file_path);
     RegexPrepare;
     // RegexCheck;
-    debug('Settings thread finished');
+    debug('Done');
 end;
 
 retn RegexPrepare;
@@ -59,7 +59,7 @@ begin
 
     if Settings.IgnoreHiddens then
         RegexAppendExpr('^\.');
-    
+
     if Settings.IgnoreBackups then begin
         RegexAppendExpr('(\.bak)$');
         RegexAppendExpr('(~)$');

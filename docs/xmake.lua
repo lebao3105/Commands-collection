@@ -30,7 +30,7 @@ target("API-docs")
             "-E" .. api_docs_dir,
             "-X", -- Copyright header
             "-DPASDOC", "-Iinclude/",
-            "@pasdoc.cfg"
+            "@docs/pasdoc.cfg"
         }
 
 		os.mkdir(api_docs_dir)
@@ -41,7 +41,7 @@ target("API-docs")
 			end
 		end
 
-        table.join2(args, os.files("src/cc.*.pp"))
+        table.join2(args, os.files("src/shared/cc.*.pp"))
 
         os.execv("docs/pasdoc/bin/pasdoc", args)
 

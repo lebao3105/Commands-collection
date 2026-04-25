@@ -40,11 +40,6 @@ uses
     {$endif}
     ;
 
-{$ifndef PASDOC}
-{$define NEED_PROGRAM_HELP}
-{$I i18n.inc}
-{$endif}
-
 const
     EndOfOptions: char            = #255;
     OptSpecifier: char            = '-';
