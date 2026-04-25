@@ -1,20 +1,30 @@
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: commands-collection\n"
+"X-Crowdin-Project-ID: 891754\n"
+"X-Crowdin-Language: vi\n"
+"X-Crowdin-File: /main/src/calltime/i18n/cc.pot\n"
+"X-Crowdin-File-ID: 86\n"
+"Project-Id-Version: commands-collection\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: Vietnamese\n"
+"Language: vi_VN\n"
+"PO-Revision-Date: 2026-04-25 10:20\n"
+
 #: calltime.default_format i18n.default_format
-msgid   "dddd mmmm dd yyyy tt"
-msgstr  ""
+msgid "dddd mmmm dd yyyy tt"
+msgstr ""
 
 #: calltime.format_des i18n.format_des
-msgid   "Time format"
-msgstr  ""
-
-#: calltime.program_bonus_help i18n.program_bonus_help
-msgid   "Consult https://www.freepascal.org/docs-html/rtl/sysutils/"
-        "formatchars.html for more information about time format strings."
-msgstr  ""
+msgid "Time format"
+msgstr ""
 
 #: calltime.program_desc i18n.program_desc
-msgid   "Returns the current time and date, in style."
-msgstr  ""
+msgid "Returns the current time and date, in style."
+msgstr ""
 
 #: calltime.time_is i18n.time_is
-msgid   "The current time is: "
-msgstr  ""
+msgid "The current time is: "
+msgstr ""
+
