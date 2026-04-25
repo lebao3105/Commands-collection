@@ -23,7 +23,7 @@ begin
     //      forum/
     //        delphi-lazarus-free-pascal/
     //          lazarus-format-integer-or-int64-with-thousands-separator/
-    BigNumberToSeparatedStr := Format('%.0n', [ val + 0.0 ]);
+    return(Format('%.0n', [ val + 0.0 ]));
 end;
 
 fn StrLowerCase(const val: string): string; inline;
@@ -102,11 +102,13 @@ begin
 end;
 
 generic retn ArrayForEach<T>(arr: specialize ArrayOf<T>; const func: specialize FArrayForEachCallback<T>);
+{$push}{$warn 5057 off} // Uninitialized item
 var item: T;
 begin
     for item in arr do
         if func(item) then break;
 end;
+{$pop}
 
 generic retn ArrayForEachIndex<T>(arr: specialize ArrayOf<T>; const func: specialize FArrayForEachIndexCallback<T>);
 var i: int;

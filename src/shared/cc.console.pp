@@ -114,7 +114,7 @@ var modi: termios;
 begin
     if tcgetattr(StdInputHandle, modi) = -1 then
         return(false);
-    
+
     modi.c_lflag := modi.c_lflag or (ICANON or IEXTEN or ISIG);
     modi.c_iflag := modi.c_iflag or (IXON or ICRNL);
 
@@ -128,7 +128,7 @@ var modi: termios;
 begin
     if tcgetattr(StdInputHandle, modi) = -1 then
         return(false);
-    
+
     if enable then
         modi.c_lflag := modi.c_lflag or ECHO
     else
@@ -161,7 +161,7 @@ initialization
 
 { Avoid funny outputs
   Like this
-             simple 
+             simple
                     example}
 SetTextLineEnding(stderr, #13#10);
 SetTextLineEnding(stdout, #13#10);

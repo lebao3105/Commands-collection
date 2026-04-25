@@ -8,25 +8,13 @@ uses
     {$else}
     sysutils,
     {$endif}
+
+    {$ifndef PASDOC}
+    i18n,
+    {$endif}
     cc.console,
     cc.logging
     ;
-
-{$push}{$warn 5028 off} // Unused resourcestring
-resourcestring
-    CC_VERSION_STR      = 'Commands-Collection (CC) version %s';
-    // TRANSLATORS:          OS v  CPU v
-    CC_TARGET_STR       = 'Built for %s on %s using FPC %s';
-    CC_BUILD_DATE       = 'Built on %s';
-    HELP_USAGE          = 'Show this help and exit';
-    VERSION_USAGE       = 'Show the version of this program and exit';
-    VERBOSE_USAGE       = 'Add verbosity';
-    UNDOCUMENTED        = '*Undocumented*';
-
-    OPT_NEED_VAL        = 'option %s requires an argument';
-    OPT_UNKNOWN         = 'unrecognized option: %s';
-    OPT_PAIR_NOT_ENOUGH = 'not enough item for a pair: %d required, got %d';
-{$pop}
 
 {$define ARGA_VERBOSE :=
     (Long: 'verbose'; Kind: EOptKind.FLAG; Short: 'v'; Help: VERBOSE_USAGE)
@@ -40,6 +28,22 @@ resourcestring
     (Long: 'use-pairs'; Kind: EOptKind.FLAG; Short: #0; Help: '')}
 
 {$ifndef PASDOC}
+    {$push}{$warn 5028 off} // Unused resourcestring
+    resourcestring
+        CC_VERSION_STR      = 'Commands-Collection (CC) version %s';
+        // TRANSLATORS:               OS v  CPU v
+        CC_TARGET_STR       = 'Built for %s on %s using FPC %s';
+        CC_BUILD_DATE       = 'Built on %s';
+        HELP_USAGE          = 'Show this help and exit';
+        VERSION_USAGE       = 'Show the version of this program and exit';
+        VERBOSE_USAGE       = 'Add verbosity';
+        UNDOCUMENTED        = '*Undocumented*';
+
+        OPT_NEED_VAL        = 'option %s requires an argument';
+        OPT_UNKNOWN         = 'unrecognized option: %s';
+        OPT_PAIR_NOT_ENOUGH = 'not enough item for a pair: %d required, got %d';
+    {$pop}
+
     {$push}{$warn 3177 off} // Uninitialized fields
         {$I config.inc}
         {$if defined(ALLOW_PAIRS) and defined(PAIR_NUM)}
@@ -48,8 +52,8 @@ resourcestring
             {$endif}
         {$endif}
     {$pop}
+    {$I cc.termcolors.inc}
 {$endif}
-{$I cc.termcolors.inc}
 
 fn TOption.WriteFullHelpMessage: string;
 begin
@@ -90,7 +94,6 @@ end;
 
 retn ShowHelp(to_stdout: bool);
 begin
-{$ifndef PASDOC}
     setOutputStream(not to_stdout);
     writeln(OutputFile, PROGRAM_DESC);
 
@@ -104,7 +107,6 @@ begin
     {$ifdef HAS_BONUS_HELP}
     writeln(OutputFile, PROGRAM_BONUS_HELP);
     {$endif}
-{$endif}
 end;
 
 var
@@ -141,7 +143,7 @@ var
 
     fn isALongOption: bool; inline;
     begin // -- doesn't count
-        Result := (length(currentArg) = 2) and
+        Result := (length(currentArg) >= 2) and
                   (currentArg[1] = OptSpecifier) and
                   (currentArg[2] = OptSpecifier);
     end;
@@ -169,7 +171,7 @@ begin
         OptInd := 1;
         NextChar := 0;
     end;
-    
+
     if nextchar = 0 then
     begin
         {$ifdef ALLOW_DOUBLE_SPECIFIER}
@@ -185,7 +187,7 @@ begin
         // Are we at the end?
         if OptInd >= argc then
             return(EndOfOptions);
-        
+
         // Are we at a non-option?
         if (currentArg[1] <> OptSpecifier) or (length(currentArg) = 1) then
         begin
@@ -254,7 +256,7 @@ begin
 
     if not exact then
         Meh(OPT_UNKNOWN, [ optName ]);
-    
+
     with ARGA[foundOptPos] do
     begin
         if Short <> #0 then
@@ -263,24 +265,23 @@ begin
             OptIsLongOnly := false;
         end
 
-        else
-            case Long of
-                'use-pairs': begin
-                {$ifdef ALLOW_PAIRS}
-                    OptIsLongOnly := false;
-                    Result := #0;
-                    OptHasPairs := true;
-                    goto deinit;
-                {$endif}
-                end;
-                else begin
-                    Result := Long[1];
-                    OptIsLongOnly := true;
-                    {$ifdef ALLOW_PAIRS}
-                    OptHasPairs := false;
-                    {$endif}
-                end;
+        else case Long of
+            'use-pairs': begin
+            {$ifdef ALLOW_PAIRS}
+                OptIsLongOnly := false;
+                Result := #0;
+                OptHasPairs := true;
+                goto deinit;
+            {$endif}
             end;
+            else begin
+                Result := Long[1];
+                OptIsLongOnly := true;
+                {$ifdef ALLOW_PAIRS}
+                OptHasPairs := false;
+                {$endif}
+            end;
+        end;
 
         if Kind <> EOptKind.FLAG then
         begin
@@ -321,7 +322,7 @@ begin
 end;
 
 fn GetArgPairs: TArrayOfStringDynArray;
-{$if defined(ALLOW_PAIRS) or defined(PASDOC)}
+{$if defined(ALLOW_PAIRS)}
 {$push}{$warn 5093 off}{$warn 5091 off}
 var
     i, j: smallint;
@@ -352,12 +353,13 @@ begin
             inc(j);
             return(false);
         end);
-    
+
     return(resp);
 end;
 {$pop}
 {$else}
-begin
-end;
+    begin
+    end;
 {$endif}
+
 end.
