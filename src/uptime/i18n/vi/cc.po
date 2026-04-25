@@ -1,47 +1,57 @@
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: commands-collection\n"
+"X-Crowdin-Project-ID: 891754\n"
+"X-Crowdin-Language: vi\n"
+"X-Crowdin-File: /main/src/uptime/i18n/cc.pot\n"
+"X-Crowdin-File-ID: 98\n"
+"Project-Id-Version: commands-collection\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: Vietnamese\n"
+"Language: vi_VN\n"
+"PO-Revision-Date: 2026-04-25 10:21\n"
+
 #: uptime.current_time
-msgid   "The current time is:"
-msgstr  ""
+msgid "The current time is:"
+msgstr ""
 
 #: uptime.load_avg
-msgid   "Load average:"
-msgstr  ""
+msgid "Load average:"
+msgstr ""
 
 #: uptime.pretty_des
-msgid   "Display uptime in a human-readable format"
-msgstr  ""
-
-#: uptime.program_bonus_help
-msgid   "If you want to use -p, use it before any other flags. Else you will "
-        "get mixed results."
-msgstr  ""
+msgid "Display uptime in a human-readable format"
+msgstr ""
 
 #: uptime.program_desc
-msgid   "Displays system uptime"
-msgstr  ""
+msgid "Displays system uptime"
+msgstr ""
 
 #: uptime.raw_des
-msgid   "Display raw uptime information"
-msgstr  ""
+msgid "Display raw uptime information"
+msgstr ""
 
 #: uptime.since_des
-msgid   "Display uptime since a specific date and time"
-msgstr  ""
+msgid "Display uptime since a specific date and time"
+msgstr ""
 
 #: uptime.sysinf_fail
 #, object-pascal-format
-msgid   "sysinfo() failed: %s"
-msgstr  ""
+msgid "sysinfo() failed: %s"
+msgstr ""
 
 #: uptime.uptime_count
-msgid   "The system is up for"
-msgstr  ""
+msgid "The system is up for"
+msgstr ""
 
 #: uptime.uptime_full
 #, object-pascal-format
-msgid   "%d day(s) %d hour(s) %d minute(s) %d second(s)"
-msgstr  ""
+msgid "%d day(s) %d hour(s) %d minute(s) %d second(s)"
+msgstr ""
 
 #: uptime.user_count
 #, object-pascal-format
-msgid   "%d users"
-msgstr  ""
+msgid "%d users"
+msgstr ""
+

@@ -1,98 +1,91 @@
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: commands-collection\n"
+"X-Crowdin-Project-ID: 891754\n"
+"X-Crowdin-Language: vi\n"
+"X-Crowdin-File: /main/src/dir/i18n/cc.pot\n"
+"X-Crowdin-File-ID: 84\n"
+"Project-Id-Version: commands-collection\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: Vietnamese\n"
+"Language: vi_VN\n"
+"PO-Revision-Date: 2026-04-25 10:20\n"
+
 #: i18n.all_des
-msgid   "Show everything, even hidden entries. Has exceptions."
-msgstr  ""
+msgid "Show everything, even hidden entries. Has exceptions."
+msgstr ""
 
 #: i18n.color_des
-msgid   "Colorize the output"
-msgstr  ""
+msgid "Colorize the output"
+msgstr ""
 
 #: i18n.dir_only_des
-msgid   "Only show directories"
-msgstr  ""
+msgid "Only show directories"
+msgstr ""
 
 #: i18n.dirs_count
 #, object-pascal-format
-msgid   "%u dir(s)"
-msgstr  ""
+msgid "%u dir(s)"
+msgstr ""
 
 #: i18n.files_count
 #, object-pascal-format
-msgid   "%u file(s)"
-msgstr  ""
+msgid "%u file(s)"
+msgstr ""
 
 #: i18n.free_space
 #, object-pascal-format
-msgid   "%s free"
-msgstr  ""
+msgid "%s free"
+msgstr ""
 
 #: i18n.ignore_bck_des
-msgid   "Ignore entities whose name end with ~ or .bak"
-msgstr  ""
+msgid "Ignore entities whose name end with ~ or .bak"
+msgstr ""
 
 #: i18n.ignore_des
-msgid   "Use regular expression to skip entities"
-msgstr  ""
+msgid "Use regular expression to skip entities"
+msgstr ""
 
 #: i18n.ignored_count
 #, object-pascal-format
-msgid   "%u ignored"
-msgstr  ""
+msgid "%u ignored"
+msgstr ""
 
 #: i18n.invalid_column
 #, object-pascal-format
-msgid   "%s: unknown column type"
-msgstr  ""
+msgid "%s: unknown column type"
+msgstr ""
 
 #: i18n.list_des
-msgid   "Show the output as a list"
-msgstr  ""
+msgid "Show the output as a list"
+msgstr ""
 
 #: i18n.open_dir_failed
 #, object-pascal-format
-msgid   "failed to open directory %s: %s"
-msgstr  ""
+msgid "failed to open directory %s: %s"
+msgstr ""
 
 #: i18n.permission_denied
 #, object-pascal-format
-msgid   "%s: permission denied"
-msgstr  ""
-
-#: i18n.program_bonus_help
-msgid   "Ignore pattern is a regular expression which is used to filter out "
-        "stuff using their name.\r\n"
-        "If -B is used, entities with ~ or .bak suffix will be ignored.\r\n"
-        "If -a is NOT used, entities with . (a literal dot) prefix will be "
-        "ignored.\r\n"
-        "By default, the ignore pattern is case-INsensitive. Currently you "
-        "can't change that\r\n"
-        "\r\n"
-        "Comments and line breaks are allowed like this:\r\n"
-        "( # this is a comment\r\n"
-        "abc\r\n"
-        "def\r\n"
-        ") # done \r\n"
-        "\r\n"
-        "DIR_CONFPATH environment variable points to where dir settings are "
-        "stored.\r\n"
-        "DIR_PRESET environment variable points to the preset that dir will "
-        "use (gnu, win, ccd).\r\n"
-        "Check dir(5) manual page for more informations."
-msgstr  ""
+msgid "%s: permission denied"
+msgstr ""
 
 #: i18n.program_desc
-msgid   "Iterate directories."
-msgstr  ""
+msgid "Iterate directories."
+msgstr ""
 
 #: i18n.recursive_des
-msgid   "List stuff, recursively"
-msgstr  ""
+msgid "List stuff, recursively"
+msgstr ""
 
 #: i18n.stat_failed
 #, object-pascal-format
-msgid   "failed to stat %s: %s"
-msgstr  ""
+msgid "failed to stat %s: %s"
+msgstr ""
 
 #: i18n.statfail_count
 #, object-pascal-format
-msgid   "%u failed to stat()"
-msgstr  ""
+msgid "%u failed to stat()"
+msgstr ""
+

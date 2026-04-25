@@ -1,44 +1,50 @@
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: commands-collection\n"
+"X-Crowdin-Project-ID: 891754\n"
+"X-Crowdin-Language: vi\n"
+"X-Crowdin-File: /main/src/inp/i18n/cc.pot\n"
+"X-Crowdin-File-ID: 94\n"
+"Project-Id-Version: commands-collection\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: Vietnamese\n"
+"Language: vi_VN\n"
+"PO-Revision-Date: 2026-04-25 10:21\n"
+
 #: i18n.casesens_des inp.casesens_des
-msgid   "Make the input case-sensitive"
-msgstr  ""
+msgid "Make the input case-sensitive"
+msgstr ""
 
 #: i18n.hideokojima_des inp.hideokojima_des
-msgid   "Hide inputs from the user"
-msgstr  ""
+msgid "Hide inputs from the user"
+msgstr ""
 
 #: i18n.loop_des inp.loop_des
-msgid   "Do not quit until a valid input is sent"
-msgstr  ""
+msgid "Do not quit until a valid input is sent"
+msgstr ""
 
 #: i18n.msg_des inp.msg_des
-msgid   "Custom message to show instead of Press any key/Enter to continue"
-msgstr  ""
+msgid "Custom message to show instead of Press any key/Enter to continue"
+msgstr ""
 
 #: i18n.press_any_key inp.press_any_key
-msgid   "Press any key to continue..."
-msgstr  ""
-
-#: i18n.program_bonus_help inp.program_bonus_help
-msgid   "-o will show characters from -k inside squared brackets, e.g [ynYn]."
-        "\r\n"
-        "If no arguments are provided, the program will simply ask for a key "
-        "press, quits with exit code 0.\r\n"
-        "Otherwise will quit with the exit code set to the ASCII value of the "
-        "input character."
-msgstr  ""
+msgid "Press any key to continue..."
+msgstr ""
 
 #: i18n.program_desc inp.program_desc
-msgid   "Asks for user input."
-msgstr  ""
+msgid "Asks for user input."
+msgstr ""
 
 #: i18n.reqchar_des inp.reqchar_des
-msgid   "Specify valid characters"
-msgstr  ""
+msgid "Specify valid characters"
+msgstr ""
 
 #: i18n.reqenter_des inp.reqenter_des
-msgid   "Require Enter to send the input"
-msgstr  ""
+msgid "Require Enter to send the input"
+msgstr ""
 
 #: i18n.showavai_des inp.showavai_des
-msgid   "Show the user -k value"
-msgstr  ""
+msgid "Show the user -k value"
+msgstr ""
+

@@ -1,35 +1,50 @@
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: commands-collection\n"
+"X-Crowdin-Project-ID: 891754\n"
+"X-Crowdin-Language: vi\n"
+"X-Crowdin-File: /main/src/touch/i18n/cc.pot\n"
+"X-Crowdin-File-ID: 88\n"
+"Project-Id-Version: commands-collection\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: Vietnamese\n"
+"Language: vi_VN\n"
+"PO-Revision-Date: 2026-04-25 10:20\n"
+
 #: i18n.already_exists touch.already_exists
 #, object-pascal-format
-msgid   "%s already exists"
-msgstr  ""
+msgid "%s already exists"
+msgstr ""
 
 #: i18n.created_stuff touch.created_stuff
 #, object-pascal-format
-msgid   "Created %s."
-msgstr  ""
+msgid "Created %s."
+msgstr ""
 
 #: i18n.creating_stuff touch.creating_stuff
 #, object-pascal-format
-msgid   "Creating %s..."
-msgstr  ""
+msgid "Creating %s..."
+msgstr ""
 
 #: i18n.dirs_des touch.dirs_des
-msgid   "Create directories ONLY"
-msgstr  ""
+msgid "Create directories ONLY"
+msgstr ""
 
 #: i18n.failed_to_create touch.failed_to_create
 #, object-pascal-format
-msgid   "Failed to create %s: %s"
-msgstr  ""
+msgid "Failed to create %s: %s"
+msgstr ""
 
 #: i18n.nothing_to_create touch.nothing_to_create
-msgid   "Nothing to create."
-msgstr  ""
+msgid "Nothing to create."
+msgstr ""
 
 #: i18n.parent_des touch.parent_des
-msgid   "Create parent directories if needed"
-msgstr  ""
+msgid "Create parent directories if needed"
+msgstr ""
 
 #: i18n.program_desc touch.program_desc
-msgid   "Creates files and directories"
-msgstr  ""
+msgid "Creates files and directories"
+msgstr ""
+
