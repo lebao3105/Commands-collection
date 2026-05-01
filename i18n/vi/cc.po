@@ -76,14 +76,6 @@ msgstr  ""
 msgid   "warning:"
 msgstr  ""
 
-#: cc.pager.console_too_small
-msgid   "The console is too small. The content will go nuts."
-msgstr  ""
-
-#: cc.pager.paged_view
-msgid   "-- Paged view. Up/down arrows = scroll. --"
-msgstr  ""
-
 #: cc.regex.regex_failed
 #, object-pascal-format
 msgid   "%s: regular expression failed: %s"

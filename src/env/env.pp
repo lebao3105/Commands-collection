@@ -15,8 +15,7 @@ uses
 	{$endif}
 	cc.getopts,
 	cc.logging,
-	cc.base,
-	cc.pager
+	cc.base
 	;
 
 var
@@ -42,13 +41,13 @@ begin
 		result[1] := Copy(inp, p + 1, Length(inp));
 		return;
 	end;
-	
+
 	SetLength(Result, 1);
 	result[0] := inp;
 end;
 
 fn SetUnSetDifferences: TStringDynArray;
-var	
+var
 	i, j: uint16;
 	parts: TStringDynArray;
 begin
@@ -81,7 +80,7 @@ begin
 	if ParamCount = 0 then
 	begin
 		for i := 1 to envc do
-			pagedPrint(GetEnvironmentString(i), true);
+			writeln(GetEnvironmentString(i));
 		exit;
 	end;
 
@@ -102,11 +101,11 @@ begin
 
 	if Length(cc.getopts.NonOpts) = 0 then
 		FatalAndTerminate(1, NoProgSpecified);
-	
+
 	// Create array of arguments
 	if not FileExists(cc.getopts.NonOpts[0]) then
 		cc.getopts.NonOpts[0] := ExeSearch(cc.getopts.NonOpts[0], GetEnvironmentVariable('PATH'));
-	
+
 	if cc.getopts.NonOpts[0] = '' then
 		FatalAndTerminate(1, ExeNotFound, [ cc.getopts.NonOpts[0] ]);
 

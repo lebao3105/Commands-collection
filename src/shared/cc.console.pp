@@ -18,37 +18,9 @@ uses
     {$endif}
     ;
 
-var
-    NeedToRefreshSz: bool = true;
-    Sz: WinSize;
-
 fn isATerminal(Handle: cint): bool;
 begin
     return(isATTY(Handle) = 1);
-end;
-
-fn refreshTerminalSz: bool;
-begin
-    Result := true;
-    if NeedToRefreshSz and isATerminal(OutputHandle) then
-    begin
-        Result := fpioctl(OutputHandle, TIOCGWINSZ, @Sz) <> -1;
-        if Result then NeedToRefreshSz := false;
-    end;
-end;
-
-fn getTerminalCols: word;
-begin
-    if refreshTerminalSz() then
-        return(Sz.ws_col);
-    return(0);
-end;
-
-fn getTerminalRows: word;
-begin
-    if refreshTerminalSz() then
-        return(Sz.ws_row);
-    return(0);
 end;
 
 retn setOutputStream(toStdErr: bool);
@@ -72,8 +44,12 @@ begin
     // UNIXes normally should cover this themselves. RTL's crt has a function
     // that does a *bit* more than just printing these ASCII keys, but this is
     // enough for us, I think.
+{$ifdef UNIX}
     write(OutputFile, ESC_KEY+'[2J');
     write(OutputFile, ESC_KEY+'[H'); // move the cursor to the top-left corner
+{$else}
+    ClrScr;
+{$endif}
 end;
 
 fn ANSIEscapeSequence(seq: string): string; inline;
@@ -82,45 +58,6 @@ begin
         return(seq);
     return('');
 end;
-
-fn enableRawStdIn(disableCtrlCZ: bool): bool;
-var modi: termios;
-{$push} {$warn 5036 off} // Local variable seems to be not initialized
-begin
-    if tcgetattr(StdInputHandle, modi) = -1 then
-        return(false);
-
-    // Turn off canonical mode / line-by-line processing (ICANON)
-    // Turn off Ctrl-V (and more?) events (IEXTEN)
-    modi.c_lflag := modi.c_lflag and not (ICANON or IEXTEN);
-
-    if disableCtrlCZ then
-        modi.c_lflag := modi.c_lflag and not ISIG;
-
-    // Turn off software flow control (IXON, disables Ctrl-S&Q)
-    // Do NOT translate \r to \n (ICRNL)
-    modi.c_iflag := modi.c_iflag and not (IXON or ICRNL);
-
-    modi.c_cc[VMIN] := 0; // minimum number of bytes of input needed before read() can return
-    modi.c_cc[VTIME] := 1; // maximum amount of time to wait, in 1/10ths of a second
-
-    Result := tcsetattr(StdInputHandle, TCSAFLUSH, modi) <> -1;
-end;
-{$pop}
-
-fn disableRawStdIn: bool;
-var modi: termios;
-{$push} {$warn 5036 off} // Local variable seems to be not initialized
-begin
-    if tcgetattr(StdInputHandle, modi) = -1 then
-        return(false);
-
-    modi.c_lflag := modi.c_lflag or (ICANON or IEXTEN or ISIG);
-    modi.c_iflag := modi.c_iflag or (IXON or ICRNL);
-
-    Result := tcsetattr(StdInputHandle, TCSAFLUSH, modi) <> -1;
-end;
-{$pop}
 
 fn enableStdInEchoing(enable: bool): bool;
 var modi: termios;
