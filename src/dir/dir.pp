@@ -91,7 +91,7 @@ begin
         dir.settings.Settings := CCD_PRESET;
     end;
 
-    InitializeSettings;
+    RegexPrepare;
 
     cc.getopts.OptCharHandler := retn (const found: char)
     begin
@@ -112,4 +112,6 @@ begin
     else
     	for str in cc.getopts.NonOpts do
             ListItems(str);
+
+	writeln;
 end.

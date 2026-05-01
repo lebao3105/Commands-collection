@@ -40,17 +40,6 @@ begin
             EListingColumns(casted));
 end;
 
-retn InitializeSettings;
-var conf_path: string;
-begin
-    conf_path := GetEnvironmentVariable('DIR_CONFPATH');
-    debug('Reading dir settings');
-    // file_path := string(p_file_path);
-    RegexPrepare;
-    // RegexCheck;
-    debug('Done');
-end;
-
 retn RegexPrepare;
 var check: specialize TOptional<ERegExpr>;
 begin
@@ -77,12 +66,12 @@ begin
     debug('Ignore expression: %s', [RegexGetExpr]);
 
     check := RegexVerifyExpr;
-    // if check.HasValue then
-    //     FatalAndTerminate(1, REGEX_FAILED_LOC, [
-    //         RegexGetExpr,
-    //         RegexGetLastCompileErrorPos,
-    //         check.Value.Message
-    //     ]);
+    //if check.HasValue then
+    //    FatalAndTerminate(1, REGEX_FAILED_LOC, [
+    //       RegexGetExpr,
+    //       RegexGetLastCompileErrorPos,
+    //       check.Value.Message
+    //    ]);
 end;
 
 fn FSEntityKindToTypeString(tp: EFSEntityKind): string; inline;

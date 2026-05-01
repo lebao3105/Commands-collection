@@ -102,6 +102,5 @@ var
     Settings: TDirSettings;
 
 fn StringToListCol(const str: string): specialize TResult<EListingColumns, string>;
-retn InitializeSettings;
 retn RegexPrepare;
 fn FSEntityKindToTypeString(tp: EFSEntityKind): string; inline;

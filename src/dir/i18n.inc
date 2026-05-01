@@ -20,7 +20,6 @@ resourcestring
         'def' + CRNL +
         ') # done ' + CRNL +
         CRNL +
-        'DIR_CONFPATH environment variable points to where dir settings are stored.' + CRNL +
         'DIR_PRESET environment variable points to the preset that dir will use (gnu, win, ccd).' + CRNL +
         'Check dir(5) manual page for more informations.';
 
