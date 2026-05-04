@@ -8,9 +8,11 @@ implementation
 
 uses
     {$ifdef FPC_DOTTEDUNITS}
-    system.sysutils
+    system.sysutils,
+    system.strutils
     {$else}
-    sysutils
+    sysutils,
+    strutils
     {$endif}
     ;
 
@@ -115,6 +117,11 @@ var i: int;
 begin
     for i := Low(arr) to High(arr) do
         if func(i, arr[i]) then break;
+end;
+
+fn StrSplit(const s: string; const delims: string): TStringDynArray;
+begin
+    return(SplitString(s, delims));
 end;
 
 end.

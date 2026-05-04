@@ -9,6 +9,14 @@ unit cc.base;
 
 interface
 
+uses
+    {$ifdef FPC_DOTTEDUNITS}
+    system.types
+    {$else}
+    types
+    {$endif}
+    ;
+
 type
 	EResultKind = (OK, ERROR);
 
@@ -43,6 +51,12 @@ type
 	generic TOptional<T> = record
 		Value: T;
 		fn HasValue: bool; inline;
+	end;
+
+	{ A key-value pair. }
+	generic TKeyValuePair<K, V> = record
+	    Key: K;
+		Value: V;
 	end;
 
 	generic ArrayOf<T> = array of T;
@@ -81,3 +95,6 @@ fn StrLowerCase(const val: string): string; inline;
 
 { Alias to sysutils.UpperCase. }
 fn StrUpperCase(const val: string): string; inline;
+
+{ Alias to strutils.SplitString. }
+fn StrSplit(const s: string; const delims: string): TStringDynArray;
