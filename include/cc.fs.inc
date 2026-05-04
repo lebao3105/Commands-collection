@@ -6,15 +6,23 @@ unit cc.fs;
 }
 
 {$modeswitch out}
+{$scopedenums on}
 
 interface
 
 type
 	{ Enum of file system entity types. }
 	EFSEntityKind = (
-	    AFile = 0, ADir, ASymlink,
-	    ASocket, ABlock, APipe, ACharDev,
-	    AStatFailure
+	    NormalFile,
+		Dir,
+		Symlink,
+		Pipe,
+	    Socket,
+		Block,
+		CharDev,
+		MissingFile,
+		Door,
+	    StatFailure
 	);
 
 	{ Record of file system entity permissions. }
@@ -22,9 +30,6 @@ type
 	    E: bool; //< Executable permission
 		R: bool; //< Read permission
 		W: bool; //< Write permission
-	    S: bool; //< Sticky (only owner and root can rename/delete)
-	    SU:bool; //< set-uid: run with the owner's UID
-	    SG:bool; //< set-gid: run with the owner's GID
 	end;
 
 	{ File system entity properties. }
@@ -34,14 +39,19 @@ type
 		  1st index: Groups
 		  2nd index: Others }
 	    Perms: array[0..2] of TFSPermissions;
+		SetUserID_OnExec, SetGroupID_OnExec: bool;
 
 	    Kind: EFSEntityKind;
 	    Size: qword;
 
-	    LastAccessTime: cardinal;
+		{ Self-explanatory, converted to Pascal's DateTime. }
+	    LastAccessTime: double;
+
+		{ Self-explanatory, converted to Pascal's DateTime. }
 	    LastModifyTime: double;
 
 	    HardLinkCount: cardinal;
+		PointsTo: string;
 	    Gid, Uid: cardinal;
 	end;
 
@@ -74,3 +84,9 @@ fn PopulateFSInfo(const path: string; out info: TFSProperties): bool;
   If an element / p itself is unreadable (fpOpenDir / fpReadDir / fpStat),
   the provided TIterateDirResult will have its info.Kind set to EFSEntityKind.AStatFailure. }
 retn IterateDir(const p: string; cb: TIterateDirCallback; r: bool; pr: bool);
+
+{ Returns the absolute path name that points to file_name, with no
+  . and .. and symlinks being involved. Returns a pointer to the
+  buffer containing the generated pathname upon successful operation.
+  Ortherwise, errno will be set and the result is Nil. }
+fn RealPath(const file_name: pchar; resolved_name: pchar): pchar; external 'libc' name 'realpath';

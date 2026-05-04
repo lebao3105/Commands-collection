@@ -17,23 +17,35 @@ uses
 fn PopulateFSInfo(const path: string; out info: TFSProperties): bool;
 var
     st: stat;
+    cFollowPath: pchar;
 
 begin
-    if FpStat(path, st) <> 0 then begin
+    cFollowPath := Nil;
+    if FpLStat(path, st) <> 0 then
+    begin
         PopulateFSInfo := false;
-        info.Kind := EFSEntityKind.AStatFailure;
+        info.Kind := EFSEntityKind.StatFailure;
         Exit;
     end;
 
     with info do begin
         case (st.st_mode and S_IFMT) of
-            S_IFBLK: Kind := EFSEntityKind.ABlock;
-            S_IFCHR: Kind := EFSEntityKind.ACharDev;
-            S_IFDIR: Kind := EFSEntityKind.ADir;
-            S_IFIFO: Kind := EFSEntityKind.APipe;
-            S_IFLNK: Kind := EFSEntityKind.ASymlink;
-            S_IFREG: Kind := EFSEntityKind.AFile;
-            S_IFSOCK: Kind := EFSEntityKind.ASocket;
+            S_IFBLK: Kind := EFSEntityKind.Block;
+            S_IFCHR: Kind := EFSEntityKind.CharDev;
+            S_IFDIR: Kind := EFSEntityKind.Dir;
+            S_IFIFO: Kind := EFSEntityKind.Pipe;
+            S_IFLNK: begin
+                Kind := EFSEntityKind.Symlink;
+                cFollowPath := RealPath(PChar(path), Nil);
+                if cFollowPath <> Nil then // TODO: Handle the opposite case
+                begin
+                    PointsTo := string(cFollowPath);
+                    // Causes double-free exception
+                    // Dispose(cFollowPath);
+                end
+            end;
+            S_IFREG: Kind := EFSEntityKind.NormalFile;
+            S_IFSOCK: Kind := EFSEntityKind.Socket;
         end;
 
         Perms[0].E := (st.st_mode and S_IXUSR) <> 0;
@@ -48,10 +60,11 @@ begin
         Perms[2].R := (st.st_mode and S_IROTH) <> 0;
         Perms[2].W := (st.st_mode and S_IWOTH) <> 0;
 
-        // TODO: Add remaining permissions
+        SetUserID_OnExec := (st.st_mode and S_ISUID) <> 0;
+        SetGroupID_OnExec := (st.st_mode and S_ISGID) <> 0;
 
         Size := st.st_size;
-        //LastAccessTime := st.st_atime;
+        LastAccessTime := UnixToDateTime(st.st_atime);
         LastModifyTime := UnixToDateTime(st.st_mtime);
         HardLinkCount := st.st_nlink;
         Gid := st.st_gid;
@@ -78,7 +91,7 @@ begin
         if dir = nil then begin
             New(r);
             r^.name := path;
-            r^.info.Kind := EFSEntityKind.AStatFailure;
+            r^.info.Kind := EFSEntityKind.StatFailure;
             callback(r, true);
             Dispose(r);
             exit;
@@ -101,7 +114,7 @@ begin
 
                     // I want to create new threads here, for deeper
                     // iterations. That would break sorting (which isnot even exist yet)
-                    if (r^.info.Kind = EFSEntityKind.ADir) and recursively and
+                    if (r^.info.Kind = EFSEntityKind.Dir) and recursively and
                        (r^.name <> '.') and (r^.name <> '..') then
                         Iteratedir(path + '/' + r^.name, callback, true, true);
                 end;
