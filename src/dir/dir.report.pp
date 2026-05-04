@@ -76,6 +76,8 @@ begin
 			case Settings.Columns[i] of
 				EListingColumns.NAME: begin
 					write(name);
+					if props.PointsTo <> '' then
+					    write(' -> ' + props.PointsTo);
 					write(ANSI_CODE_RESET);
 				end;
 

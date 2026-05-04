@@ -33,7 +33,7 @@ begin
     //         return;
 
     case r^.info.Kind of
-    	EFSEntityKind.AStatFailure:
+    	EFSEntityKind.StatFailure:
 	    begin
 	        Inc(statFailCount);
 
@@ -51,7 +51,7 @@ begin
 	        exit;
 	    end;
 
-		EFSEntityKind.ADir:
+		EFSEntityKind.Dir:
 			Inc(dirCount);
 
 		else begin
