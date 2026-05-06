@@ -8,3 +8,4 @@ resourcestring
     CREATED_STUFF            = 'Created %s.';
     FAILED_TO_CREATE         = 'Failed to create %s: %s';
     ALREADY_EXISTS           = '%s already exists';
+    INVALID_TYPE             = 'Invalid type for %s: %s - use f for file, d for folder';
