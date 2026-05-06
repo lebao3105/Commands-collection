@@ -36,7 +36,7 @@ resourcestring
     HELP_USAGE          = 'Show this help and exit';
     VERSION_USAGE       = 'Show the version of this program and exit';
     VERBOSE_USAGE       = 'Add verbosity';
-    UNDOCUMENTED        = '*Undocumented*';
+    UNDOCUMENTED        = 'Use pairs of arguments - check cc-argument-pairs(7)';
 
     OPT_NEED_VAL        = 'option %s requires an argument';
     OPT_UNKNOWN         = 'unrecognized option: %s';
@@ -62,7 +62,7 @@ begin
 
     Result := ANSI_CODE_BOLD;
 
-    if Short <> '' then
+    if (Short <> '') or (Short <> #0) then
         Result += ('-' + Short + ANSI_CODE_RESET + ' ');
 
     if Long <> '' then
@@ -99,7 +99,7 @@ begin
     writeln(OutputFile, PROGRAM_DESC);
 
     specialize ArrayForEach<TOption>(ARGA,
-    fn (const opt: TOption): bool
+    fn (opt: TOption): bool
     begin
         writeln(OutputFile, opt.WriteFullHelpMessage());
         return(false);
@@ -242,7 +242,7 @@ begin
     foundOptPos := 0;
 
     ArrayForEachIndex(ARGA,
-    fn (const indx: smallint; const opt: TOption): bool
+    fn (const indx: smallint; opt: TOption): bool
     begin
         if exact then
             return(true);
@@ -268,22 +268,21 @@ begin
             OptIsLongOnly := false;
         end
 
-        else case Long of
-            'use-pairs': begin
+        {$ifdef ALLOW_PAIRS}
+        else if Long = 'use-pairs' then begin
+            OptIsLongOnly := false;
+            Result := #0;
+            OptHasPairs := true;
+            goto deinit;
+        end
+        {$endif}
+
+        else begin
+            Result := Long[1];
+            OptIsLongOnly := true;
             {$ifdef ALLOW_PAIRS}
-                OptIsLongOnly := false;
-                Result := #0;
-                OptHasPairs := true;
-                goto deinit;
+            OptHasPairs := false;
             {$endif}
-            end;
-            else begin
-                Result := Long[1];
-                OptIsLongOnly := true;
-                {$ifdef ALLOW_PAIRS}
-                OptHasPairs := false;
-                {$endif}
-            end;
         end;
 
         if Kind <> EOptKind.FLAG then
@@ -345,9 +344,9 @@ begin
     j := 0;
 
     specialize ArrayForEachIndex<string>(NonOpts,
-        fn (const indx: smallint; const opt: string): bool
+        fn (const indx: smallint; opt: string): bool
         begin
-            if (indx mod 3 = 0) then
+            if indx mod 2 = 0 then
             begin
                 SetLength(resp[i], PAIR_NUM);
                 j := 0;

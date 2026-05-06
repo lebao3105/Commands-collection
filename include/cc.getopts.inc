@@ -28,6 +28,7 @@ unit cc.getopts;
 {$modeswitch result}
 {$goto on}
 {$scopedenums on}
+{$H+}
 
 interface
 
