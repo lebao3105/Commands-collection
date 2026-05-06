@@ -1,4 +1,5 @@
 {$define HAS_BONUS_HELP}
+{$define ALLOW_DOUBLE_SPECIFIER}
 
 const
 	ARGA: array of TOption = (
