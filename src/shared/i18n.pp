@@ -10,7 +10,11 @@ unit i18n;
     The unit has no function, no types and variables either.
     There is no need to merge CC and application .po files
     into one, since msgfmt accepts more than one file.
+
+    Multi-line strings are allowed.
 }
+
+{$modeswitch MultiLineStrings}
 
 interface
 
@@ -21,14 +25,23 @@ interface
 implementation
 
 uses {$ifdef FPC_DOTTEDUNITS}
-     system.gettext
+     system.gettext,
+     system.sysutils
      {$else}
-     gettext
+     gettext,
+     sysutils
      {$endif}
      ;
 
+var
+    where_to_read: string;
+
 initialization
 
-TranslateResourceStrings(LOC_PATH);
+where_to_read := GetEnvironmentVariable('CC_I18N_LOC');
+if where_to_read = '' then
+    where_to_read := LOC_PATH;
+
+TranslateResourceStrings(where_to_read);
 
 end.
