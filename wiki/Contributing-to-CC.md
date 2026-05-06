@@ -45,6 +45,13 @@ Requires these modeswitches:
 
 Usages can be found across the project.
 
+And this - because of mismatching `const` modifier:
+
+```
+cc.getopts.pp:363:12: error: (4025) Incompatible type for arg no. 2:
+Got "anonymous function(const SmallInt;const ShortString):System.Boolean;", expected "FARRAYFOREACHINDEXCALLBACK<System.ShortString>"
+```
+
 ## Implicit generic specialization
 
 > Note: This is available in FPC trunk.
