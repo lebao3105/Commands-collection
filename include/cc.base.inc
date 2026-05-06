@@ -53,15 +53,9 @@ type
 		fn HasValue: bool; inline;
 	end;
 
-	{ A key-value pair. }
-	generic TKeyValuePair<K, V> = record
-	    Key: K;
-		Value: V;
-	end;
-
 	generic ArrayOf<T> = array of T;
-	generic FArrayForEachCallback<T> = reference to fn(const item: T): bool;
-	generic FArrayForEachIndexCallback<T> = reference to fn(const index: int; const item: T): bool;
+	generic FArrayForEachCallback<T> = reference to fn(item: T): bool;
+	generic FArrayForEachIndexCallback<T> = reference to fn(const index: int; item: T): bool;
 
 { Returns trueVal if val is true, falseVal otherwise.
   Fact: This exists in sysutils as well (just found it out)

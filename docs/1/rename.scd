@@ -51,7 +51,7 @@ Do we really need a description for this one?
 
 Rename all .txt files to .bak:
 ```
-	$ rename .txt .bak *.txt
+	$ rename *.txt .bak
 ```
 
 Use regex to rename files:

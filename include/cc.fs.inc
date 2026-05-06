@@ -51,7 +51,11 @@ type
 	    LastModifyTime: double;
 
 	    HardLinkCount: cardinal;
+
+		{ If the entity is a symlink and this is empty,
+		  consider the entity to be a broken symlink. }
 		PointsTo: string;
+
 	    Gid, Uid: cardinal;
 	end;
 
