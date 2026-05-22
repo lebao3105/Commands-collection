@@ -63,7 +63,7 @@ begin
         Result := ignoreRegexMatch;
         if not Result and verbose then
             info(FILTERED, [name]);
-        
+
         return;
     end;
 
@@ -83,7 +83,7 @@ begin
     Result := true;
     if verbose then
         info(ATTEMPTING_TO_DELETE, [which]);
-    
+
     if not RegexFileNameCheck(ExtractFileName(which)) then
         return(not keepGoing);
 
@@ -115,8 +115,6 @@ begin
 end;
 {$pop}
 
-var regcheck: specialize TOptional<ERegExpr>;
-    str: string;
 begin
     if ParamCount = 0 then
         fatal(NOTHING_TO_DELETE);
@@ -138,12 +136,15 @@ begin
     if High(cc.getopts.NonOpts) = 0 then
         fatal(NOTHING_TO_DELETE);
 
-    if RegexGetExpr <> '' then begin
-        regcheck := RegexVerifyExpr;
-        if regcheck.HasValue then
-            fatal(REGEX_FAILED, [RegexGetExpr, regcheck.Value.Message]);
-    end;
+    if (RegexGetExpr <> '') and (not RegexVerifyExpr) then
+        FatalAndTerminate(1, REGEX_FAILED, [RegexGetExpr, regcheck.Value.Message]);
 
-    for str in cc.getopts.NonOpts do
-        DeleteThing(str);
+    specialize ArrayForEach<string>(
+        cc.getopts.NonOpts,
+        fn (where: string): bool
+        begin
+            DeleteThing(where);
+            Result := false;
+        end
+    );
 end.

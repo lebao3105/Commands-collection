@@ -15,7 +15,7 @@ begin
 	Regexer.ModifierStr := modifiers;
 end;
 
-fn RegexGetMatches(const input: string): TStringDynArray;
+fn RegexGetMatches(const input: string): specialize ArrayOf<string>;
 var i : int;
 {$push}{$warn 5093 off} // Result seems to be not initialized
 begin
@@ -66,14 +66,13 @@ begin
 	Result := Regexer.Expression;
 end;
 
-fn RegexVerifyExpr: specialize TOptional<ERegExpr>;
+fn RegexVerifyExpr: bool;
 begin
 	try
-		// It will raise exceptions anyway
 		Regexer.Compile;
+		Result := true;
 	except
-		on E: ERegExpr do
-			Result.Value := E;
+		Result := false;
 	end;
 end;
 

@@ -25,23 +25,7 @@ uses
     i18n
     ;
 
-
-fn StringToListCol(const str: string): specialize TResult<EListingColumns, string>;
-var
-    casted: int;
-begin
-    casted := GetEnumValue(TypeInfo(EListingColumns), LowerCase(str));
-
-    if casted = -1 then
-        Result := specialize TResult<EListingColumns, string>.Err(
-            Format(INVALID_COLUMN, [ str ]))
-    else
-        Result := specialize TResult<EListingColumns, string>.Ok(
-            EListingColumns(casted));
-end;
-
 retn RegexPrepare;
-var check: specialize TOptional<ERegExpr>;
 begin
     debug('Ignore modifiers: %s', [ Settings.IgnoreRegexModifiers ]);
     RegexSetModifiers(Settings.IgnoreRegexModifiers);
@@ -56,7 +40,7 @@ begin
 
     specialize ArrayForEach<string>(
         Settings.IgnoreRegexPatterns,
-        fn (const pattern: string): bool
+        fn (pattern: string): bool
         begin
             RegexAppendExpr(pattern);
             return(false);
@@ -65,13 +49,24 @@ begin
 
     debug('Ignore expression: %s', [RegexGetExpr]);
 
-    check := RegexVerifyExpr;
-    //if check.HasValue then
-    //    FatalAndTerminate(1, REGEX_FAILED_LOC, [
-    //       RegexGetExpr,
-    //       RegexGetLastCompileErrorPos,
-    //       check.Value.Message
-    //    ]);
+    if not RegexVerifyExpr then
+       FatalAndTerminate(1, REGEX_FAILED_LOC, [
+          RegexGetExpr,
+          RegexGetLastCompileErrorPos,
+          RegexGetLastError
+       ]);
+end;
+
+fn StringToListCol(const str: string): EListingColumns;
+var
+    casted: int;
+begin
+    casted := GetEnumValue(TypeInfo(EListingColumns), LowerCase(str));
+
+    if casted = -1 then
+        raise Exception.Create(Format(INVALID_COLUMN, [ str ]));
+
+    Result := EListingColumns(casted);
 end;
 
 fn FSEntityKindToTypeString(tp: EFSEntityKind): string; inline;
