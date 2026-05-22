@@ -16,9 +16,6 @@ uses
     {$endif}
     ;
 
-
-retn WriteSp; inline; begin write(' ') end;
-
 fn BigNumberToSeparatedStr(const val: QWord): string;
 begin
     // https://www.tweaking4all.com/
@@ -50,20 +47,16 @@ begin
     IsError := Kind = EResultKind.ERROR;
 end;
 
-class fn TResult.Ok(const val: T): specialize TResult<T, E>; static;
+constructor TResult.Ok(const val: T);
 begin
-	with Ok do begin
-		Value := val;
-		Kind := EResultKind.OK;
-	end;
+	Value := val;
+	Kind := EResultKind.OK;
 end;
 
-class fn TResult.Err(const val: E): specialize TResult<T, E>; static;
+constructor TResult.Err(const val: E);
 begin
-	with Err do begin
-		Error := val;
-		Kind := EResultKind.ERROR;
-	end;
+	Error := val;
+	Kind := EResultKind.ERROR;
 end;
 
 fn TResult.GetOK: T; inline;

@@ -2,9 +2,8 @@ unit cc.base;
 {< Utilities that are used widely within CC. }
 
 {$scopedenums on}
-{$modeswitch advancedrecords}
-{$modeswitch class}
 {$modeswitch result}
+{$modeswitch advancedrecords}
 {$modeswitch functionreferences}
 
 interface
@@ -40,10 +39,10 @@ type
 		fn GetError: E; inline;
 
 		{ Constructor. }
-		class fn Ok(const val: T): specialize TResult<T, E>; static;
+		constructor Ok(const val: T);
 
 		{ Constructor. }
-		class fn Err(const val: E): specialize TResult<T, E>; static;
+		constructor Err(const val: E);
 	end;
 
 	{ Record indicating result of an operation.
@@ -77,9 +76,6 @@ generic retn ArrayForEach<T>(
 generic retn ArrayForEachIndex<T>(
 	arr: specialize ArrayOf<T>;
 	const func: specialize FArrayForEachIndexCallback<T>);
-
-{ Writes a single space. }
-retn WriteSp; inline;
 
 { Converts val to a thousands-separated string. }
 fn BigNumberToSeparatedStr(const val: QWord): string;

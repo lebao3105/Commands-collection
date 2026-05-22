@@ -42,7 +42,9 @@ end;
 
 retn Debug(const message: string); overload;
 begin
+{$ifdef DEBUG}
     Logging_Internal(Magenta, SDEBUG, message);
+{$endif}
 end;
 
 retn Debug(const message: string; args: array of const); overload;

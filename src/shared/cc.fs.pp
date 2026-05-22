@@ -14,13 +14,24 @@ uses
     {$endif}
     ;
 
-fn PopulateFSInfo(const path: string; out info: TFSProperties): bool;
-var
-    st: stat;
-    cFollowPath: pchar;
-
+fn GetFSETypeInternal(st: pstat): EFSEntityKind;
 begin
-    cFollowPath := Nil;
+    case (st^.st_mode and S_IFMT) of
+        S_IFBLK: Result := EFSEntityKind.Block;
+        S_IFCHR: Result := EFSEntityKind.CharDev;
+        S_IFDIR: Result := EFSEntityKind.Dir;
+        S_IFIFO: Result := EFSEntityKind.Pipe;
+        S_IFLNK: Result := EFSEntityKind.Symlink;
+        S_IFREG: Result := EFSEntityKind.NormalFile;
+        S_IFSOCK: Result := EFSEntityKind.Socket;
+    end;
+end;
+
+fn PopulateFSInfo(const path: string; out info: TFSProperties): bool;
+{$push}
+    {$warn 5036 off}
+var st: stat;
+begin
     if FpLStat(path, st) <> 0 then
     begin
         PopulateFSInfo := false;
@@ -29,24 +40,9 @@ begin
     end;
 
     with info do begin
-        case (st.st_mode and S_IFMT) of
-            S_IFBLK: Kind := EFSEntityKind.Block;
-            S_IFCHR: Kind := EFSEntityKind.CharDev;
-            S_IFDIR: Kind := EFSEntityKind.Dir;
-            S_IFIFO: Kind := EFSEntityKind.Pipe;
-            S_IFLNK: begin
-                Kind := EFSEntityKind.Symlink;
-                cFollowPath := RealPath(PChar(path), Nil);
-                if cFollowPath <> Nil then // TODO: Handle the opposite case
-                begin
-                    PointsTo := string(cFollowPath);
-                    // Causes double-free exception
-                    // Dispose(cFollowPath);
-                end
-            end;
-            S_IFREG: Kind := EFSEntityKind.NormalFile;
-            S_IFSOCK: Kind := EFSEntityKind.Socket;
-        end;
+        Kind := GetFSETypeInternal(@st);
+        if Kind = EFSEntityKind.Symlink then
+            PointsTo := string(RealPath(PChar(path), Nil));
 
         Perms[0].E := (st.st_mode and S_IXUSR) <> 0;
         Perms[0].R := (st.st_mode and S_IRUSR) <> 0;
@@ -73,74 +69,68 @@ begin
 
     PopulateFSInfo := true;
 end;
+{$pop}
 
-retn IteratedirInternal(const request: TIteratedirRequest);
+retn Iteratedir(const path: string; callback: TIteratedirCallback; recursively, printPath: bool);
 var
     dir: pDIR;
     entry: pDirent;
     r: PIteratedirResult;
 
 begin
-    with request do begin
-        Assert(Assigned(callback));
+    Assert(Assigned(callback));
+    Assert(Length(path) > 0);
+    New(r);
 
-        if printPath then
-            writeln(path, ':');
+    if printPath then
+        writeln(path, ':');
 
-        dir := FpOpendir(path);
-        if dir = nil then begin
-            New(r);
-            r^.name := path;
-            r^.info.Kind := EFSEntityKind.StatFailure;
-            callback(r, true);
-            Dispose(r);
-            exit;
-        end;
-
-        New(r);
-        repeat
-            entry := fpReadDir(dir^);
-            if entry <> nil then begin
-                with entry^ do begin
-                    // Not all file systems support d_type -
-                    // some will return DT_UNKNOWN. Maybe use PopulateFSInfo?
-                    // Not ideal, but as Dirent having too little fields for
-                    // TFSProperties, this is the way.
-
-                    r^.name := ansistring(d_name);
-                    PopulateFSInfo(path + '/' + r^.name, r^.info);
-
-                    callback(r, false(* Known as a directory that will be listend *));
-
-                    // I want to create new threads here, for deeper
-                    // iterations. That would break sorting (which isnot even exist yet)
-                    if (r^.info.Kind = EFSEntityKind.Dir) and recursively and
-                       (r^.name <> '.') and (r^.name <> '..') then
-                        Iteratedir(path + '/' + r^.name, callback, true, true);
-                end;
-            end;
-        until entry = nil;
-
+    dir := fpOpenDir(path);
+    if dir = nil then begin
+        r^.fullpath := path;
+        r^.info.Kind := EFSEntityKind.StatFailure;
+        callback(r);
         Dispose(r);
-        FpClosedir(dir^);
-
-        if printPath then
-            writeln;
+        exit;
     end;
+
+    New(r);
+    repeat
+        entry := fpReadDir(dir^);
+        if entry = nil then continue;
+        with entry^ do begin
+            // Not all file systems support d_type -
+            // some will return DT_UNKNOWN. Maybe use PopulateFSInfo?
+            // Not ideal, but as Dirent having too little fields for
+            // TFSProperties, this is the way.
+
+            r^.name := string(d_name);
+            r^.fullpath := path + DirectorySeparator + r^.name;
+            PopulateFSInfo(r^.fullpath, r^.info);
+
+            callback(r);
+
+            // I want to create new threads here, for deeper
+            // iterations. That would break sorting (which isnot even exist yet)
+            if (r^.info.Kind = EFSEntityKind.Dir) and recursively and
+                (d_name <> '.') and (d_name <> '..') then
+                Iteratedir(r^.fullpath, callback, true, true);
+        end;
+    until entry = nil;
+
+    Dispose(r);
+    FpClosedir(dir^);
+
+    if printPath then
+        writeln;
 end;
 
-retn Iteratedir(const p: string; cb: TIteratedirCallback; r: bool; pr: bool);
-var
-    request: TIteratedirRequest;
+fn GetFSEntityType(const p: string): EFSEntityKind;
+var st: stat;
 begin
-    with request do begin
-        path := p;
-        callback := cb;
-        recursively := r;
-        printPath := pr;
-    end;
-
-    IteratedirInternal(request);
+    if FpLStat(p, st) <> 0 then
+        return(EFSEntityKind.StatFailure);
+    return(GetFSETypeInternal(@st));
 end;
 
 end.
