@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
-"PO-Revision-Date: 2026-05-02 14:10\n"
+"PO-Revision-Date: 2026-05-22 17:23\n"
 
 #: cc.base.not_error_result
 msgid "Result IS fine!"
@@ -88,6 +88,14 @@ msgstr ""
 
 #: cc.logging.swarning
 msgid "warning:"
+msgstr ""
+
+#: cc.pager.console_too_small
+msgid "The console is too small. The content will go nuts."
+msgstr ""
+
+#: cc.pager.paged_view
+msgid "-- Paged view. Up/down arrows = scroll. --"
 msgstr ""
 
 #: cc.regex.regex_failed
