@@ -1,7 +1,7 @@
 add_imports("lib.detect.find_program", "lib.detect.find_file")
 
 add_moduledirs(os.projectdir() .. "/build-aux")
-add_imports("i18n", "miscs", {inherit = true})
+add_imports("i18n", "miscs", { inherit = true })
 
 add_rules("mode.debug", "mode.release", "mode.releasedbg")
 set_policy("check.auto_ignore_flags", false)
@@ -10,7 +10,7 @@ includes("@builtin/xpack")
 
 version = "1.1.0alpha"
 set_version(version)
-programs = {}
+programs = { }
 
 option("output-prefix")
     set_showmenu(true)
@@ -55,6 +55,10 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
             "-dCC_VERSION:=\'" .. version .. "\'" -- version of CC
         )
 
+        if is_mode("debug") then
+            add_pcflags("-dDEBUG")
+        end
+
         if has_config("output-prefix") then
             set_basename(get_config("output-prefix") .. name)
         end
@@ -63,7 +67,7 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
             add_pcflags("-Municodestrings")
         end
 
-        before_build(function (target)
+        before_build( function (target)
             target:add("pcflags", miscs.get_custom_fpc_conf())
 
             local locpath = "-dLOC_PATH:="
@@ -86,7 +90,7 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
 
         local groff_path = os.projectdir() .. "/docs/1/cc-" .. name .. ".1"
 
-        on_build(function (_)
+        on_build( function (_)
             miscs.scdoc_to_groff("docs/1/" .. name .. ".scd", groff_path)
         end)
 
@@ -98,7 +102,7 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
 
         local i18n_dir = "src/" .. name .. "/i18n/"
 
-        on_build(function (_)
+        on_build( function (_)
             local potloc = i18n_dir .. "cc.pot"
 
             -- Generate a template
@@ -118,7 +122,7 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
                 i18n.merge_po_files(potloc, outpath)
 
                 -- Compile .po to .mo
-                i18n.compile_po_files({outpath, ccpath .. "/cc.po"}, fullpath .. "/cc.mo")
+                i18n.compile_po_files({ outpath, ccpath .. "/cc.po" }, fullpath .. "/cc.mo")
             end
         end)
 
