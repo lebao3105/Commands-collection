@@ -19,14 +19,11 @@ unit cc.getopts;
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 }
 
-{$I objfpc.inc}
-
 {$modeswitch advancedrecords}
 {$modeswitch anonymousfunctions}
 {$modeswitch defaultparameters}
 {$modeswitch implicitfunctionspecialization}
 {$modeswitch result}
-{$goto on}
 {$scopedenums on}
 {$H+}
 
@@ -81,10 +78,11 @@ type
 
 var
     { Set to the argument of an option if it needs one (and found one) }
-    OptArg : String;
+    OptArg : string;
 
-    { Index of the current command line argument. }
-    OptInd : Longint = 0;
+    { Index of the current command line argument.
+      This does not count the executable itself. }
+    OptInd : uint32 = 1;
 
     { Callback function that handle what GetOpt. }
     OptCharHandler : TOptArgCallback;

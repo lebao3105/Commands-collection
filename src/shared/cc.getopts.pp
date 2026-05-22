@@ -9,7 +9,7 @@ uses
     sysutils,
     {$endif}
 
-    {$ifndef PASDOC}
+    {$ifndef NO_PROG}
     i18n,
     {$endif}
     cc.console,
@@ -27,7 +27,8 @@ uses
 {$define ARGA_USE_PAIRS :=
     (Long: 'use-pairs'; Kind: EOptKind.FLAG; Short: #0; Help: '')}
 
-{$push}{$warn 5028 off} // Unused resourcestring
+{$push}
+    {$warn 5028 off} // Unused resourcestring
 resourcestring
     CC_VERSION_STR      = 'Commands-Collection (CC) version %s';
     // TRANSLATORS:               OS v  CPU v
@@ -41,24 +42,23 @@ resourcestring
     OPT_NEED_VAL        = 'option %s requires an argument';
     OPT_UNKNOWN         = 'unrecognized option: %s';
     OPT_PAIR_NOT_ENOUGH = 'not enough item for a pair: %d required, got %d';
-{$pop}
 
-{$ifndef PASDOC}
-    {$push}{$warn 3177 off} // Uninitialized fields
-        {$I config.inc}
-        {$if defined(ALLOW_PAIRS) and defined(PAIR_NUM)}
-            {$if PAIR_NUM < 2}
-                {$fatal PAIR_NUM is BELOW TWO!}
-            {$endif}
+{$ifndef NO_PROG}
+    {$push}
+        {$warn 3177 off} // Uninitialized fields
+    {$I config.inc}
+    {$if defined(ALLOW_PAIRS) and defined(PAIR_NUM)}
+        {$if PAIR_NUM < 2}
+            {$fatal PAIR_NUM is BELOW TWO!}
         {$endif}
-    {$pop}
+    {$endif}
 {$endif}
 {$I cc.termcolors.inc}
 
 fn TOption.WriteFullHelpMessage: string;
 begin
     if IsEmpty then
-        return;
+        return('');
 
     Result := ANSI_CODE_BOLD;
 
@@ -92,161 +92,135 @@ begin
     Result := (Short = #0) and (Long = '');
 end;
 
+{$ifndef NO_PROG}
 retn ShowHelp(to_stdout: bool);
 begin
-{$ifndef PASDOC}
     setOutputStream(not to_stdout);
     writeln(OutputFile, PROGRAM_DESC);
 
-    specialize ArrayForEach<TOption>(ARGA,
+    ArrayForEach(ARGA,
     fn (opt: TOption): bool
     begin
-        writeln(OutputFile, opt.WriteFullHelpMessage());
+        writeln(OutputFile, opt.WriteFullHelpMessage);
         return(false);
     end);
 
     {$ifdef HAS_BONUS_HELP}
     writeln(OutputFile, PROGRAM_BONUS_HELP);
     {$endif}
-{$endif}
 end;
 
-var
-    NextChar: LongInt;
+var foundOptPos: uint8; // index in ARGA where the option was found
+    lastArgNeedsAValue: bool = false;
 
-retn Meh(message: string; args: array of const); overload;
-begin
-    ShowHelp({ to_stdout } false);
-    FatalAndTerminate(1, message, args);
-end;
-
-retn Meh(opt: TOption; message: string; args: array of const); overload;
+retn needAValue(optName: string);
 begin
     setOutputStream(true);
-    writeln(OutputFile, opt.WriteFullHelpMessage);
-    FatalAndTerminate(1, message, args);
+    writeln(OutputFile, ARGA[foundOptPos].WriteFullHelpMessage);
+    FatalAndTerminate(1, OPT_NEED_VAL, [ optName ]);
 end;
 
-{$ifndef PASDOC}
-fn Internal_getopt: ansichar;
-label
-    deinit;
+fn Internal_getopt: char;
 var
     exact: bool;
-    optName, optValue: string;
-    foundOptPos: int;
-    eqPos: int; // position of the first equal sign
-
-    fn currentArg: string; inline;
-    begin
-        return(IfThenElse(
-            optind < argc, ParamStr(optind), ''
-        ));
-    end;
-
-    fn isALongOption: bool; inline;
-    begin // -- doesn't count
-        Result := (length(currentArg) >= 2) and
-                  (currentArg[1] = OptSpecifier) and
-                  (currentArg[2] = OptSpecifier);
-    end;
-
-    fn nameToFlag: string;
-    begin
-        if optName = '' then return('');
-        return(IfThenElse(
-            length(optName) > 1, '--' + optName, '-' + optName
-        ));
-    end;
-
-    retn appendAllNonOptions;
-    var i: int;
-    begin
-        SetLength(NonOpts, argc - optind);
-        for i := optind to argc do
-            NonOpts[i - optind] := ParamStr(i);
-    end;
+    optName, optValue, currentArg: string;
+    firstCatchIdx, // index in currentArg that is not leading dashes
+    eqPos,         // position of the first equal sign
+    argLen,        // length of currentArg
+    nextChar       // the first index after leading dashes
+        : uint32;
 
 begin
-    // Initialize if needed.
-    OptArg := '';
-    if OptInd = 0 then begin
-        OptInd := 1;
-        NextChar := 0;
+    // Are we at the end?
+    if OptInd = argc then
+    begin
+        if lastArgNeedsAValue then
+            needAValue(ParamStr(OptInd - 1));
+        return(EndOfOptions);
     end;
 
-    if nextchar = 0 then
+    nextChar := 0;
+    currentArg := ParamStr(optInd);
+    Assert(currentArg <> '');
+    argLen := Length(currentArg);
+
+    // Is this a non-option?
+    if (argLen = 1) or (currentArg[1] <> OptSpecifier) or lastArgNeedsAValue then
     begin
-        {$ifdef ALLOW_DOUBLE_SPECIFIER}
-        // Now check if the current argument is --.
-        if currentArg = OptDoubleSpecifier then
-        begin
-            appendAllNonOptions;
-            OptInd := argc;
-            return(EndOfOptions);
-        end;
-        {$endif}
-
-        // Are we at the end?
-        if OptInd >= argc then
-            return(EndOfOptions);
-
-        // Are we at a non-option?
-        if (currentArg[1] <> OptSpecifier) or (length(currentArg) = 1) then
-        begin
-            // intentional for handling options with required/optional value
-            optValue := currentArg;
-
+        if lastArgNeedsAValue then begin
+            lastArgNeedsAValue := false;
+            OptArg := currentArg;
+        end
+        else begin
             SetLength(NonOpts, Length(NonOpts) + 1);
-            NonOpts[High(NonOpts)] := optValue;
-
-            inc(optind);
-            return(#0);
+            NonOpts[High(NonOpts)] := currentArg;
         end;
 
-        // At this point we're at a long option...
-        nextchar := 2;
-        if isALongOption then
-            inc(nextchar);
-            // Now it points at the first character of an option
+        inc(optind);
+        return(#0);
     end;
 
-    // Now handle long options
-    if isALongOption then
+    {$ifdef ALLOW_DOUBLE_SPECIFIER}
+    // Now check if the current argument is --.
+    if currentArg = OptDoubleSpecifier then
     begin
+        retn(); var i: int;
+        begin
+            SetLength(NonOpts, argc - optind);
+            for i := optind to argc - 1 do
+                NonOpts[i - optind] := ParamStr(i);
+        end();
+        OptInd := argc;
+        return(EndOfOptions);
+    end;
+    {$endif}
+
+    // At this point we're at the start of an option...
+    // nextchar now points to the first character of that option
+    // (skipping the dashes of course)
+    nextChar := 2;
+
+    // Pos(sub, source)
+    // 0 if sub is not present in source.
+    if (argLen > 2) and
+        (currentArg[1] = OptSpecifier) and
+        (currentArg[2] = OptSpecifier) then
+    begin // long options
         // Get option name
         eqPos := Pos('=', currentArg);
         if eqPos = 0 then
-            eqPos := length(currentArg) + 1;
+            optName := Copy(currentArg, nextChar)
+        else begin
+            optName := Copy(currentArg, nextchar, eqPos - nextchar);
 
-        optName := Copy(currentArg, nextchar, eqPos - nextchar);
-
-        // Get option value, if any
-        // This disallows combinations of short flags, which means
-        // one has to use -l -a instead of -la.
-        if eqPos < Length(currentArg) then
-            optValue := Copy(currentArg, eqPos + 1, Length(currentArg) - eqPos);
+            // Get option value, if any.
+            // This disallows combinations of short flags, which means
+            // one has to use -l -a instead of -la.
+            optValue := Copy(currentArg, eqPos + 1, argLen - eqPos);
+        end;
     end
 
-    // Handle short options
-    else begin
-        optName := Copy(currentArg, nextchar, 1); // short option is always 1 char
+    // Copy(source, startIdx, count)
+    // startIdx is 1-based, count can be omitted
+    else
+    begin // short options
+        optName := currentArg[nextChar];
 
         // If there is a value, e.g -x5 where 5 is the value, get it too
-        if length(currentArg) > 2 then
-            optValue := Copy(currentArg, nextchar + 1, Length(currentArg) - 2);
+        if argLen > 2 then
+            optValue := Copy(currentArg, nextchar + 1);
     end;
+
+    Assert(optName <> '');
 
     // Now time to use ARGA
     exact := false;
     foundOptPos := 0;
+    Inc(OptInd);
 
     ArrayForEachIndex(ARGA,
     fn (const indx: smallint; opt: TOption): bool
     begin
-        if exact then
-            return(true);
-
         if (optName = opt.Long) or (optName = opt.Short) then
         begin
             exact := true;
@@ -257,8 +231,10 @@ begin
         return(false);
     end);
 
-    if not exact then
-        Meh(OPT_UNKNOWN, [ optName ]);
+    if not exact then begin
+        ShowHelp({ to_stdout } false);
+        FatalAndTerminate(1, OPT_UNKNOWN, [ optName ]);
+    end;
 
     with ARGA[foundOptPos] do
     begin
@@ -273,7 +249,7 @@ begin
             OptIsLongOnly := false;
             Result := #0;
             OptHasPairs := true;
-            goto deinit;
+            exit;
         end
         {$endif}
 
@@ -287,15 +263,11 @@ begin
 
         if Kind <> EOptKind.FLAG then
         begin
-            if (optValue = '') and (Kind = EOptKind.FLAG_WITH_VAL) then
-                Meh(ARGA[foundOptPos], OPT_NEED_VAL, [ nameToFlag ]);
-            OptArg := optValue;
+            lastArgNeedsAValue := optValue = '';
+            if not lastArgNeedsAValue then
+                OptArg := optValue;
         end;
     end;
-
-deinit:
-    Inc(OptInd);
-    NextChar := 0;
 end;
 
 retn GetOpt;
@@ -319,14 +291,18 @@ begin
 
     {$ifdef ALLOW_PAIRS}
     if (Length(NonOpts) mod PAIR_NUM) <> 0 then
-        Meh(OPT_PAIR_NOT_ENOUGH, [ PAIR_NUM, Length(NonOpts) div PAIR_NUM ]);
+    begin
+        ShowHelp(false);
+        FatalAndTerminate(1, OPT_PAIR_NOT_ENOUGH, [ PAIR_NUM, Length(NonOpts) div PAIR_NUM ]);
+    end;
     {$endif}
 end;
 {$else}
 
+retn ShowHelp(to_stdout: bool); begin end;
 retn GetOpt; begin end;
 
-{$endif PASDOC}
+{$endif NO_PROG}
 
 fn GetArgPairs: TArrayOfStringDynArray;
 {$if defined(ALLOW_PAIRS)}
@@ -343,7 +319,7 @@ begin
     i := 0;
     j := 0;
 
-    specialize ArrayForEachIndex<string>(NonOpts,
+    ArrayForEachIndex(NonOpts,
         fn (const indx: smallint; opt: string): bool
         begin
             if indx mod 2 = 0 then
@@ -370,3 +346,4 @@ end;
 {$endif}
 
 end.
+{$pop}
