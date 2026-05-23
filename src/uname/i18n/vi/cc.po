@@ -1,86 +1,91 @@
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: commands-collection\n"
+"X-Crowdin-Project-ID: 891754\n"
+"X-Crowdin-Language: vi\n"
+"X-Crowdin-File: /main/src/uname/i18n/cc.pot\n"
+"X-Crowdin-File-ID: 82\n"
+"Project-Id-Version: commands-collection\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: Vietnamese\n"
+"Language: vi_VN\n"
+"PO-Revision-Date: 2026-05-23 15:36\n"
+
 #: uname.all_des
-msgid   "Show everything"
-msgstr  ""
+msgid "Show everything"
+msgstr "Hiện mọi thứ"
 
 #: uname.formatted_des
-msgid   "More human-friendly output"
-msgstr  ""
+msgid "More human-friendly output"
+msgstr "Hiện những thông tin dễ đọc"
 
 #: uname.kern_name_des
-msgid   "Show the kernel name"
-msgstr  ""
+msgid "Show the kernel name"
+msgstr "Hiện tên kernel"
 
 #: uname.kern_rel_des
-msgid   "Show the kernel release"
-msgstr  ""
+msgid "Show the kernel release"
+msgstr "Hiện bản phát hành kernel"
 
 #: uname.kern_ver_des
-msgid   "Show the kernel version"
-msgstr  ""
+msgid "Show the kernel version"
+msgstr "Hiện phiên bản kernel"
 
 #: uname.kernel_name
-msgid   "Kernel name: "
-msgstr  ""
+msgid "Kernel name: "
+msgstr "Tên kernel: "
 
 #: uname.kernel_release
-msgid   "Kernel release: "
-msgstr  ""
+msgid "Kernel release: "
+msgstr "Bản phát hành kernel: "
 
 #: uname.kernel_version
-msgid   "Kernel version: "
-msgstr  ""
+msgid "Kernel version: "
+msgstr "Phiên bản kernel: "
 
 #: uname.machine_des
-msgid   "Show the machine hardware name"
-msgstr  ""
+msgid "Show the machine hardware name"
+msgstr "Hiện tên máy"
 
 #: uname.machine_hwname
-msgid   "Machine hardware name: "
-msgstr  ""
+msgid "Machine hardware name: "
+msgstr "Tên máy: "
 
 #: uname.network_nodename
-msgid   "Network node name: "
-msgstr  ""
+msgid "Network node name: "
+msgstr ""
 
 #: uname.nodename_des
-msgid   "Show the network node name"
-msgstr  ""
+msgid "Show the network node name"
+msgstr ""
 
 #: uname.operating_des
-msgid   "Show the operating system"
-msgstr  ""
+msgid "Show the operating system"
+msgstr "Hiện thông tin hệ điều hành"
 
 #: uname.operating_system
-msgid   "Operating system: "
-msgstr  ""
+msgid "Operating system: "
+msgstr "Hệ điều hành: "
 
 #: uname.processor_des
-msgid   "Show the processor type"
-msgstr  ""
+msgid "Show the processor type"
+msgstr "Hiện thông tin vi xử lý"
 
 #: uname.processor_type
-msgid   "Processor type: "
-msgstr  ""
-
-#: uname.program_bonus_help
-msgid   "With nothing else provided, -s will be omitted.\r\n"
-        "-f must be provided before any other flags, else you will either get "
-        "a mixed output, or no -f effect at all.\r\n"
-        "-o and -p outputs may differ from GNU uname's output due to the "
-        "underlying implementation.\r\n"
-        "For -o, check the following site for all identifies from GNU:https://"
-        "github.com/coreutils/gnulib/blob/master/m4/host-os.m4"
-msgstr  ""
+msgid "Processor type: "
+msgstr "Vi xử lý: "
 
 #: uname.program_desc
-msgid   "Prints system informations"
-msgstr  ""
+msgid "Prints system informations"
+msgstr "In ra những thông tin cơ bản về hệ thống"
 
 #: uname.uname_failed
 #, object-pascal-format
-msgid   "uname() failed: %s"
-msgstr  ""
+msgid "uname() failed: %s"
+msgstr "uname() thất bại: %s"
 
 #: uname.unknown
-msgid   "Unknown"
-msgstr  ""
+msgid "Unknown"
+msgstr "Không xác định"
+
