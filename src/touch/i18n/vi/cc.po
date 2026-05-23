@@ -45,6 +45,15 @@ msgstr ""
 msgid "Ignore errors"
 msgstr ""
 
+#: i18n.invalid_type touch.invalid_type
+#, object-pascal-format
+msgid   "Invalid type for %s: %s - use f for file, d for folder"
+msgstr  ""
+
+#: i18n.keep_going_des touch.keep_going_des
+msgid   "Ignore errors"
+msgstr  ""
+
 #: i18n.nothing_to_create touch.nothing_to_create
 msgid "Nothing to create."
 msgstr ""

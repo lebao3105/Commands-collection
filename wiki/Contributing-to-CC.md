@@ -1,3 +1,5 @@
+> Note: This is written for developers and maintainers only!
+
 # Considerations?
 
 ## CRNL
@@ -45,12 +47,14 @@ Requires these modeswitches:
 
 Usages can be found across the project.
 
-And this - because of mismatching `const` modifier:
+Remember to check for the anonmymous function's signature, because you can encounter this:
 
 ```
 cc.getopts.pp:363:12: error: (4025) Incompatible type for arg no. 2:
 Got "anonymous function(const SmallInt;const ShortString):System.Boolean;", expected "FARRAYFOREACHINDEXCALLBACK<System.ShortString>"
 ```
+
+Occured because of a *const* modifier.
 
 ## Implicit generic specialization
 
@@ -141,10 +145,9 @@ var t: EEnum = FLAG; // Error
     j: EEnum = EEnum.FLAG_TWO; // Ok
 ```
 
-## Some known `modeswitch`es
+## Some other known `modeswitch`es
 
 * `advancedrecords`: Records with methods
-* `result`: `Result` variable in functions
 * `defaultparameters`: Default parameter values for procedures / functions
 * `class`: Class keyword
 * `out`: `out` parameters in procedures / functions
@@ -153,21 +156,17 @@ var t: EEnum = FLAG; // Error
 
 All are created via compiler definitions (`-d` flag) and is used widely.
 
-See the project's `fpc.cfg`.
+See the project's `cc.cfg`.
 
 ## Include files
 
-Pascal allows declaration and implementation of a record, a class, a procedure a function, and more - in one file, separated to sections (`interface` - `implementation` in units) or not (`program` files).
+Pascal by default requires declaration and implementation of everything to be put in one file.
 
-As a result, the file can be very big in size and number of lines, taking more time to scroll through.
+This makes the file big and time-consuming to read and navigate.
 
-CC recommends you to split the code into include files and a main file for each part of the project.
+CC recommends you to split the code into include files and a main file for each part of the project, as seen in C and C++ projects.
 
 All files to be included must have `.inc` extension. They can be included using `{$I}` or `{$INCLUDE}` directive.
-
-## Definitions and C interop
-
-Check [this one](https://github.com/lebao3105/Commands-collection/wiki/Macros,-aliases-and-C-interop-for-Pascal).
 
 ## Creating a new program
 
@@ -180,47 +179,16 @@ $ tree src/hello-world
 |       i18n.inc   # Localizable strings
 |       hello-world.pp # Main program file
 |       ...        # Whatever
+|       i18n/      # Template + localized strings
 ```
 
-`config.inc` must contain these stuff:
+For *config.inc* and *i18n.inc*, read [this](src/shared/argpas/README.md).
 
-* `ARGA`: an array of command-line flags. It must end with `ARGA_SUFFIX`.
-* `ARGA_SHORTOPTS`: a string that presents available command-line flags (in short form). If a flag can/need to have a value, give it a `:` behind the short character. For example:
-    --message -m [MESSAGE] => `m:` in `ARGA_SHORTOPTS`
-
-`ARGA_VERBOSE` can be used in `ARGA` to add verbosity.
-
-Strings in `i18n.inc` must be put in `resourcestring` section, and `NEED_PROGRAM_HELP` check must be used for strings that will be used by `config.inc`.
-Some more needed strings:
-- `PROGRAM_DESC`: Program description;
-- `PROGRAM_BONUS_HELP` (optional): Extra help messages - define `HAS_BONUS_HELP` if you use this
-
-### Argument pairs
-
-Pairs is one of the most unique feature that CC offers. Let's advertise this a little bit.
-
-Considering this argv:
-
-```
-rename --use-pairs    bye  hello \
-       --interactive  home world \
-       --uniform-ext  .txt
-```
-
-Pairs:
-
-* `bye` and `hello`;
-* `home` and `world`;
-
-`.txt` is `--uniform-ext`'s value, and if not, it's not enough for another pair.
-
-A pair can consists of 2, 3 or even more values, depending on the purpose of the program. This can be set using `PAIR_NUM` constant in config.inc. It is required.
-
-To enable the feature, define `ALLOW_PAIRS` in config.inc, and add `ARGA_USE_PAIRS` in ARGA array.
+For how to parse arguments, read that document too, and existing CC programs (recommendation: calltime).
 
 # Documentation
 
-Made possible in feat/deC branch, CC can now generate HTMLs for APIs.
+CC can now generate HTMLs for APIs.
 
 Knowing that you have cloned the repository with submodules cloned, run:
 
@@ -231,17 +199,3 @@ $ xmake b API-docs
 This will generate HTMLs in `docs/api`.
 
 `scdoc` is used. Each program have their own `-docs` target.
-
-# Translations
-
-## In Pascal
-
-In Pascal, strings are put into `resourcestring`, which will be later put into a `.rsj` file.
-
-That's it. XMake, GNU msgfmt and such tools will handle the rest.
-
-Related tasks can be seen via `xmake -h`.
-
-## For translators
-
-Go to this site: https://crowdin.com/project/commands-collection

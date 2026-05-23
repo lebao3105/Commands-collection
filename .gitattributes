@@ -3,3 +3,4 @@
 *.iss       text eol=crlf
 *.inc       text eol=lf diff=pascal linguist-language=Pascal
 *.pp        text eol=lf diff=pascal linguist-language=Pascal
+*.lua       text eol=lf diff=lua    linguist-language=XMake

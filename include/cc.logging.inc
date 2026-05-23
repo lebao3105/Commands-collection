@@ -2,7 +2,10 @@ unit cc.logging;
 {< As the name suggests, logging functions.
    For now only stdout and stderr are used as output streams. }
 
-{$I objfpc.inc} // for array of const
+{$mode objfpc} // for array of const
+{$h+}
+{$modeswitch class-}
+{$modeswitch exceptions-}
 {$modeswitch defaultparameters}
 
 interface

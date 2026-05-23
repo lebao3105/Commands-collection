@@ -1,25 +1,16 @@
-{$define ANSI_CODE_RESET     := ANSIEscapeSequence(#27'[00m')}
+// All codes can be seen at
+// https://en.wikipedia.org/wiki/ANSI_escape_code#Select_Graphic_Rendition_parameters
+
+{$define ANSI_CODE_RESET     := ANSIEscapeSequence(#27'[0m')}
 {$define ANSI_CODE_BOLD      := ANSIEscapeSequence(#27'[1m')}
-{$define ANSI_CODE_DARK      := ANSIEscapeSequence(#27'[2m')}
 {$define ANSI_CODE_UNDERLINE := ANSIEscapeSequence(#27'[4m')}
 {$define ANSI_CODE_BLINK     := ANSIEscapeSequence(#27'[5m')}
-{$define ANSI_CODE_REVERSE   := ANSIEscapeSequence(#27'[7m')}
-{$define ANSI_CODE_CONCEALED := ANSIEscapeSequence(#27'[8m')}
-{$define ANSI_CODE_GRAY      := ANSIEscapeSequence(#27'[30m')}
-{$define ANSI_CODE_GREY      := ANSIEscapeSequence(#27'[30m')}
-{$define ANSI_CODE_RED       := ANSIEscapeSequence(#27'[31m')}
-{$define ANSI_CODE_GREEN     := ANSIEscapeSequence(#27'[32m')}
-{$define ANSI_CODE_YELLOW    := ANSIEscapeSequence(#27'[33m')}
-{$define ANSI_CODE_BLUE      := ANSIEscapeSequence(#27'[34m')}
-{$define ANSI_CODE_MAGENTA   := ANSIEscapeSequence(#27'[35m')}
-{$define ANSI_CODE_CYAN      := ANSIEscapeSequence(#27'[36m')}
-{$define ANSI_CODE_WHITE     := ANSIEscapeSequence(#27'[37m')}
-{$define ANSI_CODE_BG_GRAY   := ANSIEscapeSequence(#27'[40m')}
-{$define ANSI_CODE_BG_GREY   := ANSIEscapeSequence(#27'[40m')}
-{$define ANSI_CODE_BG_RED    := ANSIEscapeSequence(#27'[41m')}
-{$define ANSI_CODE_BG_GREEN  := ANSIEscapeSequence(#27'[42m')}
-{$define ANSI_CODE_BG_YELLOW := ANSIEscapeSequence(#27'[43m')}
-{$define ANSI_CODE_BG_BLUE   := ANSIEscapeSequence(#27'[44m')}
-{$define ANSI_CODE_BG_MAGENTA:= ANSIEscapeSequence(#27'[45m')}
-{$define ANSI_CODE_BG_CYAN   := ANSIEscapeSequence(#27'[46m')}
-{$define ANSI_CODE_BG_WHITE  := ANSIEscapeSequence(#27'[47m')}
+// Attr no. 6: rapid blink
+// Attr no. 7: swap fore & back
+// Attr no. 8: hide
+// Attr no. 9: crossed out (wow this exists)
+{$define ANSI_CODE_NO_BOLD      := ANSIEscapeSequence(#27'[22m')}
+{$define ANSI_CODE_NO_UNDERLINE := ANSIEscapeSequence(#27'[24m')}
+{$define ANSI_CODE_NO_BLINK     := ANSIEscapeSequence(#27'[25m')}
+{$define ANSI_CODE_RESET_FORE   := ANSIEscapeSequence(#27'[39m')}
+{$define ANSI_CODE_RESET_BACK   := ANSIEscapeSequence(#27'[49m')}

@@ -8,25 +8,23 @@ interface
 uses
     cc.base,
     {$ifdef FPC_DOTTEDUNITS}
-    system.regexpr,
-    system.types
+    system.regexpr
     {$else}
-    regexpr,
-    types (* TStringDynArray *)
+    regexpr
     {$endif}
     ;
 
 fn RegexGetModifierStr: string;
 // see modifiers in https://regex.sorokin.engineer/regular_expressions/#modifiers
 retn RegexSetModifiers(const modifiers: string);
-fn RegexGetMatches(const input: string): TStringDynArray;
+fn RegexGetMatches(const input: string): specialize ArrayOf<string>;
 fn RegexHasMatches(const input: string): bool;
 fn RegexGetLastError: string;
 fn RegexGetLastErrorID: int;
 fn RegexGetLastCompileErrorPos: int;
 fn RegexGetMatch(const idx: int = 0): string;
 fn RegexGetExpr: string;
-fn RegexVerifyExpr: specialize TOptional<ERegExpr>;
+fn RegexVerifyExpr: bool;
 retn RegexAppendExpr(const expr: string);
 
 resourcestring

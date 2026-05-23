@@ -19,7 +19,9 @@ uses
 
 resourcestring
     SINFO         = 'info:';
+    {$if defined(DEBUG) or defined(NO_PROG)}
     SDEBUG        = 'debug:';
+    {$endif}
     SWARNING      = 'warning:';
     SERROR        = 'error:';
     SFATAL        = 'fatal:';
@@ -32,8 +34,10 @@ end;
 
 retn Logging_Internal(color: int; level, message: string); overload;
 begin
-    TextColor(color);
-    if doPrintHeader then write(level + ' ' + ANSI_CODE_RESET);
+    if doPrintHeader then begin
+        TextColor(color);
+        write(ANSI_CODE_BOLD + level + ' ' + ANSI_CODE_RESET_FORE);
+    end;
     write(message);
     if doNewLine then write(#13#10);
 end;
@@ -42,7 +46,9 @@ end;
 
 retn Debug(const message: string); overload;
 begin
+{$ifdef DEBUG}
     Logging_Internal(Magenta, SDEBUG, message);
+{$endif}
 end;
 
 retn Debug(const message: string; args: array of const); overload;
@@ -91,7 +97,8 @@ end;
 fn Confirmation(const message: string; args: array of const): char;
 begin
     writeln(Format(message, args));
-    write(ANSI_CODE_GREEN + ANSI_CODE_BOLD + SCONFIRM + ANSI_CODE_RESET +
+    TextColor(Green);
+    write(SCONFIRM + ANSI_CODE_RESET_FORE +
           Format(message, args) + ' [yYnNaA]: ');
     readln(Confirmation);
 end;

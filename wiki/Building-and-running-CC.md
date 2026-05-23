@@ -21,9 +21,9 @@ Try C1x or C23 if something goes wrong.
 
 ### A Pascal Compiler
 
-Use FPC 3.3.1 or Trunk. Bold move I know.
+Use FPC Trunk. Bold move I know.
 
-Grab the compiler either from FPCUpdeluxe / https://freepascal.org.
+Grab the compiler from FPCUpdeluxe.
 
 Embarcadero's Delphi is not tested. This project does not use Delphi anyways.
 
@@ -67,8 +67,6 @@ Install from https://xmake.io.
 
 Assuming you've cloned the repository and `cd`'d into its root. Apply for all of my projects:D
 
-### XMake
-
 In some places like Haiku OS and MSYS2, run this first to let XMake know where the compiler is:
 
 ```bash
@@ -109,10 +107,6 @@ $ xmake c
 To create and consume debug builds, use `xmake f -m debug`.
 
 To create and consume release builds, add `xmake f -m release`.
-
-### Other build tools
-
-There are none:D
 
 ## Running built programs
 

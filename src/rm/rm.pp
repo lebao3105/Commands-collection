@@ -6,15 +6,21 @@ uses
     {$ifdef FPC_DOTTEDUNITS}
     system.sysutils,
     system.regexpr,
+    system.console.crt,
     {$else}
     sysutils,
     regexpr,
+    crt,
     {$endif}
     cc.base,
+    cc.fs,
+    cc.console,
     cc.getopts,
     cc.logging,
     cc.regex
     ;
+
+{$I cc.termcolors.inc}
 
 var
     ignoreRegexMatch,
@@ -43,36 +49,7 @@ begin
     return( (inp = 'y') or (inp = 'Y') );
 end;
 
-fn RegexFileNameCheck(const name: string): bool;
-var
-    regcheck: bool;
-begin
-    regcheck := RegexHasMatches(name);
-
-    // No matches
-    if not regcheck then
-    begin
-        if RegexGetLastErrorID <> 0 then
-        begin
-            error(REGEX_FAILED, [RegexGetExpr, RegexGetLastError]);
-            if not keepGoing then
-                halt(1);
-            return;
-        end;
-
-        Result := ignoreRegexMatch;
-        if not Result and verbose then
-            info(FILTERED, [name]);
-        
-        return;
-    end;
-
-    // There are matches
-    Result := not ignoreRegexMatch;
-    if Result and verbose then
-        info(FILTERED, [name]);
-end;
-
+{$I-}
 fn DeleteThing(const which: string): bool;
 {$push}
     {$warn 5044 off} // faHidden is not portable
@@ -80,52 +57,73 @@ var
     f: TSearchRec;
 
 begin
-    Result := true;
     if verbose then
         info(ATTEMPTING_TO_DELETE, [which]);
-    
-    if not RegexFileNameCheck(ExtractFileName(which)) then
-        return(not keepGoing);
+
+    if RegexHasMatches(ExtractFileName(which)) then
+    begin
+        if ignoreRegexMatch or not verbose then return(false);
+        TextColor(Yellow);
+        writeln(FILTERED + ANSI_CODE_RESET_FORE);
+        return(false);
+    end;
 
     if Confirmation(which) then
     begin
-        if DirectoryExists(which) then
-        begin
-            if recursively and (FindFirst(which + '/*',
-                    faAnyFile or faDirectory or faHidden, f) = 0) then
-                repeat
-                    DeleteThing(which + '/' + f.Name);
-                until FindNext(f) <> 0;
+        case GetFSEntityType(which) of
+            EFSEntityKind.Dir: begin
+                if recursively and (FindFirst(which + '/*',
+                        faAnyFile or faDirectory or faHidden, f) = 0) then
+                    repeat
+                        DeleteThing(which + '/' + f.Name);
+                    until FindNext(f) <> 0;
 
-            if not dryRun then
-                RemoveDir(which);
-        end
+                if not dryRun then
+                    RemoveDir(which);
+            end;
 
-        else if FileExists(which) and not dryRun then
-            if not dryRun then
+            EFSEntityKind.StatFailure: begin
+                TextColor(Red);
+                writeln(
+                    Format(STAT_FAILED, [ StrError(GetLastErrno) ]) +
+                    ANSI_CODE_RESET_FORE
+                );
+                return(false);
+            end;
+
+            else if not dryRun then
                 DeleteFile(which)
-
-        else begin
-            error(NON_EXISTANT, [which]);
-            return(not keepGoing);
         end;
 
-        info(DELETED, [which]);
+        if IOResult <> 0 then begin
+            TextColor(Red);
+            writeln(IOResultToString + ANSI_CODE_RESET_FORE);
+            return(false);
+        end
+        else if verbose then begin
+            TextColor(Green);
+            writeln(OK + ANSI_CODE_RESET_FORE);
+        end;
+
+        return(true);
     end;
+
+    TextColor(Yellow);
+    writeln(Cancelled + ANSI_CODE_RESET_FORE);
+    return(false);
 end;
 {$pop}
+{$I+}
 
-var regcheck: specialize TOptional<ERegExpr>;
-    str: string;
 begin
     if ParamCount = 0 then
-        fatal(NOTHING_TO_DELETE);
+        FatalAndTerminate(1, NOTHING_TO_DELETE);
 
     cc.getopts.OptCharHandler := retn (const found: char)
     begin
         case found of
             'g': ignoreRegexMatch := true;
-            'd': dryRun := true;
+            'd': begin dryRun := true; verbose := true; end;
             'i': interactive := true;
             'v': verbose := true;
             'x': RegexAppendExpr(OptArg);
@@ -135,15 +133,18 @@ begin
     end;
     cc.getopts.GetOpt;
 
-    if High(cc.getopts.NonOpts) = 0 then
-        fatal(NOTHING_TO_DELETE);
+    if Length(cc.getopts.NonOpts) = 0 then
+        FatalAndTerminate(1, NOTHING_TO_DELETE);
 
-    if RegexGetExpr <> '' then begin
-        regcheck := RegexVerifyExpr;
-        if regcheck.HasValue then
-            fatal(REGEX_FAILED, [RegexGetExpr, regcheck.Value.Message]);
-    end;
+    if (RegexGetExpr <> '') and (not RegexVerifyExpr) then
+        FatalAndTerminate(1, REGEX_FAILED, [RegexGetExpr, RegexGetLastError]);
 
-    for str in cc.getopts.NonOpts do
-        DeleteThing(str);
+    cc.logging.doNewLine := false;
+    specialize ArrayForEach<string>(
+        cc.getopts.NonOpts,
+        fn (where: string): bool
+        begin
+            Result := DeleteThing(where) and not keepGoing;
+        end
+    );
 end.

@@ -1,7 +1,7 @@
 program touch;
 {$modeswitch anonymousfunctions}
 {$modeswitch result}
-// {$IOChecks OFF}
+{$IOChecks OFF}
 
 uses
     {$ifdef FPC_DOTTEDUNITS}
@@ -23,7 +23,7 @@ uses
 {$I i18n.inc}
 
 var
-    beVerbose, createParent, dirsOnly: boolean;
+    beVerbose, createParent, dirsOnly, keepGoing: boolean;
 
 retn CreateFolder(path: string); forward;
 
@@ -36,7 +36,7 @@ begin
     // NOTE: RTL's systutils has ForceDirectories that does the same thing.
     if not createParent then return;
 
-    splits := SplitString(fullPath, DirectorySeparator);
+    splits := SplitString(fullPath, '/\');
     currentPath := '';
 
     for idx := Low(splits) to High(splits) - 1 do
@@ -70,6 +70,7 @@ begin
             'p': createParent := true;
             'v': beVerbose := true;
             'd': dirsOnly := true;
+            'k': keepGoing := true;
         end;
     end;
     cc.getopts.GetOpt;

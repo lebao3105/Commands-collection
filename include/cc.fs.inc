@@ -6,6 +6,7 @@ unit cc.fs;
 }
 
 {$modeswitch out}
+{$modeswitch result}
 {$scopedenums on}
 
 interface
@@ -20,7 +21,6 @@ type
 	    Socket,
 		Block,
 		CharDev,
-		MissingFile,
 		Door,
 	    StatFailure
 	);
@@ -59,38 +59,72 @@ type
 	    Gid, Uid: cardinal;
 	end;
 
-	EIterateResults = (
-	    OK, INACCESSIBLE
-	);
-
 	TIterateDirResult = record
-	    name: ansistring;
+	    fullpath, name: ansistring;
 	    info: TFSProperties;
 	end;
 
 	PIterateDirResult = ^TIterateDirResult;
 
-	TIterateDirCallback = retn(const p: PIterateDirResult; toBeIterated: bool);
-
-    TIterateDirRequest = record
-        path: ansistring;
-        callback: TIterateDirCallback;
-        recursively: bool;
-        printPath: bool;
-    end;
+	TIterateDirCallback = retn(const p: PIterateDirResult);
 
 { Reads path, and write its attributes into info.
   Returns a boolean indicating whether the operation succeed or not. }
 fn PopulateFSInfo(const path: string; out info: TFSProperties): bool;
 
-{ Iterates p, and run cb on each entry. Print the directory name if pr is true.
-  Iterates recursively when r is true.
-  If an element / p itself is unreadable (fpOpenDir / fpReadDir / fpStat),
+{ Iterates path, and run callback on each entry. Print the directory name if printPath is true.
+  Iterates recursively when recursively is true. If an element / p itself is unreadable,
   the provided TIterateDirResult will have its info.Kind set to EFSEntityKind.AStatFailure. }
-retn IterateDir(const p: string; cb: TIterateDirCallback; r: bool; pr: bool);
+retn Iteratedir(const path: string; callback: TIteratedirCallback; recursively, printPath: bool);
 
 { Returns the absolute path name that points to file_name, with no
   . and .. and symlinks being involved. Returns a pointer to the
   buffer containing the generated pathname upon successful operation.
   Ortherwise, errno will be set and the result is Nil. }
 fn RealPath(const file_name: pchar; resolved_name: pchar): pchar; external 'libc' name 'realpath';
+
+{ Gets the type of the entity. }
+fn GetFSEntityType(const p: string): EFSEntityKind;
+
+{ Converts system.IOResult to a localized string. If IOResult is 0, returns an empty string.
+  This requires IOChecks to be turned off using. }
+fn IOResultToString: string;
+
+resourcestring
+  // DOS Errors
+  ERR_FILE_NOT_FOUND         = 'file not found';
+  ERR_PATH_NOT_FOUND         = 'path not found';
+  ERR_TOO_MANY_OPEN_FILES    = 'too many open files';
+  ERR_ACCESS_DENIED          = 'access denied';
+  ERR_INVALID_FILE_HANDLE    = 'invalid file handle';
+  ERR_INVALID_FILE_ACCESS    = 'invalid file-access mode';
+  ERR_INVALID_DISK_NUMBER    = 'invalid disk number';
+  ERR_CANNOT_REMOVE_DIR      = 'cannot remove current directory';
+  ERR_CANNOT_RENAME_VOLUMES  = 'cannot rename across volumes';
+
+  // I/O Errors
+  ERR_DISK_READ              = 'error when reading from disk';
+  ERR_DISK_WRITE             = 'error when writing to disk';
+  ERR_FILE_NOT_ASSIGNED      = 'file not assigned';
+  ERR_FILE_NOT_OPEN          = 'file not open';
+  ERR_FILE_NOT_OPEN_INPUT    = 'file not opened for input';
+  ERR_FILE_NOT_OPEN_OUTPUT   = 'file not opened for output';
+  ERR_INVALID_NUMBER         = 'invalid number';
+
+  // Fatal Errors
+  ERR_WRITE_PROTECTED        = 'disk is write protected';
+  ERR_UNKNOWN_DEVICE         = 'unknown device';
+  ERR_DRIVE_NOT_READY        = 'drive not ready';
+  ERR_UNKNOWN_COMMAND        = 'unknown command';
+  ERR_CRC_CHECK_FAILED       = 'cRC check failed';
+  ERR_INVALID_DRIVE          = 'invalid drive specified';
+  ERR_SEEK_ERROR             = 'seek error on disk';
+  ERR_INVALID_MEDIA_TYPE     = 'invalid media type';
+  ERR_SECTOR_NOT_FOUND       = 'sector not found';
+  ERR_PRINTER_OUT_OF_PAPER   = 'printer out of paper';
+  ERR_DEVICE_WRITE           = 'error when writing to device';
+  ERR_DEVICE_READ            = 'error when reading from device';
+  ERR_HARDWARE_FAILURE       = 'hardware failure';
+
+  // Default fallback
+  ERR_UNKNOWN_IO_RESULT      = 'unknown I/O error (Code %d)';

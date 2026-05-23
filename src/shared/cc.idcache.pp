@@ -1,4 +1,5 @@
 {$I cc.idcache.inc}
+{$goto on}
 
 implementation
 
@@ -26,6 +27,8 @@ end;
 fn AppendEntry(const id: cuint32; const isGroup: bool): PCacheEntry;
 var
     tmp: PCacheEntry;
+label
+    bailOut;
 begin
     New(Result);
     Result^.isGroup := isGroup;
@@ -33,28 +36,32 @@ begin
 
     if isGroup then begin
         Result^.group := fpgetgrgid(id);
-        if Result^.group = nil then begin
-            FreeMem(Result);
-            return(nil);
-        end;
+        if Result^.group = nil then goto bailOut;
     end
     else begin
         Result^.user := fpgetpwuid(id);
-        if Result^.user = nil then begin
-            FreeMem(Result);
-            return(nil);
-        end;
+        if Result^.user = nil then goto bailOut;
     end;
 
-    if Cached <> nil then begin
+    if Cached <> nil then
+    begin
     	tmp := Cached;
     	while tmp <> nil do
-            if tmp^.next = nil then
         begin
-            tmp^.next := Result;
-            break;
+            if tmp^.next = nil then
+            begin
+                tmp^.next := Result;
+                break;
+            end;
+            tmp := tmp^.next;
         end;
-    end;
+    end
+    else
+        Cached := Result;
+
+bailOut:
+    Dispose(Result);
+    return(nil);
 end;
 
 fn getpw(id: cuint32; isGroup: bool): PCacheEntry;
