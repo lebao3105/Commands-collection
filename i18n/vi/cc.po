@@ -1,102 +1,175 @@
-msgid ""
-msgstr ""
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Crowdin-Project: commands-collection\n"
-"X-Crowdin-Project-ID: 891754\n"
-"X-Crowdin-Language: vi\n"
-"X-Crowdin-File: /main/i18n/cc.pot\n"
-"X-Crowdin-File-ID: 80\n"
-"Project-Id-Version: commands-collection\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Language-Team: Vietnamese\n"
-"Language: vi_VN\n"
-"PO-Revision-Date: 2026-05-02 14:10\n"
+msgid   ""
+msgstr  "Project-Id-Version: commands-collection\n"
+        "PO-Revision-Date: 2026-05-02 14:10\n"
+        "Language-Team: Vietnamese\n"
+        "Language: vi_VN\n"
+        "Content-Type: text/plain; charset=UTF-8\n"
+        "Plural-Forms: nplurals=1; plural=0;\n"
+        "X-Crowdin-Project: commands-collection\n"
+        "X-Crowdin-Project-ID: 891754\n"
+        "X-Crowdin-Language: vi\n"
+        "X-Crowdin-File: /main/i18n/cc.pot\n"
+        "X-Crowdin-File-ID: 80\n"
 
 #: cc.base.not_error_result
-msgid "Result IS fine!"
-msgstr ""
+msgid   "Result IS fine!"
+msgstr  ""
 
 #: cc.base.not_ok_result
-msgid "Result is NOT OK!"
-msgstr ""
+msgid   "Result is NOT OK!"
+msgstr  ""
 
-#: cc.getopts.cc_build_date
+#: cc.fs.err_access_denied
+msgid   "access denied"
+msgstr  ""
+
+#: cc.fs.err_cannot_remove_dir
+msgid   "cannot remove current directory"
+msgstr  ""
+
+#: cc.fs.err_cannot_rename_volumes
+msgid   "cannot rename across volumes"
+msgstr  ""
+
+#: cc.fs.err_crc_check_failed
+msgid   "cRC check failed"
+msgstr  ""
+
+#: cc.fs.err_device_read
+msgid   "error when reading from device"
+msgstr  ""
+
+#: cc.fs.err_device_write
+msgid   "error when writing to device"
+msgstr  ""
+
+#: cc.fs.err_disk_read
+msgid   "error when reading from disk"
+msgstr  ""
+
+#: cc.fs.err_disk_write
+msgid   "error when writing to disk"
+msgstr  ""
+
+#: cc.fs.err_drive_not_ready
+msgid   "drive not ready"
+msgstr  ""
+
+#: cc.fs.err_file_not_assigned
+msgid   "file not assigned"
+msgstr  ""
+
+#: cc.fs.err_file_not_found
+msgid   "file not found"
+msgstr  ""
+
+#: cc.fs.err_file_not_open
+msgid   "file not open"
+msgstr  ""
+
+#: cc.fs.err_file_not_open_input
+msgid   "file not opened for input"
+msgstr  ""
+
+#: cc.fs.err_file_not_open_output
+msgid   "file not opened for output"
+msgstr  ""
+
+#: cc.fs.err_hardware_failure
+msgid   "hardware failure"
+msgstr  ""
+
+#: cc.fs.err_invalid_disk_number
+msgid   "invalid disk number"
+msgstr  ""
+
+#: cc.fs.err_invalid_drive
+msgid   "invalid drive specified"
+msgstr  ""
+
+#: cc.fs.err_invalid_file_access
+msgid   "invalid file-access mode"
+msgstr  ""
+
+#: cc.fs.err_invalid_file_handle
+msgid   "invalid file handle"
+msgstr  ""
+
+#: cc.fs.err_invalid_media_type
+msgid   "invalid media type"
+msgstr  ""
+
+#: cc.fs.err_invalid_number
+msgid   "invalid number"
+msgstr  ""
+
+#: cc.fs.err_path_not_found
+msgid   "path not found"
+msgstr  ""
+
+#: cc.fs.err_printer_out_of_paper
+msgid   "printer out of paper"
+msgstr  ""
+
+#: cc.fs.err_sector_not_found
+msgid   "sector not found"
+msgstr  ""
+
+#: cc.fs.err_seek_error
+msgid   "seek error on disk"
+msgstr  ""
+
+#: cc.fs.err_too_many_open_files
+msgid   "too many open files"
+msgstr  ""
+
+#: cc.fs.err_unknown_command
+msgid   "unknown command"
+msgstr  ""
+
+#: cc.fs.err_unknown_device
+msgid   "unknown device"
+msgstr  ""
+
+#: cc.fs.err_unknown_io_result
 #, object-pascal-format
-msgid "Built on %s"
-msgstr ""
+msgid   "unknown I/O error (Code %d)"
+msgstr  ""
 
-#: cc.getopts.cc_target_str
-#, object-pascal-format
-msgid "Built for %s on %s using FPC %s"
-msgstr ""
-
-#: cc.getopts.cc_version_str
-#, object-pascal-format
-msgid "Commands-Collection (CC) version %s"
-msgstr ""
-
-#: cc.getopts.help_usage
-msgid "Show this help and exit"
-msgstr ""
-
-#: cc.getopts.opt_need_val
-#, object-pascal-format
-msgid "option %s requires an argument"
-msgstr ""
-
-#: cc.getopts.opt_pair_not_enough
-#, object-pascal-format
-msgid "not enough item for a pair: %d required, got %d"
-msgstr ""
-
-#: cc.getopts.opt_unknown
-#, object-pascal-format
-msgid "unrecognized option: %s"
-msgstr ""
-
-#: cc.getopts.undocumented
-msgid "*Undocumented*"
-msgstr ""
-
-#: cc.getopts.verbose_usage
-msgid "Add verbosity"
-msgstr ""
-
-#: cc.getopts.version_usage
-msgid "Show the version of this program and exit"
-msgstr ""
+#: cc.fs.err_write_protected
+msgid   "disk is write protected"
+msgstr  ""
 
 #: cc.logging.sconfirm
-msgid "confirm:"
-msgstr ""
+msgid   "confirm:"
+msgstr  ""
 
 #: cc.logging.sdebug
-msgid "debug:"
-msgstr ""
+msgid   "debug:"
+msgstr  ""
 
 #: cc.logging.serror
-msgid "error:"
-msgstr ""
+msgid   "error:"
+msgstr  ""
 
 #: cc.logging.sfatal
-msgid "fatal:"
-msgstr ""
+msgid   "fatal:"
+msgstr  ""
 
 #: cc.logging.sinfo
-msgid "info:"
-msgstr ""
+msgid   "info:"
+msgstr  ""
 
 #: cc.logging.swarning
-msgid "warning:"
-msgstr ""
+msgid   "warning:"
+msgstr  ""
 
 #: cc.regex.regex_failed
 #, object-pascal-format
-msgid "%s: regular expression failed: %s"
-msgstr ""
+msgid   "%s: regular expression failed: %s"
+msgstr  ""
 
 #: cc.regex.regex_failed_loc
 #, object-pascal-format
-msgid "%s: regular expression failed at index %d : %s"
-msgstr ""
-
+msgid   "%s: regular expression failed at index %d : %s"
+msgstr  ""
