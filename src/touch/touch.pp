@@ -36,7 +36,7 @@ begin
     // NOTE: RTL's systutils has ForceDirectories that does the same thing.
     if not createParent then return;
 
-    splits := SplitString(fullPath, DirectorySeparator);
+    splits := SplitString(fullPath, '/\');
     currentPath := '';
 
     for idx := Low(splits) to High(splits) - 1 do
