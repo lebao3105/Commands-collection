@@ -1,17 +1,11 @@
 program dir;
+{$modeswitch result}
 {$modeswitch anonymousfunctions}
 
 uses
     {$ifdef FPC_DOTTEDUNITS}
-        {$ifdef UNIX}
-    system.cmem, unixapi.cthreads,
-    system.clocale,
-        {$endif}
     system.sysutils,
     {$else}
-        {$ifdef UNIX}
-    cmem, cthreads, clocale,
-        {$endif}
     sysutils,
     {$endif}
     cc.base,
@@ -24,24 +18,18 @@ uses
     dir.settings
     ;
 
-retn ShowDirEntry(const r: PIterateDirResult; knownAsDir: bool);
+retn ShowDirEntry(const r: PIterateDirResult);
 begin
-    // if not RegexHasMatches(r^.name) then
-    //     if RegexGetLastErrorID <> 0 then
-    //         fatalandterminate(1, REGEX_FAILED, [ RegexGetExpr, RegexGetLastError ])
-    //     else
-    //         return;
+    if RegexHasMatches(r^.name) then
+    begin
+        inc(ignoredCount);
+        return;
+    end;
 
     case r^.info.Kind of
     	EFSEntityKind.StatFailure:
 	    begin
 	        Inc(statFailCount);
-
-	        // if knownAsDir then begin
-	        //     Error(OPEN_DIR_FAILED, @r^.name, @StrError(GetLastErrno));
-	        //     writeln;
-	        //     exit;
-	        // end;
 
 	        if Settings.UseLists then
 	            writeln(Format(STAT_FAILED, [ r^.name, StrError(GetLastErrno) ]))
@@ -54,34 +42,22 @@ begin
 		EFSEntityKind.Dir:
 			Inc(dirCount);
 
-		else begin
-			if Settings.DirOnly then exit;
-			Inc(filesSize, r^.info.Size);
-    	end;
+		else if Settings.DirOnly then exit;
     end;
 
     Inc(count);
 
-    // Name-only list
-    if not Settings.UseLists then
-    begin
-        PrintObjectName(r^.name, r^.info);
-        WriteSp;
-    end
-
-    // Detailed list
-    else PrintObjectName(r^.name, r^.info);
+    PrintObjectName(r^.name, r^.info);
 end;
 
-fn ListItems(const path: string): bool;
+retn ListItems(const path: string);
 begin
     IterateDir(path, @ShowDirEntry, Settings.Recursively,
-               (High(cc.getopts.NonOpts) > 1) or Settings.Recursively);
+               (Length(cc.getopts.NonOpts) > 1) or Settings.Recursively);
+    writeln;
     Report;
-    return(false);
 end;
 
-var str: string;
 begin
     case StrLowerCase(GetEnvironmentVariable('DIR_PRESET')) of
         'win': dir.settings.Settings := WIN_PRESET;
@@ -90,8 +66,6 @@ begin
     else
         dir.settings.Settings := CCD_PRESET;
     end;
-
-    RegexPrepare;
 
     cc.getopts.OptCharHandler := retn (const found: char)
     begin
@@ -106,12 +80,17 @@ begin
         end;
     end;
     cc.getopts.GetOpt;
+    RegexPrepare;
 
     if Length(cc.getopts.NonOpts) = 0 then
         ListItems(GetCurrentDir)
     else
-    	for str in cc.getopts.NonOpts do
-            ListItems(str);
-
-	writeln;
+       	specialize ArrayForEach<string>(
+            cc.getopts.NonOpts,
+            fn (where: string): bool
+            begin
+                ListItems(where);
+                Result := false;
+            end
+        );
 end.

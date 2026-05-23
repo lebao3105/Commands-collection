@@ -5,7 +5,6 @@ interface
 uses cc.fs;
 
 var
-    filesSize	 : qword = 0;
     dirCount	 : ulong = 0;
     ignoredCount : ulong = 0;
     count		 : ulong = 0;
@@ -50,8 +49,13 @@ begin
 	// the right way (hard-coded disk) on Windows
 	// To be REimplemented
 
+	write(Format(FILES_COUNT, [ count - dirCount ])); write(', ');
+	write(Format(DIRS_COUNT, [ dirCount ])); write(', ');
+	write(Format(IGNORED_COUNT, [ ignoredCount ])); write(', ');
+	write(Format(STATFAIL_COUNT, [ statFailCount ]));
+	writeln;
+
     dirCount := 0;
-    filesSize := 0;
     ignoredCount := 0;
     count := 0;
     statFailCount := 0;
@@ -108,13 +112,14 @@ begin
 					write(FormatDateTime(Settings.TimeFormat, props.LastAccessTime));
 			end;
 
-			WriteSp;
+			WriteASpace;
 		end;
 		writeln;
 		return;
 	end;
 
-	write(name + ANSI_CODE_RESET);
+	write(name);
+	WriteASpace;
 end;
 
 end.
