@@ -3,35 +3,14 @@ add_imports("lib.detect.find_program", "lib.detect.find_file")
 add_moduledirs(os.projectdir() .. "/build-aux")
 add_imports("i18n", "miscs", { inherit = true })
 
-add_rules("mode.debug", "mode.release", "mode.releasedbg")
+add_rules("mode.debug", "mode.release")
 set_policy("check.auto_ignore_flags", false)
 
-includes("@builtin/xpack")
-
-version = "1.1.0alpha"
+version = "262305a"
 set_version(version)
 programs = { }
 
-option("output-prefix")
-    set_showmenu(true)
-    set_description("Prefix for built binaries - useful for co-use with ones like GNU Coreutils")
-    if xpack then
-        set_default("cc-")
-    else
-        set_default("")
-    end
-
-option("fpc-conf")
-	set_showmenu(true)
-	set_description("Path to fpc.cfg file - optional")
-	set_default("")
-
-option("use-unicode-rtl")
-	set_showmenu(true)
-	set_description("Use Unicode RTL and packages")
-	set_default(false)
-
-includes("i18n/xmake.lua")
+includes("options.lua", "i18n/xmake.lua", "@builtin/xpack")
 
 for i, dir in ipairs(os.dirs("src/*", { async = true })) do
 	local name = path.filename(dir)
@@ -59,13 +38,7 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
             add_pcflags("-dDEBUG")
         end
 
-        if has_config("output-prefix") then
-            set_basename(get_config("output-prefix") .. name)
-        end
-
-        if get_config("use-unicode-rtl") then
-            add_pcflags("-Municodestrings")
-        end
+        set_basename(get_config("output-prefix") .. name)
 
         before_build( function (target)
             target:add("pcflags", miscs.get_custom_fpc_conf())
