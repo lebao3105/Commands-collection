@@ -1,6 +1,5 @@
 local package_formats = {
-    "rpm", "deb", "dmg", "nsis", "targz",
-    "srpm", "deb", "srczip", "srctargz"
+    "rpm", "deb", "dmg", "nsis", "targz"
 }
 
 xpack("commands-collection")
