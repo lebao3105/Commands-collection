@@ -38,7 +38,9 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
             add_pcflags("-dDEBUG")
         end
 
-        set_basename(get_config("output-prefix") .. name)
+        if has_config("output-prefix") then
+            set_basename(get_config("output-prefix") .. name)
+        end
 
         before_build( function (target)
             target:add("pcflags", miscs.get_custom_fpc_conf())

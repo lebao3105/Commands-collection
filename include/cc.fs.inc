@@ -87,7 +87,7 @@ fn RealPath(const file_name: pchar; resolved_name: pchar): pchar; external 'libc
 fn GetFSEntityType(const p: string): EFSEntityKind;
 
 { Converts system.IOResult to a localized string. If IOResult is 0, returns an empty string.
-  This requires IOChecks to be turned off using {$I-} or {$IOChecks off}. }
+  This requires IOChecks to be turned off using. }
 fn IOResultToString: string;
 
 resourcestring
