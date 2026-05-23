@@ -16,14 +16,17 @@ begin
     exit;
 end;
 
-try
-    if beVerbose then
-        Info(CREATING_STUFF, [path]);
+if beVerbose then
+    Info(CREATING_STUFF, [path]);
 
-    CreateOP(path);
+CreateOP(path);
 
-    if beVerbose then
-        Info(CREATED_STUFF, [path]);
-except on E: Exception do
-    FatalAndTerminate(1, FAILED_TO_CREATE, [path, E.Message]);
-end;
+if IOResult <> 0 then
+begin
+    if not keepGoing then
+        FatalAndTerminate(1, FAILED_TO_CREATE, [path, IOResultToString])
+    else
+        Error(FAILED_TO_CREATE, [path, IOResultToString]);
+end
+else if beVerbose then
+    Info(CREATED_STUFF, [path]);
