@@ -68,3 +68,12 @@ avoidable, reinventions may be made to suit our need, especially for simplicity 
 Q: [Programming scope] Your code doesn't look like Pascal!
 
 A: Which part? Only some keywords (under 5) and types get aliased.
+
+## Versioning system
+
+CC follows this YYMMDD\<branch\> for versions, where \<branch\> is one of:
+
+* a[lpha]
+* b[eta]
+* r[elease candidate]
+* empty means stable.
