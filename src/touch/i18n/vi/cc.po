@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
-"PO-Revision-Date: 2026-05-22 17:23\n"
+"PO-Revision-Date: 2026-05-23 15:06\n"
 
 #: i18n.already_exists touch.already_exists
 #, object-pascal-format
@@ -34,6 +34,15 @@ msgstr ""
 #: i18n.failed_to_create touch.failed_to_create
 #, object-pascal-format
 msgid "Failed to create %s: %s"
+msgstr ""
+
+#: i18n.invalid_type touch.invalid_type
+#, object-pascal-format
+msgid "Invalid type for %s: %s - use f for file, d for folder"
+msgstr ""
+
+#: i18n.keep_going_des touch.keep_going_des
+msgid "Ignore errors"
 msgstr ""
 
 #: i18n.nothing_to_create touch.nothing_to_create
