@@ -31,7 +31,7 @@ end;
 
 fn RegexHasMatches(const input: string): bool;
 begin
-	Result := Regexer.Exec(input);
+	Result := (Regexer.Expression <> '') and Regexer.Exec(input);
 end;
 
 fn RegexGetLastError: string;

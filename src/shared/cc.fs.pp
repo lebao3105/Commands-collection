@@ -29,7 +29,7 @@ end;
 
 fn PopulateFSInfo(const path: string; out info: TFSProperties): bool;
 {$push}
-    {$warn 5036 off}
+    {$warn 5057 off}
 var st: stat;
 begin
     if FpLStat(path, st) <> 0 then
@@ -126,11 +126,58 @@ begin
 end;
 
 fn GetFSEntityType(const p: string): EFSEntityKind;
+{$push}
+    {$warn 5057 off}
 var st: stat;
 begin
     if FpLStat(p, st) <> 0 then
         return(EFSEntityKind.StatFailure);
     return(GetFSETypeInternal(@st));
+end;
+{$pop}
+
+fn IOResultToString: string;
+begin
+    case IOResult of
+        0:   Result := '';
+
+        // DOS Errors
+        2:   Result := ERR_FILE_NOT_FOUND;
+        3:   Result := ERR_PATH_NOT_FOUND;
+        4:   Result := ERR_TOO_MANY_OPEN_FILES;
+        5:   Result := ERR_ACCESS_DENIED;
+        6:   Result := ERR_INVALID_FILE_HANDLE;
+        12:  Result := ERR_INVALID_FILE_ACCESS;
+        15:  Result := ERR_INVALID_DISK_NUMBER;
+        16:  Result := ERR_CANNOT_REMOVE_DIR;
+        17:  Result := ERR_CANNOT_RENAME_VOLUMES;
+
+        // I/O Errors
+        100: Result := ERR_DISK_READ;
+        101: Result := ERR_DISK_WRITE;
+        102: Result := ERR_FILE_NOT_ASSIGNED;
+        103: Result := ERR_FILE_NOT_OPEN;
+        104: Result := ERR_FILE_NOT_OPEN_INPUT;
+        105: Result := ERR_FILE_NOT_OPEN_OUTPUT;
+        106: Result := ERR_INVALID_NUMBER;
+
+        // Fatal Errors
+        150: Result := ERR_WRITE_PROTECTED;
+        151: Result := ERR_UNKNOWN_DEVICE;
+        152: Result := ERR_DRIVE_NOT_READY;
+        153: Result := ERR_UNKNOWN_COMMAND;
+        154: Result := ERR_CRC_CHECK_FAILED;
+        155: Result := ERR_INVALID_DRIVE;
+        156: Result := ERR_SEEK_ERROR;
+        157: Result := ERR_INVALID_MEDIA_TYPE;
+        158: Result := ERR_SECTOR_NOT_FOUND;
+        159: Result := ERR_PRINTER_OUT_OF_PAPER;
+        160: Result := ERR_DEVICE_WRITE;
+        161: Result := ERR_DEVICE_READ;
+        162: Result := ERR_HARDWARE_FAILURE;
+    else
+        Result := Format(ERR_UNKNOWN_IO_RESULT, [IOResult]);
+    end;
 end;
 
 end.

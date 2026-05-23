@@ -19,105 +19,35 @@ uses
 {$define ARGA_VERBOSE :=
     (Long: 'verbose'; Kind: EOptKind.FLAG; Short: 'v'; Help: VERBOSE_USAGE)
 }
+{$define ARGA_USE_PAIRS :=
+    (Long: 'use-pairs'; Kind: EOptKind.FLAG; Short: #0; Help: '')
+}
 {$define ARGA_SUFFIX :=
     (Long: 'help';    Kind: EOptKind.FLAG; Short: 'h'; Help: HELP_USAGE),
     (Long: 'version'; Kind: EOptKind.FLAG; Short: 'V'; Help: VERSION_USAGE),
     (Long: '';        Kind: EOptKind.FLAG; Short: #0; Help: '')
 }
-{$define ARGA_USE_PAIRS :=
-    (Long: 'use-pairs'; Kind: EOptKind.FLAG; Short: #0; Help: '')}
 
-{$push}
-    {$warn 5028 off} // Unused resourcestring
-resourcestring
-    CC_VERSION_STR      = 'Commands-Collection (CC) version %s';
-    // TRANSLATORS:               OS v  CPU v
-    CC_TARGET_STR       = 'Built for %s on %s using FPC %s';
-    CC_BUILD_DATE       = 'Built on %s';
-    HELP_USAGE          = 'Show this help and exit';
-    VERSION_USAGE       = 'Show the version of this program and exit';
-    VERBOSE_USAGE       = 'Add verbosity';
-    UNDOCUMENTED        = 'Use pairs of arguments - check cc-argument-pairs(7)';
-
-    OPT_NEED_VAL        = 'option %s requires an argument';
-    OPT_UNKNOWN         = 'unrecognized option: %s';
-    OPT_PAIR_NOT_ENOUGH = 'not enough item for a pair: %d required, got %d';
-
-{$ifndef NO_PROG}
-    {$push}
-        {$warn 3177 off} // Uninitialized fields
-    {$I config.inc}
-    {$if defined(ALLOW_PAIRS) and defined(PAIR_NUM)}
-        {$if PAIR_NUM < 2}
-            {$fatal PAIR_NUM is BELOW TWO!}
-        {$endif}
-    {$endif}
-{$endif}
 {$I cc.termcolors.inc}
-
-fn TOption.WriteFullHelpMessage: string;
-begin
-    if IsEmpty then
-        return('');
-
-    Result := ANSI_CODE_BOLD;
-
-    if (Short <> '') or (Short <> #0) then
-        Result += ('-' + Short + ANSI_CODE_RESET + ' ');
-
-    if Long <> '' then
-        Result += ('--' + Long);
-
-    if Kind <> EOptKind.FLAG then
-    begin
-        if Long <> '' then
-            Result += '  ';
-
-        if ValParam = '' then
-            ValParam := 'VALUE';
-
-        Result += ValParam;
-
-        if defaultVal <> '' then
-            Result += (' = ' + defaultVal);
-    end;
-
-    if Help = '' then
-        Help := UNDOCUMENTED;
-    Result += (CRNL + #9 + Help);
-end;
-
-fn TOption.IsEmpty: bool;
-begin
-    Result := (Short = #0) and (Long = '');
-end;
+{$I cc.getopts.help.pp}
 
 {$ifndef NO_PROG}
-retn ShowHelp(to_stdout: bool);
-begin
-    setOutputStream(not to_stdout);
-    writeln(OutputFile, PROGRAM_DESC);
-
-    ArrayForEach(ARGA,
-    fn (opt: TOption): bool
-    begin
-        writeln(OutputFile, opt.WriteFullHelpMessage);
-        return(false);
-    end);
-
-    {$ifdef HAS_BONUS_HELP}
-    writeln(OutputFile, PROGRAM_BONUS_HELP);
-    {$endif}
-end;
+const
+    EndOfOptions: char            = #255;
+    OptSpecifier: char            = '-';
+    OptDoubleSpecifier: string[2] = '--';
 
 var foundOptPos: uint8; // index in ARGA where the option was found
     lastArgNeedsAValue: bool = false;
 
-retn needAValue(optName: string);
+retn needAValue(optName: string; need: bool = true);
 begin
     setOutputStream(true);
     writeln(OutputFile, ARGA[foundOptPos].WriteFullHelpMessage);
-    FatalAndTerminate(1, OPT_NEED_VAL, [ optName ]);
+    if need then
+        FatalAndTerminate(1, OPT_NEED_VAL, [ optName ])
+    else
+        FatalAndTerminate(1, OPT_NO_VAL_NEEDED, [ optName ]);
 end;
 
 fn Internal_getopt: char;
@@ -126,8 +56,7 @@ var
     optName, optValue, currentArg: string;
     firstCatchIdx, // index in currentArg that is not leading dashes
     eqPos,         // position of the first equal sign
-    argLen,        // length of currentArg
-    nextChar       // the first index after leading dashes
+    argLen         // length of currentArg
         : uint32;
 
 begin
@@ -139,32 +68,15 @@ begin
         return(EndOfOptions);
     end;
 
-    nextChar := 0;
+    firstCatchIdx := 0;
     currentArg := ParamStr(optInd);
-    Assert(currentArg <> '');
     argLen := Length(currentArg);
-
-    // Is this a non-option?
-    if (argLen = 1) or (currentArg[1] <> OptSpecifier) or lastArgNeedsAValue then
-    begin
-        if lastArgNeedsAValue then begin
-            lastArgNeedsAValue := false;
-            OptArg := currentArg;
-        end
-        else begin
-            SetLength(NonOpts, Length(NonOpts) + 1);
-            NonOpts[High(NonOpts)] := currentArg;
-        end;
-
-        inc(optind);
-        return(#0);
-    end;
 
     {$ifdef ALLOW_DOUBLE_SPECIFIER}
     // Now check if the current argument is --.
     if currentArg = OptDoubleSpecifier then
     begin
-        retn(); var i: int;
+        retn() var i: int;
         begin
             SetLength(NonOpts, argc - optind);
             for i := optind to argc - 1 do
@@ -175,10 +87,24 @@ begin
     end;
     {$endif}
 
+    // Is this a non-option?
+    if (argLen = 1) or (currentArg[1] <> OptSpecifier) or lastArgNeedsAValue then
+    begin
+        if lastArgNeedsAValue then begin
+            lastArgNeedsAValue := false;
+            OptArg := currentArg;
+        end
+        else
+            ArrayAppend(NonOpts, currentArg);
+
+        inc(optind);
+        return(#0);
+    end;
+
     // At this point we're at the start of an option...
-    // nextchar now points to the first character of that option
+    // firstCatchIdx now points to the first character of that option
     // (skipping the dashes of course)
-    nextChar := 2;
+    firstCatchIdx := 2;
 
     // Pos(sub, source)
     // 0 if sub is not present in source.
@@ -189,9 +115,9 @@ begin
         // Get option name
         eqPos := Pos('=', currentArg);
         if eqPos = 0 then
-            optName := Copy(currentArg, nextChar)
+            optName := Copy(currentArg, firstCatchIdx)
         else begin
-            optName := Copy(currentArg, nextchar, eqPos - nextchar);
+            optName := Copy(currentArg, firstCatchIdx, eqPos - firstCatchIdx);
 
             // Get option value, if any.
             // This disallows combinations of short flags, which means
@@ -204,11 +130,11 @@ begin
     // startIdx is 1-based, count can be omitted
     else
     begin // short options
-        optName := currentArg[nextChar];
+        optName := currentArg[firstCatchIdx];
 
         // If there is a value, e.g -x5 where 5 is the value, get it too
         if argLen > 2 then
-            optValue := Copy(currentArg, nextchar + 1);
+            optValue := Copy(currentArg, firstCatchIdx + 1);
     end;
 
     Assert(optName <> '');
@@ -233,7 +159,9 @@ begin
 
     if not exact then begin
         ShowHelp({ to_stdout } false);
-        FatalAndTerminate(1, OPT_UNKNOWN, [ optName ]);
+        FatalAndTerminate(1, OPT_UNKNOWN, [ IfThenElse(
+            length(optName) > 1, '--' + optName, '-' + optName
+        ) ]);
     end;
 
     with ARGA[foundOptPos] do
@@ -266,20 +194,24 @@ begin
             lastArgNeedsAValue := optValue = '';
             if not lastArgNeedsAValue then
                 OptArg := optValue;
-        end;
+        end
+        else if optValue <> '' then
+            needAValue(IfThenElse(
+                length(optName) > 1, '--' + optName, '-' + optName
+            ), false);
     end;
 end;
 
 retn GetOpt;
 var c: ansichar;
 begin
-    if ParamCount > 0 then
+    if ParamCount = 0 then return;
     repeat
         c := Internal_getopt;
         case c of
             'h': begin ShowHelp(true); halt(0); end;
             'V': begin
-                writeln(Format(CC_VERSION_STR, [CC_VERSION]));
+                writeln(Format(CC_VERSION_STR, [ CC_VERSION ]));
                 writeln(Format(CC_TARGET_STR, [ {$I %FPCTARGETOS%}, {$I %FPCTARGETCPU%}, {$I %FPCVERSION%} ]));
                 writeln(Format(CC_BUILD_DATE, [ {$I %DATE%}, {$I %TIME%}]));
                 halt(0);
@@ -293,10 +225,11 @@ begin
     if (Length(NonOpts) mod PAIR_NUM) <> 0 then
     begin
         ShowHelp(false);
-        FatalAndTerminate(1, OPT_PAIR_NOT_ENOUGH, [ PAIR_NUM, Length(NonOpts) div PAIR_NUM ]);
+        FatalAndTerminate(1, OPT_PAIR_NOT_ENOUGH, [ PAIR_NUM, Length(NonOpts) mod PAIR_NUM ]);
     end;
     {$endif}
 end;
+
 {$else}
 
 retn ShowHelp(to_stdout: bool); begin end;
@@ -304,46 +237,39 @@ retn GetOpt; begin end;
 
 {$endif NO_PROG}
 
-fn GetArgPairs: TArrayOfStringDynArray;
 {$if defined(ALLOW_PAIRS)}
-{$push}{$warn 5093 off}{$warn 5091 off}
+fn GetArgPairs: TArrayOfStringDynArray;
 var
     i, j: smallint;
-    resp: TArrayOfStringDynArray; // FPC won't let us use Result directly, at least in 3.3.1
+    resp: TArrayOfStringDynArray; // FPC won't let us use Result directly
 begin
     if not OptHasPairs then return;
+    i := Length(NonOpts) mod PAIR_NUM;
+    if i > 0 then
+        FatalAndTerminate(1, OPT_PAIR_NOT_ENOUGH, [ PAIR_NUM, i ]);
 
-    // TODO: Throw errors
     SetLength(resp, Length(NonOpts) div PAIR_NUM);
-
-    i := 0;
+    i := -1;
     j := 0;
 
     ArrayForEachIndex(NonOpts,
         fn (const indx: smallint; opt: string): bool
         begin
-            if indx mod 2 = 0 then
+            if indx mod PAIR_NUM = 0 then
             begin
+                inc(i); j := 0;
                 SetLength(resp[i], PAIR_NUM);
-                j := 0;
-                resp[i, j] := opt;
-                inc(i);
-                inc(j);
-                return(false);
             end;
 
-            resp[i - 1, j] := opt;
+            resp[i, j] := opt;
             inc(j);
             return(false);
         end);
 
     return(resp);
 end;
-{$pop}
 {$else}
-    begin
-    end;
+fn GetArgPairs: TArrayOfStringDynArray; begin end;
 {$endif}
 
 end.
-{$pop}
