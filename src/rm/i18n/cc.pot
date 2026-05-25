@@ -1,6 +1,10 @@
 #: i18n.attempting_to_delete rm.attempting_to_delete
 #, object-pascal-format
-msgid   "Attempting to delete %s..."
+msgid   "Attempting to delete %s... "
+msgstr  ""
+
+#: i18n.cancelled rm.cancelled
+msgid   "cancelled"
 msgstr  ""
 
 #: i18n.delete_confirmation rm.delete_confirmation
@@ -8,18 +12,8 @@ msgstr  ""
 msgid   "Do you really want to remove %s? [yYnNaA] "
 msgstr  ""
 
-#: i18n.deleted rm.deleted
-#, object-pascal-format
-msgid   "Deleted %s."
-msgstr  ""
-
 #: i18n.dry_run_des rm.dry_run_des
 msgid   "Do not actually remove stuff"
-msgstr  ""
-
-#: i18n.failed_to_delete rm.failed_to_delete
-#, object-pascal-format
-msgid   "Failed to delete %s: %s"
 msgstr  ""
 
 #: i18n.filter_des rm.filter_des
@@ -27,8 +21,7 @@ msgid   "Filter out stuff to delete / keep using regular expressions"
 msgstr  ""
 
 #: i18n.filtered rm.filtered
-#, object-pascal-format
-msgid   "Filtered out %s."
+msgid   "ignored (by filters)"
 msgstr  ""
 
 #: i18n.ignore_des rm.ignore_des
@@ -39,13 +32,12 @@ msgstr  ""
 msgid   "Ignore errors"
 msgstr  ""
 
-#: i18n.non_existant rm.non_existant
-#, object-pascal-format
-msgid   "%s does not exist"
-msgstr  ""
-
 #: i18n.nothing_to_delete rm.nothing_to_delete
 msgid   "Nothing to sacrifice."
+msgstr  ""
+
+#: i18n.ok rm.ok
+msgid   "done"
 msgstr  ""
 
 #: i18n.program_desc rm.program_desc
@@ -54,4 +46,9 @@ msgstr  ""
 
 #: i18n.recursive_des rm.recursive_des
 msgid   "Remove recursively"
+msgstr  ""
+
+#: i18n.stat_failed rm.stat_failed
+#, object-pascal-format
+msgid   "unable to lstat(): %s"
 msgstr  ""
