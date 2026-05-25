@@ -10,82 +10,82 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
-"PO-Revision-Date: 2026-05-23 15:36\n"
+"PO-Revision-Date: 2026-05-25 09:00\n"
 
-#: uname.all_des
+#: i18n.all_des uname.all_des
 msgid "Show everything"
 msgstr "Hiện mọi thứ"
 
-#: uname.formatted_des
+#: i18n.formatted_des uname.formatted_des
 msgid "More human-friendly output"
 msgstr "Hiện những thông tin dễ đọc"
 
-#: uname.kern_name_des
+#: i18n.kern_name_des uname.kern_name_des
 msgid "Show the kernel name"
 msgstr "Hiện tên kernel"
 
-#: uname.kern_rel_des
+#: i18n.kern_rel_des uname.kern_rel_des
 msgid "Show the kernel release"
 msgstr "Hiện bản phát hành kernel"
 
-#: uname.kern_ver_des
+#: i18n.kern_ver_des uname.kern_ver_des
 msgid "Show the kernel version"
 msgstr "Hiện phiên bản kernel"
 
-#: uname.kernel_name
+#: i18n.kernel_name uname.kernel_name
 msgid "Kernel name: "
 msgstr "Tên kernel: "
 
-#: uname.kernel_release
+#: i18n.kernel_release uname.kernel_release
 msgid "Kernel release: "
 msgstr "Bản phát hành kernel: "
 
-#: uname.kernel_version
+#: i18n.kernel_version uname.kernel_version
 msgid "Kernel version: "
 msgstr "Phiên bản kernel: "
 
-#: uname.machine_des
+#: i18n.machine_des uname.machine_des
 msgid "Show the machine hardware name"
 msgstr "Hiện tên máy"
 
-#: uname.machine_hwname
+#: i18n.machine_hwname uname.machine_hwname
 msgid "Machine hardware name: "
 msgstr "Tên máy: "
 
-#: uname.network_nodename
+#: i18n.network_nodename uname.network_nodename
 msgid "Network node name: "
 msgstr ""
 
-#: uname.nodename_des
+#: i18n.nodename_des uname.nodename_des
 msgid "Show the network node name"
 msgstr ""
 
-#: uname.operating_des
+#: i18n.operating_des uname.operating_des
 msgid "Show the operating system"
 msgstr "Hiện thông tin hệ điều hành"
 
-#: uname.operating_system
+#: i18n.operating_system uname.operating_system
 msgid "Operating system: "
 msgstr "Hệ điều hành: "
 
-#: uname.processor_des
+#: i18n.processor_des uname.processor_des
 msgid "Show the processor type"
 msgstr "Hiện thông tin vi xử lý"
 
-#: uname.processor_type
+#: i18n.processor_type uname.processor_type
 msgid "Processor type: "
 msgstr "Vi xử lý: "
 
-#: uname.program_desc
+#: i18n.program_desc uname.program_desc
 msgid "Prints system informations"
 msgstr "In ra những thông tin cơ bản về hệ thống"
 
-#: uname.uname_failed
+#: i18n.uname_failed uname.uname_failed
 #, object-pascal-format
 msgid "uname() failed: %s"
 msgstr "uname() thất bại: %s"
 
-#: uname.unknown
+#: i18n.unknown uname.unknown
 msgid "Unknown"
 msgstr "Không xác định"
 
