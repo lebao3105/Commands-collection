@@ -77,7 +77,7 @@ end;
 {$push}{$warn 5058 off} // Inf does not seem to be initialized
 begin
     if (FpUname(Inf) = -1) then
-        FatalAndTerminate(1, UNAME_FAILED, [ StrError(GetLastErrno) ]);
+        FatalAndTerminate(1, UNAME_FAILED, [ GetLastStrErrno ]);
 
     if ParamCount = 0 then
     begin

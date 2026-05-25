@@ -85,7 +85,7 @@ begin
             EFSEntityKind.StatFailure: begin
                 TextColor(Red);
                 writeln(
-                    Format(STAT_FAILED, [ StrError(GetLastErrno) ]) +
+                    Format(STAT_FAILED, [ GetLastStrErrno ]) +
                     ANSI_CODE_RESET_FORE
                 );
                 return(false);
