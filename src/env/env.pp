@@ -7,16 +7,22 @@ uses
 	{$ifdef FPC_DOTTEDUNITS}
 	system.sysutils,
 	system.types,
-	unixapi.base,
+	{$ifdef UNIX}unixapi.base{$else}system.ctypes{$endif},
 	{$else}
 	sysutils, // GetEnvironmentVariable*
 	types,	  // TStringDynArray
-	baseunix, // fpExecVe
+	{$ifdef UNIX}baseunix{$else}ctypes{$endif}, // fpExecVe
 	{$endif}
 	cc.getopts,
 	cc.logging,
 	cc.base
 	;
+
+{$ifdef WINDOWS}
+fn fpExecVe(const cmdName: pchar;
+            const argv: ppchar;
+            const envp: ppchar): cint; external 'kernel32' name '_execve';
+{$endif}
 
 var
     getValues,
@@ -25,7 +31,7 @@ var
 		: TStringDynArray;
     cleanEnv: bool = false;
 	progArgs, progEnv: PPChar;
-    i, j: uint16;
+    i: uint16;
 	envc: int;
 
 {$I i18n.inc}
@@ -48,7 +54,7 @@ end;
 
 fn SetUnSetDifferences: TStringDynArray;
 var
-	i, j: uint16;
+	j: uint16;
 	parts: TStringDynArray;
 begin
 	if (Length(setValues) = 0) or (Length(unsetValues) = 0) or (envc = 0) then
@@ -117,7 +123,7 @@ begin
 
 	// Launch.
 	if fpExecVe(progArgs[0], progArgs, progEnv) = -1 then
-		Fatal(ProcessExit, [ StrError(GetLastErrno) ]);
+		Fatal(ProcessExit, [ GetLastStrErrno ]);
 
 	Dispose(progEnv);
 	Dispose(ProgArgs);

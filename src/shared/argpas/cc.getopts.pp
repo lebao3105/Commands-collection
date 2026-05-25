@@ -71,6 +71,7 @@ begin
     firstCatchIdx := 0;
     currentArg := ParamStr(optInd);
     argLen := Length(currentArg);
+    optValue := '';
 
     {$ifdef ALLOW_DOUBLE_SPECIFIER}
     // Now check if the current argument is --.
@@ -211,9 +212,9 @@ begin
         case c of
             'h': begin ShowHelp(true); halt(0); end;
             'V': begin
-                writeln(Format(CC_VERSION_STR, [ CC_VERSION ]));
+                writeln(Format(CC_VERSION_STR, [ {$I %CC_VERSION%} ]));
                 writeln(Format(CC_TARGET_STR, [ {$I %FPCTARGETOS%}, {$I %FPCTARGETCPU%}, {$I %FPCVERSION%} ]));
-                writeln(Format(CC_BUILD_DATE, [ {$I %DATE%}, {$I %TIME%}]));
+                writeln(Format(CC_BUILD_DATE, [ {$I %DATE%}, {$I %TIME%} ]));
                 halt(0);
             end;
         else
