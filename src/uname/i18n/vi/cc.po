@@ -1,86 +1,91 @@
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: commands-collection\n"
+"X-Crowdin-Project-ID: 891754\n"
+"X-Crowdin-Language: vi\n"
+"X-Crowdin-File: /main/src/uname/i18n/cc.pot\n"
+"X-Crowdin-File-ID: 82\n"
+"Project-Id-Version: commands-collection\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: Vietnamese\n"
+"Language: vi_VN\n"
+"PO-Revision-Date: 2026-05-25 09:00\n"
+
 #: i18n.all_des uname.all_des
-msgid   "Show everything"
-msgstr  ""
+msgid "Show everything"
+msgstr "Hiện mọi thứ"
 
 #: i18n.formatted_des uname.formatted_des
-msgid   "More human-friendly output"
-msgstr  ""
+msgid "More human-friendly output"
+msgstr "Hiện những thông tin dễ đọc"
 
 #: i18n.kern_name_des uname.kern_name_des
-msgid   "Show the kernel name"
-msgstr  ""
+msgid "Show the kernel name"
+msgstr "Hiện tên kernel"
 
 #: i18n.kern_rel_des uname.kern_rel_des
-msgid   "Show the kernel release"
-msgstr  ""
+msgid "Show the kernel release"
+msgstr "Hiện bản phát hành kernel"
 
 #: i18n.kern_ver_des uname.kern_ver_des
-msgid   "Show the kernel version"
-msgstr  ""
+msgid "Show the kernel version"
+msgstr "Hiện phiên bản kernel"
 
 #: i18n.kernel_name uname.kernel_name
-msgid   "Kernel name: "
-msgstr  ""
+msgid "Kernel name: "
+msgstr "Tên kernel: "
 
 #: i18n.kernel_release uname.kernel_release
-msgid   "Kernel release: "
-msgstr  ""
+msgid "Kernel release: "
+msgstr "Bản phát hành kernel: "
 
 #: i18n.kernel_version uname.kernel_version
-msgid   "Kernel version: "
-msgstr  ""
+msgid "Kernel version: "
+msgstr "Phiên bản kernel: "
 
 #: i18n.machine_des uname.machine_des
-msgid   "Show the machine hardware name"
-msgstr  ""
+msgid "Show the machine hardware name"
+msgstr "Hiện tên máy"
 
 #: i18n.machine_hwname uname.machine_hwname
-msgid   "Machine hardware name: "
-msgstr  ""
+msgid "Machine hardware name: "
+msgstr "Tên máy: "
 
 #: i18n.network_nodename uname.network_nodename
-msgid   "Network node name: "
-msgstr  ""
+msgid "Network node name: "
+msgstr ""
 
 #: i18n.nodename_des uname.nodename_des
-msgid   "Show the network node name"
-msgstr  ""
+msgid "Show the network node name"
+msgstr ""
 
 #: i18n.operating_des uname.operating_des
-msgid   "Show the operating system"
-msgstr  ""
+msgid "Show the operating system"
+msgstr "Hiện thông tin hệ điều hành"
 
 #: i18n.operating_system uname.operating_system
-msgid   "Operating system: "
-msgstr  ""
+msgid "Operating system: "
+msgstr "Hệ điều hành: "
 
 #: i18n.processor_des uname.processor_des
-msgid   "Show the processor type"
-msgstr  ""
+msgid "Show the processor type"
+msgstr "Hiện thông tin vi xử lý"
 
 #: i18n.processor_type uname.processor_type
-msgid   "Processor type: "
-msgstr  ""
-
-#: i18n.program_bonus_help uname.program_bonus_help
-msgid   "With nothing else provided, -s will be omitted.\r\n"
-        "-f must be provided before any other flags, else you will either get "
-        "a mixed output, or no -f effect at all.\r\n"
-        "-o and -p outputs may differ from GNU uname's output due to the "
-        "underlying implementation.\r\n"
-        "For -o, check the following site for all identifies from GNU:https://"
-        "github.com/coreutils/gnulib/blob/master/m4/host-os.m4"
-msgstr  ""
+msgid "Processor type: "
+msgstr "Vi xử lý: "
 
 #: i18n.program_desc uname.program_desc
-msgid   "Prints system informations"
-msgstr  ""
+msgid "Prints system informations"
+msgstr "In ra những thông tin cơ bản về hệ thống"
 
 #: i18n.uname_failed uname.uname_failed
 #, object-pascal-format
-msgid   "uname() failed: %s"
-msgstr  ""
+msgid "uname() failed: %s"
+msgstr "uname() thất bại: %s"
 
 #: i18n.unknown uname.unknown
-msgid   "Unknown"
-msgstr  ""
+msgid "Unknown"
+msgstr "Không xác định"
+
