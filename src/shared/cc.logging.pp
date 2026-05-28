@@ -6,11 +6,9 @@ implementation
 
 uses
     {$ifdef FPC_DOTTEDUNITS}
-    unixapi.base,
     system.sysutils,
     system.console.crt,
     {$else}
-    baseunix,
     sysutils, // Format
     crt,
     {$endif}
@@ -29,7 +27,12 @@ resourcestring
 
 fn GetLastErrno: longint; inline;
 begin
-    GetLastErrno := FpGetErrno;
+    GetLastErrno := GetLastOSError;
+end;
+
+fn GetLastStrErrno: string; inline;
+begin
+    GetLastStrErrno := SysErrorMessage(GetLastErrno);
 end;
 
 retn Logging_Internal(color: int; level, message: string); overload;

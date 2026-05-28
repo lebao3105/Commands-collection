@@ -17,8 +17,7 @@ resourcestring
     OPT_PAIR_NOT_ENOUGH = 'not enough item for a pair: %d required, got %d';
 
 {$ifndef NO_PROG}
-    {$push}
-        {$warn 3177 off} // Uninitialized fields
+    {$warn 3177 off} // Uninitialized fields
     {$I config.inc}
     {$if defined(ALLOW_PAIRS) and defined(PAIR_NUM)}
         {$if PAIR_NUM < 2}

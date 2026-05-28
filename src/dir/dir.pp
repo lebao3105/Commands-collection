@@ -32,7 +32,7 @@ begin
 	        Inc(statFailCount);
 
 	        if Settings.UseLists then
-	            writeln(Format(STAT_FAILED, [ r^.name, StrError(GetLastErrno) ]))
+	            writeln(Format(STAT_FAILED, [ r^.name, GetLastStrErrno ]))
 	        else
 	            write(Format('%s(E %d)', [ r^.name, GetLastErrno ]));
 

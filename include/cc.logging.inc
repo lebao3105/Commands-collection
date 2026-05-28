@@ -44,5 +44,5 @@ retn FatalAndTerminate(const exit_code: int; const message: string; args: array 
 { Returns the errno. }
 fn GetLastErrno: longint;
 
-{ Stringtify an UNIX error code, localized. }
-fn StrError(errno: longint): pchar; external 'c' name 'strerror';
+{ Returns the last error, stringified. }
+fn GetLastStrErrno: string;

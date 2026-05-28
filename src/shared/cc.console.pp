@@ -4,14 +4,18 @@ implementation
 
 uses
     {$ifdef FPC_DOTTEDUNITS}
+        {$ifdef UNIX}
     unixapi.base,
     unixapi.termio,
+        {$endif}
     system.sysutils,
     system.console.crt,
     system.console.keyboard
     {$else}
+        {$ifdef UNIX}
     baseunix,
     termio,
+        {$endif}
     sysutils,
     crt,
     keyboard
@@ -59,22 +63,6 @@ begin
     return('');
 end;
 
-fn enableStdInEchoing(enable: bool): bool;
-var modi: termios;
-{$push} {$warn 5036 off} // Local variable seems to be not initialized
-begin
-    if tcgetattr(StdInputHandle, modi) = -1 then
-        return(false);
-
-    if enable then
-        modi.c_lflag := modi.c_lflag or ECHO
-    else
-        modi.c_lflag := modi.c_lflag and not ECHO;
-
-    Result := tcsetattr(StdInputHandle, TCSAFLUSH, modi) <> -1;
-end;
-{$pop}
-
 fn stdInReadKey: string;
 {$push}{$warn 4104 off} // implicit ansi -> unicode type conversion
 var K: TKeyEvent;
@@ -95,6 +83,8 @@ end;
 {$pop}
 
 initialization
+
+OutputHandle := StdOutputHandle;
 
 { Avoid funny outputs
   Like this

@@ -54,6 +54,10 @@ msgstr "Không có gì để xóa cả."
 msgid "done"
 msgstr ""
 
+#: i18n.ok rm.ok
+msgid   "done"
+msgstr  ""
+
 #: i18n.program_desc rm.program_desc
 msgid "Removes files and directories"
 msgstr "Xóa tệp và thư mục"

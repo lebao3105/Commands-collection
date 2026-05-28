@@ -30,8 +30,7 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
 
         add_pcflags(
             "@cc.cfg", -- config file for flags
-            "-Fisrc/" .. name, -- include dir
-            "-dCC_VERSION:=\'" .. version .. "\'" -- version of CC
+            "-Fisrc/" .. name -- include dir
         )
 
         if is_mode("debug") then
@@ -44,18 +43,17 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
 
         before_build( function (target)
             target:add("pcflags", miscs.get_custom_fpc_conf())
+            os.setenv('CC_VERSION', version)
 
-            local locpath = "-dLOC_PATH:="
+            local locpath
             if xpack then
-                locpath = locpath .. miscs.single_string_quote(
+                locpath =
                     "/usr/share/locale/%s/LC_MESSAGES/" .. name .. ".mo"
-                )
             else
-                locpath = locpath .. miscs.single_string_quote(
+                locpath =
                     os.projectdir() .. "/src/" .. name .. "/i18n/%s/cc.mo"
-                )
             end
-            target:add("pcflags", locpath)
+            os.setenv('LOC_PATH', locpath)
 
             os.mkdir(target:objectdir())
         end)

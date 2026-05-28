@@ -35,5 +35,5 @@ function single_string_quote(str)
 end
 
 function double_string_quote(str)
-    return '"' .. str '"'
+    return '"' .. str .. '"'
 end

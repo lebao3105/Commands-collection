@@ -20,7 +20,6 @@ interface
 
 {$push}{$warn 5028 off} // Unused resourcestring
 {$I i18n.inc}
-{$pop}
 
 implementation
 
@@ -40,7 +39,7 @@ initialization
 
 where_to_read := GetEnvironmentVariable('CC_I18N_LOC');
 if where_to_read = '' then
-    where_to_read := LOC_PATH;
+    where_to_read := {$I %LOC_PATH%};
 
 TranslateResourceStrings(where_to_read);
 
