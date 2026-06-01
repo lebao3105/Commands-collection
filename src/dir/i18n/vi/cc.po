@@ -10,38 +10,57 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
-"PO-Revision-Date: 2026-05-23 15:36\n"
+"PO-Revision-Date: 2026-06-01 13:50\n"
+
+#: dir.dsl.e_invalid_preset
+msgid "Invalid preset (must be either GNU, WIN or CC - incase-sensitive)"
+msgstr ""
+
+#: dir.dsl.e_not_in_scope
+#, object-pascal-format
+msgid "%s() is not called"
+msgstr ""
+
+#: dir.dsl.e_read_fail
+#, object-pascal-format
+msgid "Failed to read and run %s: %s"
+msgstr ""
+
+#: dir.dsl.w_too_much_water
+#, object-pascal-format
+msgid "%s does not need more than %u arguments"
+msgstr ""
 
 #: i18n.all_des
 msgid "Show everything, even hidden entries. Has exceptions."
-msgstr "Hiện mọi thứ, kể cả những thứ bị ẩn. Có ngoại lệ."
+msgstr "Hi\\341\\273\\207n m\\341\\273\\215i th\\341\\273\\251, k\\341\\273\\203 "
 
 #: i18n.color_des
 msgid "Colorize the output"
-msgstr "Thêm màu vào đầu ra"
+msgstr "Th\\303\\252m m\\303\\240u v\\303\\240o \\304\\221\\341\\272\\247u ra"
 
 #: i18n.dir_only_des
 msgid "Only show directories"
-msgstr "Chỉ hiện những thư mục"
+msgstr "Ch\\341\\273\\211 hi\\341\\273\\207n nh\\341\\273\\257ng th\\306\\260 "
 
 #: i18n.dirs_count
 #, object-pascal-format
 msgid "%u dir(s)"
-msgstr "%u thư mục"
+msgstr "%u th\\306\\260 m\\341\\273\\245c"
 
 #: i18n.files_count
 #, object-pascal-format
 msgid "%u file(s)"
-msgstr "%u tệp"
+msgstr "%u t\\341\\273\\207p"
 
 #: i18n.free_space
 #, object-pascal-format
 msgid "%s free"
-msgstr "còn trống %s"
+msgstr "c\\303\\262n tr\\341\\273\\221ng %s"
 
 #: i18n.ignore_bck_des
 msgid "Ignore entities whose name end with ~ or .bak"
-msgstr "Bỏ qua những cái tên kết thúc bằng ~ hoặc .bak"
+msgstr "B\\341\\273\\217 qua nh\\341\\273\\257ng c\\303\\241i t\\303\\252n "
 
 #: i18n.ignore_des
 msgid "Use regular expression to skip entities"
@@ -50,12 +69,12 @@ msgstr ""
 #: i18n.ignored_count
 #, object-pascal-format
 msgid "%u ignored"
-msgstr "%u bị bỏ qua"
+msgstr "%u b\\341\\273\\213 b\\341\\273\\217 qua"
 
 #: i18n.invalid_column
 #, object-pascal-format
 msgid "%s: unknown column type"
-msgstr "%s: loại cột không xác định"
+msgstr "%s: lo\\341\\272\\241i c\\341\\273\\231t kh\\303\\264ng x\\303\\241c "
 
 #: i18n.list_des
 msgid "Show the output as a list"
@@ -64,12 +83,12 @@ msgstr ""
 #: i18n.open_dir_failed
 #, object-pascal-format
 msgid "failed to open directory %s: %s"
-msgstr "không thể mở %s: %s"
+msgstr "kh\\303\\264ng th\\341\\273\\203 m\\341\\273\\237 %s: %s"
 
 #: i18n.permission_denied
 #, object-pascal-format
 msgid "%s: permission denied"
-msgstr "%s: không được phép tiếp cận"
+msgstr "%s: kh\\303\\264ng \\304\\221\\306\\260\\341\\273\\243c ph\\303\\251p "
 
 #: i18n.program_desc
 msgid "Iterate directories."
@@ -82,10 +101,10 @@ msgstr ""
 #: i18n.stat_failed
 #, object-pascal-format
 msgid "failed to stat %s: %s"
-msgstr "stat() %s thất bại: %s"
+msgstr "stat() %s th\\341\\272\\245t b\\341\\272\\241i: %s"
 
 #: i18n.statfail_count
 #, object-pascal-format
 msgid "%u failed to stat()"
-msgstr "%u không thể đọc"
+msgstr "%u kh\\303\\264ng th\\341\\273\\203 \\304\\221\\341\\273\\215c"
 
