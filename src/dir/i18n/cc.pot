@@ -1,3 +1,22 @@
+#: dir.dsl.e_invalid_preset
+msgid   "Invalid preset (must be either GNU, WIN or CC - incase-sensitive)"
+msgstr  ""
+
+#: dir.dsl.e_not_in_scope
+#, object-pascal-format
+msgid   "%s() is not called"
+msgstr  ""
+
+#: dir.dsl.e_read_fail
+#, object-pascal-format
+msgid   "Failed to read and run %s: %s"
+msgstr  ""
+
+#: dir.dsl.w_too_much_water
+#, object-pascal-format
+msgid   "%s does not need more than %u arguments"
+msgstr  ""
+
 #: i18n.all_des
 msgid   "Show everything, even hidden entries. Has exceptions."
 msgstr  ""
