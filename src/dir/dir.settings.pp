@@ -3,6 +3,7 @@ unit dir.settings;
 {$modeswitch advancedrecords}
 {$modeswitch anonymousfunctions}
 {$modeswitch result}
+{$unitpath ./settings/}
 
 interface
 
@@ -22,7 +23,9 @@ uses
     {$endif}
     cc.logging,
     cc.regex,
-    i18n
+    i18n,
+    dir.dsl in 'settings/dir.dsl.pp',
+    dir.dsl.cols in 'settings/dir.dsl.cols.pp'
     ;
 
 retn RegexPrepare;
@@ -57,6 +60,19 @@ begin
        ]);
 end;
 
+retn ReadSettingsFromFile;
+var setting_file: string;
+begin
+    setting_file := GetEnvironmentVariable('DIR_CONF');
+    if FileExists(setting_file) then
+    begin
+        DSL_init;
+        DSL_cols_init;
+        DSL_run_file(setting_file);
+        DSL_deinit;
+    end;
+end;
+
 fn StringToListCol(const str: string): EListingColumns;
 var
     casted: int;
@@ -71,7 +87,7 @@ end;
 
 fn FSEntityKindToTypeString(tp: EFSEntityKind): string; inline;
 begin
-    return(Settings.TypeFormats[ord(tp)]);
+    return(TypeFormats[ord(tp)]);
 end;
 
 end.
