@@ -81,6 +81,7 @@ begin
     end;
     cc.getopts.GetOpt;
     RegexPrepare;
+    ReadSettingsFromFile;
 
     if Length(cc.getopts.NonOpts) = 0 then
         ListItems(GetCurrentDir)

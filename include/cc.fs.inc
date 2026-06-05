@@ -14,7 +14,7 @@ interface
 type
 	{ Enum of file system entity types. }
 	EFSEntityKind = (
-	    NormalFile,
+	    NormalFile = 0,
 		Dir,
 		Symlink,
 		Pipe,

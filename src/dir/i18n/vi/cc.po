@@ -63,8 +63,8 @@ msgid "Ignore entities whose name end with ~ or .bak"
 msgstr "B\\341\\273\\217 qua nh\\341\\273\\257ng c\\303\\241i t\\303\\252n "
 
 #: i18n.ignore_des
-msgid "Use regular expression to skip entities"
-msgstr ""
+msgid   "Use regular expression to skip entities"
+msgstr  ""
 
 #: i18n.ignored_count
 #, object-pascal-format
@@ -77,8 +77,8 @@ msgid "%s: unknown column type"
 msgstr "%s: lo\\341\\272\\241i c\\341\\273\\231t kh\\303\\264ng x\\303\\241c "
 
 #: i18n.list_des
-msgid "Show the output as a list"
-msgstr ""
+msgid   "Show the output as a list"
+msgstr  ""
 
 #: i18n.open_dir_failed
 #, object-pascal-format
@@ -91,12 +91,12 @@ msgid "%s: permission denied"
 msgstr "%s: kh\\303\\264ng \\304\\221\\306\\260\\341\\273\\243c ph\\303\\251p "
 
 #: i18n.program_desc
-msgid "Iterate directories."
-msgstr ""
+msgid   "Iterate directories."
+msgstr  ""
 
 #: i18n.recursive_des
-msgid "List stuff, recursively"
-msgstr ""
+msgid   "List stuff, recursively"
+msgstr  ""
 
 #: i18n.stat_failed
 #, object-pascal-format

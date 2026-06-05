@@ -22,6 +22,7 @@ uses
 	{$endif}
 	cc.console,
 	dir.settings,
+	dir.dsl.cols in 'settings/dir.dsl.cols.pp',
 	i18n,
 	{$ifdef FPC_DOTTEDUNITS}
 	system.dateutils,
@@ -73,11 +74,11 @@ begin
 	itemGroup := getpw(props.Gid, true);
 	{$endif}
 
-	if Settings.UseLists then
+	if ColumnsEnabled then
 	begin
-		for i := Low(Settings.Columns) to High(Settings.Columns) do
+		for i := Low(Columns) to High(Columns) do
 		begin
-			case Settings.Columns[i] of
+			case Columns[i] of
 				EListingColumns.NAME: begin
 					write(name);
 					if props.PointsTo <> '' then
@@ -106,10 +107,10 @@ begin
 				{$endif}
 
 				EListingColumns.LAST_MODIFIED:
-					write(FormatDateTime(Settings.TimeFormat, props.LastModifyTime));
+					write(FormatDateTime(TimeFormat, props.LastModifyTime));
 
 				EListingColumns.LAST_ACCESSED:
-					write(FormatDateTime(Settings.TimeFormat, props.LastAccessTime));
+					write(FormatDateTime(TimeFormat, props.LastAccessTime));
 			end;
 
 			WriteASpace;

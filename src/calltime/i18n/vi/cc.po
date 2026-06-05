@@ -13,8 +13,8 @@ msgstr ""
 "PO-Revision-Date: 2026-06-01 13:50\n"
 
 #: calltime.default_format i18n.default_format
-msgid "dddd mmmm dd yyyy tt"
-msgstr "dddd mmmm dd yyy tt"
+msgid   "dddd mmmm dd yyyy tt"
+msgstr  "dddd mmmm dd yyy tt"
 
 #: calltime.format_des i18n.format_des
 msgid "Time format"
