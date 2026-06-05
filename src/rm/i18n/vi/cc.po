@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
-"PO-Revision-Date: 2026-05-25 09:00\n"
+"PO-Revision-Date: 2026-06-01 13:50\n"
 
 #: i18n.attempting_to_delete rm.attempting_to_delete
 #, object-pascal-format
@@ -53,10 +53,6 @@ msgstr "Không có gì để xóa cả."
 #: i18n.ok rm.ok
 msgid "done"
 msgstr ""
-
-#: i18n.ok rm.ok
-msgid   "done"
-msgstr  ""
 
 #: i18n.program_desc rm.program_desc
 msgid "Removes files and directories"
