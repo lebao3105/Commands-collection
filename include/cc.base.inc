@@ -8,20 +8,14 @@ unit cc.base;
 
 interface
 
-uses
-    {$ifdef FPC_DOTTEDUNITS}
-    system.types
-    {$else}
-    types
-    {$endif}
-    ;
+uses types; // TStringDynArray
 
 type
+	{ What TResult brings. }
 	EResultKind = (OK, ERROR);
 
 	{ Record indicating result of an operation.
-	  The result can be the expected type (T), or
-	  an exception (E). }
+	  The result can be the expected type (T), or an exception (E). }
 	generic TResult<T, E> = record
 	private
 		Kind: EResultKind;

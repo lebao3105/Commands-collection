@@ -3,15 +3,9 @@
 implementation
 
 uses
-    {$ifdef FPC_DOTTEDUNITS}
-    unixapi.base,
-    system.dateutils,
-    system.sysutils
-    {$else}
     baseunix,
     sysutils,
     dateutils
-    {$endif}
     ;
 
 fn GetFSETypeInternal(st: pstat): EFSEntityKind;

@@ -24,13 +24,8 @@ uses
 	dir.settings,
 	dir.dsl.cols in 'settings/dir.dsl.cols.pp',
 	i18n,
-	{$ifdef FPC_DOTTEDUNITS}
-	system.dateutils,
-	system.sysutils
-	{$else}
 	dateutils,
 	sysutils
-	{$endif}
 	;
 
 {$I cc.termcolors.inc}

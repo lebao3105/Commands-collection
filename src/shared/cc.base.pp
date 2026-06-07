@@ -7,13 +7,8 @@ resourcestring
 implementation
 
 uses
-    {$ifdef FPC_DOTTEDUNITS}
-    system.sysutils,
-    system.strutils
-    {$else}
     sysutils,
     strutils
-    {$endif}
     ;
 
 fn BigNumberToSeparatedStr(const val: QWord): string;

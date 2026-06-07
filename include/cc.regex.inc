@@ -7,15 +7,11 @@ interface
 
 uses
     cc.base,
-    {$ifdef FPC_DOTTEDUNITS}
-    system.regexpr
-    {$else}
     regexpr
-    {$endif}
     ;
 
 fn RegexGetModifierStr: string;
-// see modifiers in https://regex.sorokin.engineer/regular_expressions/#modifiers
+// See modifiers in https://regex.sorokin.engineer/regular_expressions/#modifiers
 retn RegexSetModifiers(const modifiers: string);
 fn RegexGetMatches(const input: string): specialize ArrayOf<string>;
 fn RegexHasMatches(const input: string): bool;

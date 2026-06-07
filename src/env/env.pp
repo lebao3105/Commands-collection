@@ -4,15 +4,13 @@ program env;
 {$modeswitch anonymousfunctions}
 
 uses
-	{$ifdef FPC_DOTTEDUNITS}
-	system.sysutils,
-	system.types,
-	{$ifdef UNIX}unixapi.base{$else}system.ctypes{$endif},
-	{$else}
 	sysutils, // GetEnvironmentVariable*
 	types,	  // TStringDynArray
-	{$ifdef UNIX}baseunix{$else}ctypes{$endif}, // fpExecVe
-	{$endif}
+		{$ifdef UNIX}
+	baseunix
+		{$else}
+	ctypes
+	{$endif}, // fpExecVe
 	cc.getopts,
 	cc.logging,
 	cc.base

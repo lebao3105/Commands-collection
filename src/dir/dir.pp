@@ -3,11 +3,7 @@ program dir;
 {$modeswitch anonymousfunctions}
 
 uses
-    {$ifdef FPC_DOTTEDUNITS}
-    system.sysutils,
-    {$else}
     sysutils,
-    {$endif}
     cc.base,
     cc.getopts,
     cc.logging,

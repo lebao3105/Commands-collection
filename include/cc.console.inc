@@ -3,13 +3,7 @@ unit cc.console;
 
 interface
 
-uses
-    {$ifdef FPC_DOTTEDUNITS}
-    system.ctypes
-    {$else}
-    ctypes
-    {$endif}
-    ;
+uses ctypes;
 
 const
     ESC_KEY = #27;

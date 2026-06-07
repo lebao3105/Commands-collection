@@ -3,7 +3,6 @@ unit dir.settings;
 {$modeswitch advancedrecords}
 {$modeswitch anonymousfunctions}
 {$modeswitch result}
-{$unitpath ./settings/}
 
 interface
 
@@ -12,15 +11,9 @@ interface
 implementation
 
 uses
-    {$ifdef FPC_DOTTEDUNITS}
-    system.sysutils,
-    system.typinfo,
-    system.regexpr,
-    {$else}
-    sysutils, { LowerCase, Format }
-    typinfo,  { GetEnumName, TypeInfo }
-    regexpr,  { ERegExpr }
-    {$endif}
+    sysutils, // LowerCase, Format
+    typinfo,  // GetEnumName, TypeInfo
+    regexpr,  // ERegExpr
     cc.logging,
     cc.regex,
     i18n,

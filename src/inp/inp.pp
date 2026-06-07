@@ -2,17 +2,10 @@ program inp;
 {$modeswitch anonymousfunctions}
 
 uses
-	{$ifdef FPC_DOTTEDUNITS}
-	system.classes,
-	system.sysutils,
-	system.strutils,
-	system.console.keyboard,
-	{$else}
 	classes,
 	sysutils,
 	keyboard,
 	strutils,
-	{$endif}
     cc.getopts
 	;
 

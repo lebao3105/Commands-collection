@@ -3,15 +3,9 @@ program rm;
 {$modeswitch anonymousfunctions}
 
 uses
-    {$ifdef FPC_DOTTEDUNITS}
-    system.sysutils,
-    system.regexpr,
-    system.console.crt,
-    {$else}
     sysutils,
     regexpr,
     crt,
-    {$endif}
     cc.base,
     cc.fs,
     cc.console,

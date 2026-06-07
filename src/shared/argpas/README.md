@@ -2,7 +2,7 @@
 
 This document contains technical details of `cc.getopts`, used for building applications.
 
-## (Not) Required stuff (application-specific)
+## Required and not required stuff (application-specific)
 
 ### In program's config.inc
 
@@ -56,4 +56,36 @@ A pair can consists of 2, 3 or even more values, depending on the purpose of the
 2. In case of errors occured by invalid use of options, only the help of that option will be printed instead of the full program help. One condition is that the option must exist in ARGA.
 3. Long-only options are supported
 4. `NO_PROG` is used for i18n.
-5. *GetOpt* function is supposed to run only **once**.
+5. This unit is meant to be used to parse command line arguments *only once*.
+
+## Internal implementation
+
+### Conditions to end the parse
+
+The parse will end if one of the conditions below is satisfied first:
+
+1. `--` encountered while `ALLOW_DOUBLE_SPECIFIER` is defined
+2. End of the argument vector reached. What? You think otherwise?
+3. An error occured (invalid flag name etc)
+4. Empty argument list. At the point the parse won't even start
+
+### How it works
+
+ArgPas gets the job done by traversing each command line argument.
+
+With each argument:
+0. Check if argument is `--` and `ALLOW_DOUBLE_SPECIFIER` is defined.
+1. Check if there is a previous argument, and if it needs a value, this argument is the value it needs.
+   Set `OptArg` to this argument and go read the next argument.
+2. If (1) is not the case, check if the argument has `-` or `--` prefix. If yes, proceed to the next step.
+   Otherwise append this argument to `NonOptions` and go read the next one.
+3. Get the name+value of the flag:
+    - If it's a short flag (`-` prefix): the flag name is the **second** character
+    - Otherwise, the flag name is what between `--` and `=` (if any).
+        - If the equal sign is present, we can get the flag's value right next to it.
+        - If the flag is short, the flag value is everything after the first 2 characters.
+        - If not, set an internal value and proceed.
+4. Read ARGA for one that matches the flag. Throws error when:
+    - No such flag found in ARGA
+    - There is value for a flag that does not need one
+5. Go to the next argument

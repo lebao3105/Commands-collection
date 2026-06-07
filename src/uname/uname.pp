@@ -4,16 +4,11 @@ program uname;
 {$endif}
 
 uses
-    {$ifdef FPC_DOTTEDUNITS}
-    system.sysutils,
-    unixapi.base,
-    {$else}
     sysutils,
     baseunix,
     cc.base,
     cc.getopts,
     cc.logging
-    {$endif}
     ;
 
 {$I i18n.inc}

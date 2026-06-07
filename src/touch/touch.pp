@@ -4,15 +4,9 @@ program touch;
 {$IOChecks OFF}
 
 uses
-    {$ifdef FPC_DOTTEDUNITS}
-    system.sysutils,
-    system.strutils,
-    system.types,
-    {$else}
     sysutils,
     strutils,
     types,
-    {$endif}
     cc.base,
     cc.fs,
     cc.logging,

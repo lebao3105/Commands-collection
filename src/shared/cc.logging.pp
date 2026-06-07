@@ -5,13 +5,8 @@ implementation
 {$I cc.termcolors.inc}
 
 uses
-    {$ifdef FPC_DOTTEDUNITS}
-    system.sysutils,
-    system.console.crt,
-    {$else}
     sysutils, // Format
     crt,
-    {$endif}
     cc.console // isATerminal
     ;
 

@@ -3,15 +3,6 @@
 implementation
 
 uses
-    {$ifdef FPC_DOTTEDUNITS}
-        {$ifdef UNIX}
-    unixapi.base,
-    unixapi.termio,
-        {$endif}
-    system.sysutils,
-    system.console.crt,
-    system.console.keyboard
-    {$else}
         {$ifdef UNIX}
     baseunix,
     termio,
@@ -19,7 +10,6 @@ uses
     sysutils,
     crt,
     keyboard
-    {$endif}
     ;
 
 fn isATerminal(Handle: cint): bool;
@@ -86,20 +76,13 @@ initialization
 
 OutputHandle := StdOutputHandle;
 
-{ Avoid funny outputs
-  Like this
-             simple
-                    example}
-SetTextLineEnding(stderr, #13#10);
-SetTextLineEnding(stdout, #13#10);
-
 InitKeyboard;
 
-{ Modify unit CRT's settings }
-{ Unused? }
-{
-    CheckBreak := true;
-    CheckEOF   := true;
-}
+{ Avoid funny outputs
+  Like this
+           simple
+                 example}
+SetTextLineEnding(stderr, #13#10);
+SetTextLineEnding(stdout, #13#10);
 
 end.
