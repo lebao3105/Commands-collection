@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
-"PO-Revision-Date: 2026-06-01 13:50\n"
+"PO-Revision-Date: 2026-06-07 16:53\n"
 
 #: dir.dsl.e_invalid_preset
 msgid "Invalid preset (must be either GNU, WIN or CC - incase-sensitive)"
@@ -33,7 +33,7 @@ msgstr ""
 
 #: i18n.all_des
 msgid "Show everything, even hidden entries. Has exceptions."
-msgstr "Hi\\341\\273\\207n m\\341\\273\\215i th\\341\\273\\251, k\\341\\273\\203 "
+msgstr "Hi\\341\\273\\207n m\\341\\273\\215i th\\341\\273\\251, "
 
 #: i18n.color_des
 msgid "Colorize the output"
@@ -41,7 +41,7 @@ msgstr "Th\\303\\252m m\\303\\240u v\\303\\240o \\304\\221\\341\\272\\247u ra"
 
 #: i18n.dir_only_des
 msgid "Only show directories"
-msgstr "Ch\\341\\273\\211 hi\\341\\273\\207n nh\\341\\273\\257ng th\\306\\260 "
+msgstr "Ch\\341\\273\\211 hi\\341\\273\\207n nh\\341\\273\\257ng "
 
 #: i18n.dirs_count
 #, object-pascal-format
@@ -63,8 +63,8 @@ msgid "Ignore entities whose name end with ~ or .bak"
 msgstr "B\\341\\273\\217 qua nh\\341\\273\\257ng c\\303\\241i t\\303\\252n "
 
 #: i18n.ignore_des
-msgid   "Use regular expression to skip entities"
-msgstr  ""
+msgid "Use regular expression to skip entities"
+msgstr ""
 
 #: i18n.ignored_count
 #, object-pascal-format
@@ -77,8 +77,8 @@ msgid "%s: unknown column type"
 msgstr "%s: lo\\341\\272\\241i c\\341\\273\\231t kh\\303\\264ng x\\303\\241c "
 
 #: i18n.list_des
-msgid   "Show the output as a list"
-msgstr  ""
+msgid "Show the output as a list"
+msgstr ""
 
 #: i18n.open_dir_failed
 #, object-pascal-format
@@ -88,15 +88,15 @@ msgstr "kh\\303\\264ng th\\341\\273\\203 m\\341\\273\\237 %s: %s"
 #: i18n.permission_denied
 #, object-pascal-format
 msgid "%s: permission denied"
-msgstr "%s: kh\\303\\264ng \\304\\221\\306\\260\\341\\273\\243c ph\\303\\251p "
+msgstr "%s: kh\\303\\264ng \\304\\221\\306\\260\\341\\273\\243c "
 
 #: i18n.program_desc
-msgid   "Iterate directories."
-msgstr  ""
+msgid "Iterate directories."
+msgstr ""
 
 #: i18n.recursive_des
-msgid   "List stuff, recursively"
-msgstr  ""
+msgid "List stuff, recursively"
+msgstr ""
 
 #: i18n.stat_failed
 #, object-pascal-format
