@@ -3,12 +3,7 @@
 implementation
 
 uses
-    {$ifdef FPC_DOTTEDUNITS}
-    system.sysutils, // Format
-    {$else}
-    sysutils,
-    {$endif}
-
+    sysutils, // Format
     {$ifndef NO_PROG}
     i18n,
     {$endif}
@@ -114,6 +109,7 @@ begin
         (currentArg[2] = OptSpecifier) then
     begin // long options
         // Get option name
+        Inc(firstCatchIdx);
         eqPos := Pos('=', currentArg);
         if eqPos = 0 then
             optName := Copy(currentArg, firstCatchIdx)
