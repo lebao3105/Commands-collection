@@ -2,8 +2,9 @@
 
 [![Crowdin](https://badges.crowdin.net/commands-collection/localized.svg)](https://crowdin.com/project/commands-collection)
 
-> If you are seeing this on GitHub, I have to remind this once more:
-> This GitHub repository is a mirror, which does not accept any pull requests other than ones from Crowdin (as I don't have any other free intergration slot) and maybe more.
+> If you're visiting Commands-Collection on Github: This repository is a mirror
+> and does not accept any pull requests other than ones from Crowdin
+> (as I don't have any other free intergration slot).
 
 A collection of system commands written in Free Pascal and (maybe) C.
 
@@ -35,7 +36,7 @@ Read the [Wiki](./wiki).
 
 * Linux man pages
 * Windows API documentations
-* GNU Coreutils [source code](https://github.com/coreutils/coreutils)
+* GNU Coreutils [source code](https://github.com/coreutils/coreutils) - have to admit that I have to look at it for how programs there work, and adopt that to my own..ideas?
 * Free Pascal's Run time [library](https://www.freepascal.org/docs-html/rtl/index.html) (RTL) and [Wiki](https://wiki.freepascal.org) and [docs](https://www.freepascal.org/docs.html)
 * Procps-ng [source code](https://gitlab.com/procps-ng/procps)
 * Free Pascal Compiler's [packages](https://gitlab.com/freepascal.org/fpc/source/-/tree/main/packages?ref_type=heads).

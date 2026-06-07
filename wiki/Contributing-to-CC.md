@@ -1,40 +1,24 @@
 > Note: This is written for developers and maintainers only!
 
-# Considerations?
+# C, C++, C# keyword/features to Pascal
 
-## CRNL
+1. `{` and `}` => `begin` and `end`. `{` and `}` are used for comments and compiler directives.
+2. `#define` => `{$define}` (no function-like macros allowed). The same goes to `#if defined`, `#else`, `#endif` and more
+3. `void name(args)` => `procedure name(args);`
+4. `<type> name(args)` => `function name(args): <type>;`
+5. `enum class` => `enum` (before that use `{$scopedenums on}`, read the section below)
+6. In Pascal: No `;` right before `else`
+7. `switch(...) - case(val)` => `case(...) of - val:`. No `break` is required. Works with strings.
+8. `extern "C"` before identifier => `external <optional libname> name <name of identifier in C>` after the identifier
+9. `#include NAME` => `{$include NAME}` or `{$I NAME}` (a case of 2)
+10. C++/C# lambda function => Pascal function/procedure with no name (read the section below)
+11. C++/C# template => Pascal's [generic](https://wiki.freepascal.org/Generics)
+12. Pascal strings can be concatenate together using + operator
+13. Classes are NOT directly used unless it's neccessary. Records with functions are doable using `{$modeswitch advancedrecords}`
+14. `struct` = `record`
+15. ???
 
-As CC modifies some console attributes (both stdout, stderr and sometimes stdin are modified), the output may look (un)funny like this:
-
-```bash
-$ xmake b -r inp && xmake r inp --help
-[ 31%]: linking.debug inp
-[100%]: build ok, spent 0.767s
-debug: Initializing console module...
-Asks for user input.
-                    --message  -m  VALUE
-                                        	Custom message to show instead of Press any key/Enter to continue
-                                                                                                                 --hide-input  -t
-                                                                                                                                 	Hide inputs from the user
-                     --require-enter  -e
-                                        	Require Enter to send the input
-                                                                               --require-chars  -k  VALUE
-                                                                                                         	Specify valid characters
-                                                                                                                                        --loop  -l
-      	Do not quit until a valid input is sent
-                                               --show-availables  -o
-                                                                    	Show the user -k value
-                                                                        ...
-```
-
-This is due to usage of RTL-console functions that modify the console under-the-hood. One common thing is the RAW mode.
-
-That's why I decided to not use RTL's `crt` at the first place, thinking it did something to break the output. Now I understand why :wilted_rose: - sorry dude.
-
-One possible fix is to use `SetTextLineEnding` on stdout and stderr (should we use this on stdin?) so that writeln can still work as usual. This, however, does not apply to RTL's `LineEnding` - which in some OSes a literal NL - as it's a **const**ant string.
-
-But I do have a workaround as well. `CRNL` has been defined, globally. And as the name suggests,
-it's Carriage return+New line!
+# Used Pascal/FPC features
 
 ## Anonymous functions/procedures
 
@@ -81,21 +65,29 @@ This, however has at least one downside:
 
 > Note: FPC, of course, welcomes contributions.
 
-Unicode RTL exists and is usable, however not in CC. While minimal support for it is here, problems exist in both compile and run time:
+Unicode RTL exists and is usable, however not in CC. Problems exist in both compile and run time:
 
 * `resourcestring`s cause conversion errors;
-* garbage strings sometimes.
+* garbage data sometimes.
 * a bunch of conversion warnings.
-
-# Pascal-only
 
 ## Dotted units
 
 Or rather say, namespaced units.
 
-Typically, FPC's dotted RTL (and included packages) have `System.` (notice the dot) prefix in their name. UNIX-only units are prefixed with `unixapi.`, while Windows ones have `winapi.` prefix.
+> Support for this thing will be removed in the next version of CC (releases in this June?) as:
+> 1. Not enabled by default in FPC+RTL builds.
+> 2. Not supported in FPCUpdeluxe (our beloved FPC installer)
+> 3. Takes spaces, and a bit of time just to get/remember the right unit name
+> 4. Who actually use it?
+> 5. No benefits (CC shared units have cc. prefix)
 
-Namespaced names can be found in FPC package's `namespaced` folder.
+Dotted unit names:
+* RTL: `system.` + names found in non-dotted
+* UNIX-only: `unixapi.` + slightly changed name (e.g `baseunix` => `unixapi.base`)
+* Windows-only: `winapi.` + slightly changed name
+
+Correct names can be found in `namespaced` folders found across the FPC source code.
 
 `FPC_DOTTEDUNITS` symbol is also defined for easy `uses` choice:
 
@@ -107,10 +99,6 @@ uses
     sysutils, strutils,
     {$endif}
 ```
-
-This feature is disabled by default. Besides, not everyone use it (if not there are nobody) :D
-
-(Wait, why do I add support for this thing?)
 
 If you want to have one, run these in FPC source code:
 
@@ -145,11 +133,12 @@ var t: EEnum = FLAG; // Error
     j: EEnum = EEnum.FLAG_TWO; // Ok
 ```
 
+Scoped enums works the same way as `enum class` in C++.
+
 ## Some other known `modeswitch`es
 
 * `advancedrecords`: Records with methods
 * `defaultparameters`: Default parameter values for procedures / functions
-* `class`: Class keyword
 * `out`: `out` parameters in procedures / functions
 
 ## Aliases
@@ -182,7 +171,7 @@ $ tree src/hello-world
 |       i18n/      # Template + localized strings
 ```
 
-For *config.inc* and *i18n.inc*, read [this](src/shared/argpas/README.md).
+For *config.inc* and *i18n.inc*, read [this](../src/shared/argpas/README.md).
 
 For how to parse arguments, read that document too, and existing CC programs (recommendation: calltime).
 

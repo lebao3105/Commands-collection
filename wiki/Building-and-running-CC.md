@@ -3,21 +3,11 @@
 ### OS
 
 * CC is written and made to run on Linux;
-* CC has a little bit of code for BSDs + Darwin;
+* CC has a little bit of code for BSDs + Darwin (macOS);
 * CC should run on many other UNIXes - some workarounds maybe required;
-* CC does NOT compile on Windows! WSL doesn't count. Most stuff here is done using UNIX/POSIX functions.
+* CC does NOT compile on Windows! May work on WSL. Most stuff here is done using UNIX/POSIX functions.
 
 Do not ask for support for dated/dead OSes / versions.
-
-### A C compiler
-
-> Note: Currently it is not needed right now. This section is kept as-is for future usage, if any.
-
-It could be MSVC, CLang or GCC. A fairly recent compiler is recommended.
-
-Right now CC still does not have the C standard version set. Will it only need C99? C11? Or even C23?
-
-Try C1x or C23 if something goes wrong.
 
 ### A Pascal Compiler
 
@@ -27,9 +17,10 @@ Grab the compiler from FPCUpdeluxe.
 
 Embarcadero's Delphi is not tested. This project does not use Delphi anyways.
 
-Ensure that either `/etc/fpc.cfg` (Linux), `/usr/local/etc/fpc.cfg` (FreeBSD) or `~/.fpc.cfg` exists:
+Ensure that either `/etc/fpc.cfg` (Linux), `/usr/local/etc/fpc.cfg` (FreeBSD) or `~/.fpc.cfg` (all OSes) exists:
 * Prebuilt packages normally include `/etc/fpc.cfg`;
 * Tar installs from [freepascal.org](https://freepascal.org) will create one;
+* FPCUpdeluxe creates `fp.cfg` in the same directory with `fpc` executable;
 * FPC installed from FreeBSD's Ports, however, tells you:
 
 <img width="850" height="581" alt="image" src="https://github.com/user-attachments/assets/78ca9f78-3c29-49dd-ac03-77c69c2bf87a" />
@@ -39,6 +30,7 @@ In most installations this is handled automatically and correctly by FPC/package
 ### Libraries
 
 * A C library (musl or not);
+* Lua 5.5 (for `dir` only);
 * RTL (run time library) and more from Free Pascal, see below.
 
 > Note: Since FPC trunk is being used, skip the information below.
@@ -57,7 +49,7 @@ CC in the past implemented a tool that can pull required packages from FPC's Git
 
 ### Git
 
-Of course. There may even be Git submodules to be cloned in the future.
+Of course.
 
 ### XMake
 
@@ -70,20 +62,22 @@ Assuming you've cloned the repository and `cd`'d into its root. Apply for all of
 In some places like Haiku OS and MSYS2, run this first to let XMake know where the compiler is:
 
 ```bash
-$ xmake f --pc=$(which fpc) --pcld=$(which fpc)
+$ xmake f --pc{,ld}=$(which fpc)
 ```
 
 Replace `$(which fpc)` with either the full path of FPC or your preferred way of finding FPC.
 
 This is also required if you want to use another compiler that is not on PATH.
 
-To build a specific program:
+1. To build a specific program:
 
 ```bash
 $ xmake b <program_name>
 ```
 
-To build everything:
+For \<program_name\>, check out the folders of [src](../src) (ignore the shared/ folder).
+
+2. To build everything:
 
 ```bash
 $ xmake
@@ -91,22 +85,25 @@ $ xmake
 $ xmake b
 ```
 
-To build all programs:
+3. To build all programs:
+
 ```bash
 $ xmake b programs
 ```
 
 Add `-r` for rebuilds, needed for new changes.
 
-To clean:
+5. To clean:
 
 ```bash
-$ xmake c
+$ xmake c <target>
 ```
 
-To create and consume debug builds, use `xmake f -m debug`.
+To create and consume debug builds, add `-m debug` to `xmake f`.
 
-To create and consume release builds, add `xmake f -m release`.
+To create and consume release builds, add `-m release` to `xmake f`.
+
+To see all targets for `xmake b`, see `xmake b -h`.
 
 ## Running built programs
 
@@ -122,6 +119,12 @@ xmake b -v dir
 The executable will be put in `build/linux/x86_64/release/`.
 
 Most programs have their own `--help` / `-h`.
+
+Or using XMake:
+
+```
+xmake r <program_name> <arguments>
+```
 
 ## Packaging CC
 
