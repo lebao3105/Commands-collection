@@ -4,13 +4,8 @@
 implementation
 
 uses
-    {$ifdef FPC_DOTTEDUNITS}
-    unixapi.base,
-    system.sysutils,
-    {$else}
     baseunix,
     sysutils
-    {$endif}
     ;
 
 var

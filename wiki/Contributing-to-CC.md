@@ -16,7 +16,48 @@
 12. Pascal strings can be concatenate together using + operator
 13. Classes are NOT directly used unless it's neccessary. Records with functions are doable using `{$modeswitch advancedrecords}`
 14. `struct` = `record`
-15. ???
+15. `main()` function => single `begin-end.` (notice the dot) block.
+16. Quit functions/scopes using `exit(whatever or not)` or `return` (alias of `exit`). Halt the program *anywhere* using `halt(exit code)`
+17. `argc`, `argv` in `main()` are still accessible as int and PPChar (or `char**` in C). However we all use `ParamCount` (argc) and `ParamStr(index)` function (which returns a Pascal string)
+18. Varadic parameters: use `array of const`:
+```pascal
+{$mode objfpc}
+
+uses sysutils; // Format
+
+procedure SayHello(names: array of const);
+begin
+    writeln(Format('Hello %s from %s!', names));
+end;
+
+begin
+    SayHello( [ // <- Notice this
+        'YOU', 'ME'
+    ] );
+end.
+```
+
+For external C functions, check [this](https://www.freepascal.org/docs-html/ref/refsu97.html).
+
+# Project structure
+
+```bash
+$ tree ..
+|   build-aux/      # Build helper scripts
+|   changelogs/     # Self-explanatory
+|   docs/           # Documents + related scripts
+|   i18n/           # Localizations for shared units
+|   include/        # Shared unit header files(*)
+|   src/
+|       dir/...     # Programs
+|       shared/     # Shared units
+|   cc.cfg          # Compiler flags
+|   crowdin.yml     # Crowdin (translation service) settings
+|   options.lua     # Build options
+|   xmake.lua       # Main build file
+```
+
+\*: They do the same work as C/C++ header files.
 
 # Used Pascal/FPC features
 
@@ -157,13 +198,13 @@ CC recommends you to split the code into include files and a main file for each 
 
 All files to be included must have `.inc` extension. They can be included using `{$I}` or `{$INCLUDE}` directive.
 
-## Creating a new program
+# Creating a new program
 
 Create a new folder in [src/](../src/) that is named after the program.
 
 Its folder structure is as follow:
 ```bash
-$ tree src/hello-world
+$ tree src/hello
 |       config.inc # Store configurations, e.g command-line flags
 |       i18n.inc   # Localizable strings
 |       hello-world.pp # Main program file
@@ -173,7 +214,7 @@ $ tree src/hello-world
 
 For *config.inc* and *i18n.inc*, read [this](../src/shared/argpas/README.md).
 
-For how to parse arguments, read that document too, and existing CC programs (recommendation: calltime).
+For how to parse arguments, read that document too, and existing CC programs (recommendation: `hello`).
 
 # Documentation
 

@@ -47,64 +47,64 @@ unit lua;
 interface
 
 type
-  size_t = Cardinal;
-  Psize_t = ^size_t;
+    size_t = Cardinal;
+    Psize_t = ^size_t;
 
 const
-  LUA_VERSION = 'Lua 5.5';
-  LUA_RELEASE = 'Lua 5.5.0';
-  LUA_VERSION_NUM = 550;
-  LUA_COPYRIGHT = 'Copyright (C) 1994-2025 Lua.org, PUC-Rio';
-  LUA_AUTHORS = 'R. Ierusalimschy, L. H. de Figueiredo, W. Celes';
+    LUA_VERSION = 'Lua 5.5';
+    LUA_RELEASE = 'Lua 5.5.0';
+    LUA_VERSION_NUM = 550;
+    LUA_COPYRIGHT = 'Copyright (C) 1994-2025 Lua.org, PUC-Rio';
+    LUA_AUTHORS = 'R. Ierusalimschy, L. H. de Figueiredo, W. Celes';
 
 (* option for multiple returns in `lua_pcall' and `lua_call' *)
-  LUA_MULTRET = -1;
+    LUA_MULTRET = -1;
 
-  LUA_OK        = 0;
 (* thread status; 0 is OK *)
-  LUA_YIELD_    = 1;
-  LUA_ERRRUN    = 2;
-  LUA_ERRSYNTAX = 3;
-  LUA_ERRMEM    = 4;
-  LUA_ERRERR    = 5;
+    LUA_OK        = 0;
+    LUA_YIELD_    = 1;
+    LUA_ERRRUN    = 2;
+    LUA_ERRSYNTAX = 3;
+    LUA_ERRMEM    = 4;
+    LUA_ERRERR    = 5;
 
 (* basic types *)
-  LUA_TNONE          = -1;
+    LUA_TNONE          = -1;
 
-  LUA_TNIL           = 0;
-  LUA_TBOOLEAN       = 1;
-  LUA_TLIGHTUSERDATA = 2;
-  LUA_TNUMBER        = 3;
-  LUA_TSTRING        = 4;
-  LUA_TTABLE         = 5;
-  LUA_TFUNCTION      = 6;
-  LUA_TUSERDATA      = 7;
-  LUA_TTHREAD        = 8;
+    LUA_TNIL           = 0;
+    LUA_TBOOLEAN       = 1;
+    LUA_TLIGHTUSERDATA = 2;
+    LUA_TNUMBER        = 3;
+    LUA_TSTRING        = 4;
+    LUA_TTABLE         = 5;
+    LUA_TFUNCTION      = 6;
+    LUA_TUSERDATA      = 7;
+    LUA_TTHREAD        = 8;
 
 (* minimum Lua stack available to a C function *)
-  LUA_MINSTACK = 20;
+    LUA_MINSTACK = 20;
 
 type
-  Plua_State = Pointer;
-  lua_KContext = PtrInt;
+    Plua_State = Pointer;
+    lua_KContext = PtrInt;
 
-  lua_CFunction = function(L: Plua_State): Integer; cdecl;
-  lua_KFunction = function(L: Plua_State; status: int; ctx: lua_KContext): int; cdecl;
+    lua_CFunction = function(L: Plua_State): Integer; cdecl;
+    lua_KFunction = function(L: Plua_State; status: int; ctx: lua_KContext): int; cdecl;
 
 (*
 ** functions that read/write blocks when loading/dumping Lua chunks
 *)
-  lua_Reader = function(L: Plua_State; ud: Pointer; sz: Psize_t): PAnsiChar; cdecl;
-  lua_Writer = function(L: Plua_State; const p: Pointer; sz: size_t; ud: Pointer): Integer; cdecl;
+    lua_Reader = function(L: Plua_State; ud: Pointer; sz: Psize_t): PAnsiChar; cdecl;
+    lua_Writer = function(L: Plua_State; const p: Pointer; sz: size_t; ud: Pointer): Integer; cdecl;
 
 (*
 ** prototype for memory-allocation functions
 *)
-  lua_Alloc = function(ud, ptr: Pointer; osize, nsize: size_t): Pointer; cdecl;
+    lua_Alloc = function(ud, ptr: Pointer; osize, nsize: size_t): Pointer; cdecl;
 
 (* Type of Numbers in Lua *)
-  lua_Number = Double;
-  lua_Integer = PtrInt;
+    lua_Number = Double;
+    lua_Integer = PtrInt;
 
 (*
 ** state manipulation

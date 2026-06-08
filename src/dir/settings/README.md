@@ -71,6 +71,8 @@ Functions, or settings if you want, known in dir's Lua files, are all implemente
 function [name] (L: PLua_State) : integer; cdecl;
 ```
 
+`[name]` is lower-cased.
+
 This is the signature of Lua's `lua_CFunction` type. That `cdecl` part is **required**.
 
 They are not visible outside their corresponding unit's `implementation`.

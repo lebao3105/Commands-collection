@@ -27,18 +27,17 @@ unit lauxlib;
 
 interface
 
-uses
-  Lua;
+uses Lua;
 
 // functions added for Pascal
 procedure lua_pushstring(L: Plua_State; const s: ansistring);
 
 type
-  luaL_reg = record
-    name: PAnsiChar;
-    func: lua_CFunction;
-  end;
-  PluaL_reg = ^luaL_reg;
+    luaL_reg = record
+        name: PAnsiChar;
+        func: lua_CFunction;
+    end;
+    PluaL_reg = ^luaL_reg;
 
 procedure luaL_openlibs(L: Plua_State);
 function luaL_argerror(L: Plua_State; numarg: Integer; const extramsg: PAnsiChar): Integer; cdecl; external;
