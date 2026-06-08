@@ -6,10 +6,15 @@ unit cc.logging;
 {$h+}
 {$modeswitch class-}
 {$modeswitch exceptions-}
-{$modeswitch defaultparameters}
+{$scopedenums on}
 
 interface
 
+type
+    { Result of Confirmation(). }
+    ConfirmationResult = (
+        YES, NO, ALWAYS
+    );
 var
     { Print a new line after a cc.logging function call. }
     doNewLine: bool = true;
@@ -30,7 +35,7 @@ retn Warning(const message: string; args: array of const); overload;
 retn Error(const message: string); overload;
 retn Error(const message: string; args: array of const); overload;
 
-fn Confirmation(const message: string; args: array of const): char;
+fn Confirmation(const message: string; args: array of const): ConfirmationResult;
 
 { Prints a fatal error, with OUT exitting the program.
   To also quit the program, use FatalAndTerminate. }

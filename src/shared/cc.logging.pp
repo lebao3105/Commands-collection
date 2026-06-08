@@ -92,13 +92,19 @@ end;
 
 // Confirmation
 
-fn Confirmation(const message: string; args: array of const): char;
+fn Confirmation(const message: string; args: array of const): ConfirmationResult;
+var c: char;
 begin
     writeln(Format(message, args));
     TextColor(Green);
     write(SCONFIRM + ANSI_CODE_RESET_FORE +
           Format(message, args) + ' [yYnNaA]: ');
-    readln(Confirmation);
+    readln(c);
+    case c of
+        'y', 'Y': return(ConfirmationResult.YES);
+        'n', 'N': return(ConfirmationResult.NO);
+        'a', 'A': return(ConfirmationResult.ALWAYS);
+    end;
 end;
 
 // Fatal

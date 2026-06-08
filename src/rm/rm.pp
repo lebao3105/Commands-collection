@@ -32,15 +32,15 @@ begin
     if (not interactive) or dryRun then
         return(true);
 
-    inp := cc.logging.Confirmation(DELETE_CONFIRMATION, [which]);
-
-    if (inp = 'A') or (inp = 'a') then
-    begin
-        interactive := false;
-        return(true);
+    case cc.logging.Confirmation(DELETE_CONFIRMATION, [which]) of
+        ConfirmationResult.YES:
+            return(true);
+        ConfirmationResult.NO:
+            return(false);
+        ConfirmationResult.ALWAYS:
+            interactive := false;
+            return(true);
     end;
-
-    return( (inp = 'y') or (inp = 'Y') );
 end;
 
 {$I-}
