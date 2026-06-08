@@ -1,16 +1,3 @@
-msgid   ""
-msgstr  "Project-Id-Version: commands-collection\n"
-        "PO-Revision-Date: 2026-06-01 13:50\n"
-        "Language-Team: Vietnamese\n"
-        "Language: vi_VN\n"
-        "Content-Type: text/plain; charset=UTF-8\n"
-        "Plural-Forms: nplurals=1; plural=0;\n"
-        "X-Crowdin-Project: commands-collection\n"
-        "X-Crowdin-Project-ID: 891754\n"
-        "X-Crowdin-Language: vi\n"
-        "X-Crowdin-File: /main/src/dir/i18n/cc.pot\n"
-        "X-Crowdin-File-ID: 84\n"
-
 #: dir.dsl.e_invalid_preset
 msgid   "Invalid preset (must be either GNU, WIN or CC - incase-sensitive)"
 msgstr  ""
@@ -32,36 +19,34 @@ msgstr  ""
 
 #: i18n.all_des
 msgid   "Show everything, even hidden entries. Has exceptions."
-msgstr  "Hi\\341\\273\\207n m\\341\\273\\215i th\\341\\273\\251, "
-        "k\\341\\273\\203 "
+msgstr  ""
 
 #: i18n.color_des
 msgid   "Colorize the output"
-msgstr  "Th\\303\\252m m\\303\\240u v\\303\\240o \\304\\221\\341\\272\\247u ra"
+msgstr  ""
 
 #: i18n.dir_only_des
 msgid   "Only show directories"
-msgstr  "Ch\\341\\273\\211 hi\\341\\273\\207n nh\\341\\273\\257ng "
-        "th\\306\\260 "
+msgstr  ""
 
 #: i18n.dirs_count
 #, object-pascal-format
 msgid   "%u dir(s)"
-msgstr  "%u th\\306\\260 m\\341\\273\\245c"
+msgstr  ""
 
 #: i18n.files_count
 #, object-pascal-format
 msgid   "%u file(s)"
-msgstr  "%u t\\341\\273\\207p"
+msgstr  ""
 
 #: i18n.free_space
 #, object-pascal-format
 msgid   "%s free"
-msgstr  "c\\303\\262n tr\\341\\273\\221ng %s"
+msgstr  ""
 
 #: i18n.ignore_bck_des
 msgid   "Ignore entities whose name end with ~ or .bak"
-msgstr  "B\\341\\273\\217 qua nh\\341\\273\\257ng c\\303\\241i t\\303\\252n "
+msgstr  ""
 
 #: i18n.ignore_des
 msgid   "Use regular expression to skip entities"
@@ -70,12 +55,12 @@ msgstr  ""
 #: i18n.ignored_count
 #, object-pascal-format
 msgid   "%u ignored"
-msgstr  "%u b\\341\\273\\213 b\\341\\273\\217 qua"
+msgstr  ""
 
 #: i18n.invalid_column
 #, object-pascal-format
 msgid   "%s: unknown column type"
-msgstr  "%s: lo\\341\\272\\241i c\\341\\273\\231t kh\\303\\264ng x\\303\\241c "
+msgstr  ""
 
 #: i18n.list_des
 msgid   "Show the output as a list"
@@ -84,13 +69,12 @@ msgstr  ""
 #: i18n.open_dir_failed
 #, object-pascal-format
 msgid   "failed to open directory %s: %s"
-msgstr  "kh\\303\\264ng th\\341\\273\\203 m\\341\\273\\237 %s: %s"
+msgstr  ""
 
 #: i18n.permission_denied
 #, object-pascal-format
 msgid   "%s: permission denied"
-msgstr  "%s: kh\\303\\264ng \\304\\221\\306\\260\\341\\273\\243c "
-        "ph\\303\\251p "
+msgstr  ""
 
 #: i18n.program_bonus_help
 msgid   "Ignore pattern is a regular expression which is used to filter out "
@@ -123,9 +107,9 @@ msgstr  ""
 #: i18n.stat_failed
 #, object-pascal-format
 msgid   "failed to stat %s: %s"
-msgstr  "stat() %s th\\341\\272\\245t b\\341\\272\\241i: %s"
+msgstr  ""
 
 #: i18n.statfail_count
 #, object-pascal-format
 msgid   "%u failed to stat()"
-msgstr  "%u kh\\303\\264ng th\\341\\273\\203 \\304\\221\\341\\273\\215c"
+msgstr  ""

@@ -1,16 +1,3 @@
-msgid   ""
-msgstr  "Project-Id-Version: commands-collection\n"
-        "PO-Revision-Date: 2026-05-23 15:06\n"
-        "Language-Team: Vietnamese\n"
-        "Language: vi_VN\n"
-        "Content-Type: text/plain; charset=UTF-8\n"
-        "Plural-Forms: nplurals=1; plural=0;\n"
-        "X-Crowdin-Project: commands-collection\n"
-        "X-Crowdin-Project-ID: 891754\n"
-        "X-Crowdin-Language: vi\n"
-        "X-Crowdin-File: /main/src/touch/i18n/cc.pot\n"
-        "X-Crowdin-File-ID: 88\n"
-
 #: i18n.already_exists touch.already_exists
 #, object-pascal-format
 msgid   "%s already exists"
