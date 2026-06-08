@@ -6,7 +6,7 @@
 2. `#define` => `{$define}` (no function-like macros allowed). The same goes to `#if defined`, `#else`, `#endif` and more
 3. `void name(args)` => `procedure name(args);`
 4. `<type> name(args)` => `function name(args): <type>;`
-5. `enum class` => `enum` (before that use `{$scopedenums on}`, read the section below)
+5. `enum class` => normal enum (before that use `{$scopedenums on}`, read the section below)
 6. In Pascal: No `;` right before `else`
 7. `switch(...) - case(val)` => `case(...) of - val:`. No `break` is required. Works with strings.
 8. `extern "C"` before identifier => `external <optional libname> name <name of identifier in C>` after the identifier
@@ -14,8 +14,8 @@
 10. C++/C# lambda function => Pascal function/procedure with no name (read the section below)
 11. C++/C# template => Pascal's [generic](https://wiki.freepascal.org/Generics)
 12. Pascal strings can be concatenate together using + operator
-13. Classes are NOT directly used unless it's neccessary. Records with functions are doable using `{$modeswitch advancedrecords}`
-14. `struct` = `record`
+13. Classes are NOT directly used unless it's neccessary.
+14. `struct` => `record` Records with functions are doable using `{$modeswitch advancedrecords}`
 15. `main()` function => single `begin-end.` (notice the dot) block.
 16. Quit functions/scopes using `exit(whatever or not)` or `return` (alias of `exit`). Halt the program *anywhere* using `halt(exit code)`
 17. `argc`, `argv` in `main()` are still accessible as int and PPChar (or `char**` in C). However we all use `ParamCount` (argc) and `ParamStr(index)` function (which returns a Pascal string)
@@ -38,6 +38,9 @@ end.
 ```
 
 For external C functions, check [this](https://www.freepascal.org/docs-html/ref/refsu97.html).
+19. Letter-case is ignored in Pascal. Applies for everything.
+
+There are more of Pascal you should know. Check out[this](https://en.wikipedia.org/wiki/Pascal_(programming_language)#Language_constructs) and Free Pascal [wiki](https://wiki.freepascal.org).
 
 # Project structure
 
