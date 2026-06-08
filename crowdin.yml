@@ -1,11 +1,12 @@
 commit-message: 'i18n: Updates for %language% from Crowdin'
 project_id: 891754
 append_commit_message: 
+preserver_hierarchy: true
 files:
   - source: /i18n/cc.pot
     translation: /i18n/%two_letters_code%/cc.po
-  - source: /src/calltime/i18n/cc.pot
-    translation: /src/calltime/i18n/%two_letters_code%/cc.po
+  - source: /src/hello/i18n/cc.pot
+    translation: /src/hello/i18n/%two_letters_code%/cc.po
   - source: /src/dir/i18n/cc.pot
     translation: /src/dir/i18n/%two_letters_code%/cc.po
   - source: /src/env/i18n/cc.pot

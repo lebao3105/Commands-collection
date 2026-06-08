@@ -34,7 +34,7 @@ retn Logging_Internal(color: int; level, message: string); overload;
 begin
     if doPrintHeader then begin
         TextColor(color);
-        write(ANSI_CODE_BOLD + level + ' ' + ANSI_CODE_RESET_FORE);
+        write(ANSI_CODE_BOLD + level + ' ' + ANSI_CODE_RESET{_FORE});
     end;
     write(message);
     if doNewLine then write(#13#10);

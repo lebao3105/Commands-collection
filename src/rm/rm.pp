@@ -38,8 +38,10 @@ begin
         ConfirmationResult.NO:
             return(false);
         ConfirmationResult.ALWAYS:
+        begin
             interactive := false;
             return(true);
+        end;
     end;
 end;
 

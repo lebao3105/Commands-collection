@@ -1,0 +1,23 @@
+#: i18n.greeting_des
+msgid   "Use TEXT as the greeting message"
+msgstr  ""
+
+#: i18n.hello_world
+msgid   "Hello world!"
+msgstr  ""
+
+#: i18n.hello_world_traditional
+msgid   "hello world!"
+msgstr  ""
+
+#: i18n.program_bonus_help
+msgid   "This is a sample program from Commands-Collection."
+msgstr  ""
+
+#: i18n.program_desc
+msgid   "Prints a friendly, customizable greeting."
+msgstr  ""
+
+#: i18n.traditional_des
+msgid   "Use traditional greeting message"
+msgstr  ""

@@ -3,6 +3,7 @@ unit dir.settings;
 {$modeswitch advancedrecords}
 {$modeswitch anonymousfunctions}
 {$modeswitch result}
+{$unitpath settings}
 
 interface
 

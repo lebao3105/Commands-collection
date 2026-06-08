@@ -27,6 +27,7 @@ begin // Main program block
             // cc.getopts itself. Nothing else to do here.
         end;
     end;
+    cc.getopts.GetOpt;
 
     writeln(greeting_msg);
 end. // Notice the dot

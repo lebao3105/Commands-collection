@@ -19,7 +19,6 @@ unit cc.getopts;
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 }
 
-{$scopedenums on}
 {$modeswitch result}
 {$modeswitch advancedrecords}
 {$modeswitch defaultparameters}
@@ -46,8 +45,8 @@ type
         Kind      : EOptKind;
         Short     : char;
         Help      : string;
-        DefaultVal: string;
         ValParam  : string;
+        DefaultVal: string;
 
         { Write the full help message of the option, which includes:
           * Short and long variants;
