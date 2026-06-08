@@ -9,7 +9,8 @@ resourcestring
     HELP_USAGE          = 'Show this help and exit';
     VERSION_USAGE       = 'Show the version of this program and exit';
     VERBOSE_USAGE       = 'Add verbosity';
-    UNDOCUMENTED        = 'Use pairs of arguments - check cc-argument-pairs(7)';
+    ARGPAIRS_USAGE      = 'Use pairs of arguments - check cc-argument-pairs(7)';
+    UNDOCUMENTED        = '[REDACTED]';
 
     OPT_NEED_VAL        = '%s requires a value';
     OPT_NO_VAL_NEEDED   = '%s does not require a value';
@@ -28,26 +29,28 @@ resourcestring
 
 fn TOption.IsEmpty: bool;
 begin
-    Result := (Short = #0) and (Long = '');
+    Result := (Short = #0) and (Long = '') and (Help = '');
 end;
 
 fn TOption.WriteFullHelpMessage: string;
 begin
+    if IsEmpty then
+        return('');
+
     if Help = '' then
         Help := UNDOCUMENTED;
-
-    if IsEmpty then
-        return(Help);
 
     Result := ANSI_CODE_BOLD;
 
     if (Short <> '') or (Short <> #0) then
-        Result += ('-' + Short + ANSI_CODE_RESET + ' ');
+        Result += ('-' + Short + ' ');
 
     if Long <> '' then
         Result += ('--' + Long);
 
-    if Kind <> EOptKind.FLAG then
+    Result += ANSI_CODE_RESET;
+
+    if Kind <> FLAG then
     begin
         if Long <> '' then
             Result += '  ';

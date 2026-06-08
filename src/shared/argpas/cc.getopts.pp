@@ -12,15 +12,15 @@ uses
     ;
 
 {$define ARGA_VERBOSE :=
-    (Long: 'verbose'; Kind: EOptKind.FLAG; Short: 'v'; Help: VERBOSE_USAGE)
+    (Long: 'verbose'; Kind: FLAG; Short: 'v'; Help: VERBOSE_USAGE)
 }
 {$define ARGA_USE_PAIRS :=
-    (Long: 'use-pairs'; Kind: EOptKind.FLAG; Short: #0; Help: '')
+    (Long: 'use-pairs'; Kind: FLAG; Short: #0; Help: ARGPAIRS_USAGE)
 }
 {$define ARGA_SUFFIX :=
-    (Long: 'help';    Kind: EOptKind.FLAG; Short: 'h'; Help: HELP_USAGE),
-    (Long: 'version'; Kind: EOptKind.FLAG; Short: 'V'; Help: VERSION_USAGE),
-    (Long: '';        Kind: EOptKind.FLAG; Short: #0; Help: '')
+    (Long: 'help';    Kind: FLAG; Short: 'h'; Help: HELP_USAGE),
+    (Long: 'version'; Kind: FLAG; Short: 'V'; Help: VERSION_USAGE),
+    (Long: '';        Kind: FLAG; Short: #0; Help: '')
 }
 
 {$I cc.termcolors.inc}
@@ -186,7 +186,7 @@ begin
             {$endif}
         end;
 
-        if Kind <> EOptKind.FLAG then
+        if Kind <> FLAG then
         begin
             lastArgNeedsAValue := optValue = '';
             if not lastArgNeedsAValue then
