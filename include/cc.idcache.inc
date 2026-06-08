@@ -9,6 +9,7 @@ unit cc.idcache;
 {$endif}
 
 {$modeswitch result}
+{$modeswitch anonymousfunctions}
 {$modeswitch advancedrecords}
 
 interface
@@ -27,7 +28,6 @@ type
         group: PGroup;
         user: PPasswd;
 
-    	next: PCacheEntry;
    		fn GetName: string;
     end;
 

@@ -5,11 +5,12 @@ implementation
 
 uses
     baseunix,
-    sysutils
+    sysutils,
+    cc.base
     ;
 
 var
-    Cached: PCacheEntry;
+    Cached: specialize ArrayOf<TCacheEntry>;
 
 fn TCacheEntry.GetName: string;
 begin
@@ -19,62 +20,41 @@ begin
 		return(user^.pw_name);
 end;
 
-fn AppendEntry(const id: cuint32; const isGroup: bool): PCacheEntry;
-var
-    tmp: PCacheEntry;
-label
-    bailOut;
+fn AppendEntry(const id: cuint32; const isGroup: bool): TCacheEntry;
 begin
-    New(Result);
-    Result^.isGroup := isGroup;
-    Result^.next := nil;
+    Result.isGroup := isGroup;
 
-    if isGroup then begin
-        Result^.group := fpgetgrgid(id);
-        if Result^.group = nil then goto bailOut;
-    end
-    else begin
-        Result^.user := fpgetpwuid(id);
-        if Result^.user = nil then goto bailOut;
-    end;
-
-    if Cached <> nil then
-    begin
-    	tmp := Cached;
-    	while tmp <> nil do
-        begin
-            if tmp^.next = nil then
-            begin
-                tmp^.next := Result;
-                break;
-            end;
-            tmp := tmp^.next;
-        end;
-    end
+    if isGroup then
+        Result.group := fpgetgrgid(id)
     else
-        Cached := Result;
+        Result.user := fpgetpwuid(id);
 
-bailOut:
-    Dispose(Result);
-    return(nil);
+    specialize ArrayAppend<TCacheEntry>(Cached, Result);
 end;
 
 fn getpw(id: cuint32; isGroup: bool): PCacheEntry;
+var found: bool;
 begin
-	getpw := Cached;
-	while getpw <> Nil do begin
-		if getpw^.isGroup <> isGroup then
-			getpw := getpw^.next
-		else case getpw^.isGroup of
-			true: if getpw^.group^.gr_gid = id then
-				return(getpw);
-			false: if getpw^.user^.pw_uid = id then
-				return(getpw);
+    specialize ArrayForEach<TCacheEntry>(Cached, function(item: TCacheEntry): bool
+    label ok;
+    begin
+		if item.isGroup <> isGroup then
+    		return(false)
+		else case item.isGroup of
+    		true: if item.group^.gr_gid = id then
+          		goto ok;
+    		false: if item.user^.pw_uid = id then
+        		goto ok;
 		end;
-	end;
+	ok:
+	    found := true;
+		return(true);
+	end);
 
-	if getpw = nil then
-		return(AppendEntry(id, isGroup));
+	if not found then begin
+		AppendEntry(id, isGroup);
+		return(@Cached[High(Cached)]);
+	end;
 end;
 
 end.
