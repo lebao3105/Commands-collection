@@ -28,6 +28,8 @@ function generate_pot(resource_path, outpath, for_application)
                                 "--add-comments=TRANSLATORS",
                                 "--sort-by-file", "--omit-header",
                                 "-j", fullpath })
+        else
+            print("Found no valid .rsj for localization. Did you run xmake b [target]?")
         end
     end
 end

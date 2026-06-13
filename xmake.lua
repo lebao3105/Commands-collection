@@ -1,18 +1,20 @@
 add_imports("lib.detect.find_program", "lib.detect.find_file")
-
-add_moduledirs(os.projectdir() .. "/build-aux")
-add_imports("i18n", "miscs", { inherit = true })
-
-add_rules("mode.debug", "mode.release")
+set_policy("build.progress_style", "multirow")
 set_policy("check.auto_ignore_flags", false)
 
-version = "262305a"
+add_moduledirs(os.projectdir() .. "/build-aux")
+add_imports("miscs")
+
+add_rules("mode.debug", "mode.release")
+
+local rel_type = 'a'
+version = os.date("%y%d%m") .. rel_type
 set_version(version)
 programs = { }
 
-includes("options.lua", "i18n/xmake.lua", "@builtin/xpack")
+includes("options.lua", "@builtin/xpack")
 
-for i, dir in ipairs(os.dirs("src/*", { async = true })) do
+for i, dir in ipairs(os.dirs("src/*")) do
 	local name = path.filename(dir)
     local srcfile = "src/" .. name .. "/" .. name .. ".pp"
 
@@ -45,85 +47,37 @@ for i, dir in ipairs(os.dirs("src/*", { async = true })) do
             target:add("pcflags", miscs.get_custom_fpc_conf())
             os.setenv('CC_VERSION', version)
 
-            local locpath
-            if xpack then
-                locpath =
-                    "/usr/share/locale/%s/LC_MESSAGES/" .. name .. ".mo"
-            else
-                locpath =
-                    os.projectdir() .. "/src/" .. name .. "/i18n/%s/cc.mo"
-            end
+            local locpath = xpack and
+                "/usr/share/locale/%s/LC_MESSAGES/" .. name .. ".mo" or
+                os.projectdir() .. "/src/" .. name .. "/i18n/%s/cc.mo"
             os.setenv('LOC_PATH', locpath)
 
             os.mkdir(target:objectdir())
         end)
 
-    target(name .. "-docs")
-        set_kind("phony")
-
-        local groff_path = os.projectdir() .. "/docs/1/cc-" .. name .. ".1"
-
-        on_build( function (_)
-            miscs.scdoc_to_groff("docs/1/" .. name .. ".scd", groff_path)
-        end)
-
-        add_installfiles(groff_path, { prefixdir = "share/man/man1" })
-
-    target(name .. "-i18n")
-        add_deps(name)
-        set_kind("phony")
-
-        local i18n_dir = "src/" .. name .. "/i18n/"
-
-        on_build( function (_)
-            local potloc = i18n_dir .. "cc.pot"
-
-            -- Generate a template
-            local rsjpath = vformat(
-                "$(builddir)/.objs/" .. name .. "/$(os)/$(arch)/$(mode)",
-                xmake
-            )
-            i18n.generate_pot(rsjpath, potloc, true)
-
-            for __, fullpath in ipairs(os.dirs(i18n_dir .. "*")) do
-                local language = path.filename(fullpath)
-                local ccpath = "i18n/" .. language
-                local outpath = fullpath .. "/cc.po"
-
-                -- Merge application's template to
-                -- language-specific translation
-                i18n.merge_po_files(potloc, outpath)
-
-                -- Compile .po to .mo
-                i18n.compile_po_files({ outpath, ccpath .. "/cc.po" }, fullpath .. "/cc.mo")
-            end
-        end)
-
-        for __, fullpath in ipairs(os.dirs(i18n_dir .. "*")) do
-            add_installfiles(fullpath .. "/cc.mo", {
-                prefixdir = "share/locale/" .. path.filename(fullpath) .. "/LC_MESSAGES/",
-                filename = name .. ".mo"
-            })
-        end
-
     ::continue::
 end
 
+target("API")
+    set_kind("phony")
+    on_build( function (_)
+        local args = { "-dNO_PROG", "@cc.cfg", miscs.get_custom_fpc_conf() }
+
+        for __, fullpath in ipairs(os.files("src/shared/cc.*.pp")) do
+            os.execv(miscs.get_fpc_path(), table.join(args, fullpath))
+        end
+    end)
+
+    on_clean( function (_)
+        os.rm("i18n/*/cc.mo")
+        os.rm("src/shared/*.o")
+        os.rm("src/shared/*.ppu")
+        os.rm("src/shared/*.rsj")
+    end)
+
 target("programs")
 	set_kind("phony")
+	set_default(true)
     add_deps(programs)
 
-target("programs-i18n")
-	set_kind("phony")
-	for _, program in ipairs(programs) do
-		add_deps(program .. "-i18n")
-	end
-
-target("programs-docs")
-	set_kind("phony")
-	for _, program in ipairs(programs) do
-		add_deps(program .. "-docs")
-	end
-
-includes("docs/xmake.lua")
-includes("build-aux/pack.lua")
+includes("i18n/xmake.lua", "docs/xmake.lua")

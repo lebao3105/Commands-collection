@@ -77,17 +77,15 @@ $ xmake b <program_name>
 
 For \<program_name\>, check out the folders of [src](../src) (ignore the shared/ folder).
 
+Add `-r` for rebuilds, needed for new changes.
+
 2. To build everything:
 
 ```bash
 $ xmake
 # or
 $ xmake b
-```
-
-3. To build all programs:
-
-```bash
+# or
 $ xmake b programs
 ```
 
@@ -96,7 +94,12 @@ Add `-r` for rebuilds, needed for new changes.
 5. To clean:
 
 ```bash
+# Programs
 $ xmake c <target>
+# Documents
+$ xmake docs clean <target>
+# i18n
+$ xmake i18n clean <target>
 ```
 
 To create and consume debug builds, add `-m debug` to `xmake f`.
@@ -104,6 +107,24 @@ To create and consume debug builds, add `-m debug` to `xmake f`.
 To create and consume release builds, add `-m release` to `xmake f`.
 
 To see all targets for `xmake b`, see `xmake b -h`.
+
+6. To generate localizations:
+
+```bash
+$ xmake i18n pot [target]
+$ xmake i18n po [target]
+$ xmake i18n mo [target]
+```
+
+`[target]` is one of the targets in `xmake b -h`.
+
+7. To generate documents:
+
+```bash
+$ xmake docs build [target]
+```
+
+`[target]` is one of the targets in `xmake b -h`.
 
 ## Running built programs
 

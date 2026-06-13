@@ -1,29 +1,106 @@
-target("API-i18n")
-    set_kind("phony")
+task("i18n")
+    set_menu {
+        usage = "xmake i18n [task] [what]",
+        description = "Updates/compiles .po files",
+        options = {
+            { nil, "task", "v", nil, "What to make",
+                                        " - pot for templates",
+                                        " - po for .po files",
+                                        " - mo for compiled .po files",
+                                        " - all for all the 3 above",
+                                        " - clean" },
+            { nil, "what", "v", nil, "What to localize for (check build targets from xmake b --help)" }
+        }
+    }
 
-    on_build( function (target)
-        local args = { "-dNO_PROG", "@cc.cfg", miscs.get_custom_fpc_conf() }
+    on_run( function ()
+        import("core.base.option")
+        import("core.base.task")
+        import("miscs")
 
-        for __, fullpath in ipairs(os.files("src/shared/cc.*.pp")) do
-            -- TODO: Fix this terrible hardcoded FPC executable
-            -- (pc and pcld failed to work)
-            os.execv("fpc", table.join(args, fullpath))
-        end
-    end)
+        local what_to_do = option.get("task")
+        local what_for = option.get("what")
 
-    after_build( function (target)
-        i18n.generate_pot("src/shared", "i18n/cc.pot", false)
-
-        for _, fullpath in ipairs(os.dirs("i18n/*")) do
-            if os.isfile(fullpath .. "/cc.po") then
-                i18n.merge_po_files("i18n/cc.pot", fullpath .. "/cc.po")
+        if not miscs.is_string_empty(what_for) then
+            if what_to_do == "clean" then
+                print(what_for .. " is not needed for xmake i18n clean")
+            elseif what_to_do == "all" then
+                task.run("i18n", { task = "pot", what = what_for })
+                task.run("i18n", { task = "po", what = what_for })
+                task.run("i18n", { task = "mo", what = what_for })
             end
+        else
+            os.exec("xmake i18n --help")
+            raise("[what] is required here. Exiting.")
         end
-    end)
 
-    on_clean( function (_)
-        os.rm("i18n/*/cc.mo")
-        os.rm("src/shared/*.o")
-        os.rm("src/shared/*.ppu")
-        os.rm("src/shared/*.rsj")
+        if what_for == "programs" then
+            for _, p in ipairs(os.dirs(os.projectdir() .. "/src/*")) do
+                local name = path.filename(p)
+                if os.isfile(p .. '/' .. name .. ".pp") then
+                    task.run("i18n", { task = what_to_do, what = name })
+                end
+            end
+        elseif what_for == "all" then
+            task.run("i18n", { task = what_to_do, what = "programs" })
+            task.run("i18n", { task = what_to_do, what = "API" })
+        end
+
+        import("i18n")
+        import("core.project.config")
+        config.load() -- to make core.project.config.get() work
+
+        if task.run("build", what_for) ~= 0 then
+            raise("Failed to build " .. what_for)
+        end
+
+        local i18n_dir, potloc
+        if what_for == "API" then
+            i18n_dir = "i18n/"
+            potloc = "i18n/cc.pot"
+        else
+            i18n_dir = "src/" .. what_for .. "/i18n/"
+            potloc = i18n_dir .. "cc.pot"
+        end
+
+        if what_to_do == "pot" then
+            print("Creating templates...")
+            local rsjpath = (what_for == "API") and "src/shared" or
+                format(
+                    "%s/.objs/" .. what_for .. "/%s/%s/%s",
+                    config.builddir, config.plat,
+                    config.arch, config.mode
+                )
+            -- print(rsjpath)
+            i18n.generate_pot(rsjpath, potloc, what_for ~= "API")
+
+        elseif what_to_do == "po" then
+            for _, fullpath in ipairs(os.dirs(i18n_dir .. "*")) do
+                local out = fullpath .. "/cc.po"
+                print("Merging " .. potloc .. " to " .. out)
+                i18n.merge_po_files(potloc, out)
+            end
+
+        elseif what_to_do == "mo" then
+            for _, fullpath in ipairs(os.dirs(i18n_dir .. "*")) do
+                local outpath = fullpath .. "/cc.mo"
+                local inpaths = { fullpath .. "/cc.po" }
+
+                if not (what_for == "API") then
+                    local language = path.filename(fullpath)
+                    table.insert(inpaths, "i18n/" .. language .. "/cc.po")
+                end
+
+                i18n.compile_po_files(inpaths, outpath)
+            end
+
+        elseif what_to_do == "clean" then
+            for _, path in ipairs({ "**/*.mo" }) do
+                os.rm(path)
+            end
+
+        else
+            os.exec("xmake i18n --help")
+            raise("Unknown [task]!")
+        end
     end)
