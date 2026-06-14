@@ -4,29 +4,14 @@ implementation
 
 uses
     sysutils, // Format
-    {$ifndef NO_PROG}
     i18n,
-    {$endif}
     cc.console,
     cc.logging
     ;
 
-{$define ARGA_VERBOSE :=
-    (Long: 'verbose'; Kind: FLAG; Short: 'v'; Help: VERBOSE_USAGE)
-}
-{$define ARGA_USE_PAIRS :=
-    (Long: 'use-pairs'; Kind: FLAG; Short: #0; Help: ARGPAIRS_USAGE)
-}
-{$define ARGA_SUFFIX :=
-    (Long: 'help';    Kind: FLAG; Short: 'h'; Help: HELP_USAGE),
-    (Long: 'version'; Kind: FLAG; Short: 'V'; Help: VERSION_USAGE),
-    (Long: '';        Kind: FLAG; Short: #0; Help: '')
-}
-
 {$I cc.termcolors.inc}
 {$I cc.getopts.help.pp}
 
-{$ifndef NO_PROG}
 const
     EndOfOptions: char            = #255;
     OptSpecifier: char            = '-';
@@ -208,7 +193,7 @@ begin
         case c of
             'h': begin ShowHelp(true); halt(0); end;
             'V': begin
-                writeln(Format(CC_VERSION_STR, [ {$I %CC_VERSION%} ]));
+                writeln(Format(CC_VERSION_STR, [ CC_VERSION ]));
                 writeln(Format(CC_TARGET_STR, [ {$I %FPCTARGETOS%}, {$I %FPCTARGETCPU%}, {$I %FPCVERSION%} ]));
                 writeln(Format(CC_BUILD_DATE, [ {$I %DATE%}, {$I %TIME%} ]));
                 halt(0);
@@ -226,13 +211,6 @@ begin
     end;
     {$endif}
 end;
-
-{$else}
-
-retn ShowHelp(to_stdout: bool); begin end;
-retn GetOpt; begin end;
-
-{$endif NO_PROG}
 
 {$if defined(ALLOW_PAIRS)}
 fn GetArgPairs: TArrayOfStringDynArray;

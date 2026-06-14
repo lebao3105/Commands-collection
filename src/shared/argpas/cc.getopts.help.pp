@@ -3,8 +3,7 @@
 
 resourcestring
     CC_VERSION_STR      = 'Commands-Collection (CC) version %s';
-    /// TRANSLATORS:               OS v  CPU v
-    CC_TARGET_STR       = 'Built for %s on %s using FPC %s';
+    CC_TARGET_STR       = 'Built for %s on %s CPU using FPC %s';
     CC_BUILD_DATE       = 'Built on %s';
     HELP_USAGE          = 'Show this help and exit';
     VERSION_USAGE       = 'Show the version of this program and exit';
@@ -17,13 +16,22 @@ resourcestring
     OPT_UNKNOWN         = 'unrecognized option: %s';
     OPT_PAIR_NOT_ENOUGH = 'not enough item for a pair: %d required, got %d';
 
-{$ifndef NO_PROG}
-    {$warn 3177 off} // Uninitialized fields
-    {$I config.inc}
-    {$if defined(ALLOW_PAIRS) and defined(PAIR_NUM)}
-        {$if PAIR_NUM < 2}
-            {$fatal PAIR_NUM is BELOW TWO!}
-        {$endif}
+{$warn 3177 off} // Uninitialized fields
+{$define ARGA_VERBOSE :=
+    (Long: 'verbose'; Kind: FLAG; Short: 'v'; Help: VERBOSE_USAGE)
+}
+{$define ARGA_USE_PAIRS :=
+    (Long: 'use-pairs'; Kind: FLAG; Short: #0; Help: ARGPAIRS_USAGE)
+}
+{$define ARGA_SUFFIX :=
+    (Long: 'help';    Kind: FLAG; Short: 'h'; Help: HELP_USAGE),
+    (Long: 'version'; Kind: FLAG; Short: 'V'; Help: VERSION_USAGE),
+    (Long: '';        Kind: FLAG; Short: #0; Help: '')
+}
+{$I config.inc}
+{$if defined(ALLOW_PAIRS) and defined(PAIR_NUM)}
+    {$if PAIR_NUM < 2}
+        {$fatal PAIR_NUM is BELOW TWO!}
     {$endif}
 {$endif}
 
@@ -69,7 +77,6 @@ end;
 
 retn ShowHelp(to_stdout: bool);
 begin
-{$ifndef NO_PROG}
     setOutputStream(not to_stdout);
     writeln(OutputFile, PROGRAM_DESC);
 
@@ -83,5 +90,4 @@ begin
     {$ifdef HAS_BONUS_HELP}
     writeln(OutputFile, PROGRAM_BONUS_HELP);
     {$endif}
-{$endif}
 end;
