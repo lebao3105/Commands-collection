@@ -14,6 +14,8 @@ unit i18n;
     Multi-line strings are allowed.
 }
 
+{$modeswitch out}
+{$modeswitch anonymousfunctions}
 {$modeswitch MultiLineStrings}
 
 interface
@@ -23,17 +25,9 @@ interface
 
 implementation
 
-uses {$ifdef FPC_DOTTEDUNITS}
-     system.gettext,
-     system.sysutils
-     {$else}
-     gettext,
-     sysutils
-     {$endif}
-     ;
+uses gettext, sysutils, cc.logging;
 
-var
-    where_to_read: string;
+var where_to_read: string;
 
 initialization
 
