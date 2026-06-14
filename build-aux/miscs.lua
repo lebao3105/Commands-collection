@@ -12,13 +12,8 @@ function is_string_empty(str)
 end
 
 function get_custom_fpc_conf()
-    local fpc_conf = get_config("fpc-conf")
-
-    if not is_string_empty(fpc_conf) then
-        return "@" .. fpc_conf
-    end
-
-    return ""
+    local p = os.projectdir() .. "/extra.cfg"
+    return os.isfile(p) and p or ""
 end
 
 function single_string_quote(str)

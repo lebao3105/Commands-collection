@@ -69,6 +69,8 @@ Replace `$(which fpc)` with either the full path of FPC or your preferred way of
 
 This is also required if you want to use another compiler that is not on PATH.
 
+If you have extra build options, put them in extra.cfg.
+
 1. To build a specific program:
 
 ```bash

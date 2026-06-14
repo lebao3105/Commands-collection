@@ -50,3 +50,6 @@ compile_commands.json
 
 # Unicode subtarget
 fpc-unicodertl.cfg
+
+# Extra build args
+extra.cfg
