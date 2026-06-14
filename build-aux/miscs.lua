@@ -23,14 +23,3 @@ end
 function double_string_quote(str)
     return '"' .. str .. '"'
 end
-
-function get_fpc_path(config)
-    local result = config.get("pc")
-    return is_string_empty(result) and "fpc" or result
-end
-
-function get_fpc_path()
-    import("core.project.config")
-    config.load()
-    return get_fpc_path(config)
-end

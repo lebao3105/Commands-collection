@@ -5,10 +5,7 @@ local msgmerge = find_program("msgmerge")
 local msgfmt = find_program("msgfmt")
 
 function generate_pot(resource_path, outpath, for_application)
-    if xgettext == nil then
-        return
-    end
-
+    print('RSJ path: ' .. resource_path)
     if os.isfile(outpath) then
         os.rm(outpath)
     end
@@ -17,28 +14,22 @@ function generate_pot(resource_path, outpath, for_application)
     for __, fullpath in ipairs(os.files(resource_path .. "/*.rsj"))
     do
         local valid = not for_application
-        if not valid then
+        if for_application then
             local fn = path.filename(fullpath)
-            valid = (fn == "cc.i18n.rsj") or (not fn:startswith("cc."))
+            valid = (fn == "i18n.rsj") or ( not fn:startswith("cc."))
         end
 
         if valid then
-            print("Found a .rsj file for localization: " .. fullpath)
-            os.execv(xgettext, {"-o", outpath, "-E", "-i",
+            print("found " .. fullpath .. " file for localization: ")
+            os.execv(xgettext, { "-o", outpath, "-E", "-i",
                                 "--add-comments=TRANSLATORS",
                                 "--sort-by-file", "--omit-header",
                                 "-j", fullpath })
-        else
-            print("Found no valid .rsj for localization. Did you run xmake b [target]?")
         end
     end
 end
 
 function merge_po_files(from, to)
-    if msgmerge == nil then
-        return
-    end
-
     if os.exists(to) then
         os.execv(msgmerge, { "-i", "-E", "-N", "-U", to, from })
     else
@@ -47,9 +38,5 @@ function merge_po_files(from, to)
 end
 
 function compile_po_files(from, to)
-    if msgfmt == nil then
-        return
-    end
-
     os.execv(msgfmt, table.join(from, { "-o", to }))
 end
