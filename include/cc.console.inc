@@ -29,5 +29,5 @@ fn ANSIEscapeSequence(seq: string): string;
 fn stdInReadKey: string;
 
 {$ifdef WINDOWS}
-fn isATTY(fd: cint): int; external 'kernel32' name '_isatty';
+fn isATTY(fd: cint): cint; external 'msvcrt' name '_isatty';
 {$endif}
