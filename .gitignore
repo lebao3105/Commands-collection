@@ -5,6 +5,8 @@ test*
 *.res
 a.out
 
+*.a
+*.lib
 *.dll
 *.so
 *.dylib
