@@ -12,8 +12,8 @@ function is_string_empty(str)
 end
 
 function get_custom_fpc_conf()
-    local p = os.projectdir() .. "/extra.cfg"
-    return os.isfile(p) and p or ""
+    local p = "extra.cfg"
+    return os.isfile(p) and '@' .. p or ""
 end
 
 function single_string_quote(str)

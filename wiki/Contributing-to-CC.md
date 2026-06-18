@@ -115,7 +115,7 @@ Unicode RTL exists and is usable, however not in CC. Problems exist in both comp
 * garbage data sometimes.
 * a bunch of conversion warnings.
 
-## Dotted units
+## (not used anymore) Dotted units
 
 Or rather say, namespaced units.
 
@@ -232,3 +232,57 @@ $ xmake b API-docs
 This will generate HTMLs in `docs/api`.
 
 `scdoc` is used. Each program have their own `-docs` target.
+
+# XMake
+
+This is the main build system used across CC. Also, CC is one of the first Pascal project that uses XMake.
+
+Not all `add_*` or `set_*` works. All supported functions can be seen [here](https://github.com/xmake-io/xmake/blob/dev/xmake/modules/core/tools/fpc.lua) (functions with `nf_` prefix).
+* `set_language` is not required. The language used in CC is the default FreePascal dialect anyways.
+* If required, use `add_pcflags()`.
+
+`compile_commands.json` is not used by any known Pascal LSP, and is not even supported by XMake.
+
+Do not use `add_files()` to compile multiple files at once! Use a for loop in `on_build()` instead.
+
+If something goes wrong, add `-vD` to the used command. One common case is uninitialized variables.
+
+XMake has try-catch block.
+
+XMake is Lua.
+
+## Skip platform-specific units (apply for shared code only)
+
+You can tell XMake to skip files for specific platforms by adding this line to the very top of the implementation file:
+
+```pascal
+{ SKIP platform names seperated by spaces }
+{$I header.inc}
+
+implementation
+...
+```
+
+That *SKIP* is case-sensitive.
+
+## Dependent files
+
+XMake stores dependent files and compile flags in `$(builddir)/.deps/[target]/$(os)/$(arch)/$(mode)/[target].d`, which contains serialized Lua table:
+
+```
+{
+    files = {
+        [[src\env\env.pp]]
+    },
+    values = {
+        [[C:\fpcupdeluxe\fpc\bin\x86_64-win64\fpc.exe]],
+        {
+            "-O3",
+            "@cc.cfg",
+            "-Fisrc/env"
+        }
+    }
+}
+```
+
+XMake does not have an implementation of this feature, so it only depends on whatever you give the target's `add_files()`. This leads to the use of `-r` (rebuild) flag

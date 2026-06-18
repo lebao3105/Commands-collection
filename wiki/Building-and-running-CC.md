@@ -36,7 +36,7 @@ In most installations this is handled automatically and correctly by FPC/package
 > Note: Since FPC trunk is being used, skip the information below.
 > To strip your FPC installation, you will want to modify its Makefile(.fpc)...
 
-Default installation of FPC includes a lot of other unneccessary things, which can be skipped (mostly) on some Linux distributions. Here's what to install on Ubuntu-based distros, and maybe, Debian-based ones (Ubuntu is based on Debian):
+Default installation of FPC includes RTL and a lot of other unneccessary things, which can be skipped (mostly) on some Linux distributions. Here's what to install on Ubuntu-based distros, and maybe, Debian-based ones (Ubuntu is based on Debian):
 
 * `fp-compiler`: The compiler
 * `fp-units-base`: Some "base"(???) units, this includes Regexpr (for regular expressions)
@@ -71,29 +71,19 @@ This is also required if you want to use another compiler that is not on PATH.
 
 If you have extra build options, put them in extra.cfg.
 
-1. To build a specific program:
+1. To build a specific program, or the shared code:
 
 ```bash
-$ xmake b <program_name>
+$ xmake b [name]
+# or
+$ xmake build [name]
 ```
 
-For \<program_name\>, check out the folders of [src](../src) (ignore the shared/ folder).
+For \[name\], check out the targets shown in `xmake b -h`.
 
-Add `-r` for rebuilds, needed for new changes.
+Add `-r` for rebuilds, NOT needed for new changes.
 
-2. To build everything:
-
-```bash
-$ xmake
-# or
-$ xmake b
-# or
-$ xmake b programs
-```
-
-Add `-r` for rebuilds, needed for new changes.
-
-5. To clean:
+2. To clean:
 
 ```bash
 # Programs
@@ -110,7 +100,7 @@ To create and consume release builds, add `-m release` to `xmake f`.
 
 To see all targets for `xmake b`, see `xmake b -h`.
 
-6. To generate localizations:
+3. To generate localizations:
 
 ```bash
 $ xmake i18n pot [target]
@@ -120,13 +110,15 @@ $ xmake i18n mo [target]
 
 `[target]` is one of the targets in `xmake b -h`.
 
-7. To generate documents:
+4. To generate documents:
 
 ```bash
 $ xmake docs build [target]
 ```
 
 `[target]` is one of the targets in `xmake b -h`.
+
+More can be read [here](https://xmake.io/guide/basic-commands/build-targets.html).
 
 ## Running built programs
 
@@ -141,7 +133,7 @@ xmake b -v dir
 
 The executable will be put in `build/linux/x86_64/release/`.
 
-Most programs have their own `--help` / `-h`.
+All programs have their own `--help` / `-h`.
 
 Or using XMake:
 
@@ -149,22 +141,12 @@ Or using XMake:
 xmake r <program_name> <arguments>
 ```
 
+More information can be read at [XMake guide](https://xmake.io/guide/basic-commands/run-targets.html).
+
 ## Packaging CC
 
-Run:
+It's not available right now. TODO:tm:
 
-```
-xmake pack -y -f [format]
-```
+## (un)Installing CC
 
-Supported formats:
-
-* tar.gz archive
-* tar archive
-* deb
-* rpm
-* zip archive
-* dmg (for macOS)
-* and maybe more...
-
-All are put in `build/xpack/commands-collection`.
+Read [this](https://xmake.io/guide/basic-commands/install-and-uninstall.html).
