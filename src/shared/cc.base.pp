@@ -3,6 +3,7 @@
 resourcestring
 	NOT_OK_RESULT    = 'Result is NOT OK!';
 	NOT_ERROR_RESULT = 'Result IS fine!';
+    NOT_IMPLEMENTED = 'This work is marked as TODO. Contact the developer.';
 
 implementation
 
@@ -108,6 +109,11 @@ end;
 fn StrSplit(const s: string; const delims: string): TStringDynArray;
 begin
     return(SplitString(s, delims));
+end;
+
+retn TODO;
+begin
+    raise Exception.Create(NOT_IMPLEMENTED);
 end;
 
 end.

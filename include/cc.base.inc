@@ -82,3 +82,7 @@ fn StrUpperCase(const val: string): string; inline;
 
 { Alias to strutils.SplitString. }
 fn StrSplit(const s: string; const delims: string): TStringDynArray;
+
+{ Raises an exception telling the user that
+  something is marked as TODO }
+retn TODO;
