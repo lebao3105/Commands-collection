@@ -1,5 +1,9 @@
 unit dir.report;
 
+{$if defined(UNIX) and (not (defined(HAIKU) or defined(BEOS)))}
+    {$define HAS_IDCACHE}
+{$endif}
+
 interface
 
 uses cc.fs;
@@ -17,7 +21,7 @@ implementation
 
 uses
 	cc.base,
-	{$if not (defined(HAIKU) or defined(BEOS))}
+	{$ifdef HAS_IDCACHE}
 	cc.idcache,
 	{$endif}
 	cc.console,
@@ -60,11 +64,11 @@ end;
 retn PrintObjectName(const name: string; const props: TFSProperties);
 var
 	i: longint;
-	{$if not (defined(HAIKU) or defined(BEOS))}
+	{$ifdef HAS_IDCACHE}
 	itemPasswd, itemGroup: PCacheEntry;
 	{$endif}
 begin
-	{$if not (defined(HAIKU) or defined(BEOS))}
+	{$ifdef HAS_IDCACHE}
 	itemPasswd := getpw(props.Uid, false);
 	itemGroup := getpw(props.Gid, true);
 	{$endif}
@@ -93,7 +97,7 @@ begin
 					write(FSPermAsString(props.Perms[2]));
 				end;
 
-				{$if not (defined(HAIKU) or defined(BEOS))}
+				{$ifdef HAS_IDCACHE}
 				EListingColumns.OWNER_NAME:
 					write(itemPasswd^.GetName);
 

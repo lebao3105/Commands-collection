@@ -3,10 +3,9 @@
 implementation
 
 uses
-        {$ifdef UNIX}
-    baseunix,
-    termio,
-        {$endif}
+    {$ifdef UNIX}baseunix, termio,
+    {$else}windows,
+    {$endif}
     sysutils,
     crt,
     keyboard
@@ -72,6 +71,33 @@ begin
 end;
 {$pop}
 
+{$ifdef WINDOWS}
+var dwMode: DWORD;
+
+retn InitConsole(handle: cint);
+begin
+    if not isATerminal(handle) then
+        return;
+
+    if not GetConsoleMode(handle, @dwMode) then
+    begin
+        writeln(Format('error: Failed to get standard output mode: %s', [
+            SysErrorMessage(GetLastError)
+        ]));
+        return;
+    end;
+
+    if not SetConsoleMode(handle, dwMode or ENABLE_VIRTUAL_TERMINAL_PROCESSING) then
+    begin
+        writeln(Format('error: Failed to set standard output mode: %s', [
+            SysErrorMessage(GetLastError)
+        ]));
+        return;
+    end;
+end;
+
+{$endif}
+
 initialization
 
 OutputHandle := StdOutputHandle;
@@ -84,5 +110,10 @@ InitKeyboard;
                  example}
 SetTextLineEnding(stderr, #13#10);
 SetTextLineEnding(stdout, #13#10);
+
+{$ifdef WINDOWS}
+InitConsole(StdOutputHandle);
+InitConsole(StdErrorHandle);
+{$endif}
 
 end.

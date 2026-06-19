@@ -3,11 +3,14 @@
 implementation
 
 uses
+    {$ifdef UNIX}
     baseunix,
+    {$endif}
     sysutils,
     dateutils
     ;
 
+{$ifdef UNIX}
 fn GetFSETypeInternal(st: pstat): EFSEntityKind;
 begin
     case (st^.st_mode and S_IFMT) of
@@ -20,10 +23,12 @@ begin
         S_IFSOCK: Result := EFSEntityKind.Socket;
     end;
 end;
+{$endif}
 
 fn PopulateFSInfo(const path: string; out info: TFSProperties): bool;
 {$push}
     {$warn 5057 off}
+{$ifdef UNIX}
 var st: stat;
 begin
     if FpLStat(path, st) <> 0 then
@@ -63,9 +68,13 @@ begin
 
     PopulateFSInfo := true;
 end;
+{$else}
+begin end;
+{$endif}
 {$pop}
 
 retn Iteratedir(const path: string; callback: TIteratedirCallback; recursively, printPath: bool);
+{$ifdef UNIX}
 var
     dir: pDIR;
     entry: pDirent;
@@ -118,16 +127,23 @@ begin
     if printPath then
         writeln;
 end;
+{$else}
+begin end;
+{$endif}
 
 fn GetFSEntityType(const p: string): EFSEntityKind;
 {$push}
     {$warn 5057 off}
+{$ifdef UNIX}
 var st: stat;
 begin
     if FpLStat(p, st) <> 0 then
         return(EFSEntityKind.StatFailure);
     return(GetFSETypeInternal(@st));
 end;
+{$else}
+begin end;
+{$endif}
 {$pop}
 
 fn IOResultToString: string;

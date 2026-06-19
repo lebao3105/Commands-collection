@@ -1,3 +1,4 @@
+{ SKIP windows haiku }
 {$I cc.idcache.inc}
 {$goto on}
 

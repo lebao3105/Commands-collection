@@ -35,6 +35,7 @@ where_to_read := GetEnvironmentVariable('CC_I18N_LOC');
 if where_to_read = '' then
     where_to_read := {$I %LOC_PATH%};
 
+Debug('.mo path: %s', [ where_to_read ]);
 TranslateResourceStrings(where_to_read);
 
 end.

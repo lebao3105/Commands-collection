@@ -1,5 +1,6 @@
 // All codes can be seen at
 // https://en.wikipedia.org/wiki/ANSI_escape_code#Select_Graphic_Rendition_parameters
+// and https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
 
 {$define ANSI_CODE_RESET     := ANSIEscapeSequence(#27'[0m')}
 {$define ANSI_CODE_BOLD      := ANSIEscapeSequence(#27'[1m')}

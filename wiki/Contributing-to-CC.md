@@ -263,7 +263,10 @@ implementation
 ...
 ```
 
-That *SKIP* is case-sensitive.
+That *SKIP* is case-sensitive and must be surrounded by spaces.
+You can also use *ALLOW* to make the unit available to some operating systems.
+
+However, this only removes the unit from being compiled using `xmake b API`. To actually limit the usage of the unit, add compile-time checks.
 
 ## Dependent files
 

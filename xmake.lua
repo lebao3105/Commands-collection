@@ -44,6 +44,8 @@ for _, dir in ipairs(os.dirs("src/*")) do
 
         if not is_plat("windows") then
             add_defines("USE_LIBLUA")
+        else
+            add_pcflags("-WC") -- Same as {$apptype console}?
         end
 
         on_config( function (target)
@@ -169,8 +171,14 @@ target("API")
             import("core.project.config")
 
             local firstln = table.to_array(io.lines(fullpath))[1]:split(' ')
-            if firstln[2] == "SKIP" then -- Platform-specific unit
+            if firstln[2] == "SKIP" then -- Platform-specific uni
                 if table.contains(firstln, config.plat()) then
+                    cprint("${yellow}skipping " .. fullpath ..
+                           " for not supporting " .. config.plat() .. "${clear}")
+                    goto continue
+                end
+            elseif firstln[2] == "ALLOW" then
+                if not table.contains(firstln, config.plat()) then
                     cprint("${yellow}skipping " .. fullpath ..
                            " for not supporting " .. config.plat() .. "${clear}")
                     goto continue
@@ -193,6 +201,7 @@ target("API")
         os.rm("src/shared/*.o")
         os.rm("src/shared/*.ppu")
         os.rm("src/shared/*.rsj")
+        os.rm("src/shared/libimp*.a")
     end)
 
 target("programs")

@@ -41,7 +41,11 @@
 *)
 
 unit lua;
-{$linklib lua5.5}
+{$ifdef USE_LIBLUA}
+    {$linklib lua}
+{$else}
+    {$link 'lua.lib'}
+{$endif}
 {$modeswitch result}
 
 interface
