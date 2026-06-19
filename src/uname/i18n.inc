@@ -28,3 +28,7 @@ resourcestring
     KERNEL_VERSION      = 'Kernel version: ';
     MACHINE_HWNAME      = 'Machine hardware name: ';
     NETWORK_NODENAME    = 'Network node name: ';
+
+    {$ifdef WINDOWS}
+    GET_INFO_FAIL       = 'Failed with code %.8x (%s)';
+    {$endif}

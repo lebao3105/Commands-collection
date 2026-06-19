@@ -15,6 +15,10 @@ msgstr  "Project-Id-Version: commands-collection\n"
 msgid   "Result IS fine!"
 msgstr  ""
 
+#: cc.base.not_implemented
+msgid   "This work is marked as TODO. Contact the developer."
+msgstr  ""
+
 #: cc.base.not_ok_result
 msgid   "Result is NOT OK!"
 msgstr  ""

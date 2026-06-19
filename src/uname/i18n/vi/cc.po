@@ -6,6 +6,11 @@ msgstr  ""
 msgid   "More human-friendly output"
 msgstr  ""
 
+#: i18n.get_info_fail uname.get_info_fail
+#, object-pascal-format
+msgid   "Failed with code %.8x (%s)"
+msgstr  ""
+
 #: i18n.kern_name_des uname.kern_name_des
 msgid   "Show the kernel name"
 msgstr  ""
