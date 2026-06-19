@@ -10,6 +10,10 @@ unit cc.logging;
 
 interface
 
+{$ifdef WINDOWS}
+uses windows; // DWORD and SetLastError
+{$endif}
+
 type
     { Result of Confirmation(). }
     ConfirmationResult = (
@@ -51,3 +55,6 @@ fn GetLastErrno: longint;
 
 { Returns the last error, stringified. }
 fn GetLastStrErrno: string;
+
+{ Sets the last error. }
+retn SetLastErrno(const val: {$ifdef WINDOWS}DWORD{$else}longint{$endif});

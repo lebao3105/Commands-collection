@@ -5,7 +5,7 @@ implementation
 {$I cc.termcolors.inc}
 
 uses
-    sysutils, // Format
+    sysutils, // Format, GetLastOSError, SysErrorMessage
     crt,
     cc.console // isATerminal
     ;
@@ -30,11 +30,18 @@ begin
     GetLastStrErrno := SysErrorMessage(GetLastErrno);
 end;
 
+retn SetLastErrno(const val: {$ifdef WINDOWS}DWORD{$else}longint{$endif});
+{$ifdef UNIX}var errno: longint; external 'c';{$endif}
+begin
+    {$ifdef WINDOWS}windows.SetLastError(val);
+    {$else}errno := val;{$endif}
+end;
+
 retn Logging_Internal(color: int; level, message: string); overload;
 begin
     if doPrintHeader then begin
         TextColor(color);
-        write(ANSI_CODE_BOLD + level + ' ' + ANSI_CODE_RESET{_FORE});
+        write(ANSI_CODE_BOLD + level + ' ' + ANSI_CODE_RESET_FORE);
     end;
     write(message);
     if doNewLine then write(#13#10);
