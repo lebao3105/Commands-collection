@@ -5,6 +5,7 @@ implementation
 {$I cc.termcolors.inc}
 
 uses
+    {$ifdef UNIX}baseunix,{$endif} // fpseterrno
     sysutils, // Format, GetLastOSError, SysErrorMessage
     crt,
     cc.console // isATerminal
@@ -31,10 +32,9 @@ begin
 end;
 
 retn SetLastErrno(const val: {$ifdef WINDOWS}DWORD{$else}longint{$endif});
-{$ifdef UNIX}var errno: longint; external 'c';{$endif}
 begin
     {$ifdef WINDOWS}windows.SetLastError(val);
-    {$else}errno := val;{$endif}
+    {$else}FPSetErrno(val);{$endif}
 end;
 
 retn Logging_Internal(color: int; level, message: string); overload;

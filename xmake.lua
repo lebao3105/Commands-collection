@@ -5,7 +5,7 @@ includes("options.lua")
 add_imports("lib.detect.find_program")
 add_moduledirs(os.projectdir() .. "/build-aux")
 add_imports("miscs")
-add_requires("lua")
+add_requires("lua", { system = false })
 add_rules("mode.debug", "mode.release")
 
 local rel_type = 'a' -- or b(eta) or r(c) - empty for stable
@@ -210,6 +210,3 @@ target("programs")
     add_deps(programs)
 
 includes("i18n/xmake.lua", "docs/xmake.lua")
-
-target('test')
-    add_files('test.c')
