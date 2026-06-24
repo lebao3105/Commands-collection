@@ -130,7 +130,9 @@ begin
     {$endif}
         FatalAndTerminate(1, UNAME_FAILED, [ GetLastStrErrno ]);
 
+    {$ifdef WINDOWS}
     AddExitProc(retn begin RegCloseKey(RKey); end);
+    {$endif}
 
     if ParamCount = 0 then
     begin
