@@ -55,6 +55,8 @@ for _, dir in ipairs(os.dirs("src/*")) do
             -- later in before_build() below.
             os.mkdir(target:targetdir())
             os.touch(target:targetfile())
+            
+            os.mkdir(target:objectdir())
 
             -- Append @extra.cfg to compiler flags if extra.cfg exists
             target:add("pcflags", miscs.get_custom_fpc_conf())
