@@ -14,8 +14,6 @@ uses
     i18n
     ;
 
-{$I i18n.inc}
-
 var
     beVerbose, createParent, dirsOnly, keepGoing: boolean;
 
