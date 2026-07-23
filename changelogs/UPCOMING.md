@@ -9,6 +9,11 @@ Modifications have been made to CC in order to be compatible with different API 
 
 There is no known runtime differences at the moment.
 
+## Program-specific changes
+
+* inp: Removed -s, -e and -o flags. May the removal of -s be temporary?
+* inp, env, rm: Use i18n [unit](../src/shared/i18n.pp) instead of including i18n.inc
+
 ## For developers+maintainers
 
 ### API changes
@@ -16,6 +21,7 @@ There is no known runtime differences at the moment.
 * `cc.registry` unit has been added for Windows Registry system usage.
 * A new function named todo() has been added to mark TODO works.
 * SetLastErrno() has been implemented in `cc.logging`.
+* A new library named sma11 has been implemented for console and keyboard tasks. Usage RTL's CRT is, once again(?), removed from CC.
 
 ## Build system changes
 

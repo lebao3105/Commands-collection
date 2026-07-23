@@ -7,11 +7,11 @@ implementation
 uses
     baseunix,
     sysutils,
-    cc.base
+    small.base
     ;
 
 var
-    Cached: specialize ArrayOf<TCacheEntry>;
+    Cached: specialize TArray<TCacheEntry>;
 
 fn TCacheEntry.GetName: string;
 begin

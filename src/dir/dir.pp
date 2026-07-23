@@ -3,34 +3,36 @@ program dir;
 {$modeswitch anonymousfunctions}
 
 uses
+    // classes,
     sysutils,
-    cc.base,
-    cc.getopts,
-    cc.logging,
-    cc.regex,
-    cc.fs,
+    small.base,
+    small.getopts,
+    small.logging,
+    small.regex,
+    small.fs,
     i18n,
     dir.report,
-    dir.settings
+    dir.settings,
+    dir.dsl.cols
     ;
 
-retn ShowDirEntry(const r: PIterateDirResult);
+retn ShowDirEntry(const name: string; const p: TFSProperties);
 begin
-    if RegexHasMatches(r^.name) then
+    if RegexHasMatches(name) then
     begin
         inc(ignoredCount);
         return;
     end;
 
-    case r^.info.Kind of
+    case p.Kind of
     	EFSEntityKind.StatFailure:
 	    begin
 	        Inc(statFailCount);
 
 	        if Settings.UseLists then
-	            writeln(Format(STAT_FAILED, [ r^.name, GetLastStrErrno ]))
+	            writeln(Format(STAT_FAILED, [ name, GetLastStrErrno ]))
 	        else
-	            write(Format('%s(E %d)', [ r^.name, GetLastErrno ]));
+	            write(Format('%s(E %d)', [ name, GetLastErrno ]));
 
 	        exit;
 	    end;
@@ -43,19 +45,30 @@ begin
 
     Inc(count);
 
-    PrintObjectName(r^.name, r^.info);
+    PrintObjectName(name, p);
 end;
 
 retn ListItems(const path: string);
+var s: string;
+    d: TFSProperties;
+    // l: TStringList;
 begin
-    IterateDir(path, @ShowDirEntry, Settings.Recursively,
-               (Length(cc.getopts.NonOpts) > 1) or Settings.Recursively);
+    // l := TStringList.Create();
+    d := TFSProperties.Create(path);
+    for s in d.GetDirEnumerator do begin
+        // l.Add(s);
+        ShowDirEntry(s, TFSProperties.Create(s));
+    end;
+    // l.Sort;
+    // for s in l do
+    //     writeln(s);
+    // l.Free;
     writeln;
     Report;
 end;
 
 begin
-    case StrLowerCase(GetEnvironmentVariable('DIR_PRESET')) of
+    case GetEnvironmentVariable('DIR_PRESET').ToLower of
         'win': dir.settings.Settings := WIN_PRESET;
         'gnu': dir.settings.Settings := GNU_PRESET;
         'ccd': dir.settings.Settings := CCD_PRESET;
@@ -63,27 +76,29 @@ begin
         dir.settings.Settings := CCD_PRESET;
     end;
 
-    cc.getopts.OptCharHandler := retn (const found: char)
+    small.getopts.OptCharHandler := retn (const found: char)
     begin
         case found of
-            'l': Settings.UseLists := true;
+            'l': ColumnsEnabled := true;
             'a': Settings.IgnoreHiddens := false;
             'c': Settings.AddColors := true;
             'd': Settings.DirOnly := true;
-            'i': RegexAppendExpr(cc.getopts.OptArg);
+            'i': RegexAppendExpr(small.getopts.OptArg);
             'B': Settings.IgnoreBackups := true;
             'R': Settings.Recursively := true;
         end;
     end;
-    cc.getopts.GetOpt;
+    small.getopts.GetOpt;
     RegexPrepare;
     ReadSettingsFromFile;
 
-    if Length(cc.getopts.NonOpts) = 0 then
+    // Note for runs using xmake r: xmake sets
+    // the working directory to where the exe is
+    if Length(small.getopts.NonOpts) = 0 then
         ListItems(GetCurrentDir)
     else
        	specialize ArrayForEach<string>(
-            cc.getopts.NonOpts,
+            small.getopts.NonOpts,
             fn (where: string): bool
             begin
                 ListItems(where);

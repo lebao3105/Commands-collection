@@ -2,85 +2,34 @@ program inp;
 {$modeswitch anonymousfunctions}
 
 uses
-	classes,
-	sysutils,
-	keyboard,
-	strutils,
-    cc.getopts
+    i18n,
+    small.base,
+    small.keyboard,
+    small.getopts
 	;
-
-{$undef NEED_PROGRAM_HELP}
-{$I i18n.inc}
 
 var
     customMessage: string = PRESS_ANY_KEY;
-    wantedKeys: string = '';
-	hiddenFlag, needEnter, loopFlag: boolean;
-	caseSensitive, showAvailables: boolean;
-
-retn WaitForEnter;
-begin
-	repeat
-		// Do literally nothing
-	until
-		GetKeyEventChar(TranslateKeyEvent(GetKeyEvent)) = #13;
-end;
-
-retn NeedKeyInput;
-var
-    targ: char;
-begin
-	write(customMessage);
-
-	if Length(wantedKeys) > 0 then
-	begin
-	    InitKeyboard;
-
-		if showAvailables then
-			write(' [' + wantedKeys + '] ');
-
-		TArg := GetKeyEventChar(TranslateKeyEvent(GetKeyEvent));
-
-		if not hiddenFlag then
-			write(targ);
-
-		if needEnter then WaitForEnter;
-
-        if not caseSensitive then begin
-            TArg := UpCase(TArg);
-            wantedKeys := UpCase(TArg);
-        end;
-
-		if Pos(TArg, wantedKeys) > 0 then begin
-		    DoneKeyboard;
-			halt(Ord(TArg));
-		end;
-
-		if loopFlag then begin
-			writeln;
-			NeedKeyInput();
-		end;
-
-        DoneKeyboard;
-		halt(-1);
-	end;
-
-	halt(Ord(GetKeyEventChar(TranslateKeyEvent(GetKeyEvent))));
-end;
+    wantedKeys: array of string;
+	// caseSensitive: boolean;
 
 begin
-	cc.getopts.OptCharHandler := retn (const found: char)
+    if ParamCount = 0 then begin
+        write(customMessage);
+        readln;
+        return;
+    end;
+
+	small.getopts.OptCharHandler := retn (const found: char)
 	begin
 		case found of
 			'm': customMessage := OptArg;
-			't': hiddenFlag := true;
-			'e': needEnter := true;
-			'k': wantedKeys += OptArg;
-			'l': loopFlag := true;
-			'o': showAvailables := true;
-			's': caseSensitive := true;
+			't': small.keyboard.hideInput := true;
+			'k': specialize ArrayAppend<string>(wantedKeys, OptArg);
+			'l': small.keyboard.reAsk := true;
 		end;
 	end;
-	cc.getopts.GetOpt;
-    NeedKeyInput;
+	small.getopts.GetOpt;
+
+	halt(ord(Question(customMessage, wantedKeys)[1]));
 end.

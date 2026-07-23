@@ -11,7 +11,7 @@
 7. `switch(...) - case(val)` => `case(...) of - val:`. No `break` is required. Works with strings.
 8. `extern "C"` before identifier => `external <optional libname> name <name of identifier in C>` after the identifier
 9. `#include NAME` => `{$include NAME}` or `{$I NAME}` (a case of 2)
-10. C++/C# lambda function => Pascal function/procedure with no name (read the section below)
+10. C++/C# lambda function => anonymous function/procedure (read the section below)
 11. C++/C# template => Pascal's [generic](https://wiki.freepascal.org/Generics)
 12. Pascal strings can be concatenate together using + operator
 13. Classes are NOT directly used unless it's neccessary.
@@ -102,7 +102,7 @@ aProc(param1, param2, ...); // works
 ```
 
 This, however has at least one downside:
-* Different types that are aliases to a specific type (e.g CC's `ArrayOf<string>` and RTL's `TStringDynArray`) will not work.
+* Different types that are aliases to a specific type (e.g CC's `TArray<string>` and RTL's `TStringDynArray`) will not work.
 * It's still best to not totally remove `specialize`, for the sake of code-understanding and maybe debugging.
 
 ## (DO NOT USE) Unicode RTL

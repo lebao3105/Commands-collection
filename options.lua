@@ -14,6 +14,18 @@ elseif is_plat("wasm") then
     raise("this project does not support WASM!")
 end
 
+-- should I add mingw and msys? They use VT sequence-compatible terminal
+if is_plat("windows") then
+    option("use-win-console")
+        set_showmenu(true)
+        set_description(
+            "Use Windows Console API instead of escape sequences." ..
+            "This removes compatibility with older Windows Consoles."
+        )
+        set_default(false)
+        add_defines("USE_WIN_CONSOLE")
+end
+
 option("use-valgrind")
     set_showmenu(true)
     set_description("Generate debug symbols for Valgrind instead of DWARF")

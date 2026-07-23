@@ -7,10 +7,10 @@ uses
     sysutils,
     strutils,
     types,
-    cc.base,
-    cc.fs,
-    cc.logging,
-    cc.getopts,
+    small.base,
+    small.fs,
+    small.logging,
+    small.getopts,
     i18n
     ;
 
@@ -56,7 +56,7 @@ begin
     if ParamCount = 0 then
         FatalAndTerminate(1, NOTHING_TO_CREATE);
 
-    cc.getopts.OptCharHandler := retn (const found: char)
+    small.getopts.OptCharHandler := retn (const found: char)
     begin
         case found of
             'p': createParent := true;
@@ -65,11 +65,11 @@ begin
             'k': keepGoing := true;
         end;
     end;
-    cc.getopts.GetOpt;
+    small.getopts.GetOpt;
 
-    if cc.getopts.OptHasPairs then
+    if small.getopts.OptHasPairs then
         specialize ArrayForEach<TStringDynArray>(
-            cc.getopts.GetArgPairs,
+            small.getopts.GetArgPairs,
             fn (arg: TStringDynArray): bool
             begin
                 if arg[1] = 'd' then begin
@@ -87,7 +87,7 @@ begin
         )
     else
         specialize ArrayForEach<string>(
-            cc.getopts.NonOpts,
+            small.getopts.NonOpts,
             fn (arg: string): bool
             begin
                 if dirsOnly then

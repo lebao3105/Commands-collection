@@ -11,9 +11,10 @@ uses
 		{$else}
 	ctypes
 	{$endif}, // fpExecVe
-	cc.getopts,
-	cc.logging,
-	cc.base
+	i18n,
+	small.getopts,
+	small.logging,
+	small.base
 	;
 
 {$ifdef WINDOWS}
@@ -31,8 +32,6 @@ var
 	progArgs, progEnv: PPChar;
     i: uint16;
 	envc: int;
-
-{$I i18n.inc}
 
 fn SplitByEqualSign(const inp: string): TStringDynArray;
 var
@@ -88,7 +87,7 @@ begin
 		exit;
 	end;
 
-	cc.getopts.OptCharHandler := retn (const found: char)
+	small.getopts.OptCharHandler := retn (const found: char)
 	begin
 		case (found) of
 			'g': specialize ArrayAppend<string>(getValues, OptArg);
@@ -103,17 +102,17 @@ begin
 		writeln(
 			getValues[i] + '=' + GetEnvironmentVariable(getValues[i]));
 
-	if Length(cc.getopts.NonOpts) = 0 then
+	if Length(small.getopts.NonOpts) = 0 then
 		FatalAndTerminate(1, NoProgSpecified);
 
 	// Create array of arguments
-	if not FileExists(cc.getopts.NonOpts[0]) then
-		cc.getopts.NonOpts[0] := ExeSearch(cc.getopts.NonOpts[0], GetEnvironmentVariable('PATH'));
+	if not FileExists(small.getopts.NonOpts[0]) then
+		small.getopts.NonOpts[0] := ExeSearch(small.getopts.NonOpts[0], GetEnvironmentVariable('PATH'));
 
-	if cc.getopts.NonOpts[0] = '' then
-		FatalAndTerminate(1, ExeNotFound, [ cc.getopts.NonOpts[0] ]);
+		if small.getopts.NonOpts[0] = '' then
+		FatalAndTerminate(1, ExeNotFound, [ small.getopts.NonOpts[0] ]);
 
-	progArgs := @cc.getopts.NonOpts[0];
+		progArgs := @small.getopts.NonOpts[0];
 
 	// Create array of environment variables
 	if not cleanEnv then

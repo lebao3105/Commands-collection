@@ -43,9 +43,12 @@ for _, dir in ipairs(os.dirs("src/*")) do
         end
 
         if not is_plat("windows") then
-            add_defines("USE_LIBLUA")
+            add_defines("USE_LIBLUA", "USE_VT_SEQ")
         else
             add_pcflags("-WC") -- Same as {$apptype console}?
+            if not get_config("use-win-console") then
+                add_defines("USE_VT_SEQ")
+            end
         end
 
         on_config( function (target)
@@ -55,7 +58,7 @@ for _, dir in ipairs(os.dirs("src/*")) do
             -- later in before_build() below.
             os.mkdir(target:targetdir())
             os.touch(target:targetfile())
-            
+
             os.mkdir(target:objectdir())
 
             -- Append @extra.cfg to compiler flags if extra.cfg exists
@@ -135,8 +138,8 @@ for _, dir in ipairs(os.dirs("src/*")) do
         before_install( function (target)
             import("core.base.task")
             install = true
-            task.run("build", { target = name, no_rebuild = true })
-            task.run("i18n", { task = "all", what = name })
+            task.run("build", { target = name })
+            task.run("i18n", { task = "all", what = name, no_rebuild = true })
             task.run("docs", { task = "build", what = name })
             for __, fullpath in ipairs(os.dirs("src/" .. name .. "/i18n/*")) do
                 target:add("installfiles", fullpath .. "/cc.mo", {
@@ -157,7 +160,7 @@ target("API")
 
     on_install( function (_)
         raise(
-            "error: Installation for this target is NOT supported!\n" ..
+            "installation for this target is NOT supported!\n" ..
             "What to install are src/shared/cc.*.{o,ppu}. Install to a " ..
             "supported directory in your fpc.cfg."
         )

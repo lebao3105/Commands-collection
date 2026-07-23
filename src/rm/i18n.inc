@@ -12,4 +12,4 @@ resourcestring
     STAT_FAILED          = 'unable to lstat(): %s';
     FILTERED             = 'ignored (by filters)';
     CANCELLED            = 'cancelled';
-    OK                   = 'done';
+    DONE                 = 'done';

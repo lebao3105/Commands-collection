@@ -6,7 +6,7 @@ unit dir.report;
 
 interface
 
-uses cc.fs;
+uses small.fs;
 
 var
     dirCount	 : ulong = 0;
@@ -20,35 +20,26 @@ retn PrintObjectName(const name: string; const props: TFSProperties);
 implementation
 
 uses
-	cc.base,
 	{$ifdef HAS_IDCACHE}
 	cc.idcache,
 	{$endif}
-	cc.console,
-	dir.settings,
-	dir.dsl.cols in 'settings/dir.dsl.cols.pp',
-	i18n,
 	dateutils,
-	sysutils
+	sysutils,
+	small.base,
+	small.console,
+	dir.settings,
+	dir.dsl.cols,
+	i18n
 	;
 
-{$I cc.termcolors.inc}
+{$I termcolors.inc}
 
-fn FSPermAsString(const perms: TFSPermissions): string;
-begin
-    FSPermAsString :=
-        specialize IfThenElse<char>(perms.R, 'r', '-') +
-        specialize IfThenElse<char>(perms.W, 'w', '-') +
-        specialize IfThenElse<char>(perms.E, 'x', '-');
-end;
-
-retn Report;
+procedure Report;
 begin
 	// BigNumberToSeparatedStr(DiskFree(0))
 	// ^ To get the free space. To be honest, this is NOT
 	// the right way (hard-coded disk) on Windows
 	// To be REimplemented
-
 	write(Format(FILES_COUNT, [ count - dirCount ])); write(', ');
 	write(Format(DIRS_COUNT, [ dirCount ])); write(', ');
 	write(Format(IGNORED_COUNT, [ ignoredCount ])); write(', ');
@@ -62,64 +53,72 @@ begin
 end;
 
 retn PrintObjectName(const name: string; const props: TFSProperties);
+    retn FSPermAsString(const scope: EPermissionScope);
+    begin
+        write(specialize IfThenElse<char>(props.HasPermission(scope, SEEK), 'r', '-') +
+              specialize IfThenElse<char>(props.HasPermission(scope, MODIFY), 'w', '-') +
+              specialize IfThenElse<char>(props.HasPermission(scope, EXECUTE), 'x', '-'));
+    end;
 var
-	i: longint;
+	column: EListingColumns;
 	{$ifdef HAS_IDCACHE}
 	itemPasswd, itemGroup: PCacheEntry;
 	{$endif}
 begin
 	{$ifdef HAS_IDCACHE}
-	itemPasswd := getpw(props.Uid, false);
-	itemGroup := getpw(props.Gid, true);
+	itemPasswd := getpw(props.UserID, false);
+	itemGroup := getpw(props.GroupID, true);
 	{$endif}
 
-	if ColumnsEnabled then
+	if not ColumnsEnabled then
 	begin
-		for i := Low(Columns) to High(Columns) do
-		begin
-			case Columns[i] of
-				EListingColumns.NAME: begin
-					write(name);
-					if props.PointsTo <> '' then
-					    write(' -> ' + props.PointsTo);
-					write(ANSI_CODE_RESET);
-				end;
-
-				EListingColumns.SIZE:
-					write(Format('%.0u', [ props.Size ]));
-
-				EListingColumns.KIND:
-					write(FSEntityKindToTypeString(props.Kind));
-
-				EListingColumns.PERMS: begin
-					write(FSPermAsString(props.Perms[0]));
-					write(FSPermAsString(props.Perms[1]));
-					write(FSPermAsString(props.Perms[2]));
-				end;
-
-				{$ifdef HAS_IDCACHE}
-				EListingColumns.OWNER_NAME:
-					write(itemPasswd^.GetName);
-
-				EListingColumns.OWNER_GROUP:
-					write(itemGroup^.GetName);
-				{$endif}
-
-				EListingColumns.LAST_MODIFIED:
-					write(FormatDateTime(TimeFormat, props.LastModifyTime));
-
-				EListingColumns.LAST_ACCESSED:
-					write(FormatDateTime(TimeFormat, props.LastAccessTime));
-			end;
-
-			WriteASpace;
-		end;
-		writeln;
-		return;
+    	write(name);
+    	WriteASpace;
+    	return;
 	end;
 
-	write(name);
-	WriteASpace;
+	for column in Columns do
+	begin
+		case column of
+			EListingColumns.NAME: begin
+				write(name);
+				if props.SymlinkPointsTo <> '' then
+				    write(' -> ' + props.SymlinkPointsTo);
+				write(ANSI_CODE_RESET);
+			end;
+
+			EListingColumns.SIZE:
+				write(Format('%.0u', [ props.Size ]));
+
+			EListingColumns.KIND:
+				write(FSEntityKindToTypeString(props.Kind));
+
+			EListingColumns.PERMS: begin
+				FSPermAsString(OWNER);
+				FSPermAsString(GROUP);
+				FSPermAsString(OTHERS);
+			end;
+
+			{$ifdef HAS_IDCACHE}
+			EListingColumns.OWNER_NAME:
+				write(itemPasswd^.GetName);
+
+			EListingColumns.OWNER_GROUP:
+				write(itemGroup^.GetName);
+			{$endif}
+
+			EListingColumns.LAST_MODIFIED:
+				write(FormatDateTime(TimeFormat, props.LastModifyTime));
+
+			EListingColumns.LAST_ACCESSED:
+				write(FormatDateTime(TimeFormat, props.LastAccessTime));
+		end;
+
+		WriteASpace;
+	end;
+
+	writeln;
+	return;
 end;
 
 end.

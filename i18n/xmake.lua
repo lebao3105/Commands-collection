@@ -62,7 +62,7 @@ task("i18n")
         if what_for ~= "API" then
             i18n_dir = "src/" .. what_for .. "/i18n/"
         end
-        local potloc = i18n_dir .. "cc.pot"
+        local potloc = i18n_dir .. "pot"
 
         if what_to_do == "pot" then
             if not option.get("no-rebuild") then
@@ -82,19 +82,19 @@ task("i18n")
 
         elseif what_to_do == "po" then
             for _, fullpath in ipairs(os.dirs(i18n_dir .. "*")) do
-                local out = fullpath .. "/cc.po"
+                local out = fullpath .. "/po"
                 print("merging " .. potloc .. " to " .. out)
                 i18n.merge_po_files(potloc, out)
             end
 
         elseif what_to_do == "mo" then
             for _, fullpath in ipairs(os.dirs(i18n_dir .. "*")) do
-                local outpath = fullpath .. "/cc.mo"
-                local inpaths = { fullpath .. "/cc.po" }
+                local outpath = fullpath .. "/mo"
+                local inpaths = { fullpath .. "/po" }
 
                 if what_for ~= "API" then
                     local language = path.filename(fullpath)
-                    table.insert(inpaths, "i18n/" .. language .. "/cc.po")
+                    table.insert(inpaths, "i18n/" .. language .. "/po")
                 end
 
                 print("creating " .. outpath .. " ...")

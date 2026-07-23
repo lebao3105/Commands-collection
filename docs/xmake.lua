@@ -62,13 +62,13 @@ task("docs")
             end
 
             local args = { "-Iinclude/", "@docs/pasdoc.cfg" }
-      		for line in io.lines("cc.cfg") do
+      		for line in io.lines("cfg") do
      			if line:startswith("-d") then
          			table.append(args, '-D' .. line:split("-d")[1])
      			end
       		end
 
-            table.join2(args, os.files("src/shared/**/cc.*.pp"), os.files("src/shared/cc.*.pp"))
+            table.join2(args, os.files("src/shared/**/*.pp"), os.files("src/shared/*.pp"))
 
             local ignores = table.to_array(io.lines("docs/pasdoc.ignore"))
             table.remove_if(args, function (v)

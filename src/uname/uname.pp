@@ -4,11 +4,12 @@ program uname;
 uses
     sysutils,
     {$ifdef UNIX}baseunix,
-    {$else}windows, cc.registry,
+    {$else}windows, registry,
     {$endif}
-    cc.base,
-    cc.getopts,
-    cc.logging
+    small.base,
+    small.getopts,
+    small.logging,
+    i18n
     ;
 
 {$I i18n.inc}
@@ -140,7 +141,7 @@ begin
         exit;
     end;
 
-    cc.getopts.OptCharHandler := @OptionHandler;
-    cc.getopts.GetOpt;
+    small.getopts.OptCharHandler := @OptionHandler;
+    small.getopts.GetOpt;
 end.
 {$pop}

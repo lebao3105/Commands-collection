@@ -5,16 +5,17 @@ program rm;
 uses
     sysutils,
     regexpr,
-    crt,
-    cc.base,
-    cc.fs,
-    cc.console,
-    cc.getopts,
-    cc.logging,
-    cc.regex
+    i18n,
+    small.base,
+    small.fs,
+    small.console,
+    small.keyboard,
+    small.getopts,
+    small.logging,
+    small.regex
     ;
 
-{$I cc.termcolors.inc}
+{$I termcolors.inc}
 
 var
     ignoreRegexMatch,
@@ -24,15 +25,12 @@ var
     verbose,
     recursively: bool;
 
-{$I i18n.inc}
-
 fn Confirmation(which: string): bool;
-var inp: char;
 begin
     if (not interactive) or dryRun then
         return(true);
 
-    case cc.logging.Confirmation(DELETE_CONFIRMATION, [which]) of
+    case small.keyboard.Confirmation(DELETE_CONFIRMATION, [which]) of
         ConfirmationResult.YES:
             return(true);
         ConfirmationResult.NO:
@@ -98,7 +96,7 @@ begin
         end
         else if verbose then begin
             TextColor(Green);
-            writeln(OK + ANSI_CODE_RESET_FORE);
+            writeln(DONE + ANSI_CODE_RESET_FORE);
         end;
 
         return(true);
@@ -115,7 +113,7 @@ begin
     if ParamCount = 0 then
         FatalAndTerminate(1, NOTHING_TO_DELETE);
 
-    cc.getopts.OptCharHandler := retn (const found: char)
+    small.getopts.OptCharHandler := retn (const found: char)
     begin
         case found of
             'g': ignoreRegexMatch := true;
@@ -127,17 +125,17 @@ begin
             'k': keepGoing := true;
         end;
     end;
-    cc.getopts.GetOpt;
+    small.getopts.GetOpt;
 
-    if Length(cc.getopts.NonOpts) = 0 then
+    if Length(small.getopts.NonOpts) = 0 then
         FatalAndTerminate(1, NOTHING_TO_DELETE);
 
     if (RegexGetExpr <> '') and (not RegexVerifyExpr) then
         FatalAndTerminate(1, REGEX_FAILED, [RegexGetExpr, RegexGetLastError]);
 
-    cc.logging.doNewLine := false;
+    small.logging.doNewLine := false;
     specialize ArrayForEach<string>(
-        cc.getopts.NonOpts,
+        small.getopts.NonOpts,
         fn (where: string): bool
         begin
             Result := DeleteThing(where) and not keepGoing;

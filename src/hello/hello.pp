@@ -9,7 +9,7 @@ program hello;
 {$modeswitch anonymousfunctions} // functions/procedures with no name
 
 uses
-    cc.getopts, // argument parser
+    small.getopts, // argument parser
     i18n        // localizations
     ;
 
@@ -17,17 +17,17 @@ var
     greeting_msg : string = HELLO_WORLD;
 
 begin // Main program block
-    cc.getopts.OptCharHandler := retn(const found: char) // < No trailing ;
+    small.getopts.OptCharHandler := retn(const found: char) // < No trailing ;
     begin
         // OptArg is the value of the nearest flag.
         case found of
             'g': greeting_msg := OptArg;
             't': greeting_msg := HELLO_WORLD_TRADITIONAL;
             // Other flags like --help and --version are handled by
-            // cc.getopts itself. Nothing else to do here.
+            // getopts itself. Nothing else to do here.
         end;
     end;
-    cc.getopts.GetOpt;
+    small.getopts.GetOpt;
 
     writeln(greeting_msg);
 end. // Notice the dot

@@ -4,7 +4,7 @@ unit i18n;
     i18n.inc file for you know, localizations.
 
     This is done to make sure all application-specific strings
-    are not put inside any shared units, like cc.getopts, while
+    are not put inside any shared units, like getopts, while
     (still) being able to accessed everywhere.
 
     The unit has no function, no types and variables either.
@@ -25,7 +25,7 @@ interface
 
 implementation
 
-uses gettext, sysutils, cc.logging;
+uses gettext, sysutils, small.logging;
 
 var where_to_read: string;
 

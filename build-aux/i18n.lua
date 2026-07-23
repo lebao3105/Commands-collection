@@ -16,7 +16,7 @@ function generate_pot(resource_path, outpath, for_application)
         local valid = not for_application
         if for_application then
             local fn = path.filename(fullpath)
-            valid = (fn == "i18n.rsj") or ( not fn:startswith("cc."))
+            valid = (fn == "i18n.rsj") or ( not fn:startswith(""))
         end
 
         if valid then

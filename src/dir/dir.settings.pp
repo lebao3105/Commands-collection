@@ -15,8 +15,8 @@ uses
     sysutils, // LowerCase, Format
     typinfo,  // GetEnumName, TypeInfo
     regexpr,  // ERegExpr
-    cc.logging,
-    cc.regex,
+    small.logging,
+    small.regex,
     i18n,
     dir.dsl in 'settings/dir.dsl.pp',
     dir.dsl.cols in 'settings/dir.dsl.cols.pp'
