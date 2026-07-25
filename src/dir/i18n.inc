@@ -3,7 +3,9 @@ resourcestring
     ALL_DES = 'Show everything, even hidden entries. Has exceptions.';
     COLOR_DES = 'Colorize the output';
     DIR_ONLY_DES = 'Only show directories';
+    FOOTER_DES = 'Add a footer for each directory iteration';
     IGNORE_DES = 'Use regular expression to skip entities';
+    IGNORE_UM_DES = 'Ignore names that MATCHES the provided ignore expression';
     IGNORE_BCK_DES = 'Ignore entities whose name end with ~ or .bak';
     RECURSIVE_DES = 'List stuff, recursively';
 
@@ -37,3 +39,4 @@ resourcestring
 
     // More
     INVALID_COLUMN    = '%s: unknown column type';
+    UNKNOWN_PRESET    = '%s: unknown preset (must be either win, gnu or ccd)';

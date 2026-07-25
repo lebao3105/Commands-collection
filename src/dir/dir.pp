@@ -5,20 +5,27 @@ program dir;
 uses
     // classes,
     sysutils,
+    small.arr,
     small.base,
     small.getopts,
     small.logging,
     small.regex,
     small.fs,
     i18n,
+    dir.dsl,
+    dir.presets,
     dir.report,
-    dir.settings,
-    dir.dsl.cols
+    dir.dsl.cols,
+    dir.dsl.ignore
     ;
+
+var
+    recursively: bool = false;
+    addFooter: bool = false;
 
 retn ShowDirEntry(const name: string; const p: TFSProperties);
 begin
-    if RegexHasMatches(name) then
+    if RegexIsMatched(name) then
     begin
         inc(ignoredCount);
         return;
@@ -29,7 +36,7 @@ begin
 	    begin
 	        Inc(statFailCount);
 
-	        if Settings.UseLists then
+	        if ColumnsEnabled then
 	            writeln(Format(STAT_FAILED, [ name, GetLastStrErrno ]))
 	        else
 	            write(Format('%s(E %d)', [ name, GetLastErrno ]));
@@ -37,10 +44,14 @@ begin
 	        exit;
 	    end;
 
-		EFSEntityKind.Dir:
+		EFSEntityKind.Folder:
 			Inc(dirCount);
 
-		else if Settings.DirOnly then exit;
+        otherwise if (IgnoreFlags and IGNORE_DIRS) <> 0 then
+        begin
+            inc(ignoredCount);
+            return;
+        end;
     end;
 
     Inc(count);
@@ -48,49 +59,86 @@ begin
     PrintObjectName(name, p);
 end;
 
-retn ListItems(const path: string);
-var s: string;
+retn ListItems(const path: TFSProperties);
+var s, s2: string;
     d: TFSProperties;
+    l: array of TFSProperties;
     // l: TStringList;
 begin
     // l := TStringList.Create();
-    d := TFSProperties.Create(path);
-    for s in d.GetDirEnumerator do begin
+    if path.Kind <> FOLDER then return;
+
+    currentPath := path.Path;
+    if recursively then
+        writeln(path.Path + ':');
+
+    for s in path.GetDirEnumerator do begin
         // l.Add(s);
-        ShowDirEntry(s, TFSProperties.Create(s));
+        s2 := IncludeTrailingPathDelimiter(path.Path) + s;
+        d := TFSProperties.Create(s2, ColumnsEnabled);
+        if recursively and (d.Kind = FOLDER) and (s <> '.') and (s <> '..') then
+            specialize ArrayAppend<TFSProperties>(l, d);
+        ShowDirEntry(s, d);
     end;
+
     // l.Sort;
     // for s in l do
     //     writeln(s);
     // l.Free;
     writeln;
-    Report;
+    if addFooter then
+        Report;
+
+    if recursively then
+    begin
+        writeln;
+
+        specialize ArrayForEach<TFSProperties>(l, fn(p: TFSProperties): bool
+        begin
+            ListItems(p);
+            return(false);
+        end);
+    end;
+end;
+
+retn ListItems(const path: string);
+begin
+    ListItems(TFSProperties.Create(path));
+end;
+
+retn ReadSettingsFromFile;
+var setting_file: string;
+begin
+    setting_file := GetEnvironmentVariable('DIR_CONF');
+    if FileExists(setting_file) then
+    begin
+        DSL_init;
+        DSL_cols_init;
+        DSL_ignore_init;
+        DSL_run_file(setting_file);
+        DSL_deinit;
+    end;
 end;
 
 begin
-    case GetEnvironmentVariable('DIR_PRESET').ToLower of
-        'win': dir.settings.Settings := WIN_PRESET;
-        'gnu': dir.settings.Settings := GNU_PRESET;
-        'ccd': dir.settings.Settings := CCD_PRESET;
-    else
-        dir.settings.Settings := CCD_PRESET;
-    end;
+    ReadSettingsFromFile;
 
     small.getopts.OptCharHandler := retn (const found: char)
     begin
         case found of
-            'l': ColumnsEnabled := true;
-            'a': Settings.IgnoreHiddens := false;
-            'c': Settings.AddColors := true;
-            'd': Settings.DirOnly := true;
+            'a': IgnoreFlags := IgnoreFlags and not IGNORE_HIDDEN;
+            'c': TODO;
+            'd': IgnoreFlags := IgnoreFlags or IGNORE_DIRS;
             'i': RegexAppendExpr(small.getopts.OptArg);
-            'B': Settings.IgnoreBackups := true;
-            'R': Settings.Recursively := true;
+            'l': ColumnsEnabled := true;
+            'r': addFooter := true;
+            'u': IgnoreFlags := IgnoreFlags or IGNORE_UNMATCH;
+            'B': IgnoreFlags := IgnoreFlags or IGNORE_BACKUPS;
+            'R': recursively := true;
         end;
     end;
     small.getopts.GetOpt;
     RegexPrepare;
-    ReadSettingsFromFile;
 
     // Note for runs using xmake r: xmake sets
     // the working directory to where the exe is

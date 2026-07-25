@@ -13,6 +13,7 @@ var
     ignoredCount : ulong = 0;
     count		 : ulong = 0;
     statFailCount: ulong = 0;
+    currentPath  : string;
 
 retn Report;
 retn PrintObjectName(const name: string; const props: TFSProperties);
@@ -20,22 +21,26 @@ retn PrintObjectName(const name: string; const props: TFSProperties);
 implementation
 
 uses
-	{$ifdef HAS_IDCACHE}
-	cc.idcache,
-	{$endif}
 	dateutils,
 	sysutils,
 	small.base,
 	small.console,
-	dir.settings,
+	{$ifdef HAS_IDCACHE}
+	dir.idcache,
+	{$endif}
 	dir.dsl.cols,
 	i18n
 	;
+
+//resourcestring
+//    HAS = ' has:';
 
 {$I termcolors.inc}
 
 procedure Report;
 begin
+//    Assert(not currentPath.IsEmpty);
+//    writeln(currentPath + HAS);
 	// BigNumberToSeparatedStr(DiskFree(0))
 	// ^ To get the free space. To be honest, this is NOT
 	// the right way (hard-coded disk) on Windows
@@ -53,7 +58,7 @@ begin
 end;
 
 retn PrintObjectName(const name: string; const props: TFSProperties);
-    retn FSPermAsString(const scope: EPermissionScope);
+    retn FSPermAsString(const scope: EPermissionScope); inline;
     begin
         write(specialize IfThenElse<char>(props.HasPermission(scope, SEEK), 'r', '-') +
               specialize IfThenElse<char>(props.HasPermission(scope, MODIFY), 'w', '-') +
@@ -61,6 +66,7 @@ retn PrintObjectName(const name: string; const props: TFSProperties);
     end;
 var
 	column: EListingColumns;
+    i: sizeint;
 	{$ifdef HAS_IDCACHE}
 	itemPasswd, itemGroup: PCacheEntry;
 	{$endif}
@@ -77,21 +83,30 @@ begin
     	return;
 	end;
 
+    Assert(Length(Columns) >= 1);
+    i := 0;
 	for column in Columns do
 	begin
 		case column of
 			EListingColumns.NAME: begin
 				write(name);
 				if props.SymlinkPointsTo <> '' then
-				    write(' -> ' + props.SymlinkPointsTo);
+                    write(' -> ' + specialize IfThenElse<string>(
+                        props.SymlinkPointsTo.StartsWith(currentPath),
+                        props.SymlinkPointsTo.Substring(Length(currentPath) + 1),
+                        props.SymlinkPointsTo
+                    ));
 				write(ANSI_CODE_RESET);
 			end;
 
 			EListingColumns.SIZE:
-				write(Format('%.0u', [ props.Size ]));
+                if props.Kind <> FOLDER then
+                    write(Format('%.0u', [ props.Size ]))
+                else
+                    write('---');
 
 			EListingColumns.KIND:
-				write(FSEntityKindToTypeString(props.Kind));
+				write(TypeFormats[ord(props.Kind)]);
 
 			EListingColumns.PERMS: begin
 				FSPermAsString(OWNER);
@@ -114,11 +129,12 @@ begin
 				write(FormatDateTime(TimeFormat, props.LastAccessTime));
 		end;
 
-		WriteASpace;
+        if i < High(Columns) then
+            WriteASpace;
+        inc(i);
 	end;
 
 	writeln;
-	return;
 end;
 
 end.

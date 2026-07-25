@@ -14,8 +14,8 @@ var luaState: Plua_State;
     SCOPE: EScopes = EScopes.UNSET;
     PRESET: EPresets;
 
-retn DSL_error_must_have_n_args(L: Plua_State; n: int; name: string);
-retn DSL_warn_too_much_args(L: Plua_State; n: int; name: string);
+retn DSL_error_must_have_n_args(L: Plua_State; n: sizeint; name: string);
+retn DSL_warn_too_much_args(L: Plua_State; n: sizeint; name: string);
 retn DSL_assert_in_scope(wanted: EScopes);
 
 retn DSL_init;
@@ -24,22 +24,18 @@ fn DSL_run_file(const path: string): bool;
 
 implementation
 
-uses {$ifdef FPC_DOTTEDUNITS}
-     system.typinfo,
-     system.sysutils,
-     {$else}
-     typinfo,
+uses typinfo,
      sysutils,
-     {$endif}
      lauxlib,
+     dir.presets,
      small.logging
      ;
 
 resourcestring
-    W_TOO_MUCH_WATER = '%s does not need more than %u arguments';
-    E_NOT_IN_SCOPE   = '%s() is not called';
-    E_READ_FAIL      = 'Failed to read and run %s: %s';
-    E_INVALID_PRESET = 'Invalid preset (must be either GNU, WIN or CC - incase-sensitive)';
+    W_TOO_MUCH_WATER  = '%s does not need more than %u arguments';
+    E_NEED_MORE_POWER = '%s needs exactly %u arguments';
+    E_NOT_IN_SCOPE    = '%s() is not called';
+    E_READ_FAIL       = 'Failed to read and run %s: %s';
 
 var scopeTI: PTypeInfo;
 
@@ -54,26 +50,19 @@ fn set_preset(L: Plua_State): int; cdecl;
 var check: int;
 begin
     DSL_error_must_have_n_args(L, 1, 'preset');
-    check := GetEnumValue(
-        TypeInfo(EPresets),
-        string(luaL_checkstring(L, 1))
-    );
-    if check <> -1 then
-        PRESET := EPresets(check)
-    else
-        luaL_argerror(L, 1, pchar(E_INVALID_PRESET));
+    PresetFromString(string(luaL_checkstring(L, 1)));
     return(0);
 end;
 
-retn DSL_error_must_have_n_args(L: Plua_State; n: int; name: string);
+retn DSL_error_must_have_n_args(L: Plua_State; n: sizeint; name: string);
 begin
     if lua_gettop(L) < n then
-        luaL_error(L, pchar(W_TOO_MUCH_WATER), pchar(name), n)
+        luaL_error(L, pchar(E_NEED_MORE_POWER), pchar(name), n)
     else
         DSL_warn_too_much_args(L, n, name);
 end;
 
-retn DSL_warn_too_much_args(L: Plua_State; n: int; name: string);
+retn DSL_warn_too_much_args(L: Plua_State; n: sizeint; name: string);
 begin
     if lua_gettop(L) > n then
         lua_warning(L, pchar(Format(W_TOO_MUCH_WATER, [name, n])), 0);

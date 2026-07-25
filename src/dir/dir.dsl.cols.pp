@@ -5,7 +5,7 @@ unit dir.dsl.cols;
 
 interface
 
-uses Lua, small.fs, small.base;
+uses Lua, small.fs, small.arr;
 
 type
     EListingColumns = (
@@ -15,19 +15,11 @@ type
 
 var
     ColumnsEnabled: bool = false;
-    PrintHeaders: bool = false;
-    Columns: specialize TArray<EListingColumns> = (
-        OWNER_NAME, OWNER_GROUP, LAST_MODIFIED, LAST_ACCESSED,
-        SIZE, KIND, PERMS, NAME
-    ); // TODO: Update this with existing presets
-    SizeFormat: string = '0.00';
-
-    (* These ones are the same in GNU & CC presets.
-       Will be changed later if the preset is Windows. *)
-    TimeFormat: string = 'mmm d hh:nn';
-    TypeFormats: array[0..Ord(High(EFSEntityKind))] of string = (
-        '-', 'd', 'l', 'p', 's', 'b', 'c', 'D', '?'
-    );
+    PrintHeaders: bool = false; // not implemented
+    Columns: specialize TArray<EListingColumns>;
+    SizeFormat: string = '0.00'; // used in all presets
+    TimeFormat: string;
+    TypeFormats: array[0..Ord(High(EFSEntityKind))] of string;
 
 retn DSL_cols_init;
 
@@ -102,25 +94,11 @@ fn append_kind_col(L: Plua_State): int; cdecl;
 var i: size_t;
 begin
     DSL_assert_in_scope(EScopes.COLUMNS);
+    DSL_warn_too_much_args(L, Ord(High(EFSEntityKind)), 'kind');
 
-    if (lua_gettop(L) = 0) and (PRESET = EPresets.WIN) then
-    begin
-        TypeFormats[Ord(EFSEntityKind.NormalFile)] := '';
-        TypeFormats[Ord(EFSEntityKind.Dir)] := '<Folder>';
-        TypeFormats[Ord(EFSEntityKind.Pipe)] := '<Pipe>';
-        TypeFormats[Ord(EFSEntityKind.Socket)] := '<Socket>';
-        TypeFormats[Ord(EFSEntityKind.Block)] := '<Block>';
-        TypeFormats[Ord(EFSEntityKind.CharDev)] := '<Device>';
-        TypeFormats[Ord(EFSEntityKind.Door)] := '<Door>';
-        TypeFormats[Ord(EFSEntityKind.StatFailure)] := '<?????>';
-    end
-    else begin
-        DSL_warn_too_much_args(L, Ord(High(EFSEntityKind)), 'kind');
-
-        for i := 1 to lua_gettop(L) do begin
-            if LowerCase(luaL_checkstring(L, i)) <> 'nan' then
-                TypeFormats[i] := luaL_checkstring(L, i);
-        end;
+    for i := 1 to lua_gettop(L) do begin
+        if LowerCase(luaL_checkstring(L, i)) <> 'skip' then
+            TypeFormats[i] := luaL_checkstring(L, i);
     end;
 
     ArrayAppend(Columns, EListingColumns.KIND);
