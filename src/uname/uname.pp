@@ -4,7 +4,7 @@ program uname;
 uses
     sysutils,
     {$ifdef UNIX}baseunix,
-    {$else}windows, registry,
+    {$else}windows, small.registry,
     {$endif}
     small.base,
     small.getopts,

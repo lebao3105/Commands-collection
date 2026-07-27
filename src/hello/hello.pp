@@ -10,7 +10,7 @@ program hello;
 
 uses
     small.getopts, // argument parser
-    i18n        // localizations
+    i18n           // localizations
     ;
 
 var

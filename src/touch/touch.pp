@@ -7,6 +7,7 @@ uses
     sysutils,
     strutils,
     types,
+    small.arr,
     small.base,
     small.fs,
     small.logging,

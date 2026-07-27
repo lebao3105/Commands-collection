@@ -59,7 +59,7 @@ begin
     PrintObjectName(name, p);
 end;
 
-retn ListItems(const path: TFSProperties);
+retn ListItems(path: TFSProperties);
 var s, s2: string;
     d: TFSProperties;
     l: array of TFSProperties;
@@ -92,18 +92,8 @@ begin
     if recursively then
     begin
         writeln;
-
-        specialize ArrayForEach<TFSProperties>(l, fn(p: TFSProperties): bool
-        begin
-            ListItems(p);
-            return(false);
-        end);
+        specialize ArrayForEach<TFSProperties>(l, @ListItems);
     end;
-end;
-
-retn ListItems(const path: string);
-begin
-    ListItems(TFSProperties.Create(path));
 end;
 
 retn ReadSettingsFromFile;
@@ -112,6 +102,7 @@ begin
     setting_file := GetEnvironmentVariable('DIR_CONF');
     if FileExists(setting_file) then
     begin
+        debug('DIR_CONF =' + setting_file);
         DSL_init;
         DSL_cols_init;
         DSL_ignore_init;
@@ -143,14 +134,13 @@ begin
     // Note for runs using xmake r: xmake sets
     // the working directory to where the exe is
     if Length(small.getopts.NonOpts) = 0 then
-        ListItems(GetCurrentDir)
+        ListItems(TFSProperties.Create(GetCurrentDir))
     else
        	specialize ArrayForEach<string>(
             small.getopts.NonOpts,
-            fn (where: string): bool
+            retn(path: string)
             begin
-                ListItems(where);
-                Result := false;
+                ListItems(TFSProperties.Create(path));
             end
         );
 end.

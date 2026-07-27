@@ -22,6 +22,7 @@ uses
 
 retn WIN_PRESET;
 begin
+    debug('Choosen preset: WIN');
     TimeFormat := 'yyyy/mm/dd hh:mm:nn AM/PM';
     ColumnsEnabled := true;
     Columns := specialize TArray<EListingColumns>.Create( LAST_MODIFIED, KIND, SIZE, NAME );
@@ -52,6 +53,7 @@ end;
 
 retn GNU_PRESET;
 begin
+    debug('Choosen preset: GNU');
     GNU_CCD_SHARED;
     ColumnsEnabled := false;
     Columns := specialize TArray<EListingColumns>.Create(
@@ -62,7 +64,8 @@ end;
 
 retn CCD_PRESET;
 begin
-    GNU_PRESET;
+    debug('Choosen preset: CCD');
+    GNU_CCD_SHARED;
     ColumnsEnabled := true;
     Columns := specialize TArray<EListingColumns>.Create(
         LAST_MODIFIED, KIND, SIZE, PERMS, NAME

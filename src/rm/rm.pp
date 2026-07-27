@@ -6,6 +6,7 @@ uses
     sysutils,
     regexpr,
     i18n,
+    small.arr,
     small.base,
     small.fs,
     small.console,
@@ -49,7 +50,6 @@ fn DeleteThing(const which: string): bool;
     {$warn 5044 off} // faHidden is not portable
 var
     f: TSearchRec;
-
 begin
     if verbose then
         info(ATTEMPTING_TO_DELETE, [which]);
@@ -64,47 +64,47 @@ begin
 
     if Confirmation(which) then
     begin
-        case GetFSEntityType(which) of
-            EFSEntityKind.Dir: begin
-                if recursively and (FindFirst(which + '/*',
-                        faAnyFile or faDirectory or faHidden, f) = 0) then
-                    repeat
-                        DeleteThing(which + '/' + f.Name);
-                    until FindNext(f) <> 0;
-
-                if not dryRun then
-                    RemoveDir(which);
-            end;
-
-            EFSEntityKind.StatFailure: begin
-                TextColor(Red);
-                writeln(
-                    Format(STAT_FAILED, [ GetLastStrErrno ]) +
-                    ANSI_CODE_RESET_FORE
-                );
-                return(false);
-            end;
-
-            else if not dryRun then
-                DeleteFile(which)
-        end;
-
-        if IOResult <> 0 then begin
-            TextColor(Red);
-            writeln(IOResultToString + ANSI_CODE_RESET_FORE);
-            return(false);
-        end
-        else if verbose then begin
-            TextColor(Green);
-            writeln(DONE + ANSI_CODE_RESET_FORE);
-        end;
-
-        return(true);
+        TextColor(Yellow);
+        writeln(Cancelled + ANSI_CODE_RESET_FORE);
+        return(false);
     end;
 
-    TextColor(Yellow);
-    writeln(Cancelled + ANSI_CODE_RESET_FORE);
-    return(false);
+    case GetFSEntityType(which) of
+        EFSEntityKind.Folder: begin
+            if recursively and (FindFirst(which + '/*',
+                    faAnyFile or faDirectory or faHidden, f) = 0) then
+                repeat
+                    DeleteThing(which + '/' + f.Name);
+                until FindNext(f) <> 0;
+
+            if not dryRun then
+                RemoveDir(which);
+        end;
+
+        EFSEntityKind.StatFailure: begin
+            TextColor(Red);
+            writeln(
+                Format(STAT_FAILED, [ GetLastStrErrno ]) +
+                ANSI_CODE_RESET_FORE
+            );
+            return(false);
+        end;
+
+        else if not dryRun then
+            DeleteFile(which)
+    end;
+
+    if IOResult <> 0 then begin
+        TextColor(Red);
+        writeln(IOResultToString + ANSI_CODE_RESET_FORE);
+        return(false);
+    end
+    else if verbose then begin
+        TextColor(Green);
+        writeln(DONE + ANSI_CODE_RESET_FORE);
+    end;
+
+    return(true);
 end;
 {$pop}
 {$I+}

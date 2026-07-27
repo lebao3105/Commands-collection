@@ -3,6 +3,7 @@ program inp;
 
 uses
     i18n,
+    small.arr,
     small.base,
     small.keyboard,
     small.getopts

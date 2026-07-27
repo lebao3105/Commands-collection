@@ -5,7 +5,7 @@ unit dir.dsl.ignore;
 
 interface
 
-uses Lua, small.base;
+uses Lua;
 
 const
     IGNORE_HIDDEN = 1 shl 0;
