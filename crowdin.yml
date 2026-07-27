@@ -3,19 +3,17 @@ project_id: 891754
 append_commit_message: 
 preserver_hierarchy: true
 files:
-  - source: /i18n/cc.pot
-    translation: /i18n/%two_letters_code%/cc.po
-  - source: /src/hello/i18n/cc.pot
-    translation: /src/hello/i18n/%two_letters_code%/cc.po
-  - source: /src/dir/i18n/cc.pot
-    translation: /src/dir/i18n/%two_letters_code%/cc.po
-  - source: /src/env/i18n/cc.pot
-    translation: /src/env/i18n/%two_letters_code%/cc.po
-  - source: /src/inp/i18n/cc.pot
-    translation: /src/inp/i18n/%two_letters_code%/cc.po
-  - source: /src/rm/i18n/cc.pot
-    translation: /src/rm/i18n/%two_letters_code%/cc.po
-  - source: /src/touch/i18n/cc.pot
-    translation: /src/touch/i18n/%two_letters_code%/cc.po
-  - source: /src/uname/i18n/cc.pot
-    translation: /src/uname/i18n/%two_letters_code%/cc.po
+  - source: /i18n/dir.pot
+    translation: /i18n/%two_letters_code%/dir.po
+  - source: /i18n/env.pot
+    translation: /i18n/%two_letters_code%/env.po
+  - source: /i18n/hello.pot
+    translation: /i18n/%two_letters_code%/hello.po
+  - source: /i18n/inp.pot
+    translation: /i18n/%two_letters_code%/inp.po
+  - source: /i18n/rm.pot
+    translation: /i18n/%two_letters_code%/rm.po
+  - source: /i18n/touch.pot
+    translation: /i18n/%two_letters_code%/touch.po
+  - source: /i18n/uname.pot
+    translation: /i18n/%two_letters_code%/uname.po
