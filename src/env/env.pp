@@ -12,6 +12,7 @@ uses
 	ctypes
 	{$endif}, // fpExecVe
 	i18n,
+	small.arr,
 	small.getopts,
 	small.logging,
 	small.base
@@ -20,7 +21,7 @@ uses
 {$ifdef WINDOWS}
 fn fpExecVe(const cmdName: pchar;
             const argv: ppchar;
-            const envp: ppchar): cint; external 'kernel32' name '_execve';
+            const envp: ppchar): cint; external 'msvcrt' name '_execve';
 {$endif}
 
 var
@@ -109,14 +110,14 @@ begin
 	if not FileExists(small.getopts.NonOpts[0]) then
 		small.getopts.NonOpts[0] := ExeSearch(small.getopts.NonOpts[0], GetEnvironmentVariable('PATH'));
 
-		if small.getopts.NonOpts[0] = '' then
+	if small.getopts.NonOpts[0] = '' then
 		FatalAndTerminate(1, ExeNotFound, [ small.getopts.NonOpts[0] ]);
 
-		progArgs := @small.getopts.NonOpts[0];
+	progArgs := ArrayStringToPPChar(small.getopts.NonOpts, 0);
 
 	// Create array of environment variables
 	if not cleanEnv then
-		progEnv := @SetUnsetDifferences[0];
+		progEnv := ArrayStringToPPChar(SetUnsetDifferences, 0);
 
 	// Launch.
 	if fpExecVe(progArgs[0], progArgs, progEnv) = -1 then
