@@ -5,8 +5,8 @@ includes("options.lua")
 add_imports("lib.detect.find_program")
 add_moduledirs(os.projectdir() .. "/build-aux")
 add_imports("miscs")
-add_requires("lua 5.5.0", { system = false })
-add_requires("gettext", { system = false })
+add_requires("lua 5.5.0", { configs = { shared = true } })
+-- add_requires("gettext", { system = false, optional = true })
 add_rules("mode.debug", "mode.release")
 
 local rel_type = 'a' -- or b(eta) or r(c) - empty for stable
@@ -29,6 +29,7 @@ for _, dir in ipairs(os.dirs("src/*")) do
         set_kind("binary")
         add_files(srcfile)
         add_packages("lua")
+        -- add_links(is_plat("windows") and 'msvcrt' or 'c')
 
         add_pcflags(
             "@cc.cfg", -- config file for flags
@@ -44,7 +45,7 @@ for _, dir in ipairs(os.dirs("src/*")) do
         end
 
         if not is_plat("windows") then
-            add_defines("USE_LIBLUA", "USE_VT_SEQ")
+            add_defines("USE_VT_SEQ")
         else
             add_pcflags("-WC") -- Same as {$apptype console}?
             if not get_config("use-win-console") then
@@ -67,8 +68,8 @@ for _, dir in ipairs(os.dirs("src/*")) do
         end)
 
         before_build( function (target)
-            if os.getenv("CC_VERSION") == nil then
-                os.setenv("CC_VERSION", import("core.project.project").version())
+            if os.getenv("VERSION") == nil then
+                os.setenv("VERSION", import("core.project.project").version())
             end
 
             -- Where to search for compiled i18n - that %s is kept for FCL's gettext

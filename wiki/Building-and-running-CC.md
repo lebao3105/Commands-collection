@@ -47,6 +47,14 @@ Default installation of FPC includes RTL and a lot of other unneccessary things,
 
 CC in the past implemented a tool that can pull required packages from FPC's GitLab. Guess I should bring it back...
 
+#### Lua
+
+You can obtain shared library (DLL) for Windows [here](https://github.com/dyne/luabinaries) or [here](https://sourceforge.net/projects/luabinaries/files/5.5.0/).
+
+For Linux/BSD, use the shipped package manager.
+
+For macOS, I don't know:)
+
 ### Git
 
 Of course.

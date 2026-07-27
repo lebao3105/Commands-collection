@@ -80,7 +80,7 @@ end;
 
 function lua_pcallk(L: Plua_State;
                     nargs, nresults, errf: Integer;
-                    ctx: lua_KContext; k: lua_KFunction): Integer; cdecl; external;
+                    ctx: lua_KContext; k: lua_KFunction): Integer; cdecl; external LUALIB;
 function lua_pcall(L: Plua_State; nargs, nresults, errf: Integer): Integer;
 begin
     Result := lua_pcallk(L, nargs, nresults, errf, 0, nil);

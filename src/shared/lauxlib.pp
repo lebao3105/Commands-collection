@@ -7,7 +7,7 @@ begin
     lua_pushlstring(L, PAnsiChar(s), Length(s));
 end;
 
-procedure luaL_openselectedlibs(L: Plua_State; load, preload: int); cdecl; external;
+procedure luaL_openselectedlibs(L: Plua_State; load, preload: int); cdecl; external LUALIB;
 procedure luaL_openlibs(L: Plua_State);
 begin
     luaL_openselectedlibs(L, 0, 0);
@@ -28,7 +28,7 @@ begin
     Result := lua_typename(L, lua_type(L, i));
 end;
 
-function luaL_loadfilex(L: Plua_State; const filename, mode: PAnsiChar): Integer; cdecl; external;
+function luaL_loadfilex(L: Plua_State; const filename, mode: PAnsiChar): Integer; cdecl; external LUALIB;
 function lua_dofile(L: Plua_State; const filename: PAnsiChar): Integer;
 begin
     Result := luaL_loadfilex(L, filename, nil);

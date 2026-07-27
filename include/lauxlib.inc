@@ -40,27 +40,27 @@ type
     PluaL_reg = ^luaL_reg;
 
 procedure luaL_openlibs(L: Plua_State);
-function luaL_argerror(L: Plua_State; numarg: Integer; const extramsg: PAnsiChar): Integer; cdecl; external;
-function luaL_checknumber(L: Plua_State; numArg: Integer): lua_Number; cdecl; external;
-function luaL_optnumber(L: Plua_State; nArg: Integer; def: lua_Number): lua_Number; cdecl; external;
-function luaL_checkinteger(L: Plua_State; numArg: Integer): lua_Integer; cdecl; external;
-function luaL_optinteger(L: Plua_State; nArg: Integer; def: lua_Integer): lua_Integer; cdecl; external;
-function luaL_checklstring(L: Plua_State; numArg: Integer; l_: Psize_t): PAnsiChar; cdecl; external;
-function luaL_optlstring(L: Plua_State; numArg: Integer; const def: PAnsiChar; l_: Psize_t): PAnsiChar; cdecl; external;
+function luaL_argerror(L: Plua_State; numarg: Integer; const extramsg: PAnsiChar): Integer; cdecl; external LUALIB;
+function luaL_checknumber(L: Plua_State; numArg: Integer): lua_Number; cdecl; external LUALIB;
+function luaL_optnumber(L: Plua_State; nArg: Integer; def: lua_Number): lua_Number; cdecl; external LUALIB;
+function luaL_checkinteger(L: Plua_State; numArg: Integer): lua_Integer; cdecl; external LUALIB;
+function luaL_optinteger(L: Plua_State; nArg: Integer; def: lua_Integer): lua_Integer; cdecl; external LUALIB;
+function luaL_checklstring(L: Plua_State; numArg: Integer; l_: Psize_t): PAnsiChar; cdecl; external LUALIB;
+function luaL_optlstring(L: Plua_State; numArg: Integer; const def: PAnsiChar; l_: Psize_t): PAnsiChar; cdecl; external LUALIB;
 
-procedure luaL_checkstack(L: Plua_State; sz: Integer; const msg: PAnsiChar); cdecl; external;
-procedure luaL_checktype(L: Plua_State; narg, t: Integer); cdecl; external;
-procedure luaL_checkany(L: Plua_State; narg: Integer); cdecl; external;
+procedure luaL_checkstack(L: Plua_State; sz: Integer; const msg: PAnsiChar); cdecl; external LUALIB;
+procedure luaL_checktype(L: Plua_State; narg, t: Integer); cdecl; external LUALIB;
+procedure luaL_checkany(L: Plua_State; narg: Integer); cdecl; external LUALIB;
 
-procedure luaL_where(L: Plua_State; lvl: Integer); cdecl; external;
-function luaL_error(L: Plua_State; const fmt: PAnsiChar): Integer; cdecl; varargs; external;
+procedure luaL_where(L: Plua_State; lvl: Integer); cdecl; external LUALIB;
+function luaL_error(L: Plua_State; const fmt: PAnsiChar): Integer; cdecl; varargs; external LUALIB;
 
-function luaL_checkoption(L: Plua_State; narg: Integer; def: PAnsiChar; lst: PPAnsiChar): Integer; cdecl; external;
+function luaL_checkoption(L: Plua_State; narg: Integer; def: PAnsiChar; lst: PPAnsiChar): Integer; cdecl; external LUALIB;
 
-function luaL_newstate: Plua_State; cdecl; external;
+function luaL_newstate: Plua_State; cdecl; external LUALIB;
 function lua_open: Plua_State; // compatibility; moved from unit lua to lauxlib because it needs luaL_newstate
 
-function luaL_gsub(L: Plua_State; const s, p, r: PAnsiChar): PAnsiChar; cdecl; external;
+function luaL_gsub(L: Plua_State; const s, p, r: PAnsiChar): PAnsiChar; cdecl; external LUALIB;
 
 (*
 ** ===============================================================
