@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PascalDialectSettings">
+    <option name="family" value="FREE_PASCAL" />
+    <option name="mode" value="FPC" />
+    <option name="version" value="3.3.1" />
+  </component>
+</project>
