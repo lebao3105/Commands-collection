@@ -16,8 +16,6 @@ uses
     small.regex
     ;
 
-{$I termcolors.inc}
-
 var
     ignoreRegexMatch,
     interactive,
@@ -58,14 +56,16 @@ begin
     begin
         if ignoreRegexMatch or not verbose then return(false);
         TextColor(Yellow);
-        writeln(FILTERED + ANSI_CODE_RESET_FORE);
+        writeln(FILTERED);
+        resetForeground;
         return(false);
     end;
 
     if Confirmation(which) then
     begin
         TextColor(Yellow);
-        writeln(Cancelled + ANSI_CODE_RESET_FORE);
+        writeln(Cancelled);
+        resetForeground;
         return(false);
     end;
 
@@ -83,10 +83,8 @@ begin
 
         EFSEntityKind.StatFailure: begin
             TextColor(Red);
-            writeln(
-                Format(STAT_FAILED, [ GetLastStrErrno ]) +
-                ANSI_CODE_RESET_FORE
-            );
+            writeln(Format(STAT_FAILED, [ GetLastStrErrno ]));
+            resetForeground;
             return(false);
         end;
 
@@ -96,12 +94,14 @@ begin
 
     if IOResult <> 0 then begin
         TextColor(Red);
-        writeln(IOResultToString + ANSI_CODE_RESET_FORE);
+        writeln(IOResultToString);
+        resetForeground;
         return(false);
     end
     else if verbose then begin
         TextColor(Green);
-        writeln(DONE + ANSI_CODE_RESET_FORE);
+        writeln(DONE);
+        resetForeground;
     end;
 
     return(true);

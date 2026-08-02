@@ -35,8 +35,6 @@ uses
 //resourcestring
 //    HAS = ' has:';
 
-{$I termcolors.inc}
-
 procedure Report;
 begin
 //    Assert(not currentPath.IsEmpty);
@@ -96,7 +94,7 @@ begin
                         props.SymlinkPointsTo.Substring(Length(currentPath) + 1),
                         props.SymlinkPointsTo
                     ));
-				write(ANSI_CODE_RESET);
+				//resetForeground;
 			end;
 
 			EListingColumns.SIZE:
