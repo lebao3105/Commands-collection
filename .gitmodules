@@ -1,0 +1,3 @@
+[submodule "build-aux"]
+	path = build-aux
+	url = https://gitlab.com/lebao3105/pascal-xmake-aux

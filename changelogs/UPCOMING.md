@@ -54,3 +54,8 @@ $ xmake docs [task] [target]
 Check out their `--help` for more infomations.
 
 Also usages of XPack have been removed as I want to have more control over packaging scripts (in this case, `debian/control`). Instead, one can use `xmake install` now.
+
+### Miscs
+
+* Helper functions and tasks are now moved to a separate project
+* output-prefix option will now affect manual page names

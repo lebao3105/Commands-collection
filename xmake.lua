@@ -3,7 +3,7 @@ if is_plat("wasm") then
     raise("this project does not support WASM!")
 end
 
-local buildaux = os.projectdir() .. "/../pascal-xmake-aux/"
+local buildaux = os.projectdir() .. "/build-aux/"
 add_moduledirs(buildaux .. "utils")
 add_repositories("3rd " .. buildaux .. "3rdparty")
 add_imports("miscs", "targets")
@@ -17,6 +17,7 @@ option_end()
 
 add_requires("lua 5.5.0", { configs = { shared = true } })
 add_requires("gettext", { optional = true })
+add_requires("scdoc", { optional = true })
 add_rules("mode.debug", "mode.release")
 set_policy("check.auto_ignore_flags", false)
 
@@ -52,7 +53,12 @@ for _, dir in ipairs(os.dirs("src/*")) do
 
         before_install(function (target)
             targets.before_target_install(target)
-            target:add("installfiles", "docs/1/cc-" .. name .. ".1", { prefixdir = "share/man/man1" })
+            local pref = "cc-"
+            if has_config("output-prefix") then
+                pref = get_config("output-prefix")
+            end
+            target:add("installfiles", "docs/cc-" .. name .. ".1", {
+                prefixdir = "share/man/man1", name = pref ..  name .. ".1" })
         end)
 
 
