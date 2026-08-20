@@ -29,7 +29,7 @@ uses
 	dir.idcache,
 	{$endif}
 	dir.dsl.cols,
-	i18n
+	small.i18n
 	;
 
 //resourcestring

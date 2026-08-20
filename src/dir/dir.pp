@@ -11,7 +11,7 @@ uses
     small.logging,
     small.regex,
     small.fs,
-    i18n,
+    small.i18n,
     dir.dsl,
     dir.presets,
     dir.report,

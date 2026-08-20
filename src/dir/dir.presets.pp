@@ -14,7 +14,7 @@ uses
     sysutils,
     small.fs,
     small.logging,
-    i18n
+    small.i18n
     ;
 
 // All possible characters for date/time formatting is in
