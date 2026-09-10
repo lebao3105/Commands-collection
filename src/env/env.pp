@@ -11,7 +11,7 @@ uses
 		{$else}
 	ctypes
 	{$endif}, // fpExecVe
-	i18n,
+	small.i18n,
 	small.arr,
 	small.getopts,
 	small.logging,

@@ -12,7 +12,7 @@ uses
     small.fs,
     small.logging,
     small.getopts,
-    i18n
+    small.i18n
     ;
 
 var

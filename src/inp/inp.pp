@@ -2,7 +2,7 @@ program inp;
 {$modeswitch anonymousfunctions}
 
 uses
-    i18n,
+    small.i18n,
     small.arr,
     small.base,
     small.keyboard,

@@ -5,7 +5,7 @@ end
 
 local buildaux = os.projectdir() .. "/build-aux/"
 add_moduledirs(buildaux .. "utils")
-add_repositories("3rd " .. buildaux .. "3rdparty")
+add_repositories("3rd 3rdparty", { rootdir = buildaux })
 add_imports("miscs", "targets")
 includes(buildaux .. "options.lua")
 

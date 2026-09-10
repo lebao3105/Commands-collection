@@ -5,7 +5,7 @@ program rm;
 uses
     sysutils,
     regexpr,
-    i18n,
+    small.i18n,
     small.arr,
     small.base,
     small.fs,

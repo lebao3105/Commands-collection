@@ -9,7 +9,7 @@ uses
     small.base,
     small.getopts,
     small.logging,
-    i18n
+    small.i18n
     ;
 
 {$I i18n.inc}
