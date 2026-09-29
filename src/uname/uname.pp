@@ -14,15 +14,17 @@ uses
 
 {$I i18n.inc}
 
+type STR = {$ifdef WINDOWS}widestring{$else}string{$endif};
+
 var
     {$ifdef UNIX}Inf: TUtsname;
     {$else}RKey: HKEY;{$endif}
     PrettyPrint: bool = false;
 
-retn PrintElement(what, name: string); inline;
+retn PrintElement(what: STR {???}; name: string); inline;
 begin
     write(
-        specialize IfThenElse<string>(
+        specialize IfThenElse<STR>(
             PrettyPrint,
             name + ': ' + what + sLineBreak,
             what + ' '
@@ -31,24 +33,49 @@ begin
 end;
 
 {$ifdef WINDOWS}
-const UNAME_RKEY: pwidechar = 'SOFTWARE\Microsoft\Windows NT\CurrentVersion';
+const
+    UNAME_RKEY: pwidechar = 'SOFTWARE\Microsoft\Windows NT\CurrentVersion';
+    // Below are definitions in Windows SDK include dir\um\winnt.h
+    // They are not included in FPC's RTL
+    PROCESSOR_ARCHITECTURE_INTEL = 0; // x86
+    // PROCESSOR_ARCHITECTURE_MIPS = 1;
+    // PROCESSOR_ARCHITECTURE_ALPHA = 2;
+    // PROCESSOR_ARCHITECTURE_PPC = 3;
+    // PROCESSOR_ARCHITECTURE_SHX = 4;
+    PROCESSOR_ARCHITECTURE_ARM = 5;
+    // PROCESSOR_ARCHITECTURE_IA64 = 6;
+    // PROCESSOR_ARCHITECTURE_ALPHA64 = 7;
+    // PROCESSOR_ARCHITECTURE_MSIL = 8;
+    PROCESSOR_ARCHITECTURE_AMD64 = 9; // x64 (AMD or Intel)
+    PROCESSOR_ARCHITECTURE_IA32_ON_WIN64 = 10;
+    // PROCESSOR_ARCHITECTURE_NEUTRAL = 11; // ???
+    PROCESSOR_ARCHITECTURE_ARM64 = 12;
+    PROCESSOR_ARCHITECTURE_ARM32_ON_WIN64 = 13;
+    PROCESSOR_ARCHITECTURE_IA32_ON_ARM64 = 14;
+    // PROCESSOR_ARCHITECTURE_UNKNOWN = $ffff;
 
 retn GetStrRegValue(const pValue: LPCWSTR; const name: string);
 var str: widestring;
 begin
     str := RegGetString(RKey, pValue);
-    if Length(str) = 0 then
-        PrintElement(UNKNOWN, name)
-    else
-        PrintElement(str, name);
+    PrintElement(
+        specialize IfThenElse<widestring>(
+            Length(str) = 0,
+            UNKNOWN,
+            str
+        ),
+        name
+    );
 end;
 
 retn GetInfoFailed(name: string);
 var pprintBackup: bool;
 begin
     pprintBackup := PrettyPrint;
-    if not PrettyPrint then writeln;
-    PrettyPrint := true;
+    if not PrettyPrint then begin
+        writeln;
+        PrettyPrint := true;
+    end;
 
     PrintElement(Format(GET_INFO_FAIL, [ GetLastError, GetLastStrErrno ]), name);
     PrettyPrint := pprintBackup;
@@ -58,7 +85,7 @@ end;
 retn OptionHandler(const found: char);
 begin
     case found of
-        'a': begin
+        'a': begin // Follows GNU
             OptionHandler('s');
             OptionHandler('n');
             OptionHandler('r');
@@ -105,7 +132,29 @@ begin
             // GetStrRegValue('CurrentVersion', KERNEL_VERSION);
             PrintElement(Format('%u.%u', [ dwMajor, dwMinor ]), KERNEL_VERSION);
         end ();
-        'm': TODO;
+        'm': retn var inf: SYSTEM_INFO; begin
+            GetNativeSystemInfo(@inf); // ??????
+            case inf.wProcessorArchitecture of
+                PROCESSOR_ARCHITECTURE_AMD64:
+                    PrintElement('x86_64', MACHINE_HWNAME);
+                PROCESSOR_ARCHITECTURE_ARM64:
+                    PrintElement('aarch64', MACHINE_HWNAME);
+                PROCESSOR_ARCHITECTURE_INTEL:
+                    PrintElement('x86', MACHINE_HWNAME);
+                PROCESSOR_ARCHITECTURE_ARM:
+                    PrintElement('arm', MACHINE_HWNAME);
+                PROCESSOR_ARCHITECTURE_IA32_ON_WIN64:
+                    PrintElement('ia32 on x64 (WOW64)', MACHINE_HWNAME);
+                PROCESSOR_ARCHITECTURE_ARM32_ON_WIN64:
+                    PrintElement('arm on x64', MACHINE_HWNAME);
+                PROCESSOR_ARCHITECTURE_IA32_ON_ARM64:
+                    PrintElement('ia32 on aarch64', MACHINE_HWNAME);
+                
+                // Unsupported + unknown go here
+                else
+                    PrintElement(UNKNOWN, MACHINE_HWNAME);
+            end;
+        end ();
         {$endif}
 
         // End old macOSes env
