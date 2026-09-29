@@ -19,6 +19,11 @@ end;
 if beVerbose then
     Info(CREATING_STUFF, [path]);
 
+{$ifndef SKIP_PARENTS}
+if createParent then
+    CreateParentFolder(path);
+{$endif}
+
 CreateOP(path);
 
 if IOResult <> 0 then

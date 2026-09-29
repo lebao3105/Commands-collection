@@ -18,17 +18,12 @@ uses
 var
     beVerbose, createParent, dirsOnly, keepGoing: boolean;
 
-retn CreateFolder(path: string); forward;
-
 retn CreateParentFolder(fullPath: string);
 var
     currentPath: string;
     idx: int;
     splits: TStringDynArray;
 begin
-    // NOTE: RTL's systutils has ForceDirectories that does the same thing.
-    if not createParent then return;
-
     splits := SplitString(fullPath, '/\');
     currentPath := '';
 
@@ -37,7 +32,10 @@ begin
         currentPath := specialize IfThenElse<string>(
             idx > 0, ConcatPaths([currentPath, splits[idx]]), splits[idx]
         ); // hmmmmm
-        CreateFolder(currentPath);
+        {$define IS_MKDIR}
+        {$define SKIP_PARENTS}
+        {$I makething.inc}
+        {$undef SKIP_PARENTS}
     end;
 end;
 
@@ -71,19 +69,14 @@ begin
     if small.getopts.OptHasPairs then
         specialize ArrayForEach<TStringDynArray>(
             small.getopts.GetArgPairs,
-            fn (arg: TStringDynArray): bool
+            retn (arg: TStringDynArray)
             begin
-                if arg[1] = 'd' then begin
-                    CreateParentFolder(arg[0]);
-                    CreateFolder(arg[0]);
-                end
-                else if arg[1] = 'f' then begin
-                    CreateParentFolder(arg[0]);
-                    CreateFile(arg[0]);
-                end
-                else
-                    Warning(INVALID_TYPE, [ arg[0], arg[1] ]);
-                return(false);
+                case arg[1] of
+                    'd': CreateFolder(arg[0]);
+                    'f': CreateFile(arg[0]);
+                    else
+                        Warning(INVALID_TYPE, [ arg[0], arg[1] ]);
+                end;
             end
         )
     else
