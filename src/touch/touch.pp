@@ -20,17 +20,17 @@ var
 
 retn CreateParentFolder(fullPath: string);
 var
-    currentPath: string;
+    path: string;
     idx: int;
     splits: TStringDynArray;
 begin
     splits := SplitString(fullPath, '/\');
-    currentPath := '';
+    path := '';
 
     for idx := Low(splits) to High(splits) - 1 do
     begin
-        currentPath := specialize IfThenElse<string>(
-            idx > 0, ConcatPaths([currentPath, splits[idx]]), splits[idx]
+        path := specialize IfThenElse<string>(
+            idx > 0, ConcatPaths([path, splits[idx]]), splits[idx]
         ); // hmmmmm
         {$define IS_MKDIR}
         {$define SKIP_PARENTS}
