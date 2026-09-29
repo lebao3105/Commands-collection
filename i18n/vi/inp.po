@@ -1,0 +1,43 @@
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: commands-collection\n"
+"X-Crowdin-Project-ID: 891754\n"
+"X-Crowdin-Language: vi\n"
+"X-Crowdin-File: /main/i18n/inp.pot\n"
+"X-Crowdin-File-ID: 113\n"
+"Project-Id-Version: commands-collection\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: Vietnamese\n"
+"Language: vi_VN\n"
+"PO-Revision-Date: 2026-08-05 07:58\n"
+
+#: i18n.hideokojima_des
+msgid "Hide inputs from the user"
+msgstr ""
+
+#: i18n.loop_des
+msgid "Do not quit until a valid input is sent"
+msgstr ""
+
+#: i18n.msg_des
+msgid "Custom message to show instead of Press any key/Enter to continue"
+msgstr ""
+
+#: i18n.press_any_key
+msgid "Press any key to continue..."
+msgstr "Nhấn phím bất kỳ để tiếp tục..."
+
+#: i18n.program_bonus_help
+msgid "If no arguments are provided, the program will simply ask for a key press, quits with exit code 0.\r\n"
+"Otherwise will quit with the exit code set to the ASCII value of the input character."
+msgstr ""
+
+#: i18n.program_desc
+msgid "Asks for user input."
+msgstr ""
+
+#: i18n.reqchar_des
+msgid "Specify valid characters"
+msgstr ""
+
