@@ -1,3 +1,7 @@
+## Feature progress
+
+
+
 ## dir settings
 
 This feature is implemented by:
@@ -14,6 +18,26 @@ This feature is implemented by:
 
 ## How the DSL works
 
+### Program initialization
+
+From top to bottom:
+* Load RTL
+* Load presets (from environment)
+* Load dir.dsl
+    * Get environment variable
+    * Check if we *can* load setting file
+        * If yes, initialize Lua
+        * If no, bail out
+* Load sections of the DSL
+* Load anything else that is not initialized
+* Run the program main block
+    * Actually load and run the setting file
+    * Parse command-line arguments
+    * Do what it needs to do
+
+For units, `initialization` blocks are used.
+Units load from top to bottom.
+
 ### Sections
 
 Each DSL unit has its own section, for example with column settings:
@@ -21,7 +45,7 @@ Each DSL unit has its own section, for example with column settings:
 ```lua
 columns(true) -- start of a section
     -- do whatever you want
-finish -- end, optional
+finish() -- end, optional
 ```
 
 Section start and end markers are actually Lua functions, which modifies a Pascal variable named *SCOPE* under the hood:
@@ -36,8 +60,8 @@ var SCOPE: EScopes = UNSET;
 function start_columns_section(L: PLua_State): int; cdecl;
 begin
     SCOPE := COLUMNS;
-    // does additonal jobs if any...
-    return(0); // no return value
+    // do additonal jobs if any...
+    return(0); // 0 = no return value
 end;
 
 // implements finish()
@@ -87,4 +111,9 @@ They are not visible outside their corresponding unit's `implementation`.
 
 #### Registeration (to Lua)
 
-Use `lua_register(PLua_State, name, func)` in `DSL_*_init`.
+Use `DSL_register(^ansichar, lua_CFunction)` from `dir.dsl` in `DSL_*_init`.
+
+### Afterwords
+
+Lua is small and fast I know, but is it worth using in this program?
+Only linking with Lua on Windows took me a while.

@@ -2,10 +2,10 @@ unit dir.presets;
 
 interface
 
-retn WIN_PRESET;
-retn GNU_PRESET;
-retn CCD_PRESET;
-retn PresetFromString(const str: string);
+procedure WIN_PRESET;
+procedure GNU_PRESET;
+procedure CCD_PRESET;
+procedure PresetFromString(const str: string);
 
 implementation
 
@@ -20,7 +20,7 @@ uses
 // All possible characters for date/time formatting is in
 // https://www.freepascal.org/docs-html/rtl/sysutils/formatchars.html
 
-retn WIN_PRESET;
+procedure WIN_PRESET;
 begin
     debug('Choosen preset: WIN');
     TimeFormat := 'yyyy/mm/dd hh:mm:nn AM/PM';
@@ -37,7 +37,7 @@ begin
     TypeFormats[Ord(STATFAILURE)] := '<?????>';
 end;
 
-retn GNU_CCD_SHARED;
+procedure GNU_CCD_SHARED;
 begin
     TimeFormat := 'mmm dd hh:nn';
     TypeFormats[Ord(NORMALFILE)] := '-';
@@ -51,7 +51,7 @@ begin
     TypeFormats[Ord(STATFAILURE)] := '?';
 end;
 
-retn GNU_PRESET;
+procedure GNU_PRESET;
 begin
     debug('Choosen preset: GNU');
     GNU_CCD_SHARED;
@@ -62,7 +62,7 @@ begin
     );
 end;
 
-retn CCD_PRESET;
+procedure CCD_PRESET;
 begin
     debug('Choosen preset: CCD');
     GNU_CCD_SHARED;
@@ -72,7 +72,7 @@ begin
     );
 end;
 
-retn PresetFromString(const str: string);
+procedure PresetFromString(const str: string);
 begin
     case str.ToLower of
         'win': WIN_PRESET;

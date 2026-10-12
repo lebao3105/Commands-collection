@@ -23,9 +23,8 @@ var
     // Additonal flags that influences (or not) the pattern array.
     IgnoreFlags: byte = IGNORE_HIDDEN or IGNORE_BACKUPS;
 
-retn RegexPrepare;
-fn RegexIsMatched(const name: string): bool;
-retn DSL_ignore_init;
+procedure RegexPrepare;
+function RegexIsMatched(const name: string): bool;
 
 implementation
 
@@ -40,7 +39,7 @@ uses
 resourcestring
     E_INVALID_FLAG = '%s is not a valid flag';
 
-retn RegexPrepare;
+procedure RegexPrepare;
 begin
     debug('Ignore modifiers: %s', [ IgnoreRegexModifiers ]);
     RegexSetModifiers(IgnoreRegexModifiers);
@@ -62,7 +61,7 @@ begin
         ]);
 end;
 
-fn RegexIsMatched(const name: string): bool;
+function RegexIsMatched(const name: string): bool;
 begin
     if (IgnoreFlags and IGNORE_UNMATCH) <> 0 then
         return(not RegexHasMatches(name))
@@ -70,14 +69,14 @@ begin
         return(RegexHasMatches(name));
 end;
 
-fn start_ignore(L: Plua_State): int; cdecl;
+function start_ignore(L: Plua_State): int; cdecl;
 begin
     SCOPE := EScopes.IGNORE;
     DSL_warn_too_much_args(L, 0, 'ignore');
     return(0);
 end;
 
-fn set_modifiers(L: Plua_State): int; cdecl;
+function set_modifiers(L: Plua_State): int; cdecl;
 begin
     DSL_assert_in_scope(EScopes.IGNORE);
     DSL_error_must_have_n_args(L, 1, 'modifiers');
@@ -86,7 +85,7 @@ begin
     return(0);
 end;
 
-fn append_pattern(L: Plua_State): int; cdecl;
+function append_pattern(L: Plua_State): int; cdecl;
 begin
     DSL_assert_in_scope(EScopes.IGNORE);
     DSL_error_must_have_n_args(L, 1, 'add_pattern');
@@ -95,7 +94,7 @@ begin
     return(0);
 end;
 
-fn append_flag(L: Plua_State): int; cdecl;
+function append_flag(L: Plua_State): int; cdecl;
 var fl: string;
 begin
     DSL_assert_in_scope(EScopes.IGNORE);
@@ -111,12 +110,14 @@ begin
     return(0);
 end;
 
-retn DSL_ignore_init;
+initialization
+
+if canRunDSL then
 begin
-    lua_register(luaState, 'ignore', @start_ignore);
-    lua_register(luaState, 'modifiers', @set_modifiers);
-    lua_register(luaState, 'add_pattern', @append_pattern);
-    lua_register(luaState, 'add_flag', @append_flag);
+    DSL_register('ignore', @start_ignore);
+    DSL_register('modifiers', @set_modifiers);
+    DSL_register('add_pattern', @append_pattern);
+    DSL_register('add_flag', @append_flag);
 end;
 
 end.

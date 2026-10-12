@@ -21,13 +21,11 @@ var
     TimeFormat: string;
     TypeFormats: array[0..Ord(High(EFSEntityKind))] of string;
 
-retn DSL_cols_init;
-
 implementation
 
 uses dir.dsl, lauxlib, sysutils;
 
-fn start_columns(L: Plua_State): int; cdecl;
+function start_columns(L: Plua_State): int; cdecl;
 begin
     SCOPE := EScopes.COLUMNS;
 
@@ -38,7 +36,7 @@ begin
     return(0);
 end;
 
-fn set_print_headers(L: Plua_State): int; cdecl;
+function set_print_headers(L: Plua_State): int; cdecl;
 begin
     DSL_assert_in_scope(EScopes.COLUMNS);
     DSL_warn_too_much_args(L, 1, 'print_headers');
@@ -59,12 +57,12 @@ begin
     return(0);
 end}
 
-fn append_name_col(L: Plua_State): int; cdecl;
+function append_name_col(L: Plua_State): int; cdecl;
 {$define TARGET_NAME := 'name'}
 {$define TARGET := NAME}
 APPEND_COL_IMPL;
 
-fn append_size_col(L: Plua_State): int; cdecl;
+function append_size_col(L: Plua_State): int; cdecl;
 begin
     DSL_assert_in_scope(EScopes.COLUMNS);
     DSL_warn_too_much_args(L, 1, 'size');
@@ -76,7 +74,7 @@ begin
     return(0);
 end;
 
-fn append_time_format_col(L: Plua_State): int; cdecl;
+function append_time_format_col(L: Plua_State): int; cdecl;
 begin
     DSL_assert_in_scope(EScopes.COLUMNS);
     DSL_warn_too_much_args(L, 1, 'time_format');
@@ -90,7 +88,7 @@ begin
     return(0);
 end;
 
-fn append_kind_col(L: Plua_State): int; cdecl;
+function append_kind_col(L: Plua_State): int; cdecl;
 var i: size_t;
 begin
     DSL_assert_in_scope(EScopes.COLUMNS);
@@ -105,27 +103,27 @@ begin
     return(0);
 end;
 
-fn append_perms_col(L: Plua_State): int; cdecl;
+function append_perms_col(L: Plua_State): int; cdecl;
 {$define TARGET_NAME := 'perms'}
 {$define TARGET := PERMS}
 APPEND_COL_IMPL;
 
-fn append_owner_name_col(L: Plua_State): int; cdecl;
+function append_owner_name_col(L: Plua_State): int; cdecl;
 {$define TARGET_NAME := 'owner_name'}
 {$define TARGET := OWNER_NAME}
 APPEND_COL_IMPL;
 
-fn append_owner_group_col(L: Plua_State): int; cdecl;
+function append_owner_group_col(L: Plua_State): int; cdecl;
 {$define TARGET_NAME := 'owner_group'}
 {$define TARGET := OWNER_GROUP}
 APPEND_COL_IMPL;
 
-fn append_last_modified_col(L: Plua_State): int; cdecl;
+function append_last_modified_col(L: Plua_State): int; cdecl;
 {$define TARGET_NAME := 'last_modified'}
 {$define TARGET := LAST_MODIFIED}
 APPEND_COL_IMPL;
 
-fn append_last_accessed_col(L: Plua_State): int; cdecl;
+function append_last_accessed_col(L: Plua_State): int; cdecl;
 {$define TARGET_NAME := 'last_accessed'}
 {$define TARGET := LAST_ACCESSED}
 APPEND_COL_IMPL;
@@ -133,18 +131,20 @@ APPEND_COL_IMPL;
 {$undef TARGET}
 {$undef APPEND_COL_IMPL}
 
-retn DSL_cols_init;
+initialization
+
+if canRunDSL then
 begin
-    lua_register(luaState, 'columns', @start_columns);
-    lua_register(luaState, 'name', @append_name_col);
-    lua_register(luaState, 'size', @append_size_col);
-    lua_register(luaState, 'time_format', @append_time_format_col);
-    lua_register(luaState, 'kind', @append_kind_col);
-    lua_register(luaState, 'perms', @append_perms_col);
-    lua_register(luaState, 'owner_name', @append_owner_name_col);
-    lua_register(luaState, 'owner_group', @append_owner_group_col);
-    lua_register(luaState, 'last_modified', @append_last_modified_col);
-    lua_register(luaState, 'last_accessed', @append_last_accessed_col);
+    DSL_register('columns', @start_columns);
+    DSL_register('name', @append_name_col);
+    DSL_register('size', @append_size_col);
+    DSL_register('time_format', @append_time_format_col);
+    DSL_register('kind', @append_kind_col);
+    DSL_register('perms', @append_perms_col);
+    DSL_register('owner_name', @append_owner_name_col);
+    DSL_register('owner_group', @append_owner_group_col);
+    DSL_register('last_modified', @append_last_modified_col);
+    DSL_register('last_accessed', @append_last_accessed_col);
 end;
 
 end.

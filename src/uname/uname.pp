@@ -21,7 +21,7 @@ var
     {$else}RKey: HKEY;{$endif}
     PrettyPrint: bool = false;
 
-retn PrintElement(what: STR {???}; name: string); inline;
+procedure PrintElement(what: STR {???}; name: string); inline;
 begin
     write(
         specialize IfThenElse<STR>(
@@ -54,7 +54,7 @@ const
     PROCESSOR_ARCHITECTURE_IA32_ON_ARM64 = 14;
     // PROCESSOR_ARCHITECTURE_UNKNOWN = $ffff;
 
-retn GetStrRegValue(const pValue: LPCWSTR; const name: string);
+procedure GetStrRegValue(const pValue: LPCWSTR; const name: string);
 var str: widestring;
 begin
     str := RegGetString(RKey, pValue);
@@ -68,7 +68,7 @@ begin
     );
 end;
 
-retn GetInfoFailed(name: string);
+procedure GetInfoFailed(name: string);
 var pprintBackup: bool;
 begin
     pprintBackup := PrettyPrint;
@@ -82,7 +82,7 @@ begin
 end;
 {$endif}
 
-retn OptionHandler(const found: char);
+procedure OptionHandler(const found: char);
 begin
     case found of
         'a': begin // Follows GNU
@@ -110,7 +110,7 @@ begin
         'm': PrintElement(Inf.machine, MACHINE_HWNAME);
         {$else}
         's': PrintElement('Microsoft Windows NT', KERNEL_NAME);
-        'n': retn var buffer: widestring; sz: DWORD;
+        'n': procedure var buffer: widestring; sz: DWORD;
         begin
             sz := MAX_COMPUTERNAME_LENGTH + 1;
             SetLength(buffer, sz);
@@ -120,7 +120,7 @@ begin
                 PrintElement(buffer, NETWORK_NODENAME);
         end ();
         'r': GetStrRegValue('CurrentBuild', KERNEL_RELEASE);
-        'v': retn var dwMajor, dwMinor: DWORD; begin
+        'v': procedure var dwMajor, dwMinor: DWORD; begin
             if (not RegGetDWORD(RKey, 'CurrentMajorVersionNumber', dwMajor)) or
                (not RegGetDWORD(RKey, 'CurrentMinorVersionNumber', dwMinor)) then
             begin
@@ -132,7 +132,7 @@ begin
             // GetStrRegValue('CurrentVersion', KERNEL_VERSION);
             PrintElement(Format('%u.%u', [ dwMajor, dwMinor ]), KERNEL_VERSION);
         end ();
-        'm': retn var inf: SYSTEM_INFO; begin
+        'm': procedure var inf: SYSTEM_INFO; begin
             GetNativeSystemInfo(@inf); // ??????
             case inf.wProcessorArchitecture of
                 PROCESSOR_ARCHITECTURE_AMD64:
@@ -181,7 +181,7 @@ begin
         FatalAndTerminate(1, UNAME_FAILED, [ GetLastStrErrno ]);
 
     {$ifdef WINDOWS}
-    AddExitProc(retn begin RegCloseKey(RKey); end);
+    AddExitProc(procedure begin RegCloseKey(RKey); end);
     {$endif}
 
     if ParamCount = 0 then

@@ -3,7 +3,6 @@ program dir;
 {$modeswitch anonymousfunctions}
 
 uses
-    // classes,
     sysutils,
     small.arr,
     small.base,
@@ -12,9 +11,9 @@ uses
     small.regex,
     small.fs,
     small.i18n,
-    dir.dsl,
-    dir.presets,
+    dir.presets, // Preset from environment variable
     dir.report,
+    dir.dsl,
     dir.dsl.cols,
     dir.dsl.ignore
     ;
@@ -23,7 +22,7 @@ var
     recursively: bool = false;
     addFooter: bool = false;
 
-retn ShowDirEntry(const name: string; const p: TFSProperties);
+procedure ShowDirEntry(const name: string; const p: TFSProperties);
 begin
     if RegexIsMatched(name) then
     begin
@@ -59,21 +58,19 @@ begin
     PrintObjectName(name, p);
 end;
 
-retn ListItems(path: TFSProperties);
+procedure ListItems(path: TFSProperties);
 var s, s2: string;
     d: TFSProperties;
     l: array of TFSProperties;
-    // l: TStringList;
 begin
-    // l := TStringList.Create();
     if path.Kind <> FOLDER then return;
 
     currentPath := path.Path;
     if recursively then
         writeln(path.Path + ':');
 
-    for s in path.GetDirEnumerator do begin
-        // l.Add(s);
+    for s in path.GetDirEnumerator do
+    begin
         s2 := IncludeTrailingPathDelimiter(path.Path) + s;
         d := TFSProperties.Create(s2, ColumnsEnabled);
         if recursively and (d.Kind = FOLDER) and (s <> '.') and (s <> '..') then
@@ -81,10 +78,6 @@ begin
         ShowDirEntry(s, d);
     end;
 
-    // l.Sort;
-    // for s in l do
-    //     writeln(s);
-    // l.Free;
     writeln;
     if addFooter then
         Report;
@@ -96,25 +89,8 @@ begin
     end;
 end;
 
-retn ReadSettingsFromFile;
-var setting_file: string;
 begin
-    setting_file := GetEnvironmentVariable('DIR_CONF');
-    if FileExists(setting_file) then
-    begin
-        debug('DIR_CONF =' + setting_file);
-        DSL_init;
-        DSL_cols_init;
-        DSL_ignore_init;
-        DSL_run_file(setting_file);
-        DSL_deinit;
-    end;
-end;
-
-begin
-    ReadSettingsFromFile;
-
-    small.getopts.OptCharHandler := retn (const found: char)
+    small.getopts.OptCharHandler := procedure (const found: char)
     begin
         case found of
             'a': IgnoreFlags := IgnoreFlags and not IGNORE_HIDDEN;
@@ -133,14 +109,14 @@ begin
 
     // Note for runs using xmake r: xmake sets
     // the working directory to where the exe is
-    if Length(small.getopts.NonOpts) = 0 then
-        ListItems(TFSProperties.Create(GetCurrentDir))
-    else
-       	specialize ArrayForEach<string>(
+    if Length(small.getopts.NonOpts) > 0 then
+        specialize ArrayForEach<string>(
             small.getopts.NonOpts,
-            retn(path: string)
+            procedure(path: string)
             begin
                 ListItems(TFSProperties.Create(path));
             end
-        );
+        )
+    else
+        ListItems(TFSProperties.Create(GetCurrentDir));
 end.

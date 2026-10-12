@@ -17,6 +17,7 @@ There is no known runtime differences at the moment.
 * dir: Read settings from DIR_CONF file before parsing command-line arguments
 * dir: Do not print directory size as it's not implemented
 * dir: Footer (which shows ignored file count etc.) is now optional
+* uname: Implement -m (show machine hardware name - a bit misleading I know) for Windows
 
 ## For developers+maintainers
 

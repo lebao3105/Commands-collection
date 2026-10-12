@@ -24,7 +24,7 @@ var
     verbose,
     recursively: bool;
 
-fn Confirmation(which: string): bool;
+function Confirmation(which: string): bool;
 begin
     if (not interactive) or dryRun then
         return(true);
@@ -43,7 +43,7 @@ begin
 end;
 
 {$I-}
-fn DeleteThing(const which: string): bool;
+function DeleteThing(const which: string): bool;
 {$push}
     {$warn 5044 off} // faHidden is not portable
 var
@@ -54,10 +54,12 @@ begin
 
     if RegexHasMatches(ExtractFileName(which)) then
     begin
-        if ignoreRegexMatch or not verbose then return(false);
-        TextColor(Yellow);
-        writeln(FILTERED);
-        resetForeground;
+        if not ignoreRegexMatch or verbose then
+        begin
+            TextColor(Yellow);
+            writeln(FILTERED);
+            resetForeground;
+        end;
         return(false);
     end;
 
@@ -113,7 +115,7 @@ begin
     if ParamCount = 0 then
         FatalAndTerminate(1, NOTHING_TO_DELETE);
 
-    small.getopts.OptCharHandler := retn (const found: char)
+    small.getopts.OptCharHandler := procedure (const found: char)
     begin
         case found of
             'g': ignoreRegexMatch := true;
@@ -136,7 +138,7 @@ begin
     small.logging.doNewLine := false;
     specialize ArrayForEach<string>(
         small.getopts.NonOpts,
-        fn (where: string): bool
+        function (where: string): bool
         begin
             Result := DeleteThing(where) and not keepGoing;
         end

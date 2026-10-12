@@ -19,7 +19,7 @@ uses
 	;
 
 {$ifdef WINDOWS}
-fn fpExecVe(const cmdName: pchar;
+function fpExecVe(const cmdName: pchar;
             const argv: ppchar;
             const envp: ppchar): cint; external 'msvcrt' name '_execve';
 {$endif}
@@ -34,7 +34,7 @@ var
     i: uint16;
 	envc: int;
 
-fn SplitByEqualSign(const inp: string): TStringDynArray;
+function SplitByEqualSign(const inp: string): TStringDynArray;
 var
 	p: sizeint;
 begin
@@ -50,7 +50,7 @@ begin
 	result[0] := inp;
 end;
 
-fn SetUnSetDifferences: TStringDynArray;
+function SetUnSetDifferences: TStringDynArray;
 var
 	j: uint16;
 	parts: TStringDynArray;
@@ -88,7 +88,7 @@ begin
 		exit;
 	end;
 
-	small.getopts.OptCharHandler := retn (const found: char)
+	small.getopts.OptCharHandler := procedure (const found: char)
 	begin
 		case (found) of
 			'g': specialize ArrayAppend<string>(getValues, OptArg);

@@ -15,8 +15,8 @@ var
     statFailCount: ulong = 0;
     currentPath  : string;
 
-retn Report;
-retn PrintObjectName(const name: string; const props: TFSProperties);
+procedure Report;
+procedure PrintObjectName(const name: string; const props: TFSProperties);
 
 implementation
 
@@ -55,8 +55,8 @@ begin
     statFailCount := 0;
 end;
 
-retn PrintObjectName(const name: string; const props: TFSProperties);
-    retn FSPermAsString(const scope: EPermissionScope); inline;
+procedure PrintObjectName(const name: string; const props: TFSProperties);
+    procedure FSPermAsString(const scope: EPermissionScope); inline;
     begin
         write(specialize IfThenElse<char>(props.HasPermission(scope, SEEK), 'r', '-') +
               specialize IfThenElse<char>(props.HasPermission(scope, MODIFY), 'w', '-') +

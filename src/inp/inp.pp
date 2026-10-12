@@ -21,7 +21,7 @@ begin
         return;
     end;
 
-	small.getopts.OptCharHandler := retn (const found: char)
+	small.getopts.OptCharHandler := procedure (const found: char)
 	begin
 		case found of
 			'm': customMessage := OptArg;

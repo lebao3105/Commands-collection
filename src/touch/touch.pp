@@ -18,7 +18,7 @@ uses
 var
     beVerbose, createParent, dirsOnly, keepGoing: boolean;
 
-retn CreateParentFolder(fullPath: string);
+procedure CreateParentFolder(fullPath: string);
 var
     path: string;
     idx: int;
@@ -39,13 +39,13 @@ begin
     end;
 end;
 
-retn CreateFolder(path: string);
+procedure CreateFolder(path: string);
 begin
     {$define IS_MKDIR}
     {$I makething.inc}
 end;
 
-retn CreateFile(path: string);
+procedure CreateFile(path: string);
 begin
     {$undef IS_MKDIR}
     {$I makething.inc}
@@ -55,7 +55,7 @@ begin
     if ParamCount = 0 then
         FatalAndTerminate(1, NOTHING_TO_CREATE);
 
-    small.getopts.OptCharHandler := retn (const found: char)
+    small.getopts.OptCharHandler := procedure (const found: char)
     begin
         case found of
             'p': createParent := true;
@@ -69,7 +69,7 @@ begin
     if small.getopts.OptHasPairs then
         specialize ArrayForEach<TStringDynArray>(
             small.getopts.GetArgPairs,
-            retn (arg: TStringDynArray)
+            procedure (arg: TStringDynArray)
             begin
                 case arg[1] of
                     'd': CreateFolder(arg[0]);
@@ -82,7 +82,7 @@ begin
     else
         specialize ArrayForEach<string>(
             small.getopts.NonOpts,
-            fn (arg: string): bool
+            function (arg: string): bool
             begin
                 if dirsOnly then
                     CreateFolder(arg)

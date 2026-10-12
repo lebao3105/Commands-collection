@@ -25,10 +25,10 @@ type
         group: PGroup;
         user: PPasswd;
 
-        fn GetName: string;
+        function GetName: string;
     end;
 
-fn getpw(id: cuint32; isGroup: bool): PCacheEntry;
+function getpw(id: cuint32; isGroup: bool): PCacheEntry;
 
 implementation
 
@@ -41,7 +41,7 @@ uses
 var
     Cached: specialize TArray<TCacheEntry>;
 
-fn TCacheEntry.GetName: string;
+function TCacheEntry.GetName: string;
 begin
 	if isGroup then
 		return(group^.gr_name)
@@ -49,7 +49,7 @@ begin
 		return(user^.pw_name);
 end;
 
-fn AppendEntry(const id: cuint32; const isGroup: bool): TCacheEntry;
+function AppendEntry(const id: cuint32; const isGroup: bool): TCacheEntry;
 begin
     Result.isGroup := isGroup;
 
@@ -61,7 +61,7 @@ begin
     specialize ArrayAppend<TCacheEntry>(Cached, Result);
 end;
 
-fn getpw(id: cuint32; isGroup: bool): PCacheEntry;
+function getpw(id: cuint32; isGroup: bool): PCacheEntry;
 var found: bool;
 begin
     specialize ArrayForEach<TCacheEntry>(Cached, function(item: TCacheEntry): bool
