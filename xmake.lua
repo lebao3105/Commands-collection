@@ -39,12 +39,12 @@ for _, dir in ipairs(os.dirs("src/*")) do
         end
 
         on_config(function (target)
-            targets.on_target_config(target)
             target:add("pcflags", "@cc.cfg")
             target:add("pcflags", "-Fisrc/" .. name)
             if has_config("output-prefix") then
                 target:set("basename", get_config("output-prefix") .. name)
             end
+            targets.on_target_config(target)
         end)
 
         before_build(function (target)
