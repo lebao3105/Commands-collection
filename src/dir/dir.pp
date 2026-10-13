@@ -24,12 +24,6 @@ var
 
 procedure ShowDirEntry(const name: string; const p: TFSProperties);
 begin
-    if RegexIsMatched(name) then
-    begin
-        inc(ignoredCount);
-        return;
-    end;
-
     case p.Kind of
     	EFSEntityKind.StatFailure:
 	    begin
@@ -65,12 +59,24 @@ var s, s2: string;
 begin
     if path.Kind <> FOLDER then return;
 
+    if RegexIsMatched(path.Name) then
+    begin
+        inc(ignoredCount);
+        return;
+    end;
+
     currentPath := path.Path;
     if recursively then
         writeln(path.Path + ':');
 
     for s in path.GetDirEnumerator do
     begin
+        if RegexIsMatched(s) then
+        begin
+            inc(ignoredCount);
+            continue;
+        end;
+
         s2 := IncludeTrailingPathDelimiter(path.Path) + s;
         d := TFSProperties.Create(s2, ColumnsEnabled);
         if recursively and (d.Kind = FOLDER) and (s <> '.') and (s <> '..') then
