@@ -39,7 +39,7 @@ for _, dir in ipairs(os.dirs("src/*")) do
         end
 
         on_config(function (target)
-            target:add("pcflags", "@cc.cfg")
+            target:add("pcflags", "@build-aux/cc.cfg")
             target:add("pcflags", "-Fisrc/" .. name)
             if has_config("output-prefix") then
                 target:set("basename", get_config("output-prefix") .. name)
@@ -59,6 +59,19 @@ for _, dir in ipairs(os.dirs("src/*")) do
             end
             target:add("installfiles", "docs/cc-" .. name .. ".1", {
                 prefixdir = "share/man/man1", name = pref ..  name .. ".1" })
+        end)
+
+        before_run(function (target)
+            if name == "dir" then
+                import("private.action.require.impl.package")
+                local lua_dir
+                for _, pkg in ipairs(package.load_packages({"lua"})) do
+                    if pkg:requireinfo().originstr == "lua" then
+                        os.addenv("PATH", pkg:installdir() .. "/bin/")
+                        break
+                    end
+                end
+            end
         end)
 
 
