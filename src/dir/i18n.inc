@@ -39,4 +39,4 @@ resourcestring
 
     // More
     INVALID_COLUMN    = '%s: unknown column type';
-    UNKNOWN_PRESET    = '%s: unknown preset (must be either win, gnu or ccd)';
+    UNKNOWN_PRESET    = '%s: unknown preset (must be either win, gnu or ccd). Using defaults.';

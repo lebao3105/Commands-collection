@@ -78,8 +78,10 @@ begin
         'win': WIN_PRESET;
         'gnu': GNU_PRESET;
         'ccd', '': CCD_PRESET;
-        otherwise
-            FatalAndTerminate(1, UNKNOWN_PRESET, [ str ]);
+        otherwise begin
+            Warning(UNKNOWN_PRESET, [ str ]);
+            CCD_PRESET;
+        end;
     end;
 end;
 

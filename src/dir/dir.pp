@@ -7,7 +7,6 @@ uses
     small.arr,
     small.base,
     small.getopts,
-    small.logging,
     small.regex,
     small.fs,
     small.i18n,
