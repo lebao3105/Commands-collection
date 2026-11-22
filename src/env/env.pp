@@ -6,6 +6,7 @@ program env;
 uses
 	sysutils, // GetEnvironmentVariable*
 	types,	  // TStringDynArray
+	strutils,
 		{$ifdef UNIX}
 	baseunix
 		{$else}
@@ -30,11 +31,12 @@ var
     unsetValues
 		: TStringDynArray;
     cleanEnv: bool = false;
+	separateByPathSep: bool = true;
 	progArgs, progEnv: PPChar;
     i: uint16;
 	envc: int;
 
-function SplitByEqualSign(const inp: string): TStringDynArray;
+function SplitByEqualSign(const inp: string): specialize TArray<String>;
 var
 	p: sizeint;
 begin
@@ -50,6 +52,15 @@ begin
 	result[0] := inp;
 end;
 
+procedure SplitByPathSep(const inp: string);
+begin
+	specialize ArrayForEach<string>(SplitString(inp, PathSeparator), procedure(path: string)
+	begin
+		if Length(path) > 0 then
+			writeln(#9 + path + PathSeparator);
+	end);
+end;
+
 function SetUnSetDifferences: TStringDynArray;
 var
 	j: uint16;
@@ -61,16 +72,17 @@ begin
 	for i := 1 to envc do begin
 		Insert(GetEnvironmentString(i), Result, Length(Result) + 1);
 
-		for j := Low(unsetValues) to High(unsetValues) do
-			if SplitByEqualSign(Result[i - 1])[0] = unsetValues[j] then
+		specialize ArrayForEach<string>(unsetValues, procedure(value: string)
+			if SplitByEqualSign(Result[i - 1])[0] = value then
 				Result[i - 1] := '';
+		end);
 
-		for j := Low(setValues) to High(setValues) do
+		specialize ArrayForEach<string>(setValues, procedure(value: string)
 		begin
-			parts := SplitByEqualSign(setValues[j]);
+			parts := SplitByEqualSign(value);
 			if SplitByEqualSign(Result[i - 1])[0] = parts[0] then
-				Result[i - 1] := setValues[j];
-		end;
+				Result[i - 1] := value;
+		end);
 	end;
 
 	if Length(Result) > 0 then
@@ -84,7 +96,13 @@ begin
 	if ParamCount = 0 then
 	begin
 		for i := 1 to envc do
-			writeln(GetEnvironmentString(i));
+			procedure
+			var splits: specialize TArray<string>;
+			begin
+				splits := SplitByEqualSign(GetEnvironmentString(i));
+				writeln(splits[0] + ' =');
+				SplitByPathSep(splits[1]);
+			end();
 		exit;
 	end;
 
@@ -94,14 +112,16 @@ begin
 			'g': specialize ArrayAppend<string>(getValues, OptArg);
 			's': specialize ArrayAppend<string>(setValues, OptArg);
 			'u': specialize ArrayAppend<string>(unsetValues, OptArg);
+			'p': separateByPathSep := true;
 			'c': cleanEnv := true;
 		end;
 	end;
 
-	if Length(getValues) > 0 then
-	for i := Low(getValues) to High(getValues) do
-		writeln(
-			getValues[i] + '=' + GetEnvironmentVariable(getValues[i]));
+	specialize ArrayForEach<string>(getValues, procedure(value: string)
+	begin
+		write(value + '=');
+		SplitByPathSep(GetEnvironmentVariable(value));
+	end);
 
 	if Length(small.getopts.NonOpts) = 0 then
 		FatalAndTerminate(1, NoProgSpecified);
@@ -119,10 +139,13 @@ begin
 	if not cleanEnv then
 		progEnv := ArrayStringToPPChar(SetUnsetDifferences, 0);
 
+	AddExitProc(procedure
+	begin
+		Dispose(progEnv);
+		Dispose(ProgArgs);
+	end);
+
 	// Launch.
 	if fpExecVe(progArgs[0], progArgs, progEnv) = -1 then
 		Fatal(ProcessExit, [ GetLastStrErrno ]);
-
-	Dispose(progEnv);
-	Dispose(ProgArgs);
 end.

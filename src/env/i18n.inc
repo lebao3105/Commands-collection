@@ -3,6 +3,7 @@ resourcestring
     SET_DES = 'Set environment variables';
     UNSET_DES = 'Unset environment variables';
     CLEAN_DES = 'Clean environment, containing only variables from -s';
+    SEP_DES = 'Separate values by path separator (; on Windows, : on UNIX)';
 
     PROGRAM_DESC = 'Launch processes with specified (and maybe modified) environment variables.';
     PROGRAM_BONUS_HELP =

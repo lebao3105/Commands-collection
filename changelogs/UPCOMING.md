@@ -11,12 +11,14 @@ There is no known runtime differences at the moment.
 
 ## Program-specific changes
 
+* env: Added a new -p / --separated flag, used to split values with path separator (literal `:` OR `;` inside)
 * inp: Removed -s, -e and -o flags. May the removal of -s be temporary?
 * inp, env, rm: Use i18n [unit](../src/shared/i18n.pp) instead of including i18n.inc
 * dir: Added more settings. It will raise an exception if DIR_PRESET is not one of the predefined names
 * dir: Read settings from DIR_CONF file before parsing command-line arguments
 * dir: Do not print directory size as it's not implemented
 * dir: Footer (which shows ignored file count etc.) is now optional
+* dir: Warn if the provided preset is unknown (instead of quitting). The default preset, CC's one, will be used in this case.
 * uname: Implement -m (show machine hardware name - a bit misleading I know) for Windows
 
 ## For developers+maintainers
@@ -31,6 +33,7 @@ Below is what the new library offers since v262305:
 * Refactored TFSProperties, and it's iterable now!
 * Added ability to set last error code
 * Usage of CRT is, once again, removed.
+* A bunch of new functions have been added for other uses
 
 ### Changed i18n location
 
