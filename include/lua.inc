@@ -41,11 +41,6 @@
 *)
 
 unit lua;
-//{$ifdef USE_LIBLUA}
-//    {$link}
-//{$else}
-//    {$link 'lua.lib'}
-//{$endif}
 {$modeswitch result}
 
 interface
@@ -56,7 +51,7 @@ type
 
 const
     LUA_VERSION = 'Lua 5.5';
-    LUA_RELEASE = 'Lua 5.5.0';
+    LUA_RELEASE = 'Lua 5.5.x';
     LUA_VERSION_NUM = 550;
     LUA_COPYRIGHT = 'Copyright (C) 1994-2025 Lua.org, PUC-Rio';
     LUA_AUTHORS = 'R. Ierusalimschy, L. H. de Figueiredo, W. Celes';

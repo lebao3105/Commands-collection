@@ -5,7 +5,6 @@ program env;
 
 uses
 	sysutils, // GetEnvironmentVariable*
-	types,	  // TStringDynArray
 	strutils,
 		{$ifdef UNIX}
 	baseunix
@@ -29,7 +28,7 @@ var
     getValues,
     setValues,
     unsetValues
-		: TStringDynArray;
+		: specialize TArray<string>;
     cleanEnv: bool = false;
 	separateByPathSep: bool = true;
 	progArgs, progEnv: PPChar;
@@ -61,10 +60,9 @@ begin
 	end);
 end;
 
-function SetUnSetDifferences: TStringDynArray;
+function SetUnSetDifferences: specialize TArray<string>;
 var
-	j: uint16;
-	parts: TStringDynArray;
+	value: string;
 begin
 	if (Length(setValues) = 0) or (Length(unsetValues) = 0) or (envc = 0) then
 		return(setValues);
@@ -72,23 +70,19 @@ begin
 	for i := 1 to envc do begin
 		Insert(GetEnvironmentString(i), Result, Length(Result) + 1);
 
-		specialize ArrayForEach<string>(unsetValues, procedure(value: string)
+		for value in unsetValues do
 			if SplitByEqualSign(Result[i - 1])[0] = value then
 				Result[i - 1] := '';
-		end);
 
-		specialize ArrayForEach<string>(setValues, procedure(value: string)
-		begin
-			parts := SplitByEqualSign(value);
-			if SplitByEqualSign(Result[i - 1])[0] = parts[0] then
+		for value in setValues do
+			if SplitByEqualSign(Result[i - 1])[0] = SplitByEqualSign(value)[0] then
 				Result[i - 1] := value;
-		end);
 	end;
 
 	if Length(Result) > 0 then
-	for i := Low(Result) to High(Result) do
-		if Result[i] = '' then
-			Delete(Result, i, 1);
+		for i := Low(Result) to High(Result) do
+			if Result[i] = '' then
+				Delete(Result, i, 1);
 end;
 
 begin
@@ -98,7 +92,15 @@ begin
 		for i := 1 to envc do
 			procedure
 			var splits: specialize TArray<string>;
+				str: string;
 			begin
+				str := GetEnvironmentString(i);
+				if Pos(PathSeparator, str) = 0 then
+				begin
+					writeln(str);
+					return;
+				end;
+
 				splits := SplitByEqualSign(GetEnvironmentString(i));
 				writeln(splits[0] + ' =');
 				SplitByPathSep(splits[1]);
@@ -141,8 +143,11 @@ begin
 
 	AddExitProc(procedure
 	begin
-		Dispose(progEnv);
-		Dispose(ProgArgs);
+		if progEnv <> nil then
+			Dispose(progEnv);
+		
+		if progArgs <> nil then
+			Dispose(progArgs);
 	end);
 
 	// Launch.

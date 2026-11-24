@@ -12,6 +12,7 @@ There is no known runtime differences at the moment.
 ## Program-specific changes
 
 * env: Added a new -p / --separated flag, used to split values with path separator (literal `:` OR `;` inside)
+* env: Do deallocation tasks even if something goes wrong while launching a new process
 * inp: Removed -s, -e and -o flags. May the removal of -s be temporary?
 * inp, env, rm: Use i18n [unit](../src/shared/i18n.pp) instead of including i18n.inc
 * dir: Added more settings. It will raise an exception if DIR_PRESET is not one of the predefined names
